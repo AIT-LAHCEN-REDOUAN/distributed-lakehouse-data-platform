@@ -1,0 +1,26 @@
+================================================================================
+UCI ONLINE RETAIL 2 - PREPROCESSING SUMMARY REPORT
+================================================================================
+
+1. DATASET OVERVIEW
+----------------------------------------
+Original records: 525,461 rows
+Cleaned records: 504,731 rows
+Rows removed: 20,730
+
+2. FEATURE ENGINEERING
+----------------------------------------
+New features created: 37
+Processed dataset: 504,731 rows × 45 columns
+
+3. VALIDATION RESULTS
+----------------------------------------
+Checks passed: 4
+Checks failed: 0
+
+4. OUTPUT FILES
+----------------------------------------
+Cleaned dataset: d:\github\Master_PFE_Project\CustomerDNA AI\src\Preprocessing\UCI_Online_Retail_2_Preprocessing\cleaned_dataset\cleaned_online_retail_20260604_163358.csv
+RFM data: d:\github\Master_PFE_Project\CustomerDNA AI\src\Preprocessing\UCI_Online_Retail_2_Preprocessing\cleaned_dataset\rfm_data_20260604_163358.csv
+JSON report: d:\github\Master_PFE_Project\CustomerDNA AI\src\Preprocessing\UCI_Online_Retail_2_Preprocessing\logs\preprocessing_report_20260604_163358.json
+Text summary: d:\github\Master_PFE_Project\CustomerDNA AI\src\Preprocessing\UCI_Online_Retail_2_Preprocessing\logs\preprocessing_summary_20260604_163358.txt

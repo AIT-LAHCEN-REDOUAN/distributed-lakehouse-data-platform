@@ -1,0 +1,29 @@
+================================================================================
+SEGMENTATION ANALYSIS REPORT - CUSTOMER SEGMENTS
+================================================================================
+
+1. DEMOGRAPHIC SEGMENTS
+----------------------------------------
+Gender-based segments:
+   - Female: 2,246.0 customers, Churn rate: 15.5%
+   - Male: 3,384.0 customers, Churn rate: 17.7%
+
+Marital status-based segments:
+   - Divorced: 848.0 customers, Churn rate: 14.6%
+   - Married: 2,986.0 customers, Churn rate: 11.5%
+   - Single: 1,796.0 customers, Churn rate: 26.7%
+
+
+2. BEHAVIORAL SEGMENTS
+----------------------------------------
+Login device-based segments:
+   - Computer: 1,634.0 customers, Churn rate: 19.8%
+   - Mobile Phone: 2,765.0 customers, Churn rate: 12.6%
+   - Phone: 1,231.0 customers, Churn rate: 22.4%
+
+Satisfaction score-based segments:
+   - Score 1: 1,164.0 customers, Churn rate: 11.5%
+   - Score 2: 586.0 customers, Churn rate: 12.6%
+   - Score 3: 1,698.0 customers, Churn rate: 17.2%
+   - Score 4: 1,074.0 customers, Churn rate: 17.1%
+   - Score 5: 1,108.0 customers, Churn rate: 23.8%

@@ -1,0 +1,70 @@
+[2026-06-04 13:14:27] [INFO] run_complete_preprocessing() started
+[2026-06-04 13:14:27] [INFO] load_and_assess_data() started
+[2026-06-04 13:14:27] [INFO] Data loaded successfully: 2,240 rows × 29 columns
+[2026-06-04 13:14:27] [INFO] Memory usage: 0.81 MB
+[2026-06-04 13:14:27] [WARNING] Total missing values: 24
+[2026-06-04 13:14:27] [INFO] clean_data() started
+[2026-06-04 13:14:27] [INFO] 2.1 Handling missing values...
+[2026-06-04 13:14:27] [INFO]   Imputed Income with median: 51381.50
+[2026-06-04 13:14:27] [INFO] 2.2 Handling duplicates...
+[2026-06-04 13:14:27] [INFO] 2.3 Data type conversion and validation...
+[2026-06-04 13:14:27] [WARNING]   Validation issues found: ['Year_Birth: 2 invalid values']
+[2026-06-04 13:14:27] [INFO] 2.4 Standardizing categorical values...
+[2026-06-04 13:14:27] [INFO]   Standardized Education column
+[2026-06-04 13:14:27] [INFO]   Standardized Marital_Status column
+[2026-06-04 13:14:27] [WARNING]   Found unusual marital statuses: ['Absurd', 'YOLO', 'Alone']
+[2026-06-04 13:14:27] [INFO] Data cleaning completed: 2,240 rows × 29 columns
+[2026-06-04 13:14:27] [INFO] engineer_features() started
+[2026-06-04 13:14:27] [INFO] 3.1 Creating demographic features...
+[2026-06-04 13:14:27] [INFO] 3.2 Creating spending features...
+[2026-06-04 13:14:27] [INFO] 3.3 Creating purchase behavior features...
+[2026-06-04 13:14:27] [INFO] 3.4 Creating temporal features...
+[2026-06-04 13:14:27] [INFO] 3.5 Creating campaign response features...
+[2026-06-04 13:14:27] [INFO] 3.6 Creating composite features...
+[2026-06-04 13:14:27] [INFO] Feature engineering completed: 56 total features
+[2026-06-04 13:14:27] [INFO] handle_outliers() started
+[2026-06-04 13:14:27] [INFO]   Income: 8 outliers detected, 8 capped
+[2026-06-04 13:14:27] [INFO]   MntWines: 35 outliers detected, 35 capped
+[2026-06-04 13:14:27] [INFO]   MntFruits: 227 outliers detected, 233 capped
+[2026-06-04 13:14:27] [INFO]   MntMeatProducts: 175 outliers detected, 175 capped
+[2026-06-04 13:14:27] [INFO]   MntFishProducts: 223 outliers detected, 223 capped
+[2026-06-04 13:14:27] [INFO]   MntSweetProducts: 248 outliers detected, 250 capped
+[2026-06-04 13:14:27] [INFO]   MntGoldProds: 207 outliers detected, 207 capped
+[2026-06-04 13:14:27] [INFO]   NumDealsPurchases: 86 outliers detected, 147 capped
+[2026-06-04 13:14:27] [INFO]   NumWebPurchases: 4 outliers detected, 4 capped
+[2026-06-04 13:14:27] [INFO]   NumCatalogPurchases: 23 outliers detected, 71 capped
+[2026-06-04 13:14:27] [INFO]   NumWebVisitsMonth: 8 outliers detected, 9 capped
+[2026-06-04 13:14:28] [INFO]   Age: 3 outliers detected, 3 capped
+[2026-06-04 13:14:28] [INFO]   Family_Size: 53 outliers detected, 53 capped
+[2026-06-04 13:14:28] [INFO]   Total_Spending: 3 outliers detected, 3 capped
+[2026-06-04 13:14:28] [INFO]   MntFruits_Proportion: 125 outliers detected, 125 capped
+[2026-06-04 13:14:28] [INFO]   MntMeatProducts_Proportion: 24 outliers detected, 24 capped
+[2026-06-04 13:14:28] [INFO]   MntFishProducts_Proportion: 78 outliers detected, 78 capped
+[2026-06-04 13:14:28] [INFO]   MntSweetProducts_Proportion: 114 outliers detected, 114 capped
+[2026-06-04 13:14:28] [INFO]   MntGoldProds_Proportion: 89 outliers detected, 89 capped
+[2026-06-04 13:14:28] [INFO]   Total_Purchases: 2 outliers detected, 2 capped
+[2026-06-04 13:14:28] [INFO]   NumDealsPurchases_Proportion: 3 outliers detected, 3 capped
+[2026-06-04 13:14:28] [INFO]   NumWebPurchases_Proportion: 54 outliers detected, 54 capped
+[2026-06-04 13:14:28] [INFO]   NumCatalogPurchases_Proportion: 8 outliers detected, 9 capped
+[2026-06-04 13:14:28] [INFO]   NumStorePurchases_Proportion: 16 outliers detected, 44 capped
+[2026-06-04 13:14:28] [INFO]   Purchase_Concentration: 62 outliers detected, 62 capped
+[2026-06-04 13:14:28] [INFO]   Enrollment_Year: 1,051 outliers detected, 2,240 capped
+[2026-06-04 13:14:28] [INFO]   Total_Campaign_Responses: 97 outliers detected, 97 capped
+[2026-06-04 13:14:28] [INFO]   Campaign_Response_Rate: 97 outliers detected, 97 capped
+[2026-06-04 13:14:28] [INFO]   Recent_Response: 334 outliers detected, 2,240 capped
+[2026-06-04 13:14:28] [INFO] Outlier handling completed: 3,457 total outliers handled
+[2026-06-04 13:14:28] [INFO] encode_and_scale() started
+[2026-06-04 13:14:28] [INFO] 5.1 Encoding categorical variables...
+[2026-06-04 13:14:28] [ERROR] Failed to encode and scale: name 'LabelEncoder' is not defined
+[2026-06-04 13:14:28] [WARNING] Encoding and scaling had issues, but continuing.
+[2026-06-04 13:14:28] [INFO] validate_and_export() started
+[2026-06-04 13:14:28] [INFO] 6.1 Performing final validation checks...
+[2026-06-04 13:14:28] [WARNING]   Validation failed for: ['missing_values', 'infinite_values']
+[2026-06-04 13:14:28] [INFO] 6.2 Exporting cleaned dataset...
+[2026-06-04 13:14:28] [ERROR] Failed to validate and export: Unable to find a usable engine; tried using: 'pyarrow', 'fastparquet'.
+A suitable version of pyarrow or fastparquet is required for parquet support.
+Trying to import the above resulted in these errors:
+ - `Import pyarrow` failed. pyarrow is required for parquet support. Use pip or conda to install the pyarrow package.
+ - `Import fastparquet` failed. fastparquet is required for parquet support. Use pip or conda to install the fastparquet package.
+[2026-06-04 13:14:28] [WARNING] Validation and export had issues.
+[2026-06-04 13:14:28] [INFO] Preprocessing completed at 2026-06-04 13:14:28.111715. Duration: 0:00:00.260234

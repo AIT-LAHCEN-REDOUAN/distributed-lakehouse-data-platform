@@ -1,0 +1,14 @@
+================================================================================
+TEMPORAL ANALYSIS REPORT - TIME-BASED PATTERNS
+================================================================================
+
+1. TEMPORAL FEATURES ANALYSIS
+----------------------------------------
+Temporal features found in dataset:
+   - OrderAmountHikeFromlastYear: float64
+   - DaySinceLastOrder: float64
+
+Temporal patterns identified:
+   1. DaySinceLastOrder: Customers with longer gaps since last order have higher churn risk
+   2. Tenure: Longer tenure customers show more stable behavior patterns
+   3. OrderCount over time: Frequent orders indicate higher engagement

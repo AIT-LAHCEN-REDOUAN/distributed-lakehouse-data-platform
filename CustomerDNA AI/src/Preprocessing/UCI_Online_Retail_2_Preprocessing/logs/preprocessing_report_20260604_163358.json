@@ -1,0 +1,439 @@
+{
+  "dataset_info": {
+    "original_shape": [
+      525461,
+      8
+    ],
+    "columns": [
+      "Invoice",
+      "StockCode",
+      "Description",
+      "Quantity",
+      "InvoiceDate",
+      "Price",
+      "Customer ID",
+      "Country"
+    ],
+    "dtypes": {
+      "Invoice": "object",
+      "StockCode": "object",
+      "Description": "object",
+      "Quantity": "int64",
+      "InvoiceDate": "datetime64[us]",
+      "Price": "float64",
+      "Customer ID": "float64",
+      "Country": "str"
+    },
+    "memory_usage_mb": 122.87100219726562
+  },
+  "cleaning_summary": {
+    "rows_removed": "20730",
+    "columns_removed": 0,
+    "missing_values_handled": {
+      "Description": "constant_imputation",
+      "Customer ID": "special_value_imputation"
+    },
+    "data_type_conversions": {
+      "InvoiceDate": "datetime",
+      "Quantity": "numeric",
+      "Price": "numeric",
+      "Customer ID": "numeric"
+    },
+    "cleaned_shape": [
+      504731,
+      9
+    ]
+  },
+  "feature_engineering_summary": {
+    "new_features_created": 37,
+    "processed_shape": [
+      504731,
+      45
+    ],
+    "feature_categories": {
+      "temporal": 12,
+      "transaction": 3,
+      "customer": 4,
+      "product": 3,
+      "derived": 4,
+      "rfm": 8,
+      "country": 3
+    }
+  },
+  "rfm_analysis": {},
+  "validation_results": {
+    "checks_passed": 4,
+    "checks_failed": 0,
+    "details": [
+      {
+        "check": "missing_values_key",
+        "status": "PASS",
+        "message": "No missing values in key columns"
+      },
+      {
+        "check": "quantity_range",
+        "status": "PASS",
+        "message": "All quantities are positive"
+      },
+      {
+        "check": "price_range",
+        "status": "PASS",
+        "message": "All prices are positive"
+      },
+      {
+        "check": "date_range",
+        "status": "PASS",
+        "message": "All dates within valid range"
+      }
+    ]
+  },
+  "outlier_handling_summary": {
+    "features_checked": 29,
+    "features_with_outliers": 22,
+    "total_outliers": 1116582,
+    "outlier_details": {
+      "Quantity": {
+        "outlier_count": 27089,
+        "outlier_pct": 5.367017282473238,
+        "method": "iqr_capping",
+        "lower_bound": -15.5,
+        "upper_bound": 28.5
+      },
+      "Price": {
+        "outlier_count": 33370,
+        "outlier_pct": 6.611442530773819,
+        "method": "iqr_capping",
+        "lower_bound": -3.1899999999999995,
+        "upper_bound": 8.649999999999999
+      },
+      "TotalValue": {
+        "outlier_count": 43682,
+        "outlier_pct": 8.654511016759422,
+        "method": "iqr_capping",
+        "lower_bound": -16.050000000000008,
+        "upper_bound": 37.95000000000001
+      },
+      "InvoiceYear": {
+        "outlier_count": 43453,
+        "outlier_pct": 8.609140314345662,
+        "method": "iqr_capping",
+        "lower_bound": 2010.0,
+        "upper_bound": 2010.0
+      },
+      "IsWeekend": {
+        "outlier_count": 72576,
+        "outlier_pct": 14.379144534415362,
+        "method": "iqr_capping",
+        "lower_bound": 0.0,
+        "upper_bound": 0.0
+      },
+      "LineItemValue": {
+        "outlier_count": 43682,
+        "outlier_pct": 8.654511016759422,
+        "method": "iqr_capping",
+        "lower_bound": -16.050000000000008,
+        "upper_bound": 37.95000000000001
+      },
+      "TransactionValue": {
+        "outlier_count": 53721,
+        "outlier_pct": 10.643491285457007,
+        "method": "iqr_capping",
+        "lower_bound": -1032.5300000000002,
+        "upper_bound": 2477.87
+      },
+      "TotalQuantity": {
+        "outlier_count": 44747,
+        "outlier_pct": 8.86551450178412,
+        "method": "iqr_capping",
+        "lower_bound": -371.5,
+        "upper_bound": 984.5
+      },
+      "DaysSinceLastPurchase": {
+        "outlier_count": 52216,
+        "outlier_pct": 10.345312651689712,
+        "method": "iqr_capping",
+        "lower_bound": 5600.5,
+        "upper_bound": 5748.5
+      },
+      "TotalQuantitySold": {
+        "outlier_count": 43188,
+        "outlier_pct": 8.556637099762051,
+        "method": "iqr_capping",
+        "lower_bound": -6770.5,
+        "upper_bound": 13697.5
+      },
+      "TotalRevenue": {
+        "outlier_count": 44327,
+        "outlier_pct": 8.782301859802548,
+        "method": "iqr_capping",
+        "lower_bound": -13191.780000000002,
+        "upper_bound": 26565.180000000004
+      },
+      "TransactionCount": {
+        "outlier_count": 16688,
+        "outlier_pct": 3.3063156414010635,
+        "method": "iqr_capping",
+        "lower_bound": -507.5,
+        "upper_bound": 1216.5
+      },
+      "AvgPricePerUnit": {
+        "outlier_count": 21963,
+        "outlier_pct": 4.351426799621977,
+        "method": "iqr_capping",
+        "lower_bound": -1.0681477272727276,
+        "upper_bound": 5.908912878787879
+      },
+      "PriceRatio": {
+        "outlier_count": 39130,
+        "outlier_pct": 7.752644477949641,
+        "method": "iqr_capping",
+        "lower_bound": -1.157550548293984,
+        "upper_bound": 3.483809957171588
+      },
+      "QuantityRatio": {
+        "outlier_count": 47134,
+        "outlier_pct": 9.33843968371271,
+        "method": "iqr_capping",
+        "lower_bound": -0.04742052801724138,
+        "upper_bound": 0.09465921336206896
+      },
+      "LoyaltyScore": {
+        "outlier_count": 103815,
+        "outlier_pct": 20.568381969801734,
+        "method": "iqr_capping",
+        "lower_bound": -0.07274295572167912,
+        "upper_bound": 0.1273720529039678
+      },
+      "Recency": {
+        "outlier_count": 52216,
+        "outlier_pct": 10.345312651689712,
+        "method": "iqr_capping",
+        "lower_bound": -54.5,
+        "upper_bound": 93.5
+      },
+      "Frequency": {
+        "outlier_count": 103815,
+        "outlier_pct": 20.568381969801734,
+        "method": "iqr_capping",
+        "lower_bound": -126.5,
+        "upper_bound": 221.5
+      },
+      "Monetary": {
+        "outlier_count": 115386,
+        "outlier_pct": 22.860890256394,
+        "method": "iqr_capping",
+        "lower_bound": -55843.76000000001,
+        "upper_bound": 96973.76000000001
+      },
+      "CountryTransactionCount": {
+        "outlier_count": 38128,
+        "outlier_pct": 7.55412288922218,
+        "method": "iqr_capping",
+        "lower_bound": 19291.0,
+        "upper_bound": 19291.0
+      },
+      "CountryTotalRevenue": {
+        "outlier_count": 38128,
+        "outlier_pct": 7.55412288922218,
+        "method": "iqr_capping",
+        "lower_bound": 8812685.403,
+        "upper_bound": 8812685.403
+      },
+      "CountryCustomerCount": {
+        "outlier_count": 38128,
+        "outlier_pct": 7.55412288922218,
+        "method": "iqr_capping",
+        "lower_bound": 3970.0,
+        "upper_bound": 3970.0
+      }
+    }
+  },
+  "encoding_scaling_summary": {
+    "categorical_encoded": 3,
+    "numerical_scaled": 23,
+    "encoding_details": {
+      "Country": {
+        "method": "label",
+        "classes": [
+          "United Kingdom",
+          "France",
+          "Usa",
+          "Belgium",
+          "Australia",
+          "Eire",
+          "Germany",
+          "Portugal",
+          "Denmark",
+          "Netherlands",
+          "Poland",
+          "Channel Islands",
+          "Spain",
+          "Cyprus",
+          "Greece",
+          "Norway",
+          "Austria",
+          "Sweden",
+          "United Arab Emirates",
+          "Finland",
+          "Italy",
+          "Switzerland",
+          "Japan",
+          "Unspecified",
+          "Nigeria",
+          "Malta",
+          "Bahrain",
+          "Rsa",
+          "Bermuda",
+          "Hong Kong",
+          "Singapore",
+          "Thailand",
+          "Israel",
+          "Lithuania",
+          "West Indies",
+          "Lebanon",
+          "Korea",
+          "Brazil",
+          "Canada",
+          "Iceland"
+        ]
+      },
+      "TimeOfDay": {
+        "method": "ordinal",
+        "categories": [
+          "Morning",
+          "Afternoon",
+          "Evening",
+          "Night"
+        ]
+      },
+      "RFM_Segment": {
+        "method": "ordinal",
+        "categories": [
+          "Champions",
+          "Loyal Customers",
+          "Potential Loyalists",
+          "Recent Customers",
+          "Customers Needing Attention",
+          "At Risk"
+        ]
+      }
+    },
+    "scaling_details": {
+      "Quantity": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "28"
+      },
+      "Price": {
+        "method": "min_max",
+        "original_min": 0.001,
+        "original_max": 8.649999999999999
+      },
+      "TotalValue": {
+        "method": "min_max",
+        "original_min": 0.001,
+        "original_max": 37.95000000000001
+      },
+      "InvoiceWeekOfYear": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "52"
+      },
+      "LineItemValue": {
+        "method": "min_max",
+        "original_min": 0.001,
+        "original_max": 37.95000000000001
+      },
+      "TransactionValue": {
+        "method": "min_max",
+        "original_min": 0.19,
+        "original_max": 2477.87
+      },
+      "TotalQuantity": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "984"
+      },
+      "CustomerTenureDays": {
+        "method": "min_max",
+        "original_min": "0",
+        "original_max": "373"
+      },
+      "DaysSinceLastPurchase": {
+        "method": "min_max",
+        "original_min": "5655",
+        "original_max": "5748"
+      },
+      "TotalQuantitySold": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "13698"
+      },
+      "TotalRevenue": {
+        "method": "min_max",
+        "original_min": 0.014,
+        "original_max": 26565.180000000004
+      },
+      "TransactionCount": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "1216"
+      },
+      "AvgPricePerUnit": {
+        "method": "min_max",
+        "original_min": 0.09,
+        "original_max": 5.908912878787879
+      },
+      "PriceRatio": {
+        "method": "min_max",
+        "original_min": 0.00033988858027477864,
+        "original_max": 3.483809957171588
+      },
+      "QuantityRatio": {
+        "method": "min_max",
+        "original_min": 0.00016880486158001352,
+        "original_max": 0.09465921336206896
+      },
+      "LoyaltyScore": {
+        "method": "min_max",
+        "original_min": 0.0005750431282346176,
+        "original_max": 0.1273720529039678
+      },
+      "Recency": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "94"
+      },
+      "Frequency": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "222"
+      },
+      "Monetary": {
+        "method": "min_max",
+        "original_min": 2.95,
+        "original_max": 96973.76000000001
+      },
+      "R_Score": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "5"
+      },
+      "F_Score": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "5"
+      },
+      "M_Score": {
+        "method": "min_max",
+        "original_min": "1",
+        "original_max": "5"
+      },
+      "RFM_Score": {
+        "method": "min_max",
+        "original_min": "3",
+        "original_max": "15"
+      }
+    }
+  }
+}

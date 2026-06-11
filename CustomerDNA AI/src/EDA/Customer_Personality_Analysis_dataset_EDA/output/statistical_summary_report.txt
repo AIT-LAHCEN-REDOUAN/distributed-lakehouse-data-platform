@@ -1,0 +1,236 @@
+COMPREHENSIVE STATISTICAL SUMMARY REPORT
+================================================================================
+Generated : 2026-05-31 14:14:19
+Dataset   : d:\github\Master_PFE_Project\CustomerDNA AI\base_dataset\Customer_Personality_Analysis\marketing_campaign.csv
+Rows      : 2,208
+Columns   : 32
+
+NUMERICAL FEATURES SUMMARY:
+----------------------------------------
+  Year_Birth
+    Count    : 2,208
+    Mean     : 1968.90
+    Median   : 1970.00
+    Std Dev  : 11.70
+    Min      : 1940.00
+    Max      : 1996.00
+    Range    : 56.00
+    Skewness : -0.095
+
+  Income
+    Count    : 2,208
+    Mean     : 51943.52
+    Median   : 51371.00
+    Std Dev  : 21536.76
+    Min      : 1730.00
+    Max      : 162397.00
+    Range    : 160667.00
+    Skewness : 0.349
+
+  Kidhome
+    Count    : 2,208
+    Mean     : 0.44
+    Median   : 0.00
+    Std Dev  : 0.54
+    Min      : 0.00
+    Max      : 2.00
+    Range    : 2.00
+    Skewness : 0.634
+
+  Teenhome
+    Count    : 2,208
+    Mean     : 0.51
+    Median   : 0.00
+    Std Dev  : 0.54
+    Min      : 0.00
+    Max      : 2.00
+    Range    : 2.00
+    Skewness : 0.407
+
+  Recency
+    Count    : 2,208
+    Mean     : 49.06
+    Median   : 49.00
+    Std Dev  : 28.94
+    Min      : 0.00
+    Max      : 99.00
+    Range    : 99.00
+    Skewness : -0.001
+
+  MntWines
+    Count    : 2,208
+    Mean     : 305.23
+    Median   : 174.00
+    Std Dev  : 337.61
+    Min      : 0.00
+    Max      : 1493.00
+    Range    : 1493.00
+    Skewness : 1.171
+
+  MntFruits
+    Count    : 2,208
+    Mean     : 26.30
+    Median   : 8.00
+    Std Dev  : 39.73
+    Min      : 0.00
+    Max      : 199.00
+    Range    : 199.00
+    Skewness : 2.109
+
+  MntMeatProducts
+    Count    : 2,208
+    Mean     : 167.00
+    Median   : 68.00
+    Std Dev  : 224.32
+    Min      : 0.00
+    Max      : 1725.00
+    Range    : 1725.00
+    Skewness : 2.029
+
+  MntFishProducts
+    Count    : 2,208
+    Mean     : 37.53
+    Median   : 12.00
+    Std Dev  : 54.58
+    Min      : 0.00
+    Max      : 259.00
+    Range    : 259.00
+    Skewness : 1.921
+
+  MntSweetProducts
+    Count    : 2,208
+    Mean     : 27.07
+    Median   : 8.00
+    Std Dev  : 41.11
+    Min      : 0.00
+    Max      : 262.00
+    Range    : 262.00
+    Skewness : 2.102
+
+  MntGoldProds
+    Count    : 2,208
+    Mean     : 43.78
+    Median   : 24.00
+    Std Dev  : 51.51
+    Min      : 0.00
+    Max      : 321.00
+    Range    : 321.00
+    Skewness : 1.838
+
+  NumDealsPurchases
+    Count    : 2,208
+    Mean     : 2.32
+    Median   : 2.00
+    Std Dev  : 1.92
+    Min      : 0.00
+    Max      : 15.00
+    Range    : 15.00
+    Skewness : 2.421
+
+  NumWebPurchases
+    Count    : 2,208
+    Mean     : 4.09
+    Median   : 4.00
+    Std Dev  : 2.74
+    Min      : 0.00
+    Max      : 27.00
+    Range    : 27.00
+    Skewness : 1.197
+
+  NumCatalogPurchases
+    Count    : 2,208
+    Mean     : 2.67
+    Median   : 2.00
+    Std Dev  : 2.93
+    Min      : 0.00
+    Max      : 28.00
+    Range    : 28.00
+    Skewness : 1.885
+
+  NumStorePurchases
+    Count    : 2,208
+    Mean     : 5.81
+    Median   : 5.00
+    Std Dev  : 3.25
+    Min      : 0.00
+    Max      : 13.00
+    Range    : 13.00
+    Skewness : 0.700
+
+  NumWebVisitsMonth
+    Count    : 2,208
+    Mean     : 5.32
+    Median   : 6.00
+    Std Dev  : 2.42
+    Min      : 0.00
+    Max      : 20.00
+    Range    : 20.00
+    Skewness : 0.220
+
+  AcceptedCmp3
+    Count    : 2,208
+    Mean     : 0.07
+    Median   : 0.00
+    Std Dev  : 0.26
+    Min      : 0.00
+    Max      : 1.00
+    Range    : 1.00
+    Skewness : 3.262
+
+  AcceptedCmp4
+    Count    : 2,208
+    Mean     : 0.07
+    Median   : 0.00
+    Std Dev  : 0.26
+    Min      : 0.00
+    Max      : 1.00
+    Range    : 1.00
+    Skewness : 3.249
+
+  AcceptedCmp5
+    Count    : 2,208
+    Mean     : 0.07
+    Median   : 0.00
+    Std Dev  : 0.26
+    Min      : 0.00
+    Max      : 1.00
+    Range    : 1.00
+    Skewness : 3.300
+
+  AcceptedCmp1
+    Count    : 2,208
+    Mean     : 0.06
+    Median   : 0.00
+    Std Dev  : 0.24
+    Min      : 0.00
+    Max      : 1.00
+    Range    : 1.00
+    Skewness : 3.570
+
+
+CATEGORICAL FEATURES SUMMARY:
+----------------------------------------
+  Education
+    Unique values : 5
+    Mode          : Graduation (1,114)
+    Entropy       : 1.848
+
+  Marital_Status
+    Unique values : 5
+    Mode          : Married (857)
+    Entropy       : 2.019
+
+
+DATA QUALITY ASSESSMENT:
+----------------------------------------
+  Missing values        : 0
+  Duplicate rows        : 0
+  Zero variance columns : 0
+  Outliers detected     : 1,021
+
+RECOMMENDATIONS:
+----------------------------------------
+  1. Consider feature scaling for machine learning models
+  2. Address class imbalance in target variable if present
+  3. Evaluate multicollinearity before regression modeling
+  4. Consider dimensionality reduction for high-dimensional data

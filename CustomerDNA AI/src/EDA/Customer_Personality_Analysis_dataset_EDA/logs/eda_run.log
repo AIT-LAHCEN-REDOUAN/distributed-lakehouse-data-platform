@@ -1,0 +1,4 @@
+[2026-05-30 22:29:31] ==================================================
+[2026-05-30 22:29:31] run_full_analysis() STARTED
+[2026-05-30 22:29:31] load_data() started
+[2026-05-30 22:29:31] load_data() FAILED — 'charmap' codec can't encode character '\u2713' in position 3: character maps to <undefined>
