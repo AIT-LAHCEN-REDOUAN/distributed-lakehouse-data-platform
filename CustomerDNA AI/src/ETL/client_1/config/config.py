@@ -1,6 +1,6 @@
 """
-CustomerDNA AI - Client Database Configuration
-Description: Basic configuration for client_1 database setup
+CustomerDNA AI - Client 1 Database Configuration
+Description: Configuration for client_1 database and data warehouse setup
              No orchestration logic - Apache Airflow will be integrated later
 """
 
@@ -11,12 +11,12 @@ import os
 # ============================================================================
 
 # Client Identification
-CLIENT_ID = "client_1"
+CLIENT_ID = "1"
 CLIENT_NAME = "Client 1"
 
 # Database Configuration
-BASE_DATABASE_NAME = f"CustomerDNA_AI_Client_{CLIENT_ID}_Base_DB"
-DATA_WAREHOUSE_NAME = f"CustomerDNA_AI_Client_{CLIENT_ID}_DW"
+BASE_DATABASE_NAME = f"client{CLIENT_ID}_DB"
+DATA_WAREHOUSE_NAME = f"client{CLIENT_ID}_DW"
 
 # PostgreSQL connection parameters
 POSTGRES_CONFIG = {
@@ -27,20 +27,22 @@ POSTGRES_CONFIG = {
     'database': 'postgres'  # Default database for creating new databases
 }
 
-# Base Database Configuration
+# Base Database Configuration (static storage)
 BASE_DB_CONFIG = {
     'name': BASE_DATABASE_NAME,
-    'description': f'Raw data storage for {CLIENT_NAME}',
+    'description': f'Raw data storage for {CLIENT_NAME} - Static',
     'schemas': ['raw_data', 'metadata'],
-    'default_schema': 'raw_data'
+    'default_schema': 'raw_data',
+    'access': 'read_only'  # Data should not be modified here
 }
 
-# Data Warehouse Configuration
-DW_CONFIG = {
+# Client Data Warehouse Configuration (for client-specific analytics)
+CLIENT_DW_CONFIG = {
     'name': DATA_WAREHOUSE_NAME,
-    'description': f'Analytical data warehouse for {CLIENT_NAME}',
-    'schemas': ['raw_data', 'analytics', 'reports'],
-    'default_schema': 'analytics'
+    'description': f'Client-specific data warehouse for {CLIENT_NAME}',
+    'schemas': ['raw_data', 'analytics', 'reports', 'client_specific'],
+    'default_schema': 'analytics',
+    'access': 'read_write'  # Analytical users can modify data here
 }
 
 # User Configuration
@@ -51,6 +53,10 @@ USER_CONFIG = {
     }
 }
 
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
+
 def get_connection_params(database_name='postgres'):
     """Get connection parameters for a specific database."""
     params = POSTGRES_CONFIG.copy()
@@ -60,16 +66,20 @@ def get_connection_params(database_name='postgres'):
 def print_config_summary():
     """Print a summary of the configuration."""
     print("=" * 60)
-    print("CUSTOMERDNA AI - DATABASE CONFIGURATION SUMMARY")
+    print("CUSTOMERDNA AI - CLIENT 1 DATABASE CONFIGURATION")
     print("=" * 60)
     
-    print(f"\n1. BASE DATABASE: {BASE_DATABASE_NAME}")
+    print(f"\n1. BASE DATABASE (Static Storage):")
+    print(f"   Name: {BASE_DATABASE_NAME}")
     print(f"   Description: {BASE_DB_CONFIG['description']}")
     print(f"   Schemas: {', '.join(BASE_DB_CONFIG['schemas'])}")
+    print(f"   Access: {BASE_DB_CONFIG['access']}")
     
-    print(f"\n2. DATA WAREHOUSE: {DATA_WAREHOUSE_NAME}")
-    print(f"   Description: {DW_CONFIG['description']}")
-    print(f"   Schemas: {', '.join(DW_CONFIG['schemas'])}")
+    print(f"\n2. CLIENT DATA WAREHOUSE (Analytics):")
+    print(f"   Name: {DATA_WAREHOUSE_NAME}")
+    print(f"   Description: {CLIENT_DW_CONFIG['description']}")
+    print(f"   Schemas: {', '.join(CLIENT_DW_CONFIG['schemas'])}")
+    print(f"   Access: {CLIENT_DW_CONFIG['access']}")
     
     print(f"\n3. USER:")
     for user_name, user_config in USER_CONFIG.items():
