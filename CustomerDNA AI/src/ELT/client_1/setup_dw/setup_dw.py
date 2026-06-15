@@ -100,10 +100,16 @@ class ClientDWSetup:
             cursor = self.postgres_conn.cursor()
             
             # Revoke all privileges from public
-            cursor.execute(f"REVOKE ALL ON DATABASE {DATA_WAREHOUSE_NAME} FROM PUBLIC")
+            revoke_sql = sql.SQL("REVOKE ALL ON DATABASE {} FROM PUBLIC").format(
+                sql.Identifier(DATA_WAREHOUSE_NAME)
+            )
+            cursor.execute(revoke_sql)
             
             # Grant all privileges to superadmin
-            cursor.execute(f"GRANT ALL PRIVILEGES ON DATABASE {DATA_WAREHOUSE_NAME} TO superadmin")
+            grant_sql = sql.SQL("GRANT ALL PRIVILEGES ON DATABASE {} TO superadmin").format(
+                sql.Identifier(DATA_WAREHOUSE_NAME)
+            )
+            cursor.execute(grant_sql)
             
             # Connect to DW database to set schema permissions
             dw_cursor = self.dw_conn.cursor()
@@ -195,6 +201,156 @@ class ClientDWSetup:
             self.log(f"Failed to create analytical tables: {str(e)}", "ERROR")
             return False
     
+    def create_dataset_tables(self):
+        """Create empty tables for all datasets in the raw_data schema."""
+        try:
+            cursor = self.dw_conn.cursor()
+            
+            # List of dataset tables to create (based on CSV file names)
+            dataset_tables = [
+                # Customer Personality Analysis
+                {
+                    'name': 'processed_marketing_campaign',
+                    'description': 'Customer Personality Analysis dataset',
+                    'columns': [
+                        ('customerid', 'INTEGER'),
+                        ('year_birth', 'INTEGER'),
+                        ('education', 'TEXT'),
+                        ('marital_status', 'TEXT'),
+                        ('income', 'DOUBLE PRECISION'),
+                        ('kidhome', 'INTEGER'),
+                        ('teenhome', 'INTEGER'),
+                        ('dt_customer', 'DATE'),
+                        ('recency', 'INTEGER'),
+                        ('mntwines', 'INTEGER'),
+                        ('mntfruits', 'INTEGER'),
+                        ('mntmeatproducts', 'INTEGER'),
+                        ('mntfishproducts', 'INTEGER'),
+                        ('mntsweetproducts', 'INTEGER'),
+                        ('mntgoldprods', 'INTEGER'),
+                        ('numdealspurchases', 'INTEGER'),
+                        ('numwebpurchases', 'INTEGER'),
+                        ('numcatalogpurchases', 'INTEGER'),
+                        ('numstorepurchases', 'INTEGER'),
+                        ('numwebvisitsmonth', 'INTEGER'),
+                        ('acceptedcmp3', 'INTEGER'),
+                        ('acceptedcmp4', 'INTEGER'),
+                        ('acceptedcmp5', 'INTEGER'),
+                        ('acceptedcmp1', 'INTEGER'),
+                        ('acceptedcmp2', 'INTEGER'),
+                        ('complain', 'INTEGER'),
+                        ('z_costcontact', 'INTEGER'),
+                        ('z_revenue', 'INTEGER'),
+                        ('response', 'INTEGER')
+                    ]
+                },
+                # E-commerce Customer Churn
+                {
+                    'name': 'processed_e_commerce_customer_churn',
+                    'description': 'E-commerce Customer Churn dataset',
+                    'columns': [
+                        ('customerid', 'INTEGER'),
+                        ('churn', 'INTEGER'),
+                        ('tenure', 'DOUBLE PRECISION'),
+                        ('preferredlogindevice', 'TEXT'),
+                        ('citytier', 'INTEGER'),
+                        ('warehousetohome', 'DOUBLE PRECISION'),
+                        ('preferredpaymentmode', 'TEXT'),
+                        ('gender', 'TEXT'),
+                        ('hourspendonapp', 'DOUBLE PRECISION'),
+                        ('numberofdeviceregistered', 'INTEGER'),
+                        ('preferredordercat', 'TEXT'),
+                        ('satisfactionscore', 'INTEGER'),
+                        ('maritalstatus', 'TEXT'),
+                        ('numberofaddress', 'INTEGER'),
+                        ('complain', 'INTEGER'),
+                        ('orderamounthikefromlastyear', 'DOUBLE PRECISION'),
+                        ('couponused', 'INTEGER'),
+                        ('ordercount', 'INTEGER'),
+                        ('daySinceLastOrder', 'DOUBLE PRECISION'),
+                        ('cashbackamount', 'DOUBLE PRECISION')
+                    ]
+                },
+                # Retailrocket dataset tables
+                {
+                    'name': 'category_tree_processed',
+                    'description': 'Retailrocket category tree dataset',
+                    'columns': [
+                        ('categoryid', 'BIGINT'),
+                        ('parentid', 'DOUBLE PRECISION')
+                    ]
+                },
+                {
+                    'name': 'events_processed',
+                    'description': 'Retailrocket events dataset',
+                    'columns': [
+                        ('timestamp', 'BIGINT'),
+                        ('visitorid', 'BIGINT'),
+                        ('event', 'TEXT'),
+                        ('itemid', 'BIGINT'),
+                        ('transactionid', 'DOUBLE PRECISION')
+                    ]
+                },
+                {
+                    'name': 'item_properties_processed',
+                    'description': 'Retailrocket item properties dataset',
+                    'columns': [
+                        ('timestamp', 'BIGINT'),
+                        ('itemid', 'BIGINT'),
+                        ('property', 'TEXT'),
+                        ('value', 'TEXT')
+                    ]
+                },
+                # UCI Online Retail II dataset
+                {
+                    'name': 'online_retail_processed',
+                    'description': 'UCI Online Retail II dataset',
+                    'columns': [
+                        ('invoiceno', 'TEXT'),
+                        ('stockcode', 'TEXT'),
+                        ('description', 'TEXT'),
+                        ('quantity', 'INTEGER'),
+                        ('invoicedate', 'TIMESTAMP'),
+                        ('unitprice', 'DOUBLE PRECISION'),
+                        ('customerid', 'DOUBLE PRECISION'),
+                        ('country', 'TEXT')
+                    ]
+                }
+            ]
+            
+            self.log("\nCreating dataset tables in raw_data schema...")
+            
+            for table_config in dataset_tables:
+                table_name = table_config['name']
+                description = table_config['description']
+                columns = table_config['columns']
+                
+                # Build column definitions
+                column_defs = []
+                for col_name, col_type in columns:
+                    column_defs.append(f'"{col_name}" {col_type}')
+                
+                # Create table SQL
+                create_sql = f"""
+                    CREATE TABLE IF NOT EXISTS raw_data.{table_name} (
+                        {', '.join(column_defs)}
+                    )
+                """
+                
+                try:
+                    cursor.execute(create_sql)
+                    self.log(f"Created table: raw_data.{table_name} - {description}")
+                except Exception as e:
+                    self.log(f"Failed to create table raw_data.{table_name}: {str(e)}", "ERROR")
+                    # Continue with other tables
+            
+            cursor.close()
+            return True
+            
+        except Exception as e:
+            self.log(f"Failed to create dataset tables: {str(e)}", "ERROR")
+            return False
+    
     def run_setup(self):
         """Run the full client data warehouse setup."""
         print("=" * 60)
@@ -234,6 +390,11 @@ class ClientDWSetup:
             if not self.create_analytical_tables():
                 self.log("Note: Analytical tables creation failed, but database setup continues", "INFO")
             
+            # Create dataset tables
+            self.log("\nCreating dataset tables...")
+            if not self.create_dataset_tables():
+                self.log("Note: Dataset tables creation failed, but database setup continues", "INFO")
+            
             self.log("\n" + "=" * 60)
             self.log("DATA WAREHOUSE SETUP COMPLETED SUCCESSFULLY!", "SUCCESS")
             self.log("=" * 60)
@@ -253,6 +414,14 @@ class ClientDWSetup:
             self.log(f"  • analytics.customer_segments")
             self.log(f"  • analytics.sales_summary")
             self.log(f"  • analytics.product_performance")
+            
+            self.log("\nDATASET TABLES CREATED:")
+            self.log(f"  • raw_data.processed_marketing_campaign")
+            self.log(f"  • raw_data.processed_e_commerce_customer_churn")
+            self.log(f"  • raw_data.category_tree_processed")
+            self.log(f"  • raw_data.events_processed")
+            self.log(f"  • raw_data.item_properties_processed")
+            self.log(f"  • raw_data.online_retail_processed")
             
             return True
             
