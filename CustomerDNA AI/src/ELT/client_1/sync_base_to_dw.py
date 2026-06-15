@@ -124,9 +124,9 @@ class DatabaseSynchronizer:
         try:
             cursor = self.dw_conn.cursor()
             
-            # Drop table if it exists
+            # Drop table if it exists in raw_data schema (where we copy to)
             drop_sql = sql.SQL("DROP TABLE IF EXISTS {}.{}").format(
-                sql.Identifier(CLIENT_DW_CONFIG['default_schema']),
+                sql.Identifier('raw_data'),  # Copy to raw_data schema in DW
                 sql.Identifier(table_name)
             )
             cursor.execute(drop_sql)
@@ -141,9 +141,9 @@ class DatabaseSynchronizer:
                     sql.SQL(nullable)
                 ))
             
-            # Create table
+            # Create table in raw_data schema of DW
             create_sql = sql.SQL("CREATE TABLE {}.{} ({})").format(
-                sql.Identifier(CLIENT_DW_CONFIG['default_schema']),
+                sql.Identifier('raw_data'),  # Create in raw_data schema of DW
                 sql.Identifier(table_name),
                 sql.SQL(", ").join(column_defs)
             )
@@ -154,7 +154,7 @@ class DatabaseSynchronizer:
             
             cursor.execute(create_sql)
             
-            self.log(f"Created table: {CLIENT_DW_CONFIG['default_schema']}.{table_name}")
+            self.log(f"Created table: raw_data.{table_name}")
             cursor.close()
             
             return True
@@ -205,14 +205,14 @@ class DatabaseSynchronizer:
                 self.log(f"Table {table_name} is empty in base database")
                 return True, 0
             
-            # Clear existing data in DW table
+            # Clear existing data in DW table (in raw_data schema)
             dw_cursor.execute(sql.SQL("TRUNCATE TABLE {}.{}").format(
-                sql.Identifier(CLIENT_DW_CONFIG['default_schema']),
+                sql.Identifier('raw_data'),  # Clear from raw_data schema in DW
                 sql.Identifier(table_name)
             ))
             
             # Copy data - fetch from base DB and insert into DW
-            self.log(f"Copying {base_count:,} records from {BASE_DB_CONFIG['default_schema']}.{table_name} to {CLIENT_DW_CONFIG['default_schema']}.{table_name}")
+            self.log(f"Copying {base_count:,} records from {BASE_DB_CONFIG['default_schema']}.{table_name} to raw_data.{table_name}")
             
             # Fetch data from base database
             base_cursor.execute(sql.SQL("SELECT {} FROM {}.{}").format(
@@ -224,10 +224,10 @@ class DatabaseSynchronizer:
             # Get all data
             data = base_cursor.fetchall()
             
-            # Prepare INSERT statement for data warehouse
+            # Prepare INSERT statement for data warehouse (into raw_data schema)
             placeholders = sql.SQL(", ").join([sql.Placeholder() for _ in columns])
             insert_sql = sql.SQL("INSERT INTO {}.{} ({}) VALUES ({})").format(
-                sql.Identifier(CLIENT_DW_CONFIG['default_schema']),
+                sql.Identifier('raw_data'),  # Insert into raw_data schema in DW
                 sql.Identifier(table_name),
                 column_list,
                 placeholders
@@ -246,9 +246,9 @@ class DatabaseSynchronizer:
                 if self.verbose and i % 5000 == 0:
                     self.log(f"  Inserted {total_inserted:,} of {base_count:,} records...")
             
-            # Verify count
+            # Verify count (check raw_data schema in DW)
             dw_cursor.execute(sql.SQL("SELECT COUNT(*) FROM {}.{}").format(
-                sql.Identifier(CLIENT_DW_CONFIG['default_schema']),
+                sql.Identifier('raw_data'),  # Check raw_data schema in DW
                 sql.Identifier(table_name)
             ))
             dw_count = dw_cursor.fetchone()[0]
