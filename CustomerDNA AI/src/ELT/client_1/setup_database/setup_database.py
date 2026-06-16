@@ -246,7 +246,7 @@ class BaseDatabaseSetup:
                     'name': 'online_retail_processed',
                     'description': 'UCI Online Retail II dataset',
                     'columns': [
-                        ('invoiceno', 'TEXT'),
+                        ('invoice', 'TEXT'),
                         ('stockcode', 'TEXT'),
                         ('description', 'TEXT'),
                         ('quantity', 'INTEGER'),
