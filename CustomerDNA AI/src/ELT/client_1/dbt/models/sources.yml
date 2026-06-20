@@ -1,0 +1,35 @@
+# CustomerDNA AI - Client 1 Data Sources
+# Defines the raw_data schema tables as sources for dbt
+
+version: 2
+
+sources:
+  - name: raw_data
+    description: "Original client data from ingested CSV files"
+    schema: "raw_data"
+    database: "client1_DW"
+    
+    tables:
+      - name: marketing_campaign
+        description: "Customer Personality Analysis dataset - marketing campaign data"
+        identifier: "marketing_campaign"
+        
+      - name: e_commerce_customer_churn
+        description: "E-commerce Customer Churn dataset - customer churn prediction data"
+        identifier: "e_commerce_customer_churn"
+        
+      - name: category_tree
+        description: "RetailRocket dataset - product category hierarchy"
+        identifier: "category_tree"
+        
+      - name: events
+        description: "RetailRocket dataset - user interaction events"
+        identifier: "events"
+        
+      - name: item_properties
+        description: "RetailRocket dataset - item properties and attributes"
+        identifier: "item_properties"
+        
+      - name: online_retail
+        description: "UCI Online Retail II dataset - online retail transactions"
+        identifier: "online_retail"

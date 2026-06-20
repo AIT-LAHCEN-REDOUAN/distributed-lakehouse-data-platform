@@ -1,0 +1,44 @@
+# CustomerDNA AI - Client 1 dbt Profiles Configuration
+# This file should be placed in ~/.dbt/profiles.yml
+
+customerdna_client1:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "localhost"
+      port: 5440
+      user: "postgres"
+      pass: "{{ env_var('CUSTOMERDNA_POSTGRES_PASSWORD', '') }}"
+      dbname: "client1_DW"
+      schema: "staging"
+      threads: 4
+      keepalives_idle: 0
+      connect_timeout: 10
+      retries: 1
+      
+    prod:
+      type: postgres
+      host: "{{ env_var('PROD_POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('PROD_POSTGRES_PORT', 5440) }}"
+      user: "{{ env_var('PROD_POSTGRES_USER', 'postgres') }}"
+      pass: "{{ env_var('PROD_POSTGRES_PASSWORD', '') }}"
+      dbname: "client1_DW"
+      schema: "analytics"
+      threads: 8
+      keepalives_idle: 0
+      connect_timeout: 10
+      retries: 3
+      
+    test:
+      type: postgres
+      host: "localhost"
+      port: 5440
+      user: "postgres"
+      pass: "{{ env_var('CUSTOMERDNA_POSTGRES_PASSWORD', '') }}"
+      dbname: "client1_DW"
+      schema: "test"
+      threads: 2
+      keepalives_idle: 0
+      connect_timeout: 10
+      retries: 1

@@ -188,3 +188,4 @@ htmlcov/
 .coverage.*
 .pytest_cache/
 .mypy_cache/
+dbt_internal_packages/

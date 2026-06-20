@@ -1,0 +1,207 @@
+==================== 2026-06-20T15:20:16.672947Z | 16d4844a-97a1-483a-b4c8-a4c64b4c4d3d ====================
+15:20:16.672986 [info ]: Starting dbt LSP server
+15:20:16.672999 [info ]: Connecting to LSP client on port 8000
+15:20:16.674500 [info ]: Successfully connected to LSP client
+15:20:16.674513 [info ]: Creating LSP service...
+15:20:16.732212 [info ]: Creating LSP server...
+15:20:16.732236 [info ]: Starting LSP server...
+15:20:16.750259 [info ]: Loading ~/.dbt/profiles.yml
+15:20:16.751428 [error]: dbt1060: Ignored unexpected key `"docs"`. YAML path: `docs`.
+  --> dbt_project.yml:98:1
+15:20:16.751549 [error]: dbt1060: Ignored unexpected key `"log-format"`. YAML path: `log-format`.
+  --> dbt_project.yml:103:1
+15:20:16.751670 [error]: dbt1060: Ignored unexpected key `"use-colors"`. YAML path: `use-colors`.
+  --> dbt_project.yml:104:1
+15:20:16.751768 [error]: dbt1060: Ignored unexpected key `"debug"`. YAML path: `debug`.
+  --> dbt_project.yml:105:1
+15:20:16.751857 [error]: dbt1060: Ignored unexpected key `"send-anonymous-usage-stats"`. YAML path: `send-anonymous-usage-stats`.
+  --> dbt_project.yml:106:1
+15:22:59.175189 [info ]: Started loading project
+15:22:59.176041 [info ]: Loading ~/.dbt/profiles.yml
+15:22:59.182724 [debug]:    Started loading packages
+15:22:59.184224 [error]: dbt1060: Ignored unexpected key `"docs"`. YAML path: `docs`.
+  --> dbt_project.yml:98:1
+15:22:59.184421 [error]: dbt1060: Ignored unexpected key `"log-format"`. YAML path: `log-format`.
+  --> dbt_project.yml:103:1
+15:22:59.184637 [error]: dbt1060: Ignored unexpected key `"use-colors"`. YAML path: `use-colors`.
+  --> dbt_project.yml:104:1
+15:22:59.184804 [error]: dbt1060: Ignored unexpected key `"debug"`. YAML path: `debug`.
+  --> dbt_project.yml:105:1
+15:22:59.184966 [error]: dbt1060: Ignored unexpected key `"send-anonymous-usage-stats"`. YAML path: `send-anonymous-usage-stats`.
+  --> dbt_project.yml:106:1
+15:22:59.186414 [info ]: Started parsing
+15:22:59.209971 [error]: dbt1013: Invalid seed definition `customerdna_client1.+materialized`: invalid type: string "table", expected struct ProjectSeedConfig at line 49 column 20
+  --> dbt_project.yml:49:20
+15:22:59.210156 [debug]:     Loaded [  0.03s] packages
+15:22:59.210192 [info ]: Finished loading project [  0.04s]
+15:22:59.216375 [info ]: Finished parsing [  0.03s]
+15:22:59.216539 [info ]: Cached model count updated: 0 models (estimate)
+15:22:59.216557 [info ]: Cached model count updated: 0 models (accurate)
+15:22:59.216574 [info ]: Started scheduling
+15:22:59.216611 [info ]: Finished scheduling [  0.00s]
+15:22:59.216625 [debug]: Compilation - 0 nodes selected: {}
+15:22:59.216670 [warn ]: dbt1600: The selection criterion '' does not match any enabled nodes
+15:22:59.216681 [warn ]: dbt1601: Nothing to do. Try checking your model configs and model specification args
+15:22:59.216690 [info ]: Started scheduling
+15:22:59.216703 [info ]: Finished scheduling [  0.00s]
+15:22:59.373533 [info ]: Started building task graph
+15:22:59.373576 [info ]: Finished building task graph [  0.00s]
+15:22:59.379260 [info ]: Started scheduling
+15:22:59.379324 [info ]: Finished scheduling [  0.00s]
+15:22:59.379812 [info ]: Cached model count updated: 0 models (accurate)
+15:22:59.422458 [info ]: Waiting for lease on 'target' directory
+15:22:59.752151 [info ]: Loading ~/.dbt/profiles.yml
+15:22:59.764987 [info ]: Started loading project
+15:22:59.765861 [info ]: Loading ~/.dbt/profiles.yml
+15:22:59.769469 [info ]: Started loading project
+15:22:59.770695 [info ]: Loading ~/.dbt/profiles.yml
+15:22:59.770736 [info ]: Finished loading project [  0.01s]
+15:22:59.774794 [debug]:    Started loading packages
+15:22:59.776747 [debug]:     Loaded [  0.00s] packages
+15:22:59.777652 [info ]: Started parsing
+15:22:59.801852 [error]: dbt1013: Invalid seed definition `customerdna_client1.+materialized`: invalid type: string "table", expected struct ProjectSeedConfig at line 50 column 20
+  --> dbt_project.yml:50:20
+15:22:59.802016 [info ]: Finished loading project [  0.03s]
+15:22:59.807400 [info ]: Finished parsing [  0.03s]
+15:22:59.807518 [info ]: Cached model count updated: 0 models (estimate)
+15:22:59.807532 [info ]: Cached model count updated: 0 models (accurate)
+15:22:59.807549 [info ]: Started scheduling
+15:22:59.807573 [info ]: Finished scheduling [  0.00s]
+15:22:59.807581 [debug]: Compilation - 0 nodes selected: {}
+15:22:59.807594 [warn ]: dbt1600: The selection criterion '' does not match any enabled nodes
+15:22:59.807601 [warn ]: dbt1601: Nothing to do. Try checking your model configs and model specification args
+15:22:59.807608 [info ]: Started scheduling
+15:22:59.807615 [info ]: Finished scheduling [  0.00s]
+15:22:59.908971 [info ]: Started building task graph
+15:22:59.909004 [info ]: Finished building task graph [  0.00s]
+15:22:59.914024 [info ]: Waiting for lease on 'target' directory
+15:23:00.158107 [info ]: Loading ~/.dbt/profiles.yml
+15:23:00.365108 [info ]: Started loading project
+15:23:00.365928 [info ]: Loading ~/.dbt/profiles.yml
+15:23:00.369566 [debug]:    Started loading packages
+15:23:00.371160 [debug]:     Loaded [  0.00s] packages
+15:23:00.371917 [info ]: Started parsing
+15:23:00.392269 [error]: dbt1013: Invalid seed definition `customerdna_client1.+materialized`: invalid type: string "table", expected struct ProjectSeedConfig at line 50 column 20
+  --> dbt_project.yml:50:20
+15:23:00.392425 [info ]: Finished loading project [  0.03s]
+15:23:00.397507 [info ]: Finished parsing [  0.03s]
+15:23:00.397592 [info ]: Cached model count updated: 0 models (estimate)
+15:23:00.397602 [info ]: Cached model count updated: 0 models (accurate)
+15:23:00.397612 [info ]: Started scheduling
+15:23:00.397632 [info ]: Finished scheduling [  0.00s]
+15:23:00.397640 [debug]: Compilation - 0 nodes selected: {}
+15:23:00.397649 [warn ]: dbt1600: The selection criterion '' does not match any enabled nodes
+15:23:00.397656 [warn ]: dbt1601: Nothing to do. Try checking your model configs and model specification args
+15:23:00.397661 [info ]: Started scheduling
+15:23:00.397665 [info ]: Finished scheduling [  0.00s]
+15:23:00.488733 [info ]: Started building task graph
+15:23:00.488766 [info ]: Finished building task graph [  0.00s]
+15:23:00.492674 [info ]: Started scheduling
+15:23:00.492708 [info ]: Finished scheduling [  0.00s]
+15:23:00.493051 [info ]: Cached model count updated: 0 models (accurate)
+15:23:02.037487 [info ]: Started loading project
+15:23:02.038185 [info ]: Loading ~/.dbt/profiles.yml
+15:23:02.056947 [info ]: Cached model count updated: 0 models (estimate)
+15:23:02.056971 [info ]: Cached model count updated: 0 models (accurate)
+15:23:02.056984 [info ]: Started scheduling
+15:23:02.057009 [info ]: Finished scheduling [  0.00s]
+15:23:02.057023 [debug]: Compilation - 0 nodes selected: {}
+15:23:02.057031 [warn ]: dbt1601: Nothing to do. Try checking your model configs and model specification args
+15:23:02.182510 [info ]: Started building task graph
+15:23:02.182563 [info ]: Finished building task graph [  0.00s]
+15:23:02.188603 [info ]: Started scheduling
+15:23:02.188672 [info ]: Finished scheduling [  0.00s]
+15:23:02.189464 [info ]: Finished loading project [  0.15s]
+15:23:02.190523 [info ]: Cached model count updated: 0 models (accurate)
+15:23:50.984875 [info ]: Loading ~/.dbt/profiles.yml
+15:23:50.995432 [info ]: Started loading project
+15:23:50.995998 [info ]: Loading ~/.dbt/profiles.yml
+15:23:50.998438 [info ]: Started loading project
+15:23:50.998945 [info ]: Loading ~/.dbt/profiles.yml
+15:23:50.998993 [info ]: Finished loading project [  0.00s]
+15:23:51.002439 [debug]:    Started loading packages
+15:23:51.003767 [debug]:     Loaded [  0.00s] packages
+15:23:51.004477 [info ]: Started parsing
+15:23:51.025084 [error]: dbt1013: Invalid seed definition `customerdna_client1.+materialized`: invalid type: string "table", expected struct ProjectSeedConfig at line 35 column 20
+  --> dbt_project.yml:35:20
+15:23:51.025237 [info ]: Finished loading project [  0.03s]
+15:23:51.028506 [info ]: Finished parsing [  0.02s]
+15:23:51.028585 [info ]: Cached model count updated: 0 models (estimate)
+15:23:51.028595 [info ]: Cached model count updated: 0 models (accurate)
+15:23:51.028605 [info ]: Started scheduling
+15:23:51.028629 [info ]: Finished scheduling [  0.00s]
+15:23:51.028635 [debug]: Compilation - 0 nodes selected: {}
+15:23:51.028646 [warn ]: dbt1600: The selection criterion '' does not match any enabled nodes
+15:23:51.028651 [warn ]: dbt1601: Nothing to do. Try checking your model configs and model specification args
+15:23:51.028660 [info ]: Started scheduling
+15:23:51.028665 [info ]: Finished scheduling [  0.00s]
+15:23:51.142464 [info ]: Started building task graph
+15:23:51.142499 [info ]: Finished building task graph [  0.00s]
+15:23:51.146062 [info ]: Started scheduling
+15:23:51.146097 [info ]: Finished scheduling [  0.00s]
+15:23:51.148570 [info ]: Cached model count updated: 0 models (accurate)
+15:23:51.336791 [info ]: Waiting for lease on 'target' directory
+15:23:51.554960 [info ]: Loading ~/.dbt/profiles.yml
+15:23:51.565605 [info ]: Started loading project
+15:23:51.566251 [info ]: Loading ~/.dbt/profiles.yml
+15:23:51.586572 [info ]: Finished loading project [  0.02s]
+15:23:51.586814 [info ]: Cached model count updated: 0 models (accurate)
+15:23:53.119768 [info ]: Started loading project
+15:23:53.120367 [info ]: Loading ~/.dbt/profiles.yml
+15:23:53.137720 [info ]: Cached model count updated: 0 models (estimate)
+15:23:53.137746 [info ]: Cached model count updated: 0 models (accurate)
+15:23:53.137767 [info ]: Started scheduling
+15:23:53.137794 [info ]: Finished scheduling [  0.00s]
+15:23:53.137809 [debug]: Compilation - 0 nodes selected: {}
+15:23:53.137819 [warn ]: dbt1601: Nothing to do. Try checking your model configs and model specification args
+15:23:53.260156 [info ]: Started building task graph
+15:23:53.260196 [info ]: Finished building task graph [  0.00s]
+15:23:53.265027 [info ]: Started scheduling
+15:23:53.265090 [info ]: Finished scheduling [  0.00s]
+15:23:53.265383 [info ]: Finished loading project [  0.15s]
+15:23:53.266145 [info ]: Cached model count updated: 0 models (accurate)
+15:24:22.287269 [info ]: Loading ~/.dbt/profiles.yml
+15:24:22.301581 [info ]: Started loading project
+15:24:22.302299 [info ]: Loading ~/.dbt/profiles.yml
+15:24:22.305835 [info ]: Started loading project
+15:24:22.306498 [info ]: Loading ~/.dbt/profiles.yml
+15:24:22.306542 [info ]: Finished loading project [  0.00s]
+15:24:22.310682 [debug]:    Started loading packages
+15:24:22.311976 [debug]:     Loaded [  0.00s] packages
+15:24:22.312716 [info ]: Started parsing
+15:24:22.333357 [info ]: Finished loading project [  0.03s]
+15:24:22.336271 [info ]: Finished parsing [  0.02s]
+15:24:22.336374 [info ]: Cached model count updated: 0 models (estimate)
+15:24:22.336386 [info ]: Cached model count updated: 0 models (accurate)
+15:24:22.336395 [info ]: Started scheduling
+15:24:22.336416 [info ]: Finished scheduling [  0.00s]
+15:24:22.336424 [debug]: Compilation - 0 nodes selected: {}
+15:24:22.336433 [warn ]: dbt1600: The selection criterion '' does not match any enabled nodes
+15:24:22.336440 [warn ]: dbt1601: Nothing to do. Try checking your model configs and model specification args
+15:24:22.336445 [info ]: Started scheduling
+15:24:22.336450 [info ]: Finished scheduling [  0.00s]
+15:24:22.444261 [info ]: Started building task graph
+15:24:22.444299 [info ]: Finished building task graph [  0.00s]
+15:24:22.448023 [info ]: Started scheduling
+15:24:22.448079 [info ]: Finished scheduling [  0.00s]
+15:24:22.451288 [info ]: Cached model count updated: 0 models (accurate)
+15:24:22.728307 [info ]: Waiting for lease on 'target' directory
+15:24:22.840004 [info ]: Loading ~/.dbt/profiles.yml
+15:24:22.848560 [info ]: Started loading project
+15:24:22.849109 [info ]: Loading ~/.dbt/profiles.yml
+15:24:22.866643 [info ]: Finished loading project [  0.02s]
+15:24:22.866826 [info ]: Cached model count updated: 0 models (accurate)
+15:24:24.411939 [info ]: Started loading project
+15:24:24.412408 [info ]: Loading ~/.dbt/profiles.yml
+15:24:24.428250 [info ]: Cached model count updated: 0 models (estimate)
+15:24:24.428277 [info ]: Cached model count updated: 0 models (accurate)
+15:24:24.428291 [info ]: Started scheduling
+15:24:24.428316 [info ]: Finished scheduling [  0.00s]
+15:24:24.428331 [debug]: Compilation - 0 nodes selected: {}
+15:24:24.428340 [warn ]: dbt1601: Nothing to do. Try checking your model configs and model specification args
+15:24:24.520025 [info ]: Started building task graph
+15:24:24.520059 [info ]: Finished building task graph [  0.00s]
+15:24:24.523327 [info ]: Started scheduling
+15:24:24.523367 [info ]: Finished scheduling [  0.00s]
+15:24:24.523632 [info ]: Finished loading project [  0.11s]
+15:24:24.524262 [info ]: Cached model count updated: 0 models (accurate)
