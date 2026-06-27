@@ -1,0 +1,212 @@
+================================================================================
+RETAILROCKET RECOMMENDER SYSTEM - COMPREHENSIVE EDA SUMMARY
+================================================================================
+
+Analysis Timestamp: 2026-06-23 13:20:38
+Output Directory: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\Retailrocket_recommender_system_dataset\scripts\..\output\max_eda_20260623_131657
+
+1. TABLE STRUCTURE ANALYSIS
+----------------------------------------
+
+EVENTS TABLE:
+  Total Rows: 2,756,101
+  Total Columns: 5
+  Columns:
+    - timestamp: text (Nullable: YES)
+    - visitorid: text (Nullable: YES)
+    - event: text (Nullable: YES)
+    - itemid: text (Nullable: YES)
+    - transactionid: text (Nullable: YES)
+
+ITEM_PROPERTIES TABLE:
+  Total Rows: 20,275,902
+  Total Columns: 4
+  Columns:
+    - timestamp: text (Nullable: YES)
+    - itemid: text (Nullable: YES)
+    - property: text (Nullable: YES)
+    - value: text (Nullable: YES)
+
+CATEGORY_TREE TABLE:
+  Total Rows: 1,669
+  Total Columns: 2
+  Columns:
+    - categoryid: text (Nullable: YES)
+    - parentid: text (Nullable: YES)
+
+
+2. EVENTS ANALYSIS
+----------------------------------------
+
+Event Type Distribution:
+  - view: 2,664,312 (96.7%)
+  - addtocart: 69,332 (2.5%)
+  - transaction: 22,457 (0.8%)
+
+Time Range: 2015-05-03 04:00:04 to 2015-09-18 03:59:47
+Date Range: 137 days
+Unique Visitors: 1,407,580
+Unique Items: 235,061
+
+Conversion Funnel:
+  Total Visitors: 1,407,580
+  Viewers: 1,404,179 (99.8% of visitors)
+  Cart Adders: 37,722 (2.7% of viewers)
+  Purchasers: 11,719 (31.1% of cart adders)
+  Overall Conversion: 0.83%
+
+
+3. ITEM PROPERTIES ANALYSIS
+----------------------------------------
+
+Top Property Types:
+  1. 888: 3,000,398 entries (14.8%)
+  2. 790: 1,790,516 entries (8.8%)
+  3. available: 1,503,639 entries (7.4%)
+  4. categoryid: 788,214 entries (3.9%)
+  5. 6: 631,471 entries (3.1%)
+  6. 283: 597,419 entries (3.0%)
+  7. 776: 574,220 entries (2.8%)
+  8. 678: 481,966 entries (2.4%)
+  9. 364: 476,486 entries (2.4%)
+  10. 202: 448,938 entries (2.2%)
+
+Top Categories by Item Count:
+  1. Category 342: 17,231 items (3.9%)
+  2. Category 769: 10,982 items (2.5%)
+  3. Category 173: 10,561 items (2.4%)
+  4. Category 1301: 10,036 items (2.3%)
+  5. Category 1007: 9,739 items (2.2%)
+  6. Category 1142: 6,823 items (1.5%)
+  7. Category 1680: 6,019 items (1.4%)
+  8. Category 1250: 5,193 items (1.2%)
+  9. Category 1404: 4,439 items (1.0%)
+  10. Category 1070: 4,209 items (0.9%)
+
+
+4. CATEGORY TREE ANALYSIS
+----------------------------------------
+
+Category Hierarchy Depth:
+  Maximum Depth: 1
+  Average Depth: 1.0
+  Total Categories: 25
+
+Top Root Categories (by number of children):
+  1. Category 250.0: 31 children
+  2. Category 1009.0: 22 children
+  3. Category 362.0: 22 children
+  4. Category 351.0: 19 children
+  5. Category 1259.0: 18 children
+  6. Category 1687.0: 17 children
+  7. Category 312.0: 15 children
+  8. Category 945.0: 15 children
+  9. Category 92.0: 13 children
+  10. Category 893.0: 13 children
+
+
+5. INTEGRATED INSIGHTS
+----------------------------------------
+
+Most Popular Categories (by user engagement):
+  1. Category 1051:
+     - Total Events: 75,216
+     - Views: 73,016
+     - Purchases: 485
+     - Conversion Rate: 0.66%
+     - Unique Users: 36,191
+  2. Category 1483:
+     - Total Events: 66,799
+     - Views: 64,761
+     - Purchases: 475
+     - Conversion Rate: 0.73%
+     - Unique Users: 41,898
+  3. Category 491:
+     - Total Events: 61,114
+     - Views: 59,300
+     - Purchases: 263
+     - Conversion Rate: 0.44%
+     - Unique Users: 38,029
+  4. Category 959:
+     - Total Events: 52,278
+     - Views: 50,112
+     - Purchases: 532
+     - Conversion Rate: 1.06%
+     - Unique Users: 27,166
+  5. Category 342:
+     - Total Events: 46,852
+     - Views: 45,288
+     - Purchases: 281
+     - Conversion Rate: 0.62%
+     - Unique Users: 26,264
+  6. Category 1613:
+     - Total Events: 40,207
+     - Views: 38,990
+     - Purchases: 169
+     - Conversion Rate: 0.43%
+     - Unique Users: 24,981
+  7. Category 683:
+     - Total Events: 38,887
+     - Views: 37,765
+     - Purchases: 211
+     - Conversion Rate: 0.56%
+     - Unique Users: 15,962
+  8. Category 1279:
+     - Total Events: 34,381
+     - Views: 33,532
+     - Purchases: 123
+     - Conversion Rate: 0.37%
+     - Unique Users: 15,219
+  9. Category 5:
+     - Total Events: 29,716
+     - Views: 28,953
+     - Purchases: 186
+     - Conversion Rate: 0.64%
+     - Unique Users: 15,103
+  10. Category 646:
+     - Total Events: 28,240
+     - Views: 27,669
+     - Purchases: 87
+     - Conversion Rate: 0.31%
+     - Unique Users: 13,537
+
+
+6. DATA QUALITY ASSESSMENT
+----------------------------------------
+
+events:
+  Null/Empty Values by Column:
+    - transactionid: 99.19% (2,733,644 of 2,756,101 rows)
+
+item_properties:
+  Null/Empty Values by Column:
+
+category_tree:
+  Null/Empty Values by Column:
+    - parentid: 1.50% (25 of 1,669 rows)
+
+
+7. RECOMMENDATIONS FOR RECOMMENDER SYSTEM
+----------------------------------------
+
+Based on the analysis, here are key recommendations:
+1. Focus on popular categories with high engagement for recommendations
+2. Optimize conversion funnel by improving cart-to-purchase rates
+3. Use category hierarchy for personalized recommendations
+4. Monitor data quality for key columns like visitorid and itemid
+5. Consider time-based patterns for real-time recommendations
+
+
+8. GENERATED FILES
+----------------------------------------
+
+Summary File: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\Retailrocket_recommender_system_dataset\scripts\..\output\max_eda_20260623_131657\summary.txt
+
+Plot Directories:
+  - events_analysis: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\Retailrocket_recommender_system_dataset\scripts\..\output\max_eda_20260623_131657\plots\01_events_analysis
+  - item_analysis: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\Retailrocket_recommender_system_dataset\scripts\..\output\max_eda_20260623_131657\plots\02_item_analysis
+  - category_analysis: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\Retailrocket_recommender_system_dataset\scripts\..\output\max_eda_20260623_131657\plots\03_category_analysis
+  - user_behavior: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\Retailrocket_recommender_system_dataset\scripts\..\output\max_eda_20260623_131657\plots\04_user_behavior
+  - recommendation_insights: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\Retailrocket_recommender_system_dataset\scripts\..\output\max_eda_20260623_131657\plots\05_recommendation_insights
+
+Data Directory: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\Retailrocket_recommender_system_dataset\scripts\..\output\max_eda_20260623_131657\data

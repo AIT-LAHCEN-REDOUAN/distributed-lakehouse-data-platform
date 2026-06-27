@@ -1,0 +1,16 @@
+version: 2
+
+exposures:
+  - name: client_1_power_bi_dashboard
+    label: "Client 1 Power BI Dashboard"
+    type: dashboard
+    maturity: medium
+    description: "{{ doc('project_overview') }}"
+    depends_on:
+      - ref('analytics_customer_segments')
+      - ref('analytics_product_performance')
+      - ref('analytics_sales_analytics')
+      - ref('analytics_business_intelligence')
+    owner:
+      name: "CustomerDNA AI Team"
+      email: "client1@customerdna.local"

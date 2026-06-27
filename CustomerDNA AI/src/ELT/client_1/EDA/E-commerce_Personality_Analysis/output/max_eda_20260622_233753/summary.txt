@@ -1,0 +1,134 @@
+================================================================================
+E-COMMERCE CUSTOMER CHURN - MAXIMUM EDA SUMMARY
+================================================================================
+
+Analysis Timestamp: 20260622_233753
+Table: raw_data.e_commerce_customer_churn
+Output Directory: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\E-commerce_Personality_Analysis\scripts\..\output\max_eda_20260622_233753
+
+================================================================================
+
+1. TABLE STRUCTURE
+----------------------------------------
+Total Rows: 5,630
+Total Columns: 20
+
+Column Details:
+  - customerid: text (Nullable: YES)
+  - churn: text (Nullable: YES)
+  - tenure: text (Nullable: YES)
+  - preferredlogindevice: text (Nullable: YES)
+  - citytier: text (Nullable: YES)
+  - warehousetohome: text (Nullable: YES)
+  - preferredpaymentmode: text (Nullable: YES)
+  - gender: text (Nullable: YES)
+  - hourspendonapp: text (Nullable: YES)
+  - numberofdeviceregistered: text (Nullable: YES)
+  - preferedordercat: text (Nullable: YES)
+  - satisfactionscore: text (Nullable: YES)
+  - maritalstatus: text (Nullable: YES)
+  - numberofaddress: text (Nullable: YES)
+  - complain: text (Nullable: YES)
+  - orderamounthikefromlastyear: text (Nullable: YES)
+  - couponused: text (Nullable: YES)
+  - ordercount: text (Nullable: YES)
+  - daysincelastorder: text (Nullable: YES)
+  - cashbackamount: text (Nullable: YES)
+
+2. DEMOGRAPHIC ANALYSIS
+----------------------------------------
+Gender Distribution:
+  - Male: 3,384 customers (60.11%)
+  - Female: 2,246 customers (39.89%)
+
+City Tier Distribution:
+  - Tier 1: 3,666 customers (65.12%)
+  - Tier 2: 242 customers (4.30%)
+  - Tier 3: 1,722 customers (30.59%)
+
+3. BEHAVIORAL ANALYSIS
+----------------------------------------
+Preferred Payment Modes:
+  - Debit Card: 2,314 customers (41.10%)
+  - Credit Card: 1,501 customers (26.66%)
+  - E wallet: 614 customers (10.91%)
+  - UPI: 414 customers (7.35%)
+  - COD: 365 customers (6.48%)
+  - CC: 273 customers (4.85%)
+  - Cash on Delivery: 149 customers (2.65%)
+
+4. TRANSACTIONAL ANALYSIS
+----------------------------------------
+Order Count Analysis:
+  - Average Orders: 3.0080044676098287
+  - Minimum Orders: 1.0
+  - Maximum Orders: 16.0
+
+5. CHURN ANALYSIS
+----------------------------------------
+Churn Distribution:
+  - Churn = 0: 4,682 customers (83.16%)
+  - Churn = 1: 948 customers (16.84%)
+
+6. CORRELATION ANALYSIS
+----------------------------------------
+Satisfaction Score vs Churn Correlation: 0.105
+
+7. SEGMENTATION ANALYSIS
+----------------------------------------
+
+8. DATA QUALITY ANALYSIS
+----------------------------------------
+Data Consistency Checks:
+  - City Tier Range Check: PASS
+  - Satisfaction Score Range Check: PASS
+  - Churn Value Check: PASS
+
+9. BUSINESS INSIGHTS AND RECOMMENDATIONS
+----------------------------------------
+Key Demographic Insights:
+  - Most common gender: Male (60.11%)
+
+Behavioral Insights:
+  - Most preferred login device: Mobile Phone (49.11%)
+  - Most preferred payment mode: Debit Card (41.10%)
+
+Transactional Insights:
+  - Average order count per customer: 3.0
+  - Average cashback amount: $177.22
+
+Churn Insights:
+  - Overall churn rate: 16.84%
+
+Strategic Recommendations:
+  - 1. Implement targeted retention campaigns for high churn risk segments
+  - 2. Optimize mobile app experience for preferred login device users
+  - 3. Create personalized offers based on preferred order categories
+  - 4. Develop loyalty programs for customers with high order frequency
+  - 5. Use behavioral data to predict churn and intervene proactively
+
+================================================================================
+10. GENERATED FILES
+----------------------------------------
+Summary File: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\E-commerce_Personality_Analysis\scripts\..\output\max_eda_20260622_233753\summary.txt
+Plots Directory: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\E-commerce_Personality_Analysis\scripts\..\output\max_eda_20260622_233753\plots
+Data Directory: d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\EDA\E-commerce_Personality_Analysis\scripts\..\output\max_eda_20260622_233753\data
+
+Generated Plots:
+  Demographic:
+    - gender_distribution.png
+    - tenure_distribution.png
+  Behavioral:
+    - payment_mode_distribution.png
+  Transactional:
+    - order_count_distribution.png
+    - churn_distribution.png
+  Correlations:
+    - satisfaction_vs_churn_correlation.png
+  Segmentation:
+    - rfm_segments_distribution.png
+    - churn_risk_segments.png
+
+================================================================================
+END OF MAXIMUM EDA SUMMARY
+================================================================================
