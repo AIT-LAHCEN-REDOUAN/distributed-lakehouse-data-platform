@@ -1,0 +1,191 @@
+# Welcome to Great Expectations! Always know what to expect from your data.
+#
+# Here you can define datasources, batch kwargs generators, integrations and
+# more. This file is intended to be committed to your repo. For help with
+# configuration please:
+#   - Read our docs: https://docs.greatexpectations.io/docs/guides/connecting_to_your_data/connect_to_data_overview/#2-configure-your-datasource
+#   - Join our slack channel: http://greatexpectations.io/slack
+
+# config_version refers to the syntactic version of this config file, and is used in maintaining backwards compatibility
+# It is auto-generated and usually does not need to be changed.
+config_version: 4.0
+
+# This config file supports variable substitution which enables: 1) keeping
+# secrets out of source control & 2) environment-based configuration changes
+# such as staging vs prod.
+#
+# When GX encounters substitution syntax (like `my_key: ${my_value}` or
+# `my_key: $my_value`) in the great_expectations.yml file, it will attempt
+# to replace the value of `my_key` with the value from an environment
+# variable `my_value` or a corresponding key read from this config file,
+# which is defined through the `config_variables_file_path`.
+# Environment variables take precedence over variables defined here.
+#
+# Substitution values defined here can be a simple (non-nested) value,
+# nested value such as a dictionary, or an environment variable (i.e. ${ENV_VAR})
+#
+#
+# https://docs.greatexpectations.io/docs/guides/setup/configuring_data_contexts/how_to_configure_credentials
+
+
+config_variables_file_path: uncommitted/config_variables.yml
+
+# The plugins_directory will be added to your python path for custom modules
+# used to override and extend Great Expectations.
+plugins_directory: plugins/
+
+stores:
+# Stores are configurable places to store things like Expectations, Validations
+# Data Docs, and more. These are for advanced users only - most users can simply
+# leave this section alone.
+  expectations_store:
+    class_name: ExpectationsStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: expectations/
+
+  validation_results_store:
+    class_name: ValidationResultsStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: uncommitted/validations/
+
+  checkpoint_store:
+    class_name: CheckpointStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      suppress_store_backend_id: true
+      base_directory: checkpoints/
+
+  validation_definition_store:
+    class_name: ValidationDefinitionStore
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: validation_definitions/
+
+expectations_store_name: expectations_store
+validation_results_store_name: validation_results_store
+checkpoint_store_name: checkpoint_store
+
+data_docs_sites:
+  # Data Docs make it simple to visualize data quality in your project. These
+  # include Expectations, Validations & Profiles. The are built for all
+  # Datasources from JSON artifacts in the local repo including validations &
+  # profiles from the uncommitted directory. Read more at https://docs.greatexpectations.io/docs/terms/data_docs
+  local_site:
+    class_name: SiteBuilder
+    show_how_to_buttons: true
+    store_backend:
+      class_name: TupleFilesystemStoreBackend
+      base_directory: uncommitted/data_docs/local_site/
+    site_index_builder:
+      class_name: DefaultSiteIndexBuilder
+fluent_datasources:
+  client1_dw_postgres:
+    type: postgres
+    id: 911a8081-5d6b-4b53-8aae-a928ed8259fa
+    assets:
+      raw_marketing_campaign:
+        type: table
+        id: c8d3329d-28e6-479a-b753-b63cac043113
+        batch_metadata: {}
+        batch_definitions:
+          marketing_campaign_whole_table:
+            id: f31d3cc8-db4b-477e-b62a-4b269f3fd908
+            partitioner:
+        table_name: marketing_campaign
+        schema_name: raw_data
+      raw_ecommerce_customer_churn:
+        type: table
+        id: c498d09a-27b3-460b-a648-0f2567e8e591
+        batch_metadata: {}
+        batch_definitions:
+          ecommerce_customer_churn_whole_table:
+            id: 6d032fa0-d257-4602-aaa0-a41108a8c98f
+            partitioner:
+        table_name: e_commerce_customer_churn
+        schema_name: raw_data
+      raw_online_retail:
+        type: table
+        id: 041c2012-ab0c-40a6-8058-4621d6ab8ac8
+        batch_metadata: {}
+        batch_definitions:
+          online_retail_whole_table:
+            id: 30129521-f33e-492a-a5bc-18681e4770fa
+            partitioner:
+        table_name: online_retail
+        schema_name: raw_data
+      raw_retailrocket_events:
+        type: table
+        id: 5d117a34-4b10-41b1-bb6a-eb335d3ddeb2
+        batch_metadata: {}
+        batch_definitions:
+          retailrocket_events_whole_table:
+            id: 11025d3d-0c1c-4495-8633-e1b787368ffd
+            partitioner:
+        table_name: events
+        schema_name: raw_data
+      raw_retailrocket_item_properties:
+        type: table
+        id: d4a72463-ff5c-4737-8b15-797cdaa60752
+        batch_metadata: {}
+        batch_definitions:
+          retailrocket_item_properties_whole_table:
+            id: f284bf48-1c06-4fcc-b645-dde1ce5e03f7
+            partitioner:
+        table_name: item_properties
+        schema_name: raw_data
+      raw_retailrocket_category_tree:
+        type: table
+        id: 270abbef-0640-43f2-9687-71ddf9c38a73
+        batch_metadata: {}
+        batch_definitions:
+          retailrocket_category_tree_whole_table:
+            id: 05063c80-7a9d-4eb1-aa46-89262dd314c9
+            partitioner:
+        table_name: category_tree
+        schema_name: raw_data
+      analytics_customer_segments:
+        type: table
+        id: 76f599b1-ba75-411e-8f44-191e1e40e00e
+        batch_metadata: {}
+        batch_definitions:
+          analytics_customer_segments_whole_table:
+            id: 16cf842b-846b-49da-ba73-eec3ace26728
+            partitioner:
+        table_name: analytics_customer_segments
+        schema_name: analytics
+      analytics_product_performance:
+        type: table
+        id: c91130b6-fe7a-4862-9fc0-08784e131c08
+        batch_metadata: {}
+        batch_definitions:
+          analytics_product_performance_whole_table:
+            id: 20e74217-d7fb-4e0d-a277-1361754e127d
+            partitioner:
+        table_name: analytics_product_performance
+        schema_name: analytics
+      analytics_sales_analytics:
+        type: table
+        id: 3e07320b-99be-4ece-aacc-e663ce7f181d
+        batch_metadata: {}
+        batch_definitions:
+          analytics_sales_analytics_whole_table:
+            id: bdb9a1a8-7153-49b7-bc6a-4af50fb8f321
+            partitioner:
+        table_name: analytics_sales_analytics
+        schema_name: analytics
+      analytics_business_intelligence:
+        type: table
+        id: d146b043-e4b8-460a-a846-c5f44a0d5733
+        batch_metadata: {}
+        batch_definitions:
+          analytics_business_intelligence_whole_table:
+            id: 8b76428c-fded-4115-a865-bb11a723d9de
+            partitioner:
+        table_name: analytics_business_intelligence
+        schema_name: analytics
+    connection_string: 
+      postgresql+psycopg2://postgres:Redouan12.@localhost:5440/client1_DW
+analytics_enabled:
+data_context_id: 2035cb72-0bc4-4b95-beef-58f1951d8af7

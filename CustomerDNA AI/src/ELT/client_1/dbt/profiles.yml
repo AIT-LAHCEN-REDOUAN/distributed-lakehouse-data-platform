@@ -1,4 +1,4 @@
-# CustomerDNA AI - Client 1 dbt Profiles Configuration
+﻿# CustomerDNA AI - Client 1 dbt Profiles Configuration
 
 customerdna_client1:
   target: dev
@@ -6,9 +6,9 @@ customerdna_client1:
   outputs:
     dev:
       type: postgres
-      host: "localhost"
-      port: 5440
-      user: "postgres"
+      host: "{{ env_var('CUSTOMERDNA_POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('CUSTOMERDNA_POSTGRES_PORT', 5440) | int }}"
+      user: "{{ env_var('CUSTOMERDNA_POSTGRES_USER', 'postgres') }}"
       pass: "{{ env_var('CUSTOMERDNA_POSTGRES_PASSWORD', '') }}"
       dbname: "client1_DW"
 
@@ -24,7 +24,7 @@ customerdna_client1:
     prod:
       type: postgres
       host: "{{ env_var('PROD_POSTGRES_HOST', 'localhost') }}"
-      port: "{{ env_var('PROD_POSTGRES_PORT', 5440) }}"
+      port: "{{ env_var('PROD_POSTGRES_PORT', 5440) | int }}"
       user: "{{ env_var('PROD_POSTGRES_USER', 'postgres') }}"
       pass: "{{ env_var('PROD_POSTGRES_PASSWORD', '') }}"
       dbname: "client1_DW"
@@ -36,9 +36,9 @@ customerdna_client1:
 
     test:
       type: postgres
-      host: "localhost"
-      port: 5440
-      user: "postgres"
+      host: "{{ env_var('CUSTOMERDNA_POSTGRES_HOST', 'localhost') }}"
+      port: "{{ env_var('CUSTOMERDNA_POSTGRES_PORT', 5440) | int }}"
+      user: "{{ env_var('CUSTOMERDNA_POSTGRES_USER', 'postgres') }}"
       pass: "{{ env_var('CUSTOMERDNA_POSTGRES_PASSWORD', '') }}"
       dbname: "client1_DW"
       schema: "public"
