@@ -85,107 +85,47 @@ fluent_datasources:
     type: postgres
     id: 911a8081-5d6b-4b53-8aae-a928ed8259fa
     assets:
-      raw_marketing_campaign:
-        type: table
-        id: c8d3329d-28e6-479a-b753-b63cac043113
-        batch_metadata: {}
-        batch_definitions:
-          marketing_campaign_whole_table:
-            id: f31d3cc8-db4b-477e-b62a-4b269f3fd908
-            partitioner:
-        table_name: marketing_campaign
-        schema_name: raw_data
-      raw_ecommerce_customer_churn:
-        type: table
-        id: c498d09a-27b3-460b-a648-0f2567e8e591
-        batch_metadata: {}
-        batch_definitions:
-          ecommerce_customer_churn_whole_table:
-            id: 6d032fa0-d257-4602-aaa0-a41108a8c98f
-            partitioner:
-        table_name: e_commerce_customer_churn
-        schema_name: raw_data
-      raw_online_retail:
-        type: table
-        id: 041c2012-ab0c-40a6-8058-4621d6ab8ac8
-        batch_metadata: {}
-        batch_definitions:
-          online_retail_whole_table:
-            id: 30129521-f33e-492a-a5bc-18681e4770fa
-            partitioner:
-        table_name: online_retail
-        schema_name: raw_data
-      raw_retailrocket_events:
-        type: table
-        id: 5d117a34-4b10-41b1-bb6a-eb335d3ddeb2
-        batch_metadata: {}
-        batch_definitions:
-          retailrocket_events_whole_table:
-            id: 11025d3d-0c1c-4495-8633-e1b787368ffd
-            partitioner:
-        table_name: events
-        schema_name: raw_data
-      raw_retailrocket_item_properties:
-        type: table
-        id: d4a72463-ff5c-4737-8b15-797cdaa60752
-        batch_metadata: {}
-        batch_definitions:
-          retailrocket_item_properties_whole_table:
-            id: f284bf48-1c06-4fcc-b645-dde1ce5e03f7
-            partitioner:
-        table_name: item_properties
-        schema_name: raw_data
-      raw_retailrocket_category_tree:
-        type: table
-        id: 270abbef-0640-43f2-9687-71ddf9c38a73
-        batch_metadata: {}
-        batch_definitions:
-          retailrocket_category_tree_whole_table:
-            id: 05063c80-7a9d-4eb1-aa46-89262dd314c9
-            partitioner:
-        table_name: category_tree
-        schema_name: raw_data
       analytics_customer_segments:
         type: table
-        id: 76f599b1-ba75-411e-8f44-191e1e40e00e
+        id: 3841cfb1-7330-4890-acac-9bd0e6b4581d
         batch_metadata: {}
         batch_definitions:
           analytics_customer_segments_whole_table:
-            id: 16cf842b-846b-49da-ba73-eec3ace26728
+            id: 98155076-5f95-4428-933f-09f8055f19f2
             partitioner:
         table_name: analytics_customer_segments
         schema_name: analytics
       analytics_product_performance:
         type: table
-        id: c91130b6-fe7a-4862-9fc0-08784e131c08
+        id: f9df77d2-7002-4b8f-a600-8a0f0fefe025
         batch_metadata: {}
         batch_definitions:
           analytics_product_performance_whole_table:
-            id: 20e74217-d7fb-4e0d-a277-1361754e127d
+            id: 2f7fa8a6-0976-4e26-a55e-d0d8a6aba678
             partitioner:
         table_name: analytics_product_performance
         schema_name: analytics
       analytics_sales_analytics:
         type: table
-        id: 3e07320b-99be-4ece-aacc-e663ce7f181d
+        id: b6374913-71d5-4867-beed-b863f1e6fa09
         batch_metadata: {}
         batch_definitions:
           analytics_sales_analytics_whole_table:
-            id: bdb9a1a8-7153-49b7-bc6a-4af50fb8f321
+            id: d361bbbb-c60c-4255-beb9-e8a7b8e36d53
             partitioner:
         table_name: analytics_sales_analytics
         schema_name: analytics
       analytics_business_intelligence:
         type: table
-        id: d146b043-e4b8-460a-a846-c5f44a0d5733
+        id: a588ba67-5034-4ca8-a314-1011c6b81abb
         batch_metadata: {}
         batch_definitions:
           analytics_business_intelligence_whole_table:
-            id: 8b76428c-fded-4115-a865-bb11a723d9de
+            id: 0d8bc6ba-da9e-445d-832e-e9d4cf168afd
             partitioner:
         table_name: analytics_business_intelligence
         schema_name: analytics
     connection_string: 
-      postgresql+psycopg2://postgres:Redouan12.@localhost:5440/client1_DW
+      postgresql+psycopg2://postgres:Redouan12.@host.docker.internal:5440/client1_DW
 analytics_enabled:
 data_context_id: 2035cb72-0bc4-4b95-beef-58f1951d8af7

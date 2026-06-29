@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Dict, Tuple
+import argparse
+from typing import Dict, Iterable, Tuple
 
 import great_expectations as gx
 from great_expectations.checkpoint import Checkpoint
@@ -27,6 +28,19 @@ from gx_config import (
 from gx_suite_definitions import build_all_suites
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Bootstrap Great Expectations assets for CustomerDNA AI Client 1.",
+    )
+    parser.add_argument(
+        "--layers",
+        choices=["raw", "analytics", "all"],
+        default="all",
+        help="Restrict bootstrap to a specific logical layer.",
+    )
+    return parser.parse_args()
+
+
 def get_context():
     return gx.get_context(mode="file", project_root_dir=str(GX_PROJECT_DIR))
 
@@ -36,6 +50,30 @@ def ensure_datasource(context):
         name=DATASOURCE_NAME,
         connection_string=build_connection_string(),
     )
+
+
+def resolve_asset_configs(layer_selection: str) -> list[dict]:
+    if layer_selection == "all":
+        return ASSET_CONFIGS
+    return [config for config in ASSET_CONFIGS if config["layer"] == layer_selection]
+
+
+def resolve_checkpoint_names(layer_selection: str) -> list[str]:
+    if layer_selection == "raw":
+        return [RAW_CHECKPOINT_NAME]
+    if layer_selection == "analytics":
+        return [ANALYTICS_CHECKPOINT_NAME, ML_CHECKPOINT_NAME]
+    return [RAW_CHECKPOINT_NAME, ANALYTICS_CHECKPOINT_NAME, ML_CHECKPOINT_NAME]
+
+
+def resolve_validation_names_for_checkpoint(checkpoint_name: str) -> list[str]:
+    if checkpoint_name == RAW_CHECKPOINT_NAME:
+        return RAW_VALIDATION_NAMES
+    if checkpoint_name == ANALYTICS_CHECKPOINT_NAME:
+        return ANALYTICS_VALIDATION_NAMES
+    if checkpoint_name == ML_CHECKPOINT_NAME:
+        return ML_VALIDATION_NAMES
+    return []
 
 
 def ensure_table_asset(datasource, asset_config: dict) -> TableAsset:
@@ -78,10 +116,10 @@ def ensure_suites(context) -> Dict[str, ExpectationSuite]:
     return persisted
 
 
-def ensure_validation_definitions(context, suites: Dict[str, ExpectationSuite], datasource):
+def ensure_validation_definitions(context, suites: Dict[str, ExpectationSuite], datasource, asset_configs: Iterable[dict]):
     persisted = {}
 
-    for asset_config in ASSET_CONFIGS:
+    for asset_config in asset_configs:
         asset = ensure_table_asset(datasource, asset_config)
         batch_definition = ensure_batch_definition(asset, asset_config["batch_definition_name"])
         suite = suites[asset_config["suite_name"]]
@@ -96,45 +134,43 @@ def ensure_validation_definitions(context, suites: Dict[str, ExpectationSuite], 
     return persisted
 
 
-def ensure_checkpoints(context, validations: Dict[str, ValidationDefinition]):
+def ensure_checkpoints(context, validations: Dict[str, ValidationDefinition], checkpoint_names: Iterable[str]):
     actions = [UpdateDataDocsAction(name=DATA_DOCS_ACTION_NAME)]
+    persisted = {}
 
-    raw_checkpoint = Checkpoint(
-        name=RAW_CHECKPOINT_NAME,
-        validation_definitions=[validations[name] for name in RAW_VALIDATION_NAMES],
-        actions=actions,
-        result_format="SUMMARY",
-    )
-    analytics_checkpoint = Checkpoint(
-        name=ANALYTICS_CHECKPOINT_NAME,
-        validation_definitions=[validations[name] for name in ANALYTICS_VALIDATION_NAMES],
-        actions=actions,
-        result_format="SUMMARY",
-    )
-    ml_checkpoint = Checkpoint(
-        name=ML_CHECKPOINT_NAME,
-        validation_definitions=[validations[name] for name in ML_VALIDATION_NAMES],
-        actions=actions,
-        result_format="SUMMARY",
-    )
+    for checkpoint_name in checkpoint_names:
+        validation_names = resolve_validation_names_for_checkpoint(checkpoint_name)
+        available_validations = [
+            validations[name]
+            for name in validation_names
+            if name in validations
+        ]
 
-    return {
-        RAW_CHECKPOINT_NAME: context.checkpoints.add_or_update(raw_checkpoint),
-        ANALYTICS_CHECKPOINT_NAME: context.checkpoints.add_or_update(analytics_checkpoint),
-        ML_CHECKPOINT_NAME: context.checkpoints.add_or_update(ml_checkpoint),
-    }
+        if not available_validations:
+            continue
+
+        checkpoint = Checkpoint(
+            name=checkpoint_name,
+            validation_definitions=available_validations,
+            actions=actions,
+            result_format="SUMMARY",
+        )
+        persisted[checkpoint_name] = context.checkpoints.add_or_update(checkpoint)
+
+    return persisted
 
 
-def bootstrap_gx_project() -> Tuple[object, dict]:
+def bootstrap_gx_project(layer_selection: str = "all") -> Tuple[object, dict]:
     context = get_context()
     datasource = ensure_datasource(context)
     suites = ensure_suites(context)
-    validations = ensure_validation_definitions(context, suites, datasource)
-    checkpoints = ensure_checkpoints(context, validations)
+    asset_configs = resolve_asset_configs(layer_selection)
+    validations = ensure_validation_definitions(context, suites, datasource, asset_configs)
+    checkpoints = ensure_checkpoints(context, validations, resolve_checkpoint_names(layer_selection))
     return context, checkpoints
 
 
-def print_summary(context, checkpoints: dict) -> None:
+def print_summary(context, checkpoints: dict, layer_selection: str) -> None:
     print("=" * 80)
     print("CUSTOMERDNA AI - GREAT EXPECTATIONS BOOTSTRAP COMPLETE")
     print("=" * 80)
@@ -142,6 +178,7 @@ def print_summary(context, checkpoints: dict) -> None:
     print()
     print(f"Context root: {context.root_directory}")
     print(f"Datasource: {DATASOURCE_NAME}")
+    print(f"Bootstrap scope: {layer_selection}")
     print()
     print("Checkpoints:")
     for name in checkpoints:
@@ -156,8 +193,9 @@ def print_summary(context, checkpoints: dict) -> None:
 
 
 def main() -> None:
-    context, checkpoints = bootstrap_gx_project()
-    print_summary(context, checkpoints)
+    args = parse_args()
+    context, checkpoints = bootstrap_gx_project(layer_selection=args.layers)
+    print_summary(context, checkpoints, args.layers)
 
 
 if __name__ == "__main__":
