@@ -15,6 +15,7 @@ services:
     depends_on:
       - postgres_exporter
       - cadvisor
+      - pipeline_metrics_exporter
 
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter:latest
@@ -39,6 +40,19 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped
+
+  pipeline_metrics_exporter:
+    image: python:3.11-slim
+    container_name: customerdna_pipeline_metrics_exporter
+    working_dir: /monitoring
+    command:
+      - python
+      - /monitoring/exporters/pipeline_metrics_exporter.py
+    volumes:
+      - ../:/monitoring:ro
+    ports:
+      - "9109:9109"
     restart: unless-stopped
 
 volumes:

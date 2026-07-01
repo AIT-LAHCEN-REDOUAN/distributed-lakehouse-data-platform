@@ -3,7 +3,8 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
-from datetime import timedelta
+import time
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 
@@ -13,6 +14,15 @@ CLIENT_ELT_DIR = PROJECT_ROOT / "src" / "ELT" / "client_1"
 DBT_DIR = CLIENT_ELT_DIR / "dbt"
 GX_DIR = CLIENT_ELT_DIR / "great_expectations"
 CLIENT_ENV_PATH = CLIENT_ELT_DIR / ".env"
+MONITORING_SRC_DIR = PROJECT_ROOT / "src" / "monitoring"
+
+if str(MONITORING_SRC_DIR) not in sys.path:
+    sys.path.append(str(MONITORING_SRC_DIR))
+
+try:
+    from shared.pipeline_metrics import record_task_run
+except Exception:
+    record_task_run = None
 
 DEFAULT_ARGS = {
     "owner": "customerdna",
@@ -55,17 +65,43 @@ def build_task_env() -> dict[str, str]:
 
 def run_command(command: list[str], cwd: Path, task_label: str) -> None:
     env = build_task_env()
+    started_at = datetime.now(timezone.utc)
+    start_counter = time.perf_counter()
+    status = "success"
+
     print(f"[TASK] {task_label}")
     print(f"[CWD] {cwd}")
     print(f"[CMD] {' '.join(command)}")
     print(f"[DB HOST] {env.get('CUSTOMERDNA_POSTGRES_HOST')}")
 
-    subprocess.run(
-        command,
-        cwd=str(cwd),
-        env=env,
-        check=True,
-    )
+    try:
+        subprocess.run(
+            command,
+            cwd=str(cwd),
+            env=env,
+            check=True,
+        )
+    except subprocess.CalledProcessError:
+        status = "failed"
+        raise
+    finally:
+        ended_at = datetime.now(timezone.utc)
+        duration = time.perf_counter() - start_counter
+        print(f"[STATUS] {status.upper()}")
+        print(f"[DURATION] {duration:.3f}s")
+
+        if record_task_run:
+            record_task_run(
+                dag_id=env.get("AIRFLOW_CTX_DAG_ID", "manual_execution"),
+                task_id=env.get("AIRFLOW_CTX_TASK_ID", task_label.lower().replace(" ", "_")),
+                run_id=env.get("AIRFLOW_CTX_DAG_RUN_ID", env.get("AIRFLOW_CTX_RUN_ID", "manual_run")),
+                task_label=task_label,
+                status=status,
+                started_at=started_at,
+                ended_at=ended_at,
+                command=command,
+                cwd=str(cwd),
+            )
 
 
 def run_ingestion() -> None:

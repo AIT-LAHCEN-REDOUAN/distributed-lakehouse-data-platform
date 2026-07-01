@@ -20,6 +20,7 @@ Important:
 import csv
 import os
 import sys
+import time
 from datetime import datetime, timezone
 
 import pandas as pd
@@ -29,6 +30,12 @@ from tqdm import tqdm
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "config"))
 
+MONITORING_SRC_DIR = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "monitoring")
+)
+if MONITORING_SRC_DIR not in sys.path:
+    sys.path.append(MONITORING_SRC_DIR)
+
 from config import (  # noqa: E402
     CLIENT_DW_CONFIG,
     DATA_WAREHOUSE_NAME,
@@ -36,6 +43,16 @@ from config import (  # noqa: E402
     get_connection_params,
     validate_config,
 )
+
+try:
+    from shared.pipeline_metrics import record_raw_load_run
+except Exception:
+    record_raw_load_run = None
+
+try:
+    from shared.pipeline_metrics import record_raw_load_run
+except Exception:
+    record_raw_load_run = None
 
 
 FILE_TABLE_MAPPING = {
@@ -453,6 +470,8 @@ class DWDataLoader:
     def load_one_csv(self, csv_path):
         file_name = os.path.basename(csv_path)
         table_name = self.get_table_name_for_file(csv_path)
+        load_strategy = self.get_load_strategy(table_name) if table_name else "unknown"
+        current_source_rows = 0
 
         print("-" * 80)
         self.log(f"File: {file_name}")
@@ -460,7 +479,15 @@ class DWDataLoader:
 
         if not table_name:
             self.log(f"No mapping found for file: {file_name}", "ERROR")
-            return False, 0, "failed"
+            return {
+                "file_name": file_name,
+                "table_name": "unmapped",
+                "load_strategy": load_strategy,
+                "load_mode": "failed",
+                "source_rows": current_source_rows,
+                "rows_inserted": 0,
+                "success": False,
+            }
 
         if not self.table_exists(table_name):
             self.log(
@@ -468,17 +495,32 @@ class DWDataLoader:
                 f"Run setup_dw/create_base_tables.py first.",
                 "ERROR",
             )
-            return False, 0, "failed"
+            return {
+                "file_name": file_name,
+                "table_name": table_name,
+                "load_strategy": load_strategy,
+                "load_mode": "failed",
+                "source_rows": current_source_rows,
+                "rows_inserted": 0,
+                "success": False,
+            }
 
         table_columns = self.get_table_columns(table_name)
         if not table_columns:
             self.log(f"No columns found in target table: {self.raw_schema}.{table_name}", "ERROR")
-            return False, 0, "failed"
+            return {
+                "file_name": file_name,
+                "table_name": table_name,
+                "load_strategy": load_strategy,
+                "load_mode": "failed",
+                "source_rows": current_source_rows,
+                "rows_inserted": 0,
+                "success": False,
+            }
 
         current_source_rows = self.count_csv_rows(csv_path)
         file_state = self.get_file_state(csv_path)
         previous_metadata = self.get_loaded_file_metadata(csv_path, table_name)
-        load_strategy = self.get_load_strategy(table_name)
         load_mode, skip_data_rows, warning_message = self.determine_load_mode(
             load_strategy,
             file_state,
@@ -504,7 +546,15 @@ class DWDataLoader:
                 load_mode,
                 "completed",
             )
-            return True, 0, "skipped"
+            return {
+                "file_name": file_name,
+                "table_name": table_name,
+                "load_strategy": load_strategy,
+                "load_mode": "skipped",
+                "source_rows": current_source_rows,
+                "rows_inserted": 0,
+                "success": True,
+            }
 
         if load_mode == "full_refresh":
             if not self.truncate_table(table_name):
@@ -517,7 +567,15 @@ class DWDataLoader:
                     load_mode,
                     "failed",
                 )
-                return False, 0, "failed"
+                return {
+                    "file_name": file_name,
+                    "table_name": table_name,
+                    "load_strategy": load_strategy,
+                    "load_mode": "failed",
+                    "source_rows": current_source_rows,
+                    "rows_inserted": 0,
+                    "success": False,
+                }
 
         success, loaded_rows = self.load_csv_rows(
             csv_path,
@@ -547,9 +605,25 @@ class DWDataLoader:
                     f"Loaded {loaded_rows:,} rows into {self.raw_schema}.{table_name}",
                     "SUCCESS",
                 )
-            return True, loaded_rows, load_mode
+            return {
+                "file_name": file_name,
+                "table_name": table_name,
+                "load_strategy": load_strategy,
+                "load_mode": load_mode,
+                "source_rows": current_source_rows,
+                "rows_inserted": loaded_rows,
+                "success": True,
+            }
 
-        return False, 0, "failed"
+        return {
+            "file_name": file_name,
+            "table_name": table_name,
+            "load_strategy": load_strategy,
+            "load_mode": "failed",
+            "source_rows": current_source_rows,
+            "rows_inserted": 0,
+            "success": False,
+        }
 
     def print_loading_plan(self, csv_files):
         print("\n" + "=" * 80)
@@ -565,6 +639,8 @@ class DWDataLoader:
         print("=" * 80)
 
     def run_loading(self, data_dir):
+        run_started_at = datetime.now(timezone.utc)
+        start_counter = time.perf_counter()
         print("=" * 80)
         print("CUSTOMERDNA AI - LOAD DATA INTO CLIENT 1 DW RAW TABLES")
         print("=" * 80)
@@ -593,15 +669,24 @@ class DWDataLoader:
 
             successful_files = 0
             skipped_files = 0
+            refreshed_files = 0
+            incremental_files = 0
             total_rows_inserted = 0
+            table_summaries = []
 
             for csv_file in tqdm(csv_files, desc="Loading CSV files", unit="file"):
-                success, rows_inserted, load_mode = self.load_one_csv(csv_file)
-                if success:
+                file_result = self.load_one_csv(csv_file)
+                table_summaries.append(file_result)
+
+                if file_result["success"]:
                     successful_files += 1
-                    total_rows_inserted += rows_inserted
-                    if load_mode == "skip":
+                    total_rows_inserted += file_result["rows_inserted"]
+                    if file_result["load_mode"] == "skipped":
                         skipped_files += 1
+                    elif file_result["load_mode"] == "incremental_append":
+                        incremental_files += 1
+                    else:
+                        refreshed_files += 1
 
             print("\n" + "=" * 80)
             print("DATA LOADING SUMMARY")
@@ -611,6 +696,25 @@ class DWDataLoader:
             self.log(f"Files completed successfully: {successful_files}")
             self.log(f"Files skipped as unchanged: {skipped_files}")
             self.log(f"Rows inserted this run: {total_rows_inserted:,}")
+
+            run_ended_at = datetime.now(timezone.utc)
+            run_summary = {
+                "status": "success" if successful_files == len(csv_files) else "failed",
+                "started_at": run_started_at.isoformat(),
+                "ended_at": run_ended_at.isoformat(),
+                "duration_seconds": round(time.perf_counter() - start_counter, 3),
+                "mapped_files": len(csv_files),
+                "successful_files": successful_files,
+                "failed_files": len(csv_files) - successful_files,
+                "skipped_files": skipped_files,
+                "refreshed_files": refreshed_files,
+                "incremental_files": incremental_files,
+                "total_rows_inserted": total_rows_inserted,
+                "tables": table_summaries,
+            }
+
+            if record_raw_load_run:
+                record_raw_load_run(run_summary)
 
             if successful_files == len(csv_files):
                 self.log("ALL DATA LOADING TASKS COMPLETED SUCCESSFULLY", "SUCCESS")
