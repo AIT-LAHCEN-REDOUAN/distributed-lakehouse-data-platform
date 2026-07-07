@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import csv
-import json
 import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from kafka import KafkaAdminClient, KafkaProducer
+from kafka import KafkaAdminClient
 from kafka.admin import NewTopic
 from kafka.errors import TopicAlreadyExistsError
 
@@ -18,6 +17,11 @@ if COMMON_DIR not in sys.path:
     sys.path.append(COMMON_DIR)
 
 from kafka_config import KAFKA_BOOTSTRAP_SERVERS, PROCESSED_DATASET_PATHS, TOPICS  # noqa: E402
+from producer_utils import (  # noqa: E402
+    build_reliable_producer,
+    get_topic_message_count,
+    publish_with_confirmation,
+)
 
 
 DATASET_KEY = "marketing_campaign"
@@ -79,41 +83,43 @@ def build_message(row: dict[str, str], row_number: int) -> dict[str, object]:
     }
 
 
-def build_producer() -> KafkaProducer:
-    """Return a JSON-producing Kafka producer."""
-    return KafkaProducer(
-        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-        acks="all",
-        value_serializer=lambda value: json.dumps(value).encode("utf-8"),
-        key_serializer=lambda value: value.encode("utf-8") if value else None,
-    )
-
-
 def publish_dataset(source_path: Path, topic_name: str) -> int:
     """Publish the processed dataset row-by-row to Kafka."""
     if not source_path.exists():
         raise FileNotFoundError(f"Processed dataset not found: {source_path}")
 
     ensure_topic_exists(topic_name)
-    producer = build_producer()
-    published_count = 0
+    producer = build_reliable_producer()
+    topic_count_before = get_topic_message_count(topic_name)
 
     try:
         with source_path.open("r", encoding="utf-8", newline="") as csv_file:
             reader = csv.DictReader(csv_file)
 
-            for row_number, row in enumerate(reader, start=1):
-                message = build_message(row, row_number)
-                message_key = str(message["payload"].get("ID") or row_number)
+            def row_stream():
+                for row_number, row in enumerate(reader, start=1):
+                    message = build_message(row, row_number)
+                    message_key = str(message["payload"].get("ID") or row_number)
+                    yield message_key, message
 
-                producer.send(topic_name, key=message_key, value=message)
-                published_count += 1
+            confirmed_count = publish_with_confirmation(
+                producer=producer,
+                topic_name=topic_name,
+                rows=row_stream(),
+                progress_message_factory=lambda count: f"[INFO] Confirmed {count:,} records in {topic_name}",
+                progress_interval=500,
+            )
 
-                if row_number % 500 == 0:
-                    print(f"[INFO] Published {row_number:,} records to {topic_name}")
+        topic_count_after = get_topic_message_count(topic_name)
+        topic_delta = topic_count_after - topic_count_before
 
-        producer.flush()
-        return published_count
+        if topic_delta != confirmed_count:
+            raise RuntimeError(
+                f"Kafka topic growth mismatch for {topic_name}: "
+                f"confirmed={confirmed_count:,}, topic_delta={topic_delta:,}"
+            )
+
+        return confirmed_count
     finally:
         producer.close()
 

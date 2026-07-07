@@ -23,6 +23,10 @@ KAFKA_BOOTSTRAP_SERVERS = ["localhost:9092"]
 TOPICS = {
     "marketing_campaign": "client1.marketing_campaign",
     "ecommerce_customer_churn": "client1.ecommerce_customer_churn",
+    "retailrocket_category_tree": "client1.retailrocket_category_tree",
+    "retailrocket_events": "client1.retailrocket_events",
+    "retailrocket_item_properties": "client1.retailrocket_item_properties",
+    "online_retail": "client1.online_retail",
 }
 
 PROCESSED_DATASET_PATHS = {
@@ -40,6 +44,34 @@ PROCESSED_DATASET_PATHS = {
     / "ingested_data"
     / "E-commerce_customer_churn"
     / "processed_E-commerce_customer_churn.csv",
+    "retailrocket_category_tree": customerdna_root()
+    / "src"
+    / "Data_Ingestion"
+    / "client_1"
+    / "ingested_data"
+    / "Retailrocket_recommender_system_dataset"
+    / "category_tree_processed.csv",
+    "retailrocket_events": customerdna_root()
+    / "src"
+    / "Data_Ingestion"
+    / "client_1"
+    / "ingested_data"
+    / "Retailrocket_recommender_system_dataset"
+    / "events_processed.csv",
+    "retailrocket_item_properties": customerdna_root()
+    / "src"
+    / "Data_Ingestion"
+    / "client_1"
+    / "ingested_data"
+    / "Retailrocket_recommender_system_dataset"
+    / "item_properties_processed.csv",
+    "online_retail": customerdna_root()
+    / "src"
+    / "Data_Ingestion"
+    / "client_1"
+    / "ingested_data"
+    / "UCI_Online_Retail_II"
+    / "online_retail_processed.csv",
 }
 
 LOG_OUTPUT_DIR = STREAMING_ROOT / "logs" / "client_1"

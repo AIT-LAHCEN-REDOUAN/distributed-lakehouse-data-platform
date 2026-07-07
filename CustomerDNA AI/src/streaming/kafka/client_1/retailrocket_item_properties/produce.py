@@ -1,4 +1,4 @@
-"""Publish Client 1 e-commerce churn records into Kafka."""
+"""Publish Client 1 retailrocket item properties records into Kafka."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ from producer_utils import (  # noqa: E402
 )
 
 
-DATASET_KEY = "ecommerce_customer_churn"
+DATASET_KEY = "retailrocket_item_properties"
 TOPIC_NAME = TOPICS[DATASET_KEY]
 SOURCE_PATH = PROCESSED_DATASET_PATHS[DATASET_KEY]
 
@@ -95,7 +95,13 @@ def publish_dataset(source_path: Path, topic_name: str) -> int:
             def row_stream():
                 for row_number, row in enumerate(reader, start=1):
                     message = build_message(row, row_number)
-                    message_key = str(message["payload"].get("CustomerID") or row_number)
+                    payload = message["payload"]
+                    message_key = str(
+                        payload.get("itemid")
+                        or payload.get("property")
+                        or payload.get("timestamp")
+                        or row_number
+                    )
                     yield message_key, message
 
             confirmed_count = publish_with_confirmation(
@@ -103,7 +109,7 @@ def publish_dataset(source_path: Path, topic_name: str) -> int:
                 topic_name=topic_name,
                 rows=row_stream(),
                 progress_message_factory=lambda count: f"[INFO] Confirmed {count:,} records in {topic_name}",
-                progress_interval=500,
+                progress_interval=500000,
             )
 
         topic_count_after = get_topic_message_count(topic_name)
