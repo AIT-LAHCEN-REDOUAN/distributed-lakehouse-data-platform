@@ -26,6 +26,7 @@ GX_CONTEXT_DIR = GX_PROJECT_DIR / "gx"
 DATASOURCE_NAME = "client1_dw_postgres"
 RAW_CHECKPOINT_NAME = "raw_data_quality_checkpoint"
 ANALYTICS_CHECKPOINT_NAME = "analytics_data_quality_checkpoint"
+SERVING_CHECKPOINT_NAME = "serving_data_quality_checkpoint"
 ML_CHECKPOINT_NAME = "ml_feature_readiness_checkpoint"
 DATA_DOCS_ACTION_NAME = "update_data_docs"
 
@@ -121,6 +122,60 @@ ASSET_CONFIGS = [
         "suite_name": "analytics_business_intelligence_suite",
         "validation_name": "validate_analytics_business_intelligence",
     },
+    {
+        "layer": "serving",
+        "asset_name": "serving_customer_360",
+        "schema_name": "serving",
+        "table_name": "customer_360",
+        "batch_definition_name": "customer_360_whole_table",
+        "suite_name": "serving_customer_360_suite",
+        "validation_name": "validate_serving_customer_360",
+    },
+    {
+        "layer": "serving",
+        "asset_name": "serving_segmentation_feature_base",
+        "schema_name": "serving",
+        "table_name": "segmentation_feature_base",
+        "batch_definition_name": "segmentation_feature_base_whole_table",
+        "suite_name": "serving_segmentation_feature_base_suite",
+        "validation_name": "validate_serving_segmentation_feature_base",
+    },
+    {
+        "layer": "serving",
+        "asset_name": "serving_churn_feature_base",
+        "schema_name": "serving",
+        "table_name": "churn_feature_base",
+        "batch_definition_name": "churn_feature_base_whole_table",
+        "suite_name": "serving_churn_feature_base_suite",
+        "validation_name": "validate_serving_churn_feature_base",
+    },
+    {
+        "layer": "serving",
+        "asset_name": "serving_ltv_feature_base",
+        "schema_name": "serving",
+        "table_name": "ltv_feature_base",
+        "batch_definition_name": "ltv_feature_base_whole_table",
+        "suite_name": "serving_ltv_feature_base_suite",
+        "validation_name": "validate_serving_ltv_feature_base",
+    },
+    {
+        "layer": "serving",
+        "asset_name": "serving_persona_base",
+        "schema_name": "serving",
+        "table_name": "persona_base",
+        "batch_definition_name": "persona_base_whole_table",
+        "suite_name": "serving_persona_base_suite",
+        "validation_name": "validate_serving_persona_base",
+    },
+    {
+        "layer": "serving",
+        "asset_name": "serving_marketing_recommendation_base",
+        "schema_name": "serving",
+        "table_name": "marketing_recommendation_base",
+        "batch_definition_name": "marketing_recommendation_base_whole_table",
+        "suite_name": "serving_marketing_recommendation_base_suite",
+        "validation_name": "validate_serving_marketing_recommendation_base",
+    },
 ]
 
 
@@ -136,9 +191,16 @@ ANALYTICS_VALIDATION_NAMES = [
     if config["layer"] == "analytics"
 ]
 
+SERVING_VALIDATION_NAMES = [
+    config["validation_name"]
+    for config in ASSET_CONFIGS
+    if config["layer"] == "serving"
+]
+
 ML_VALIDATION_NAMES = [
-    "validate_analytics_customer_segments",
-    "validate_analytics_sales_analytics",
+    "validate_serving_segmentation_feature_base",
+    "validate_serving_churn_feature_base",
+    "validate_serving_ltv_feature_base",
 ]
 
 
@@ -169,6 +231,6 @@ def get_validation_config_map() -> dict[str, dict]:
 def describe_project() -> str:
     return (
         f"Great Expectations quality layer for {CLIENT_NAME}. "
-        "Validates raw source contracts, analytics marts, and ML-readiness checks "
+        "Validates raw source contracts, analytics marts, serving data products, and ML-readiness checks "
         f"against {DATA_WAREHOUSE_NAME}."
     )

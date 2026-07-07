@@ -1,0 +1,57 @@
+version: 2
+
+models:
+  - name: ltv_feature_base
+    description: "Customer-level lifetime value feature base built from customer_360. It combines customer attributes, commercial activity, monetary behavior, and cross-channel usage with observed revenue proxy targets."
+    columns:
+      - name: customer_id
+        description: "Stable customer grain for LTV feature engineering."
+        tests:
+          - not_null
+          - unique
+
+      - name: feature_is_multi_channel_customer_flag
+        description: "Binary indicator for multi-channel behavior."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: feature_has_any_complaint_flag
+        description: "Binary complaint flag."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: feature_cross_border_flag
+        description: "Binary cross-border shopping flag."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: reference_customer_value_tier
+        description: "Business-facing customer value tier for validation."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - High Value
+                  - Upper Mid Value
+                  - Mid Value
+                  - Low Value
+                  - Unclassified
+
+      - name: reference_sales_value_band
+        description: "Sales value band reference."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - No Sales
+                  - Small Account
+                  - Medium Account
+                  - Large Account
+                  - Top Account
+                  - Unknown

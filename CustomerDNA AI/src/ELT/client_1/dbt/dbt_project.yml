@@ -31,6 +31,10 @@ models:
       +materialized: table
       +schema: analytics
 
+    serving:
+      +materialized: table
+      +schema: serving
+
 tests:
   customerdna_client1:
     +severity: warn
@@ -46,3 +50,4 @@ vars:
   staging_schema: "staging"
   intermediate_schema: "intermediate"
   analytics_schema: "analytics"
+  serving_schema: "serving"

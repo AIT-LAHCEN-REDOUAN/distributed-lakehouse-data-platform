@@ -1,0 +1,62 @@
+version: 2
+
+models:
+  - name: churn_feature_base
+    description: "Customer-level churn modeling feature base built from customer_360. It standardizes behavioral, transactional, lifecycle, and satisfaction-related signals and retains business reference labels for churn evaluation."
+    columns:
+      - name: customer_id
+        description: "Stable customer grain for churn feature engineering."
+        tests:
+          - not_null
+          - unique
+
+      - name: target_has_churned_flag
+        description: "Binary supervised churn target."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: feature_has_any_complaint_flag
+        description: "Binary complaint signal."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: feature_is_multi_channel_customer_flag
+        description: "Binary multi-channel usage signal."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: feature_low_satisfaction_flag
+        description: "Binary low-satisfaction flag."
+        tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+
+      - name: reference_churn_risk_band
+        description: "Interpretable risk band retained for downstream validation."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - Critical
+                  - Elevated
+                  - Stable
+                  - Unknown
+
+      - name: reference_retention_status
+        description: "Business-facing retention status."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - Churned
+                  - High Risk
+                  - Watchlist
+                  - Stable
+                  - Unknown

@@ -14,6 +14,8 @@ from great_expectations.datasource.fluent.sql_datasource import TableAsset
 from gx_config import (
     ANALYTICS_CHECKPOINT_NAME,
     ANALYTICS_VALIDATION_NAMES,
+    SERVING_CHECKPOINT_NAME,
+    SERVING_VALIDATION_NAMES,
     ASSET_CONFIGS,
     DATA_DOCS_ACTION_NAME,
     DATASOURCE_NAME,
@@ -34,7 +36,7 @@ def parse_args():
     )
     parser.add_argument(
         "--layers",
-        choices=["raw", "analytics", "all"],
+        choices=["raw", "analytics", "serving", "all"],
         default="all",
         help="Restrict bootstrap to a specific logical layer.",
     )
@@ -62,8 +64,10 @@ def resolve_checkpoint_names(layer_selection: str) -> list[str]:
     if layer_selection == "raw":
         return [RAW_CHECKPOINT_NAME]
     if layer_selection == "analytics":
-        return [ANALYTICS_CHECKPOINT_NAME, ML_CHECKPOINT_NAME]
-    return [RAW_CHECKPOINT_NAME, ANALYTICS_CHECKPOINT_NAME, ML_CHECKPOINT_NAME]
+        return [ANALYTICS_CHECKPOINT_NAME]
+    if layer_selection == "serving":
+        return [SERVING_CHECKPOINT_NAME, ML_CHECKPOINT_NAME]
+    return [RAW_CHECKPOINT_NAME, ANALYTICS_CHECKPOINT_NAME, SERVING_CHECKPOINT_NAME, ML_CHECKPOINT_NAME]
 
 
 def resolve_validation_names_for_checkpoint(checkpoint_name: str) -> list[str]:
@@ -71,6 +75,8 @@ def resolve_validation_names_for_checkpoint(checkpoint_name: str) -> list[str]:
         return RAW_VALIDATION_NAMES
     if checkpoint_name == ANALYTICS_CHECKPOINT_NAME:
         return ANALYTICS_VALIDATION_NAMES
+    if checkpoint_name == SERVING_CHECKPOINT_NAME:
+        return SERVING_VALIDATION_NAMES
     if checkpoint_name == ML_CHECKPOINT_NAME:
         return ML_VALIDATION_NAMES
     return []
@@ -188,7 +194,8 @@ def print_summary(context, checkpoints: dict, layer_selection: str) -> None:
     print("  1. python bootstrap_gx.py")
     print("  2. python run_gx_validations.py --checkpoint raw")
     print("  3. python run_gx_validations.py --checkpoint analytics")
-    print("  4. python run_gx_validations.py --checkpoint ml")
+    print("  4. python run_gx_validations.py --checkpoint serving")
+    print("  5. python run_gx_validations.py --checkpoint ml")
     print("=" * 80)
 
 

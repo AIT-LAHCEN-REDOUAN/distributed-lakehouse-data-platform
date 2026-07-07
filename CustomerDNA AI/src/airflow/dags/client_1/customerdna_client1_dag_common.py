@@ -136,6 +136,14 @@ def bootstrap_analytics_gx() -> None:
     )
 
 
+def bootstrap_transformation_gx() -> None:
+    run_command(
+        [sys.executable, str(GX_DIR / "bootstrap_gx.py"), "--layers", "all"],
+        GX_DIR,
+        "Bootstrap Great Expectations context and transformation-serving assets",
+    )
+
+
 def validate_raw_data() -> None:
     run_command(
         [
@@ -191,6 +199,20 @@ def validate_analytics_data() -> None:
         ],
         GX_DIR,
         "Run Great Expectations analytics checkpoint",
+    )
+
+
+def validate_serving_data() -> None:
+    run_command(
+        [
+            sys.executable,
+            str(GX_DIR / "run_gx_validations.py"),
+            "--checkpoint",
+            "serving",
+            "--skip-bootstrap",
+        ],
+        GX_DIR,
+        "Run Great Expectations serving checkpoint",
     )
 
 

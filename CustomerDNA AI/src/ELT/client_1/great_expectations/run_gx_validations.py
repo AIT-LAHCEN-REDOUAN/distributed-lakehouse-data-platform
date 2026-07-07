@@ -10,6 +10,7 @@ from gx_config import (
     ANALYTICS_CHECKPOINT_NAME,
     ML_CHECKPOINT_NAME,
     RAW_CHECKPOINT_NAME,
+    SERVING_CHECKPOINT_NAME,
 )
 
 MONITORING_SRC_DIR = os.path.normpath(
@@ -26,6 +27,7 @@ except Exception:
 CHECKPOINT_OPTIONS = {
     "raw": RAW_CHECKPOINT_NAME,
     "analytics": ANALYTICS_CHECKPOINT_NAME,
+    "serving": SERVING_CHECKPOINT_NAME,
     "ml": ML_CHECKPOINT_NAME,
 }
 
@@ -36,7 +38,7 @@ def parse_args():
     )
     parser.add_argument(
         "--checkpoint",
-        choices=["raw", "analytics", "ml", "all"],
+        choices=["raw", "analytics", "serving", "ml", "all"],
         default="all",
         help="Checkpoint group to run.",
     )
@@ -53,6 +55,7 @@ def resolve_checkpoint_names(selection: str) -> list[str]:
         return [
             RAW_CHECKPOINT_NAME,
             ANALYTICS_CHECKPOINT_NAME,
+            SERVING_CHECKPOINT_NAME,
             ML_CHECKPOINT_NAME,
         ]
     return [CHECKPOINT_OPTIONS[selection]]

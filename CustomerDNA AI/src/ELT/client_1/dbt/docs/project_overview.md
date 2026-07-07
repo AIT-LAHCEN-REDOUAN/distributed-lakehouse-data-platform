@@ -2,7 +2,7 @@
 
 # CustomerDNA AI - Client 1 dbt Project
 
-This dbt project transforms `client1_DW.raw_data` into trusted analytical tables through three layers:
+This dbt project transforms `client1_DW.raw_data` into trusted analytical tables through four layers:
 
 1. **Staging**
    - light cleaning and type standardization
@@ -18,7 +18,12 @@ This dbt project transforms `client1_DW.raw_data` into trusted analytical tables
    - final business-facing marts
    - customer, product, sales, and executive KPI outputs
 
-The project is intentionally designed to keep raw ingestion, transformation logic, and reporting outputs clearly separated. This makes lineage in `dbt docs` easy to inspect and keeps downstream BI consumers focused on the `analytics` schema only.
+4. **Serving**
+   - curated customer-level downstream data products
+   - AI/ML-ready feature bases and explainable outputs
+   - trusted handoff layer for future segmentation, churn, LTV, persona, and recommendation workflows
+
+The project is intentionally designed to keep raw ingestion, transformation logic, reporting outputs, and AI/ML-oriented serving outputs clearly separated. This makes lineage in `dbt docs` easy to inspect, keeps downstream BI consumers focused on the `analytics` schema, and preserves the `serving` schema as the curated handoff layer for future ML and MLOps-style consumption.
 
 {% enddocs %}
 
@@ -64,5 +69,29 @@ The analytics layer publishes final marts for reporting and dashboarding:
 - `analytics_business_intelligence`
 
 Each analytics model has one stable grain and should be safe for direct BI consumption.
+
+{% enddocs %}
+
+{% docs layer_serving %}
+
+# Serving Layer
+
+The serving layer packages curated customer-level outputs for downstream AI/ML and MLOps-style interpretation:
+
+- `customer_360`
+- `segmentation_feature_base`
+- `churn_feature_base`
+- `ltv_feature_base`
+- `persona_base`
+- `marketing_recommendation_base`
+
+Serving models should:
+
+- keep one stable downstream grain, usually one row per customer
+- expose validated numerical features and explainable business context
+- remain traceable back through analytics and intermediate logic
+- support future modeling, scoring, persona, and recommendation workflows
+
+Serving models should not replace dashboard marts. Business-facing BI consumption remains centered on the `analytics` schema.
 
 {% enddocs %}
