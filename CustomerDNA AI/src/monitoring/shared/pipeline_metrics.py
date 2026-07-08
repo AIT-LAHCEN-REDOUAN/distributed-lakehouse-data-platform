@@ -4,6 +4,7 @@ import json
 import math
 import os
 import threading
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -16,6 +17,7 @@ STATE_DIR = MONITORING_ROOT / "state"
 AIRFLOW_STATE_PATH = STATE_DIR / "airflow_pipeline_state.json"
 RAW_LOAD_STATE_PATH = STATE_DIR / "raw_load_state.json"
 GX_STATE_PATH = STATE_DIR / "gx_state.json"
+MONITORING_ERROR_LOG_PATH = STATE_DIR / "monitoring_errors.log"
 
 FINAL_TASK_BY_DAG = {
     "customerdna_client1_dw_setup_pipeline": "create_client1_raw_base_tables",
@@ -90,6 +92,15 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
     os.replace(temp_path, path)
 
 
+def _append_error_log(message: str) -> None:
+    try:
+        ensure_state_dir()
+        with MONITORING_ERROR_LOG_PATH.open("a", encoding="utf-8") as handle:
+            handle.write(f"{isoformat_utc()} | {message}\n")
+    except Exception:
+        pass
+
+
 def _default_airflow_state() -> dict[str, Any]:
     return {
         "updated_at": isoformat_utc(),
@@ -140,15 +151,29 @@ def _safe_write(
     default_factory: Callable[[], dict[str, Any]],
     updater: Callable[[dict[str, Any]], None],
 ) -> bool:
-    try:
-        with _STATE_LOCK:
-            state = _read_json(path, default_factory)
-            updater(state)
-            state["updated_at"] = isoformat_utc()
-            _write_json(path, state)
-        return True
-    except Exception:
-        return False
+    last_error: Exception | None = None
+
+    for attempt in range(1, 4):
+        try:
+            with _STATE_LOCK:
+                state = _read_json(path, default_factory)
+                updater(state)
+                state["updated_at"] = isoformat_utc()
+                _write_json(path, state)
+            return True
+        except Exception as exc:
+            last_error = exc
+            _append_error_log(
+                f"write_failed path={path.name} attempt={attempt} error={exc!r}"
+            )
+            time.sleep(0.1 * attempt)
+
+    if last_error is not None:
+        _append_error_log(
+            f"write_aborted path={path.name} error={last_error!r}"
+        )
+
+    return False
 
 
 def record_task_run(

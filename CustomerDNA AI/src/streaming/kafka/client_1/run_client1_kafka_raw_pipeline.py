@@ -175,13 +175,18 @@ def main() -> int:
 
         ended_at = datetime.now(timezone.utc)
         duration_seconds = round(time.perf_counter() - start_counter, 3)
-        record_raw_load_run(
+        monitoring_recorded = record_raw_load_run(
             build_raw_load_summary(
                 status="success",
                 started_at=started_at,
                 ended_at=ended_at,
                 tables=table_summaries,
             )
+        )
+        print(
+            "[MONITORING] Raw load state recorded successfully"
+            if monitoring_recorded
+            else "[MONITORING] Raw load state recording failed"
         )
         print("=" * 80)
         print("[SUCCESS] Client 1 Kafka raw pipeline completed successfully.")
@@ -204,13 +209,18 @@ def main() -> int:
                 "duration_seconds": None,
             }
         )
-        record_raw_load_run(
+        monitoring_recorded = record_raw_load_run(
             build_raw_load_summary(
                 status="failed",
                 started_at=started_at,
                 ended_at=ended_at,
                 tables=table_summaries,
             )
+        )
+        print(
+            "[MONITORING] Raw load failure state recorded successfully"
+            if monitoring_recorded
+            else "[MONITORING] Raw load failure state recording failed"
         )
         print("=" * 80)
         print(f"[ERROR] Kafka raw pipeline failed while running: {exc.cmd}")

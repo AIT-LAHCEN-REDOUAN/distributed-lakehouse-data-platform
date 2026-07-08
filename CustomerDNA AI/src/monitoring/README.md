@@ -1,29 +1,33 @@
 # CustomerDNA Monitoring
 
-This folder centralizes the local monitoring and observability stack for CustomerDNA AI.
+This folder contains the monitoring stack for CustomerDNA AI:
+- Grafana dashboards and provisioning
+- Prometheus configuration and exporters
+- Shared pipeline-state tracking utilities
+- Runtime state files used by the pipeline metrics exporter
+- Runtime log exports for easier troubleshooting
 
-Structure:
-- `grafana/`: Grafana container setup, dashboard provisioning, and versioned dashboards.
-- `prometheus/`: Prometheus container setup, scrape configuration, and exporters.
-- `exporters/`: custom exporters built for project-specific metrics.
-- `shared/`: shared Python helpers used by Airflow, Kafka raw-loading scripts, and validation jobs to publish monitoring state.
-- `state/`: generated runtime state files consumed by the custom exporter.
+## Key Folders
+- `grafana/`: dashboard JSON files and Grafana provisioning
+- `prometheus/`: Prometheus stack configuration
+- `shared/`: Python helpers used by Airflow, Kafka, and GX monitoring
+- `state/`: generated JSON state files consumed by the pipeline metrics exporter
+- `logs/`: exported runtime logs for Grafana, Prometheus, and exporters
+- `tools/`: troubleshooting utilities, including Docker log export helpers
 
-Main capabilities:
-- Infrastructure monitoring for Prometheus, cAdvisor, and PostgreSQL exporter.
-- PostgreSQL warehouse monitoring for `client1_DW`.
-- Pipeline-health monitoring for Airflow task execution, Kafka raw loading, dbt execution, and Great Expectations checkpoints.
-- Local execution compatible with the project constraint of running entirely on one machine.
+## Runtime Log Export
+Use `tools/export_runtime_logs.py` to export the latest container logs into project files.
 
-Important design rule:
-- Monitoring code and configuration should stay inside `src/monitoring` so observability remains isolated, versioned, and easy to maintain.
-
-Generated state:
-- Files inside `state/` are produced automatically when Airflow tasks, Kafka raw-loading scripts, and Great Expectations validations run.
-- These state files are exported as Prometheus metrics through `exporters/pipeline_metrics_exporter.py`.
-- Only `.gitkeep` and `.gitignore` should stay versioned in `state/`; JSON files there are runtime-generated artifacts.
-
-Active generated state files:
-- `airflow_pipeline_state.json`
-- `raw_load_state.json`
-- `gx_state.json`
+Typical outputs:
+- `src/airflow/logs/system/airflow_api_server.log`
+- `src/airflow/logs/system/airflow_scheduler.log`
+- `src/airflow/logs/system/airflow_dag_processor.log`
+- `src/airflow/logs/system/airflow_triggerer.log`
+- `src/airflow/logs/system/airflow_postgres.log`
+- `src/streaming/kafka/logs/broker.log`
+- `src/streaming/kafka/logs/kafka_ui.log`
+- `src/monitoring/logs/grafana/grafana.log`
+- `src/monitoring/logs/prometheus/prometheus.log`
+- `src/monitoring/logs/prometheus/postgres_exporter.log`
+- `src/monitoring/logs/prometheus/cadvisor.log`
+- `src/monitoring/logs/prometheus/pipeline_metrics_exporter.log`

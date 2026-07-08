@@ -99,7 +99,7 @@ def run_command(command: list[str], cwd: Path, task_label: str) -> None:
         print(f"[DURATION] {duration:.3f}s")
 
         if record_task_run:
-            record_task_run(
+            monitoring_recorded = record_task_run(
                 dag_id=env.get("AIRFLOW_CTX_DAG_ID", "manual_execution"),
                 task_id=env.get("AIRFLOW_CTX_TASK_ID", task_label.lower().replace(" ", "_")),
                 run_id=env.get("AIRFLOW_CTX_DAG_RUN_ID", env.get("AIRFLOW_CTX_RUN_ID", "manual_run")),
@@ -110,6 +110,12 @@ def run_command(command: list[str], cwd: Path, task_label: str) -> None:
                 command=command,
                 cwd=str(cwd),
             )
+            if monitoring_recorded:
+                print("[MONITORING] Airflow task state recorded successfully")
+            else:
+                print("[MONITORING] Airflow task state recording failed")
+        else:
+            print("[MONITORING] Airflow task state writer unavailable")
 
 
 def run_setup_dw() -> None:

@@ -92,7 +92,7 @@ def main() -> None:
             checkpoint_status = "success" if getattr(result, "success", False) else "failed"
 
             if record_gx_checkpoint_run:
-                record_gx_checkpoint_run(
+                monitoring_recorded = record_gx_checkpoint_run(
                     {
                         "checkpoint_name": checkpoint_name,
                         "status": checkpoint_status,
@@ -105,12 +105,19 @@ def main() -> None:
                         "validation_results": len(run_results),
                     }
                 )
+                print(
+                    f"[MONITORING] GX checkpoint state recorded for {checkpoint_name}"
+                    if monitoring_recorded
+                    else f"[MONITORING] GX checkpoint state recording failed for {checkpoint_name}"
+                )
+            else:
+                print(f"[MONITORING] GX checkpoint writer unavailable for {checkpoint_name}")
 
             print_checkpoint_result(checkpoint_name, result)
         except Exception:
             checkpoint_ended_at = datetime.now(timezone.utc)
             if record_gx_checkpoint_run:
-                record_gx_checkpoint_run(
+                monitoring_recorded = record_gx_checkpoint_run(
                     {
                         "checkpoint_name": checkpoint_name,
                         "status": "failed",
@@ -122,6 +129,11 @@ def main() -> None:
                         ),
                         "validation_results": 0,
                     }
+                )
+                print(
+                    f"[MONITORING] GX failure state recorded for {checkpoint_name}"
+                    if monitoring_recorded
+                    else f"[MONITORING] GX failure state recording failed for {checkpoint_name}"
                 )
             raise
 
