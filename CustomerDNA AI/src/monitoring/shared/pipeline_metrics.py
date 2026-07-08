@@ -14,12 +14,11 @@ MONITORING_ROOT = Path(__file__).resolve().parents[1]
 STATE_DIR = MONITORING_ROOT / "state"
 
 AIRFLOW_STATE_PATH = STATE_DIR / "airflow_pipeline_state.json"
-INGESTION_STATE_PATH = STATE_DIR / "ingestion_state.json"
 RAW_LOAD_STATE_PATH = STATE_DIR / "raw_load_state.json"
 GX_STATE_PATH = STATE_DIR / "gx_state.json"
 
 FINAL_TASK_BY_DAG = {
-    "customerdna_client1_ingestion_pipeline": "ingest_client1_datasets",
+    "customerdna_client1_dw_setup_pipeline": "create_client1_raw_base_tables",
     "customerdna_client1_raw_load_pipeline": "validate_raw_data_quality",
     "customerdna_client1_transformation_quality_pipeline": "validate_ml_feature_readiness",
 }
@@ -97,13 +96,6 @@ def _default_airflow_state() -> dict[str, Any]:
         "tasks": {},
         "dag_runs": {},
         "pipelines": {},
-    }
-
-
-def _default_ingestion_state() -> dict[str, Any]:
-    return {
-        "updated_at": isoformat_utc(),
-        "last_run": None,
     }
 
 
@@ -257,13 +249,6 @@ def record_task_run(
         state["dag_runs"] = _cleanup_old_runs(state["dag_runs"])
 
     return _safe_write(AIRFLOW_STATE_PATH, _default_airflow_state, updater)
-
-
-def record_ingestion_run(summary: dict[str, Any]) -> bool:
-    def updater(state: dict[str, Any]) -> None:
-        state["last_run"] = summary
-
-    return _safe_write(INGESTION_STATE_PATH, _default_ingestion_state, updater)
 
 
 def record_raw_load_run(summary: dict[str, Any]) -> bool:

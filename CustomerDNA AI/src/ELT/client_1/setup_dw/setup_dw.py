@@ -6,7 +6,7 @@ Creates only the client data warehouse:
     client1_DW
 
 Schemas:
-    raw_data          -> raw CSV tables loaded directly from ingested_data
+    raw_data          -> raw tables populated by the Kafka-backed loading pipeline
     metadata          -> loading metadata
     staging           -> future dbt staging models
     intermediate      -> future dbt intermediate models
@@ -256,7 +256,7 @@ class ClientDWSetup:
         print("=" * 70)
         print(f"Database: {DATA_WAREHOUSE_NAME}")
         print("Architecture: Simplified ELT")
-        print("Flow: CSV -> client1_DW.raw_data -> dbt -> client1_DW.analytics")
+        print("Flow: source datasets -> Kafka -> client1_DW.raw_data -> dbt -> client1_DW.analytics")
         print("=" * 70)
 
         validate_config()
@@ -289,6 +289,7 @@ class ClientDWSetup:
             self.log(f"Database: {DATA_WAREHOUSE_NAME}")
             self.log(f"Schemas: {', '.join(CLIENT_DW_CONFIG['schemas'])}")
             self.log("Raw data target: client1_DW.raw_data")
+            self.log("Raw load mode: Kafka-backed batch ingestion")
             self.log("Future dbt target: client1_DW.analytics")
 
             return True

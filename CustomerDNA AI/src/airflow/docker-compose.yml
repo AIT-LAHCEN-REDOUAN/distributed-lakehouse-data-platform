@@ -22,6 +22,7 @@ x-airflow-common:
 
     AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW__API_AUTH__JWT_SECRET:-customerdna_jwt_secret}
     AIRFLOW__API_AUTH__JWT_ISSUER: ${AIRFLOW__API_AUTH__JWT_ISSUER:-airflow}
+    CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS: ${CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS:-broker:29092}
 
     _PIP_ADDITIONAL_REQUIREMENTS: -r /requirements.txt
 
@@ -39,6 +40,9 @@ x-airflow-common:
     - ./requirements.txt:/requirements.txt
 
   user: "${AIRFLOW_UID:-50000}:0"
+  networks:
+    - default
+    - kafka_shared
 
   depends_on:
     airflow-postgres:
@@ -150,3 +154,8 @@ services:
 
 volumes:
   airflow_postgres_data:
+
+networks:
+  kafka_shared:
+    external: true
+    name: customerdna_kafka_shared

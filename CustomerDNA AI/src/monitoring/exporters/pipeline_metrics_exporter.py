@@ -16,7 +16,6 @@ if str(MONITORING_ROOT) not in sys.path:
 from shared.pipeline_metrics import (  # noqa: E402
     AIRFLOW_STATE_PATH,
     GX_STATE_PATH,
-    INGESTION_STATE_PATH,
     RAW_LOAD_STATE_PATH,
     iso_to_unix_seconds,
 )
@@ -128,47 +127,6 @@ def build_metrics_payload() -> str:
             iso_to_unix_seconds(pipeline.get("last_success_at")),
             labels,
         )
-
-    ingestion_state = _read_json(INGESTION_STATE_PATH)
-    ingestion_last_run = ingestion_state.get("last_run") or {}
-    if ingestion_last_run:
-        _append_metric(
-            lines,
-            "customerdna_ingestion_last_status",
-            1 if ingestion_last_run.get("status") == "success" else 0,
-        )
-        _append_metric(
-            lines,
-            "customerdna_ingestion_last_duration_seconds",
-            ingestion_last_run.get("duration_seconds"),
-        )
-        _append_metric(
-            lines,
-            "customerdna_ingestion_last_run_timestamp_seconds",
-            iso_to_unix_seconds(ingestion_last_run.get("ended_at")),
-        )
-        for dataset in ingestion_last_run.get("datasets", []):
-            labels = {
-                "script_name": dataset.get("script_name", "unknown"),
-            }
-            _append_metric(
-                lines,
-                "customerdna_ingestion_dataset_last_status",
-                1 if dataset.get("status") == "success" else 0,
-                labels,
-            )
-            _append_metric(
-                lines,
-                "customerdna_ingestion_dataset_last_duration_seconds",
-                dataset.get("duration_seconds"),
-                labels,
-            )
-            _append_metric(
-                lines,
-                "customerdna_ingestion_dataset_last_records",
-                dataset.get("records_processed"),
-                labels,
-            )
 
     raw_load_state = _read_json(RAW_LOAD_STATE_PATH)
     raw_last_run = raw_load_state.get("last_run") or {}

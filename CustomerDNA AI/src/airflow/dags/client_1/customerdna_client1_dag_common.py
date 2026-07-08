@@ -9,8 +9,9 @@ from pathlib import Path
 
 
 PROJECT_ROOT = Path("/opt/airflow/CustomerDNA_AI")
-INGESTION_SCRIPTS_DIR = PROJECT_ROOT / "src" / "Data_Ingestion" / "client_1" / "scripts"
 CLIENT_ELT_DIR = PROJECT_ROOT / "src" / "ELT" / "client_1"
+CLIENT_KAFKA_DIR = PROJECT_ROOT / "src" / "streaming" / "kafka" / "client_1"
+SETUP_DW_DIR = CLIENT_ELT_DIR / "setup_dw"
 DBT_DIR = CLIENT_ELT_DIR / "dbt"
 GX_DIR = CLIENT_ELT_DIR / "great_expectations"
 CLIENT_ENV_PATH = CLIENT_ELT_DIR / ".env"
@@ -58,6 +59,12 @@ def build_task_env() -> dict[str, str]:
     if env.get("CUSTOMERDNA_POSTGRES_HOST", "localhost") in {"localhost", "127.0.0.1"}:
         env["CUSTOMERDNA_POSTGRES_HOST"] = container_safe_host
 
+    if not env.get("CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS"):
+        env["CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS"] = env.get(
+            "CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS",
+            "broker:29092",
+        )
+
     env["DBT_PROFILES_DIR"] = str(DBT_DIR)
     env["PYTHONUNBUFFERED"] = "1"
     return env
@@ -73,6 +80,7 @@ def run_command(command: list[str], cwd: Path, task_label: str) -> None:
     print(f"[CWD] {cwd}")
     print(f"[CMD] {' '.join(command)}")
     print(f"[DB HOST] {env.get('CUSTOMERDNA_POSTGRES_HOST')}")
+    print(f"[KAFKA BOOTSTRAP] {env.get('CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS')}")
 
     try:
         subprocess.run(
@@ -104,19 +112,27 @@ def run_command(command: list[str], cwd: Path, task_label: str) -> None:
             )
 
 
-def run_ingestion() -> None:
+def run_setup_dw() -> None:
     run_command(
-        [sys.executable, str(INGESTION_SCRIPTS_DIR / "run_all_ingestions.py")],
-        INGESTION_SCRIPTS_DIR,
-        "Client 1 data ingestion",
+        [sys.executable, str(SETUP_DW_DIR / "setup_dw.py")],
+        SETUP_DW_DIR,
+        "Initialize Client 1 data warehouse database and schemas",
+    )
+
+
+def run_create_base_tables() -> None:
+    run_command(
+        [sys.executable, str(SETUP_DW_DIR / "create_base_tables.py")],
+        SETUP_DW_DIR,
+        "Create Client 1 raw base tables",
     )
 
 
 def load_raw_data() -> None:
     run_command(
-        [sys.executable, str(CLIENT_ELT_DIR / "load_data_to_dw.py")],
-        CLIENT_ELT_DIR,
-        "Load processed ingestion outputs into client1_DW.raw_data",
+        [sys.executable, str(CLIENT_KAFKA_DIR / "run_client1_kafka_raw_pipeline.py")],
+        CLIENT_KAFKA_DIR,
+        "Run Client 1 Kafka raw pipeline into client1_DW.raw_data",
     )
 
 

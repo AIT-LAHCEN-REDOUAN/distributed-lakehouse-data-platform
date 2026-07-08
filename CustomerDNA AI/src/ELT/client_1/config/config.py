@@ -2,10 +2,11 @@
 CustomerDNA AI - Client 1 Data Warehouse Configuration
 
 Simplified ELT Architecture:
-    Ingested CSV files
+    Raw source datasets
+        -> Kafka ingestion + raw loading
         -> client1_DW.raw_data
         -> dbt transformations
-        -> client1_DW.analytics
+        -> client1_DW.analytics / serving
 
 Important:
     This config uses ONLY:
@@ -44,9 +45,10 @@ PROJECT_ROOT = os.path.abspath(
 )
 
 SRC_DIR = os.path.join(PROJECT_ROOT, "src")
-
+SOURCE_DATASETS_DIR = os.path.join(PROJECT_ROOT, "datasets", "client_1")
+LEGACY_ROOT_DIR = os.path.join(PROJECT_ROOT, "legacy")
 INGESTED_DATA_DIR = os.path.join(
-    SRC_DIR,
+    LEGACY_ROOT_DIR,
     "Data_Ingestion",
     "client_1",
     "ingested_data",
@@ -185,10 +187,11 @@ def print_config_summary():
     print(f"  Client ELT directory: {CLIENT_ELT_DIR}")
     print(f"  Client .env: {CLIENT_ENV_PATH}")
     print(f"  Project root: {PROJECT_ROOT}")
-    print(f"  Ingested data: {INGESTED_DATA_DIR}")
+    print(f"  Source datasets: {SOURCE_DATASETS_DIR}")
+    print(f"  Legacy ingested data: {INGESTED_DATA_DIR}")
 
     print("\nFLOW:")
-    print("  CSV -> client1_DW.raw_data -> dbt -> client1_DW.analytics")
+    print("  Source datasets -> Kafka -> client1_DW.raw_data -> dbt -> analytics/serving")
 
     print("\n" + "=" * 70)
 

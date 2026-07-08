@@ -11,7 +11,7 @@ Current dashboards:
   Covers PostgreSQL warehouse metrics exposed through `postgres_exporter`, including availability, database size, active connections, commit rate, rollback rate, and rows returned rate.
 
 - `customerdna_pipeline_health.dashboard.json`
-  Covers project-level pipeline observability, including DAG health, raw loading outcomes, dbt/GX task execution, and raw rows inserted by table.
+  Covers project-level pipeline observability, including DAG health, Kafka raw-loading outcomes, dbt/GX task execution, and raw rows inserted by table.
 
 Recommended usage:
 
@@ -27,4 +27,4 @@ Notes:
 - All dashboards assume the Prometheus datasource is named `prometheus`.
 - The PostgreSQL dashboard assumes the warehouse database label is `client1_DW`.
 - The infrastructure dashboard intentionally avoids unstable container labels, because this local cAdvisor setup exposes host-oriented `id` labels instead of Docker-friendly `container` labels.
-- The pipeline-health dashboard depends on state files written under `src/monitoring/state` by the Airflow / ELT monitoring helpers.
+- The pipeline-health dashboard depends on state files written under `src/monitoring/state` by Airflow task instrumentation, the Client 1 Kafka raw pipeline runner, and Great Expectations validation scripts.

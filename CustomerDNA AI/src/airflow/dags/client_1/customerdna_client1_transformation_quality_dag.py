@@ -3,8 +3,8 @@ from __future__ import annotations
 from datetime import datetime
 
 from airflow import DAG
-from airflow.operators.empty import EmptyOperator
-from airflow.operators.python import PythonOperator
+from airflow.providers.standard.operators.empty import EmptyOperator
+from airflow.providers.standard.operators.python import PythonOperator
 
 from client_1.customerdna_client1_dag_common import (
     DEFAULT_ARGS,
