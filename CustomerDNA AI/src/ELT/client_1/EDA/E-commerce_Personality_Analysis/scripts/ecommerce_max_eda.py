@@ -53,11 +53,11 @@ try:
     )
 except ImportError:
     # Fallback configuration
-    DB_HOST = "localhost"
-    DB_PORT = "5440"
-    DB_USER = "postgres"
-    DB_PASSWORD = "Redouan12."
-    DATA_WAREHOUSE_NAME = "client1_DW"
+    DB_HOST = os.getenv("CUSTOMERDNA_POSTGRES_HOST", "localhost")
+    DB_PORT = os.getenv("CUSTOMERDNA_POSTGRES_PORT", "5440")
+    DB_USER = os.getenv("CUSTOMERDNA_POSTGRES_USER", "postgres")
+    DB_PASSWORD = os.getenv("CUSTOMERDNA_POSTGRES_PASSWORD", "")
+    DATA_WAREHOUSE_NAME = os.getenv("CUSTOMERDNA_POSTGRES_DB", "client1_DW")
     RAW_DATA_SCHEMA = "raw_data"
 
 # ============================================================================

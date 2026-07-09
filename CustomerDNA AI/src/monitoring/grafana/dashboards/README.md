@@ -2,6 +2,10 @@
 
 This folder stores versioned Grafana dashboard definitions as JSON.
 
+Important:
+- These dashboard JSON files are source-controlled assets.
+- If Grafana is restarted and a dashboard appears empty or missing, first verify the JSON file still exists in this folder and the provisioning path still mounts it into the container.
+
 Current dashboards:
 
 - `customerdna_infrastructure.dashboard.json`

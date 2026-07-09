@@ -16,12 +16,12 @@ from client_1.customerdna_client1_dag_common import (
 
 with DAG(
     dag_id="customerdna_client1_raw_load_pipeline",
-    description="Client 1 raw load pipeline: reset Kafka, publish source datasets, load raw_data, and validate raw quality",
+    description="Client 1 raw load pipeline: source -> Kafka -> MinIO bronze -> Kafka bronze-ready event -> raw_data -> raw quality validation",
     default_args=DEFAULT_ARGS,
     start_date=datetime(2026, 6, 28),
     schedule=None,
     catchup=False,
-    tags=["customerdna", "client1", "raw", "kafka", "gx"],
+    tags=["customerdna", "client1", "raw", "kafka", "gx", "minio"],
 ) as dag:
     start = EmptyOperator(task_id="start")
     load_raw = PythonOperator(

@@ -7,6 +7,11 @@ This folder contains the monitoring stack for CustomerDNA AI:
 - Runtime state files used by the pipeline metrics exporter
 - Runtime log exports for easier troubleshooting
 
+Important:
+- Dashboard JSON files under `grafana/dashboards/` are source files and should stay version-controlled.
+- Runtime state files under `state/` are generated at execution time and should not be committed.
+- Exported logs are troubleshooting artifacts and should not be committed.
+
 ## Key Folders
 - `grafana/`: dashboard JSON files and Grafana provisioning
 - `prometheus/`: Prometheus stack configuration

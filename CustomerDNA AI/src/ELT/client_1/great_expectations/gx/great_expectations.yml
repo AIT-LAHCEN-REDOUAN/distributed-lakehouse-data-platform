@@ -87,161 +87,161 @@ fluent_datasources:
     assets:
       raw_marketing_campaign:
         type: table
-        id: d1528f7a-0661-4df3-8ab9-dd7f31e0f4e2
+        id: e604277e-90eb-46cc-af6b-4d7e62be8d92
         batch_metadata: {}
         batch_definitions:
           marketing_campaign_whole_table:
-            id: 1bc81e4e-afcd-492f-9d08-eaf8e5771717
+            id: cd09feaf-2a3c-4a99-a00e-f606a21b8876
             partitioner:
         table_name: marketing_campaign
         schema_name: raw_data
       raw_ecommerce_customer_churn:
         type: table
-        id: 40d320c8-81b8-4751-b0ec-60ea6755a4b5
+        id: 534d1c9d-9161-4f83-97b6-fe181f341882
         batch_metadata: {}
         batch_definitions:
           ecommerce_customer_churn_whole_table:
-            id: a3b539c4-97ec-4f20-811e-708d52137fc7
+            id: 4f85a07e-f056-4484-aa77-4ac791c20c46
             partitioner:
         table_name: e_commerce_customer_churn
         schema_name: raw_data
       raw_online_retail:
         type: table
-        id: 108a4cb5-f71f-4abc-9dc1-e8fbe474efbd
+        id: a7fabe45-827e-490a-998a-f7a1e58efa74
         batch_metadata: {}
         batch_definitions:
           online_retail_whole_table:
-            id: 716fdb95-7358-405a-9935-10361756895c
+            id: 405b02aa-4655-4704-8d1e-838f7f2f0d5e
             partitioner:
         table_name: online_retail
         schema_name: raw_data
       raw_retailrocket_events:
         type: table
-        id: ed5c8968-77ee-41e2-9610-ebb611d400f5
+        id: bf28cce3-ceac-4cd6-8d79-1f86f8cb7995
         batch_metadata: {}
         batch_definitions:
           retailrocket_events_whole_table:
-            id: 1be9f840-cc81-4741-bcc6-8df977f9bcfe
+            id: 596c852e-77fe-4b5e-95a6-a992212d662f
             partitioner:
         table_name: events
         schema_name: raw_data
       raw_retailrocket_item_properties:
         type: table
-        id: 878775b5-ba90-4686-94e6-012aeec2b0bf
+        id: cc847126-9792-465b-9486-57c198b767df
         batch_metadata: {}
         batch_definitions:
           retailrocket_item_properties_whole_table:
-            id: aac5f6c6-35c9-47e6-9020-9352adde10bc
+            id: fba89dac-87de-4108-a690-9b7559393664
             partitioner:
         table_name: item_properties
         schema_name: raw_data
       raw_retailrocket_category_tree:
         type: table
-        id: c6b2631a-f3bb-419b-b3e2-8ee70ef46533
+        id: 9bd75e0d-9981-469f-be36-e8948e43faa4
         batch_metadata: {}
         batch_definitions:
           retailrocket_category_tree_whole_table:
-            id: c5a4dbb5-c919-4bd2-9d88-1982caf490be
+            id: 9f5a08a3-2614-4402-b757-4a8a5ee7ea6b
             partitioner:
         table_name: category_tree
         schema_name: raw_data
       analytics_customer_segments:
         type: table
-        id: d1cadc32-57a1-4c9c-ba90-491e79092372
+        id: 7b15ab3c-a598-4e47-9c22-8212225c342a
         batch_metadata: {}
         batch_definitions:
           analytics_customer_segments_whole_table:
-            id: 9f35e3c8-498e-4b60-a561-085c930242e5
+            id: cafcb057-73e6-47ee-86f7-82929dbe77d9
             partitioner:
         table_name: analytics_customer_segments
         schema_name: analytics
       analytics_product_performance:
         type: table
-        id: 2894a02c-a632-49c5-8b79-e2ae312bddc3
+        id: 8bdd474c-a8bb-49a6-995a-72459d758197
         batch_metadata: {}
         batch_definitions:
           analytics_product_performance_whole_table:
-            id: 08d6456d-cebc-4420-b4c9-ebd393bc06b6
+            id: 5e2f9401-4344-4024-ba20-33f7ecf71b28
             partitioner:
         table_name: analytics_product_performance
         schema_name: analytics
       analytics_sales_analytics:
         type: table
-        id: 352a6fef-2533-4c7e-81a1-64c27117e3f4
+        id: 4dd85393-7d03-498b-b82d-4c0197378b68
         batch_metadata: {}
         batch_definitions:
           analytics_sales_analytics_whole_table:
-            id: e5031129-7f3e-413f-97d1-c12336ed4b3f
+            id: 2e4cee29-dbcb-4760-a92e-6fa874f3cf5c
             partitioner:
         table_name: analytics_sales_analytics
         schema_name: analytics
       analytics_business_intelligence:
         type: table
-        id: 87831619-b5f1-49df-b14f-518ec7254242
+        id: d81213b0-49b4-4073-8301-5838515ca5fa
         batch_metadata: {}
         batch_definitions:
           analytics_business_intelligence_whole_table:
-            id: 3b289f85-5bf9-44f1-81c3-654d741a3c5b
+            id: 4e198d39-db70-4b50-8ffc-11c34a134e15
             partitioner:
         table_name: analytics_business_intelligence
         schema_name: analytics
       serving_customer_360:
         type: table
-        id: 73ecdd3b-a8e8-482c-a773-53168fe87526
+        id: 903786db-e894-4799-9027-dfa1e5eb3bb2
         batch_metadata: {}
         batch_definitions:
           customer_360_whole_table:
-            id: 6ee7f276-84d9-4b43-b7dc-e22178c34318
+            id: 46cfb819-e977-4977-8129-1db7b7e83082
             partitioner:
         table_name: customer_360
         schema_name: serving
       serving_segmentation_feature_base:
         type: table
-        id: f5b61192-ed89-47ef-9d00-e251f2da9936
+        id: a382587d-b406-4666-8f4e-55d682ab1256
         batch_metadata: {}
         batch_definitions:
           segmentation_feature_base_whole_table:
-            id: a5d10a3f-722c-4ddf-936a-6d66b387933e
+            id: a8858b56-6ca9-41c6-b6f5-1902018a61d9
             partitioner:
         table_name: segmentation_feature_base
         schema_name: serving
       serving_churn_feature_base:
         type: table
-        id: 66cb46ee-c067-49e7-8676-07b21d89293b
+        id: dd07a060-d4b4-463c-9d69-d74526ce76bf
         batch_metadata: {}
         batch_definitions:
           churn_feature_base_whole_table:
-            id: 41630d6d-c705-44a9-87f4-a345d980175a
+            id: 84fbe00f-5e2e-4c5b-b388-779ecc9a1e30
             partitioner:
         table_name: churn_feature_base
         schema_name: serving
       serving_ltv_feature_base:
         type: table
-        id: 0fe69319-0e27-4f7f-bcea-c7779cebae77
+        id: fa73304c-57cd-4b4f-ab28-8d5cfa972b45
         batch_metadata: {}
         batch_definitions:
           ltv_feature_base_whole_table:
-            id: 7911cc54-a2e7-4af3-8aa3-ec32964702fe
+            id: 3eabf8d9-215f-489d-b112-ed05ab5250eb
             partitioner:
         table_name: ltv_feature_base
         schema_name: serving
       serving_persona_base:
         type: table
-        id: eff022b2-bee2-44b2-b604-dedc484523a5
+        id: 45c9a9ac-eb32-4721-a9d5-5e96b40f9544
         batch_metadata: {}
         batch_definitions:
           persona_base_whole_table:
-            id: 13a23878-6d5f-4909-be13-5044253d629c
+            id: ffa1fc6b-48e0-4c0d-9b99-970aa57cf238
             partitioner:
         table_name: persona_base
         schema_name: serving
       serving_marketing_recommendation_base:
         type: table
-        id: 7a416911-f05c-46a2-b6a4-bfaaac0a2a7f
+        id: 5775ec75-a98f-4f38-8dee-1a3534b5dd7c
         batch_metadata: {}
         batch_definitions:
           marketing_recommendation_base_whole_table:
-            id: fda3d4db-1a02-4fd9-a058-99611754da10
+            id: 68bd0889-4d82-49b8-aa2d-26c84f4054a9
             partitioner:
         table_name: marketing_recommendation_base
         schema_name: serving

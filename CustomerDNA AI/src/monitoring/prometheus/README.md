@@ -19,7 +19,8 @@ Suggested Grafana datasource:
 - URL: `http://host.docker.internal:9090`
 
 Notes:
-- `postgres_exporter` connects to your local PostgreSQL warehouse on port `5440`.
+- `postgres_exporter` connects to the PostgreSQL warehouse through `${CUSTOMERDNA_MONITORING_POSTGRES_HOST:-host.docker.internal}` on port `5440`.
+- The compose file adds a `host.docker.internal -> host-gateway` mapping so the same config works more reliably on Linux Docker hosts.
 - `cadvisor` is included for container-level CPU and memory monitoring.
 - `pipeline_metrics_exporter` reads generated monitoring state files from `src/monitoring/state` and exposes them on port `9109`.
 - `raw_load_state.json` appears only after the Kafka raw-load pipeline runs.

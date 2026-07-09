@@ -256,7 +256,7 @@ class ClientDWSetup:
         print("=" * 70)
         print(f"Database: {DATA_WAREHOUSE_NAME}")
         print("Architecture: Simplified ELT")
-        print("Flow: source datasets -> Kafka -> client1_DW.raw_data -> dbt -> client1_DW.analytics")
+        print("Flow: source datasets -> Kafka -> MinIO bronze -> client1_DW.raw_data -> dbt -> client1_DW.analytics")
         print("=" * 70)
 
         validate_config()

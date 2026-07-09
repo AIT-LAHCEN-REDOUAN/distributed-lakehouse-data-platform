@@ -20,10 +20,12 @@ services:
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter:latest
     container_name: customerdna_postgres_exporter
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - .env
     environment:
-      DATA_SOURCE_URI: "${CUSTOMERDNA_POSTGRES_HOST}:${CUSTOMERDNA_POSTGRES_PORT}/${CUSTOMERDNA_POSTGRES_DB}?sslmode=disable"
+      DATA_SOURCE_URI: "${CUSTOMERDNA_MONITORING_POSTGRES_HOST:-host.docker.internal}:${CUSTOMERDNA_POSTGRES_PORT}/${CUSTOMERDNA_POSTGRES_DB}?sslmode=disable"
       DATA_SOURCE_USER: "${CUSTOMERDNA_POSTGRES_USER}"
       DATA_SOURCE_PASS: "${CUSTOMERDNA_POSTGRES_PASSWORD}"
     ports:

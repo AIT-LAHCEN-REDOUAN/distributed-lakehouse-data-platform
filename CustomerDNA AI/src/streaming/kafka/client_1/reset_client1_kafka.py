@@ -1,4 +1,4 @@
-"""Reset Client 1 Kafka topics and local streaming artifacts."""
+"""Reset Client 1 Kafka topics and local Kafka logs."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from pathlib import Path
 
 from kafka import KafkaAdminClient
 from kafka.admin import NewTopic
-from kafka.errors import TopicAlreadyExistsError, UnknownTopicOrPartitionError
+from kafka.errors import TopicAlreadyExistsError
 
 CURRENT_DIR = Path(__file__).resolve().parent
 COMMON_DIR = CURRENT_DIR / "common"
@@ -18,10 +18,9 @@ if str(COMMON_DIR) not in sys.path:
     sys.path.append(str(COMMON_DIR))
 
 from kafka_config import (  # noqa: E402
-    CONSUMER_OUTPUT_DIR,
+    ALL_TOPICS,
     KAFKA_BOOTSTRAP_SERVERS,
     LOG_OUTPUT_DIR,
-    TOPICS,
 )
 
 
@@ -108,8 +107,8 @@ def clear_directory_contents(target_dir: Path) -> int:
 
 
 def main() -> None:
-    """Reset Client 1 Kafka topics and local artifacts."""
-    topics = list(TOPICS.values())
+    """Reset Client 1 Kafka topics and local log artifacts."""
+    topics = list(ALL_TOPICS)
 
     print("=" * 80)
     print("CUSTOMERDNA AI - CLIENT 1 KAFKA RESET")
@@ -128,10 +127,8 @@ def main() -> None:
     finally:
         admin_client.close()
 
-    removed_consumer_outputs = clear_directory_contents(CONSUMER_OUTPUT_DIR)
     removed_logs = clear_directory_contents(LOG_OUTPUT_DIR)
 
-    print(f"[INFO] Cleared consumer output artifacts: {removed_consumer_outputs}")
     print(f"[INFO] Cleared Kafka log artifacts: {removed_logs}")
     print("[INFO] Data warehouse tables were not modified by this reset script.")
     print("Kafka reset completed successfully.")

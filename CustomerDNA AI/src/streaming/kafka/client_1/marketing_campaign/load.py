@@ -1,4 +1,4 @@
-"""Consume Client 1 marketing campaign messages from Kafka into MinIO bronze."""
+"""Consume the bronze-ready event for Client 1 marketing campaign and load it to raw_data."""
 
 from __future__ import annotations
 
@@ -9,9 +9,11 @@ COMMON_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "com
 if COMMON_DIR not in sys.path:
     sys.path.append(COMMON_DIR)
 
-from bronze_consumer import run_bronze_consumer  # noqa: E402
+from load_event_consumer import run_load_event_consumer  # noqa: E402
 
 
 DATASET_KEY = "marketing_campaign"
+
+
 if __name__ == "__main__":
-    run_bronze_consumer(DATASET_KEY)
+    run_load_event_consumer(DATASET_KEY)

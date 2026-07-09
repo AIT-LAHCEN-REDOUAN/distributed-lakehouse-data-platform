@@ -52,17 +52,37 @@ def read_env_file(env_path: Path) -> dict[str, str]:
 
 def build_task_env() -> dict[str, str]:
     env = os.environ.copy()
-    env.update(read_env_file(CLIENT_ENV_PATH))
+    file_env = read_env_file(CLIENT_ENV_PATH)
+
+    # Keep local .env support, but let container/runtime variables win.
+    for key, value in file_env.items():
+        env.setdefault(key, value)
 
     # Inside the Airflow container, localhost points to the container itself.
     container_safe_host = env.get("CUSTOMERDNA_AIRFLOW_DW_HOST", "host.docker.internal")
     if env.get("CUSTOMERDNA_POSTGRES_HOST", "localhost") in {"localhost", "127.0.0.1"}:
         env["CUSTOMERDNA_POSTGRES_HOST"] = container_safe_host
 
-    if not env.get("CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS"):
+    if env.get("CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS", "").strip() in {
+        "",
+        "localhost:9092",
+        "127.0.0.1:9092",
+    }:
         env["CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS"] = env.get(
             "CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS",
             "broker:29092",
+        )
+
+    if env.get("CUSTOMERDNA_MINIO_ENDPOINT", "").strip() in {
+        "",
+        "localhost:9000",
+        "127.0.0.1:9000",
+        "http://localhost:9000",
+        "http://127.0.0.1:9000",
+    }:
+        env["CUSTOMERDNA_MINIO_ENDPOINT"] = env.get(
+            "CUSTOMERDNA_AIRFLOW_MINIO_ENDPOINT",
+            "minio:9000",
         )
 
     env["DBT_PROFILES_DIR"] = str(DBT_DIR)
@@ -81,6 +101,7 @@ def run_command(command: list[str], cwd: Path, task_label: str) -> None:
     print(f"[CMD] {' '.join(command)}")
     print(f"[DB HOST] {env.get('CUSTOMERDNA_POSTGRES_HOST')}")
     print(f"[KAFKA BOOTSTRAP] {env.get('CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS')}")
+    print(f"[MINIO ENDPOINT] {env.get('CUSTOMERDNA_MINIO_ENDPOINT')}")
 
     try:
         subprocess.run(

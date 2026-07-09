@@ -1,0 +1,28 @@
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: customerdna_minio
+    env_file:
+      - .env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    command: server /data --console-address ":9001"
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+    networks:
+      kafka_shared:
+        aliases:
+          - minio
+
+volumes:
+  minio_data:
+
+networks:
+  kafka_shared:
+    external: true
+    name: customerdna_kafka_shared

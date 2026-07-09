@@ -4,42 +4,14 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from kafka import KafkaAdminClient
-from kafka.admin import NewTopic
-from kafka.errors import TopicAlreadyExistsError
-
-from kafka_config import KAFKA_BOOTSTRAP_SERVERS, TOPICS
+from kafka_config import TOPICS
 from producer_utils import (
     build_reliable_producer,
+    ensure_topic_exists,
     get_topic_message_count,
     publish_with_confirmation,
 )
 from source_row_iterators import get_source_label, iter_source_rows
-
-
-def ensure_topic_exists(topic_name: str) -> None:
-    """Create a Kafka topic if it does not already exist."""
-    admin_client = KafkaAdminClient(
-        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-        client_id="customerdna-client1-topic-admin",
-    )
-
-    try:
-        admin_client.create_topics(
-            new_topics=[
-                NewTopic(
-                    name=topic_name,
-                    num_partitions=3,
-                    replication_factor=1,
-                )
-            ],
-            validate_only=False,
-        )
-        print(f"[INFO] Created topic: {topic_name}")
-    except TopicAlreadyExistsError:
-        print(f"[INFO] Topic already exists: {topic_name}")
-    finally:
-        admin_client.close()
 
 
 def build_message(dataset_key: str, row: dict[str, str | None], row_number: int) -> dict[str, object]:

@@ -6,7 +6,9 @@ import json
 import time
 from collections.abc import Callable, Iterable
 
-from kafka import KafkaConsumer, KafkaProducer, TopicPartition
+from kafka import KafkaAdminClient, KafkaConsumer, KafkaProducer, TopicPartition
+from kafka.admin import NewTopic
+from kafka.errors import TopicAlreadyExistsError
 
 from kafka_config import KAFKA_BOOTSTRAP_SERVERS
 
@@ -25,6 +27,36 @@ def build_reliable_producer() -> KafkaProducer:
         value_serializer=lambda value: json.dumps(value).encode("utf-8"),
         key_serializer=lambda value: value.encode("utf-8") if value else None,
     )
+
+
+def ensure_topic_exists(
+    topic_name: str,
+    *,
+    num_partitions: int = 3,
+    replication_factor: int = 1,
+) -> None:
+    """Create a Kafka topic if it does not already exist."""
+    admin_client = KafkaAdminClient(
+        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+        client_id="customerdna-client1-topic-admin",
+    )
+
+    try:
+        admin_client.create_topics(
+            new_topics=[
+                NewTopic(
+                    name=topic_name,
+                    num_partitions=num_partitions,
+                    replication_factor=replication_factor,
+                )
+            ],
+            validate_only=False,
+        )
+        print(f"[INFO] Created topic: {topic_name}")
+    except TopicAlreadyExistsError:
+        print(f"[INFO] Topic already exists: {topic_name}")
+    finally:
+        admin_client.close()
 
 
 def _get_topic_partitions(topic_name: str) -> list[TopicPartition]:

@@ -124,7 +124,6 @@ CustomerDNA AI/**/logs/
 # Old directory structures
 /dataset
 CustomerDNA AI/base_dataset/
-CustomerDNA AI/project_requirements/
 
 # Client-specific dataset directories (user requested)
 CustomerDNA AI/src/Preprocessing/client_1/Customer_Personality_Analysis_dataset_Preprocessing/cleaned_dataset/
@@ -189,3 +188,18 @@ htmlcov/
 .pytest_cache/
 .mypy_cache/
 dbt_internal_packages/
+
+# ============================================================================
+# CUSTOMERDNA AI - REQUIRED VERSIONED PROJECT FILES
+# ============================================================================
+
+# Keep project requirements and jury/report docs versioned
+!CustomerDNA AI/project_requirements/
+!CustomerDNA AI/project_requirements/**
+
+# Keep Grafana dashboard source JSON files versioned
+!CustomerDNA AI/src/monitoring/grafana/dashboards/
+!CustomerDNA AI/src/monitoring/grafana/dashboards/*.json
+
+# dbt build outputs should not be versioned
+CustomerDNA AI/src/ELT/client_1/dbt/target/

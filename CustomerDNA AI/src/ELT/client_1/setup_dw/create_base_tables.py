@@ -7,7 +7,7 @@ Purpose:
 Flow:
     setup_dw.py
         -> create_base_tables.py
-        -> Kafka raw loading pipeline
+        -> Kafka -> MinIO bronze -> raw loading pipeline
         -> dbt transformations
 
 Important:
