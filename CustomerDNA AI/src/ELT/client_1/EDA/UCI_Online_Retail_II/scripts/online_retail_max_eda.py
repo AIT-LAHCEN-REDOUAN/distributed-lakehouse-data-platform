@@ -71,7 +71,16 @@ RAW_DATA_SCHEMA = "raw_data"
 TABLE_NAME = "online_retail"
 
 CURRENT_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
-OUTPUT_BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "output")
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "..")
+)
+OUTPUT_BASE_DIR = os.path.join(
+    PROJECT_ROOT,
+    "artifacts",
+    "client_1",
+    "elt_eda",
+    "online_retail",
+)
 OUTPUT_DIR = os.path.join(OUTPUT_BASE_DIR, f"max_eda_{CURRENT_TIMESTAMP}")
 
 PLOT_DIR = os.path.join(OUTPUT_DIR, "plots")

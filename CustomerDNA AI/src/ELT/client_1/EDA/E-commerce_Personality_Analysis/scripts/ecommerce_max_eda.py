@@ -74,7 +74,16 @@ POSSIBLE_TABLE_NAMES = [
 ]
 
 TABLE_NAME = None  # Will be determined dynamically
-OUTPUT_BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "output")
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "..")
+)
+OUTPUT_BASE_DIR = os.path.join(
+    PROJECT_ROOT,
+    "artifacts",
+    "client_1",
+    "elt_eda",
+    "ecommerce_personality_analysis",
+)
 CURRENT_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
 OUTPUT_DIR = os.path.join(OUTPUT_BASE_DIR, f"max_eda_{CURRENT_TIMESTAMP}")
 

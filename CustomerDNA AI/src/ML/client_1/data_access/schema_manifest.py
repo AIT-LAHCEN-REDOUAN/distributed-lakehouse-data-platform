@@ -8,17 +8,19 @@ from typing import Any
 
 CLIENT_ML_ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = CLIENT_ML_ROOT.parents[2]
+ARTIFACTS_ROOT = PROJECT_ROOT / "artifacts" / "client_1"
+ML_ARTIFACTS_ROOT = ARTIFACTS_ROOT / "ml"
 
 CONFIGS_DIR = CLIENT_ML_ROOT / "configs"
-DATASETS_DIR = CLIENT_ML_ROOT / "datasets"
+DATASETS_DIR = ML_ARTIFACTS_ROOT / "datasets"
 SNAPSHOTS_DIR = DATASETS_DIR / "snapshots"
 MANIFESTS_DIR = DATASETS_DIR / "manifests"
 SAMPLES_DIR = DATASETS_DIR / "samples"
 PROCESSED_DIR = DATASETS_DIR / "processed"
-REPORTS_DIR = CLIENT_ML_ROOT / "reports"
+REPORTS_DIR = ML_ARTIFACTS_ROOT / "reports"
 EXPERIMENT_REPORTS_DIR = REPORTS_DIR / "experiment_reports"
 BUSINESS_SUMMARIES_DIR = REPORTS_DIR / "business_summaries"
-MODELS_DIR = CLIENT_ML_ROOT / "models"
+MODELS_DIR = ML_ARTIFACTS_ROOT / "models"
 PREPROCESSORS_DIR = MODELS_DIR / "preprocessors"
 MODEL_METADATA_DIR = MODELS_DIR / "model_metadata"
 

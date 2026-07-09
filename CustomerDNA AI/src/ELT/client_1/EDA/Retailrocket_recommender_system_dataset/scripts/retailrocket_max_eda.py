@@ -47,8 +47,18 @@ from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')
 
-# Direct import using absolute path
-config_path = r"d:\github\Master_PFE_Project\CustomerDNA AI\src\ELT\client_1\config\config.py"
+# Resolve the project root dynamically so the script is portable across machines.
+PROJECT_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "..")
+)
+config_path = os.path.join(
+    PROJECT_ROOT,
+    "src",
+    "ELT",
+    "client_1",
+    "config",
+    "config.py",
+)
 if not os.path.exists(config_path):
     print(f"[ERROR] Config file not found at: {config_path}")
     sys.exit(1)
@@ -87,7 +97,13 @@ EVENTS_TABLE = "events"
 ITEM_PROPERTIES_TABLE = "item_properties"
 CATEGORY_TREE_TABLE = "category_tree"
 
-OUTPUT_BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "output")
+OUTPUT_BASE_DIR = os.path.join(
+    PROJECT_ROOT,
+    "artifacts",
+    "client_1",
+    "elt_eda",
+    "retailrocket_recommender_system_dataset",
+)
 CURRENT_TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
 OUTPUT_DIR = os.path.join(OUTPUT_BASE_DIR, f"max_eda_{CURRENT_TIMESTAMP}")
 

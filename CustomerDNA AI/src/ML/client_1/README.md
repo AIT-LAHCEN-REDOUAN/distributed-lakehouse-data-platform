@@ -20,15 +20,19 @@ The ML layer must consume curated data from the `serving` schema, not directly f
 
 - `configs/` stores run configuration files for each ML use case.
 - `data_access/` stores warehouse extraction and dataset snapshot logic.
-- `datasets/` stores generated local snapshots, manifests, and safe samples.
-- `pipelines/` stores end-to-end orchestration scripts for ML workflows.
 - `preprocessing/` stores ML-specific data preparation code.
 - `training/` stores model-training entry points.
-- `evaluation/` stores metrics and evaluation logic.
-- `models/` stores serialized models and model metadata.
 - `inference/` stores batch prediction and downstream output generation logic.
-- `reports/` stores experiment summaries and business-readable outputs.
-- `notebooks/` stores exploratory notebooks only.
+- `eda/` stores ML-oriented exploratory analysis scripts and visualization logic.
+
+## Generated Artifacts
+
+Runtime outputs are intentionally kept outside `src/` so the ML codebase stays clean:
+
+- snapshots, samples, and processed matrices go to `CustomerDNA AI/artifacts/client_1/ml/datasets/`
+- model binaries and metadata go to `CustomerDNA AI/artifacts/client_1/ml/models/`
+- experiment reports and business summaries go to `CustomerDNA AI/artifacts/client_1/ml/reports/`
+- ML EDA plots and markdown outputs go to `CustomerDNA AI/artifacts/client_1/ml/eda/`
 
 ## Implementation Principle
 

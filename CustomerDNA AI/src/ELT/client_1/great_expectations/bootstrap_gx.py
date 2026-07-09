@@ -24,8 +24,9 @@ from gx_config import (
     ML_VALIDATION_NAMES,
     RAW_CHECKPOINT_NAME,
     RAW_VALIDATION_NAMES,
-    build_connection_string,
     describe_project,
+    ensure_local_config_variables,
+    get_gx_connection_string_reference,
 )
 from gx_suite_definitions import build_all_suites
 
@@ -44,13 +45,14 @@ def parse_args():
 
 
 def get_context():
+    ensure_local_config_variables()
     return gx.get_context(mode="file", project_root_dir=str(GX_PROJECT_DIR))
 
 
 def ensure_datasource(context):
     return context.data_sources.add_or_update_postgres(
         name=DATASOURCE_NAME,
-        connection_string=build_connection_string(),
+        connection_string=get_gx_connection_string_reference(),
     )
 
 

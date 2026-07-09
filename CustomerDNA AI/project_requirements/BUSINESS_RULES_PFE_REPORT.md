@@ -3,8 +3,8 @@
 > **PFE Jury-Focused Document**
 > Scope: Data Engineering positioning only
 > Status: Implemented Client 1 platform view
-> Version: 2.0
-> Last Updated: 2026-07-08
+> Version: 3.0  
+> Last Updated: 2026-07-09  
 
 ---
 
@@ -119,15 +119,18 @@ The project therefore addresses the following question:
 
 ## 4. Proposed Solution
 
-The project implements a **warehouse-centric Data Engineering platform** using PostgreSQL as the storage and transformation foundation, Kafka as the ingestion and raw-loading backbone, dbt as the transformation backbone, Great Expectations as the data-quality framework, Airflow as the orchestration layer, and Prometheus/Grafana as the observability layer.
+The project implements a **warehouse-centric Data Engineering platform** using PostgreSQL as the storage and transformation foundation, Kafka as the ingestion and event-driven raw-loading backbone, MinIO as the bronze persistence layer, dbt as the transformation backbone, Great Expectations as the data-quality framework, Airflow as the orchestration layer, and Prometheus/Grafana as the observability layer.
 
 ### 4.1 High-Level Implemented Flow
 
 ```text
 Client source files
   -> Kafka producers
-  -> Kafka topics
-  -> Kafka raw loaders
+  -> Kafka source topics
+  -> Kafka consumers to MinIO bronze
+  -> MinIO bronze batches
+  -> Kafka bronze-ready event topics
+  -> bronze-aware raw loaders
   -> PostgreSQL raw_data schema
   -> dbt staging views
   -> dbt intermediate tables
@@ -175,7 +178,8 @@ The main objectives of the project are:
 
 - build a complete Client 1 customer-data platform,
 - integrate multiple heterogeneous customer datasets,
-- make Kafka the active ingestion and raw-loading backbone,
+- make Kafka the active ingestion and event-driven raw-loading backbone,
+- introduce MinIO as the bronze persistence layer between Kafka and PostgreSQL,
 - build a layered warehouse inside PostgreSQL,
 - implement controlled transformations with dbt,
 - enforce data quality with dbt tests and Great Expectations,
@@ -232,8 +236,11 @@ The current implemented scope for Client 1 already includes the following produc
 - Kafka broker,
 - Kafka UI,
 - dataset-specific producers,
-- dataset-specific loaders,
+- dataset-specific bronze consumers,
+- dataset-specific bronze-event loaders,
 - topic-based ingestion flow,
+- MinIO bronze persistence,
+- bronze-ready event handoff,
 - ordered raw loading pipeline for Client 1.
 
 ### 6.4 dbt Transformation Layer
@@ -287,8 +294,10 @@ The jury should focus on the platform components that prove Data Engineering mat
 
 - Kafka as ingestion backbone,
 - dataset-to-topic logic,
-- loader verification,
-- repeatable raw loading into the warehouse.
+- Kafka-to-MinIO bronze persistence,
+- bronze-ready event signaling,
+- raw-loader verification,
+- repeatable bronze-to-warehouse loading.
 
 ### 7.2 Data Warehouse Design
 
@@ -394,7 +403,10 @@ These sources are heterogeneous and must therefore be treated as:
 ## 10. Active Kafka Ingestion Backbone
 
 ### 10.1 Official Rule
-Kafka is the **official active ingestion and raw-loading backbone** for Client 1.
+Kafka is the **official active ingestion backbone and event-driven raw-loading backbone** for Client 1.
+
+### 10.1.1 Bronze Rule
+MinIO is the **official bronze persistence layer** for Client 1 between Kafka transport and PostgreSQL `raw_data`.
 
 ### 10.2 Why Kafka Was Added
 Kafka strengthens the platform because it introduces:
@@ -426,8 +438,9 @@ The Kafka layer currently includes:
 - `run_client1_kafka_raw_pipeline.py`,
 - a common utility layer,
 - dataset-specific producer scripts,
-- dataset-specific sample consumer scripts,
-- dataset-specific `load_to_raw.py` loaders.
+- dataset-specific bronze consumer scripts,
+- dataset-specific bronze-event sample consumer scripts,
+- dataset-specific `load.py` raw loaders.
 
 ### 10.5 Ordering Strategy
 The raw pipeline processes smaller datasets first and larger datasets later. This improves:
@@ -443,7 +456,9 @@ Kafka ingestion is allowed to:
 - read source rows,
 - serialize source data into topics,
 - transport dataset records,
-- batch inserts into raw tables,
+- persist dataset batches into MinIO bronze,
+- publish bronze-ready events,
+- trigger controlled loading from bronze into raw tables,
 - verify final raw counts.
 
 Kafka ingestion must not:
@@ -788,7 +803,12 @@ Its implemented task order is:
 Its responsibility is to:
 
 - run the Client 1 Kafka raw pipeline,
-- load all source datasets into `raw_data`,
+- reset Kafka topics for clean reruns,
+- reset Client 1 bronze objects,
+- produce all source datasets into Kafka,
+- persist all dataset runs into MinIO bronze,
+- publish bronze-ready events,
+- load all referenced bronze batches into `raw_data`,
 - bootstrap Great Expectations for the raw scope,
 - validate raw-layer quality.
 
@@ -927,7 +947,8 @@ Any future additions must respect the same architecture-first separation rather 
 At this stage, the project already delivers:
 
 - organized heterogeneous Client 1 source data,
-- Kafka-based ingestion and raw loading,
+- Kafka-based ingestion and event-driven raw loading,
+- MinIO bronze persistence and bronze-run traceability,
 - PostgreSQL warehouse setup scripts,
 - preserved `raw_data` tables,
 - operational `metadata` support,
@@ -959,7 +980,7 @@ This sentence captures the correct final positioning.
 During the defense, the following should be emphasized:
 
 - heterogeneous source integration,
-- Kafka-based ingestion and loading,
+- Kafka-based ingestion, bronze persistence, and controlled warehouse loading,
 - warehouse schema design,
 - dbt layering,
 - validation strategy,

@@ -1,0 +1,46 @@
+## CustomerDNA AI - Repository Hygiene
+
+# Python cache
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# Centralized runtime artifacts
+artifacts/*
+!artifacts/README.md
+
+# Airflow runtime
+src/airflow/logs/
+
+# dbt runtime artifacts
+src/ELT/client_1/dbt/logs/
+src/ELT/client_1/dbt/target/
+src/ELT/client_1/dbt/dbt_packages/
+
+# Great Expectations local runtime artifacts
+src/ELT/client_1/great_expectations/gx/uncommitted/
+
+# Kafka runtime artifacts
+src/streaming/kafka/logs/
+src/streaming/kafka/consumer_output/
+src/streaming/kafka/cache/
+
+# Monitoring runtime artifacts
+src/monitoring/logs/
+src/monitoring/state/*.json
+!src/monitoring/state/.gitkeep
+
+# ELT EDA generated output
+src/ELT/client_1/EDA/**/output/
+
+# ML generated artifacts
+src/ML/client_1/datasets/processed/
+src/ML/client_1/datasets/samples/
+src/ML/client_1/datasets/snapshots/
+src/ML/client_1/eda/plots/
+src/ML/client_1/eda/reports/
+src/ML/client_1/models/model_metadata/
+src/ML/client_1/models/preprocessors/
+src/ML/client_1/models/saved_models/
+src/ML/client_1/reports/

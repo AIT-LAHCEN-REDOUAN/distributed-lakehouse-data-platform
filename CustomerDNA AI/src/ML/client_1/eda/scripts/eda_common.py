@@ -11,9 +11,12 @@ import matplotlib.pyplot as plt
 CURRENT_DIR = Path(__file__).resolve().parent
 EDA_ROOT = CURRENT_DIR.parent
 CLIENT_ML_ROOT = EDA_ROOT.parent
-PLOTS_ROOT = EDA_ROOT / "plots"
-REPORTS_ROOT = EDA_ROOT / "reports"
-MODEL_METADATA_DIR = CLIENT_ML_ROOT / "models" / "model_metadata"
+PROJECT_ROOT = CLIENT_ML_ROOT.parents[2]
+ML_ARTIFACTS_ROOT = PROJECT_ROOT / "artifacts" / "client_1" / "ml"
+EDA_ARTIFACTS_ROOT = ML_ARTIFACTS_ROOT / "eda"
+PLOTS_ROOT = EDA_ARTIFACTS_ROOT / "plots"
+REPORTS_ROOT = EDA_ARTIFACTS_ROOT / "reports"
+MODEL_METADATA_DIR = ML_ARTIFACTS_ROOT / "models" / "model_metadata"
 
 
 def utc_slug() -> str:

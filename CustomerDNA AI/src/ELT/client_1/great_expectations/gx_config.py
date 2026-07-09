@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 from pathlib import Path
 from urllib.parse import quote_plus
 import sys
@@ -22,6 +21,10 @@ from config.config import (  # noqa: E402
 
 GX_PROJECT_DIR = CURRENT_DIR
 GX_CONTEXT_DIR = GX_PROJECT_DIR / "gx"
+GX_UNCOMMITTED_DIR = GX_CONTEXT_DIR / "uncommitted"
+GX_CONFIG_VARIABLES_PATH = GX_UNCOMMITTED_DIR / "config_variables.yml"
+GX_CONNECTION_STRING_VARIABLE = "customerdna_gx_connection_string"
+GX_CONNECTION_STRING_PLACEHOLDER = f"${{{GX_CONNECTION_STRING_VARIABLE}}}"
 
 DATASOURCE_NAME = "client1_dw_postgres"
 RAW_CHECKPOINT_NAME = "raw_data_quality_checkpoint"
@@ -218,6 +221,34 @@ def build_connection_string() -> str:
     database = DATA_WAREHOUSE_NAME
 
     return f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}"
+
+
+def ensure_local_config_variables() -> Path:
+    """
+    Write the sensitive GX connection string into the local uncommitted config.
+
+    This keeps secrets out of the tracked `great_expectations.yml` while
+    preserving the current local workflow.
+    """
+    GX_UNCOMMITTED_DIR.mkdir(parents=True, exist_ok=True)
+
+    connection_string = build_connection_string()
+    escaped_connection_string = connection_string.replace("\\", "\\\\").replace('"', '\\"')
+
+    GX_CONFIG_VARIABLES_PATH.write_text(
+        "# Auto-generated locally by CustomerDNA AI Great Expectations bootstrap.\n"
+        "# This file is intentionally uncommitted and environment-specific.\n"
+        f'{GX_CONNECTION_STRING_VARIABLE}: "{escaped_connection_string}"\n',
+        encoding="utf-8",
+    )
+    return GX_CONFIG_VARIABLES_PATH
+
+
+def get_gx_connection_string_reference() -> str:
+    """
+    Return the non-secret placeholder stored in tracked GX configuration.
+    """
+    return GX_CONNECTION_STRING_PLACEHOLDER
 
 
 def get_asset_config_map() -> dict[str, dict]:

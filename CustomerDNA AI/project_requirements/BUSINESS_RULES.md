@@ -1,8 +1,8 @@
 # CustomerDNA AI - Business Rules & Project Specification
 
-> **PFE Project Document** | Version 15.0
-> Status: Client 1 Kafka-first data-engineering platform implemented with PostgreSQL warehouse setup, Kafka raw ingestion/loading backbone, dbt transformation stack (`staging`, `intermediate`, `analytics`, `serving`), dbt tests/docs, Great Expectations raw/analytics/serving/ML-readiness validation, split Airflow orchestration, Prometheus + Grafana monitoring, and local downstream ML experimentation on curated serving data products
-> Last Updated: 2026-07-08
+> **PFE Project Document** | Version 16.0
+> Status: Client 1 data-engineering platform implemented with PostgreSQL warehouse setup, Kafka ingestion backbone, MinIO bronze layer, Kafka bronze-ready event handoff, PostgreSQL `raw_data` loading, dbt transformation stack (`staging`, `intermediate`, `analytics`, `serving`), dbt tests/docs, Great Expectations raw/analytics/serving/ML-readiness validation, split Airflow orchestration, Prometheus + Grafana monitoring, and local downstream ML experimentation on curated serving data products
+> Last Updated: 2026-07-09
 
 ---
 
@@ -94,15 +94,18 @@ The project therefore addresses the following combined business and engineering 
 
 ## 4. Proposed Solution
 
-CustomerDNA AI solves this challenge through a layered warehouse-centric architecture with Kafka as the active ingestion backbone and dbt as the transformation backbone.
+CustomerDNA AI solves this challenge through a layered warehouse-centric architecture with Kafka as the active ingestion backbone, MinIO as the bronze persistence layer, PostgreSQL as the structured raw/warehouse engine, and dbt as the transformation backbone.
 
 The implemented high-level flow is:
 
 ```text
 Client source files
   -> Kafka producers
-  -> Kafka topics
-  -> Kafka raw loaders
+  -> Kafka source topics
+  -> Kafka consumers
+  -> MinIO bronze layer
+  -> Kafka bronze-ready event topics
+  -> bronze-aware raw loaders
   -> PostgreSQL raw_data schema
   -> dbt staging views
   -> dbt intermediate tables
@@ -131,7 +134,8 @@ This design ensures that:
 
 - Build a stable Client 1 customer-data platform.
 - Centralize heterogeneous source datasets into one controlled warehouse flow.
-- Make Kafka the official ingestion and raw-loading backbone.
+- Make Kafka the official ingestion backbone and event-driven raw-loading backbone.
+- Introduce MinIO as the bronze layer between Kafka transport and PostgreSQL raw storage.
 - Build trusted dbt layers from `raw_data` to `serving`.
 - Validate warehouse outputs with dbt tests and Great Expectations.
 - Orchestrate the end-to-end pipeline with Airflow.
@@ -163,9 +167,11 @@ The currently implemented scope includes:
 - Client 1 source dataset organization under the top-level `datasets` directory,
 - Client 1 warehouse initialization scripts,
 - Kafka broker and Kafka UI setup,
+- MinIO bronze object-storage layer,
 - dataset-specific Kafka producers,
 - dataset-specific Kafka sample consumers for verification,
-- dataset-specific Kafka-to-raw loaders,
+- dataset-specific Kafka-to-MinIO bronze consumers,
+- dataset-specific bronze-ready event raw loaders,
 - ordered Kafka raw pipeline runner for Client 1,
 - PostgreSQL `raw_data` and `metadata` schemas,
 - dbt `staging`, `intermediate`, `analytics`, and `serving` layers,
@@ -302,8 +308,9 @@ A shared global warehouse or benchmarking layer is valid only after multiple cli
 ### 10.1 Core Platform Stack
 
 - **Python** for platform scripts, configuration, validation helpers, monitoring exporter logic, and local downstream experimentation
-- **Apache Kafka** as the current active ingestion and raw-loading backbone
+- **Apache Kafka** as the current active ingestion and event-driven raw-loading backbone
 - **Kafka UI** for operational topic inspection
+- **MinIO** as the bronze object-storage layer between Kafka and PostgreSQL `raw_data`
 - **PostgreSQL** as the warehouse engine
 - **dbt** for transformations, testing, lineage, and documentation
 - **Great Expectations** for data-quality contracts and Data Docs
@@ -337,8 +344,11 @@ The stack must showcase:
 ```text
 Source files in datasets/client_1
   -> dataset-specific Kafka producer scripts
-  -> one topic per dataset
-  -> dataset-specific Kafka raw loader scripts
+  -> one source topic per dataset
+  -> dataset-specific Kafka-to-MinIO bronze consumer scripts
+  -> MinIO bronze JSONL batches
+  -> one bronze-ready event topic per dataset
+  -> dataset-specific bronze-event raw loader scripts
   -> PostgreSQL raw_data tables
   -> dbt staging views
   -> dbt intermediate tables
@@ -353,7 +363,8 @@ Source files in datasets/client_1
 ### 11.2 Operational Flow Rule
 Each stage must perform only its own responsibility:
 
-- Kafka handles ingestion transport and message-based raw loading,
+- Kafka handles ingestion transport, bronze-ready event signaling, and event-driven loading coordination,
+- MinIO preserves bronze ingestion batches,
 - raw tables preserve source-compatible structures,
 - dbt handles controlled transformation logic,
 - quality tools validate trust,
@@ -365,7 +376,8 @@ The platform must support clean reruns from the beginning. For Client 1 this is 
 
 - warehouse setup as a separate DAG,
 - Kafka topic reset as part of the raw pipeline,
-- dataset-by-dataset raw loading with verification,
+- bronze reset as part of the raw pipeline,
+- dataset-by-dataset Kafka -> bronze -> raw loading with verification,
 - downstream transformation and quality orchestration as a separate final DAG.
 
 ---
@@ -373,7 +385,7 @@ The platform must support clean reruns from the beginning. For Client 1 this is 
 ## 12. Kafka Ingestion and Raw Loading Rules
 
 ### 12.1 Strategic Role of Kafka
-Kafka is now the official ingestion and raw-loading backbone for Client 1.
+Kafka is now the official ingestion and event-driven raw-loading backbone for Client 1.
 
 It replaces the earlier direct raw-load path as the active architecture because it offers:
 
@@ -382,7 +394,23 @@ It replaces the earlier direct raw-load path as the active architecture because 
 - reusable topic-based ingestion design,
 - easier justification for future scaling beyond a single manual load script.
 
-### 12.2 Current Kafka Design
+### 12.1.1 Strategic Role of MinIO Bronze
+MinIO is the official bronze object-storage layer for Client 1.
+
+It exists to separate:
+
+- Kafka-based source transport,
+- bronze persistence of ingestion batches,
+- structured loading into PostgreSQL `raw_data`.
+
+This design provides:
+
+- replayable bronze files,
+- clearer traceability of each ingestion run,
+- a data-lake-style landing layer before structured warehouse storage,
+- stronger separation of concerns between transport, storage, and warehouse loading.
+
+### 12.2 Current Kafka and Bronze Design
 The Kafka layer currently includes:
 
 - one broker,
@@ -391,8 +419,18 @@ The Kafka layer currently includes:
 - source-specific row iterators,
 - dataset-specific producer scripts,
 - dataset-specific consumer verification scripts,
-- dataset-specific raw loaders,
+- dataset-specific bronze consumers,
+- bronze-ready event topics,
+- dataset-specific bronze-event raw loaders,
 - one orchestrated raw pipeline runner.
+
+The MinIO bronze layer currently includes:
+
+- one MinIO service,
+- one Client 1 bronze bucket,
+- bronze utility helpers,
+- Client 1 bronze reset and inspection scripts,
+- one dataset-run object layout under the `bronze/` prefix.
 
 ### 12.3 Dataset-Specific Kafka Topics
 The active Client 1 topic pattern follows:
@@ -404,6 +442,15 @@ The active Client 1 topic pattern follows:
 - `client1.retailrocket_item_properties`
 - `client1.online_retail`
 
+The active bronze-ready event topic pattern follows:
+
+- `client1.marketing_campaign.bronze_ready`
+- `client1.ecommerce_customer_churn.bronze_ready`
+- `client1.retailrocket_category_tree.bronze_ready`
+- `client1.retailrocket_events.bronze_ready`
+- `client1.retailrocket_item_properties.bronze_ready`
+- `client1.online_retail.bronze_ready`
+
 ### 12.4 Current Loading Strategy Rule
 The raw pipeline currently processes smaller datasets first and larger datasets last so that:
 
@@ -411,13 +458,23 @@ The raw pipeline currently processes smaller datasets first and larger datasets 
 - validation can begin on small datasets sooner,
 - long-running large loads are deferred until the smaller steps are already stable.
 
+### 12.4.1 Current Bronze-to-Raw Flow Rule
+For each dataset, the active raw-load sequence is:
+
+1. publish source rows to the dataset source topic,
+2. consume those rows into MinIO bronze JSONL batch objects,
+3. publish one bronze-ready Kafka event for that exact bronze run,
+4. consume that bronze-ready event and load the referenced bronze run into the matching PostgreSQL `raw_data` table,
+5. verify final target row counts.
+
 ### 12.5 Kafka Ingestion Boundary Rule
 Kafka ingestion may:
 
 - read source rows from CSV/XLSX inputs,
 - serialize them into topic messages,
 - preserve dataset identity,
-- batch raw inserts safely,
+- persist bronze JSONL batches safely,
+- publish bronze-ready load events,
 - verify final raw row counts.
 
 Kafka ingestion must not:
@@ -427,10 +484,26 @@ Kafka ingestion must not:
 - replace dbt transformation responsibilities,
 - silently discard records without explicit handling.
 
+### 12.5.1 Bronze Boundary Rule
+The MinIO bronze layer may:
+
+- store immutable bronze objects for each dataset run,
+- keep data under client-level and dataset-level prefixes,
+- support clean reruns through explicit bronze resets,
+- act as the replayable source for structured raw-table loading.
+
+The MinIO bronze layer must not:
+
+- replace PostgreSQL `raw_data`,
+- become the direct business-consumption layer,
+- contain hidden transformation logic.
+
 ### 12.6 Verification Rule
 No dataset load should be considered complete unless:
 
 - the producer publishes the expected dataset volume,
+- the bronze consumer stores the expected bronze objects,
+- the bronze-ready event is published successfully,
 - the loader completes insertion successfully,
 - the target raw table row count is verified.
 
@@ -452,7 +525,7 @@ Retired ingestion logic must not be reintroduced into the active platform unless
 ## 14. Raw Data Layer Rules
 
 ### 14.1 Raw Layer Purpose
-The `raw_data` schema is the preserved warehouse landing layer.
+The `raw_data` schema is the preserved structured warehouse landing layer fed from validated bronze batches.
 
 ### 14.2 Active Raw Tables
 The active Client 1 raw tables are:
@@ -470,7 +543,7 @@ The active Client 1 raw tables are:
 - Load safety is more important here than analytical convenience.
 - Typing and strong cleaning primarily belong downstream.
 - Raw data is a debug, audit, and lineage-preservation layer.
-- Raw loading must remain traceable through metadata and logs.
+- Raw loading must remain traceable through metadata, logs, and bronze-run references.
 
 ### 14.4 Metadata Tracking Rule
 Raw loading must remain observable through metadata tables and monitoring state artifacts, including:
@@ -779,8 +852,12 @@ Responsible for:
 Responsible for:
 
 - running the Kafka raw pipeline,
-- resetting topics/artifacts for clean reruns,
-- producing and loading all source datasets into `raw_data`,
+- resetting Client 1 Kafka topics for clean reruns,
+- resetting Client 1 bronze objects in MinIO,
+- producing all source datasets into Kafka topics,
+- consuming Kafka source topics into MinIO bronze batches,
+- publishing bronze-ready Kafka events per dataset run,
+- consuming bronze-ready events and loading referenced bronze batches into `raw_data`,
 - bootstrapping Great Expectations,
 - validating raw-layer quality.
 
@@ -846,7 +923,7 @@ The monitoring layer currently uses state artifacts such as:
 
 - `src/monitoring/state/airflow_pipeline_state.json`
 - `src/monitoring/state/gx_state.json`
-- `src/monitoring/state/ingestion_state.json`
+- `src/monitoring/state/raw_load_state.json`
 
 ### 25.5 Monitoring Rule
 Monitoring is not optional decoration. It is part of platform trust because it proves the system is operable, inspectable, and defendable.
@@ -926,7 +1003,9 @@ EDA exists to improve understanding and explainability. It must not replace form
 ### 29.1 Implemented Components
 
 - warehouse setup automation,
-- Kafka ingestion and raw loading backbone,
+- Kafka ingestion backbone,
+- MinIO bronze layer,
+- Kafka bronze-ready raw-loading backbone,
 - raw source preservation in PostgreSQL,
 - metadata tracking,
 - dbt staging layer,
@@ -944,16 +1023,17 @@ EDA exists to improve understanding and explainability. It must not replace form
 ### 29.2 Key Technical Achievements
 
 - Clear separation between ingestion, loading, transformation, validation, orchestration, and monitoring.
-- Kafka now serves as the official ingestion/raw-load backbone.
+- Kafka now serves as the official ingestion and event-driven raw-load backbone.
+- MinIO now acts as the bronze layer between Kafka transport and PostgreSQL raw storage.
 - Three-DAG Airflow architecture provides controlled rerun order.
 - dbt serving layer exposes reusable customer-level data products.
 - Great Expectations now validates not only raw and analytics but also serving and ML-readiness conditions.
 - Prometheus and Grafana make the platform operationally inspectable.
-- Legacy ingestion was retired cleanly without losing rollback capability.
+- The platform now separates transport, bronze persistence, and warehouse loading explicitly.
 
 ### 29.3 Current Project Structure
 
-The project structure below reflects the active platform and the retained rollback area.
+The project structure below reflects the active platform currently used by the project.
 
 ```text
 CustomerDNA AI/
@@ -1072,11 +1152,22 @@ CustomerDNA AI/
     |   |-- shared/
     |   |   |-- __init__.py
     |   |   `-- pipeline_metrics.py
+    |   |-- tools/
+    |   |   `-- export_runtime_logs.py
     |   `-- state/
-    |       |-- .gitkeep
-    |       |-- airflow_pipeline_state.json
-    |       |-- gx_state.json
-    |       `-- ingestion_state.json
+    |       `-- .gitkeep
+    |
+    |-- lake/
+    |   `-- minio/
+    |       |-- README.md
+    |       |-- docker-compose.yml
+    |       |-- requirements.txt
+    |       `-- client_1/
+    |           |-- reset_client1_bronze.py
+    |           |-- list_client1_bronze_objects.py
+    |           `-- common/
+    |               |-- minio_bronze_config.py
+    |               `-- minio_bronze_utils.py
     |
     |-- streaming/
     |   `-- kafka/
@@ -1088,39 +1179,41 @@ CustomerDNA AI/
     |           |-- run_client1_kafka_raw_pipeline.py
     |           |-- common/
     |           |   |-- __init__.py
+    |           |   |-- bronze_consumer.py
     |           |   |-- dataset_producer.py
     |           |   |-- kafka_config.py
+    |           |   |-- load_event_consumer.py
     |           |   |-- producer_utils.py
     |           |   `-- source_row_iterators.py
     |           |-- marketing_campaign/
     |           |   |-- __init__.py
     |           |   |-- consume.py
-    |           |   |-- load_to_raw.py
+    |           |   |-- load.py
     |           |   `-- produce.py
     |           |-- ecommerce_customer_churn/
     |           |   |-- __init__.py
     |           |   |-- consume.py
-    |           |   |-- load_to_raw.py
+    |           |   |-- load.py
     |           |   `-- produce.py
     |           |-- retailrocket_category_tree/
     |           |   |-- __init__.py
     |           |   |-- consume.py
-    |           |   |-- load_to_raw.py
+    |           |   |-- load.py
     |           |   `-- produce.py
     |           |-- retailrocket_events/
     |           |   |-- __init__.py
     |           |   |-- consume.py
-    |           |   |-- load_to_raw.py
+    |           |   |-- load.py
     |           |   `-- produce.py
     |           |-- retailrocket_item_properties/
     |           |   |-- __init__.py
     |           |   |-- consume.py
-    |           |   |-- load_to_raw.py
+    |           |   |-- load.py
     |           |   `-- produce.py
     |           `-- online_retail/
     |               |-- __init__.py
     |               |-- consume.py
-    |               |-- load_to_raw.py
+    |               |-- load.py
     |               `-- produce.py
     |
     `-- ML/
@@ -1251,16 +1344,18 @@ The most logical next steps after the current implemented state are:
 
 The most important final rules are:
 
-1. **Kafka is the official Client 1 ingestion and raw-loading backbone.**
-2. **Raw data must preserve source identity and must not become a business layer.**
-3. **dbt is the official transformation backbone from `staging` through `serving`.**
-4. **Analytics outputs must come from validated curated layers, not direct raw access.**
-5. **Serving outputs are curated customer-level data products for downstream reuse.**
-6. **dbt tests and Great Expectations are both required parts of trust.**
-7. **Airflow must orchestrate the platform in the order: setup -> raw load -> transformation-quality.**
-8. **Prometheus and Grafana are part of the platform, not optional extras.**
-9. **Retired ingestion paths must not return as active architecture without an explicit redesign decision.**
-10. **The platform must be presented primarily as a Data Engineering system, with AI/ML as downstream capability.**
+1. **Kafka is the official Client 1 ingestion backbone and event-driven raw-loading backbone.**
+2. **MinIO is the official bronze layer between Kafka transport and PostgreSQL warehouse landing storage.**
+3. **Bronze objects must be created before `raw_data` loading, and bronze-ready events must drive warehouse ingestion.**
+4. **Raw data must preserve source identity and must not become a business layer.**
+5. **dbt is the official transformation backbone from `staging` through `serving`.**
+6. **Analytics outputs must come from validated curated layers, not direct raw access.**
+7. **Serving outputs are curated customer-level data products for downstream reuse.**
+8. **dbt tests and Great Expectations are both required parts of trust.**
+9. **Airflow must orchestrate the platform in the order: setup -> raw load -> transformation-quality.**
+10. **Prometheus and Grafana are part of the platform, not optional extras.**
+11. **Retired ingestion paths must not return as active architecture without an explicit redesign decision.**
+12. **The platform must be presented primarily as a Data Engineering system, with AI/ML as downstream capability.**
 
 ---
 
@@ -1274,3 +1369,4 @@ The most important final rules are:
 | 13.4 | 2026-07-03 | Expanded Great Expectations coverage to serving and ML-readiness validation. |
 | 14.0 | 2026-07-04 | Added the implemented local ML experimentation layer and ML EDA workflow. |
 | 15.0 | 2026-07-08 | Rewrote the document to align with the finalized Kafka-first ingestion architecture, the active three-DAG Airflow flow, the centralized monitoring stack, the current project structure, and the final Data Engineering-first project positioning. |
+| 16.0 | 2026-07-09 | Updated the document for the Kafka -> MinIO bronze -> PostgreSQL raw flow, bronze-ready event loading, monitoring state-file corrections, and the current active project structure. |

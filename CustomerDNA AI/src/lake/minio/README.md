@@ -53,7 +53,7 @@ The Client 1 bronze scripts live in:
 Install the MinIO Python client before running them:
 
 ```bash
-pip install -r "D:\github\Master_PFE_Project\CustomerDNA AI\src\lake\minio\requirements.txt"
+python -m pip install -r "src/lake/minio/requirements.txt"
 ```
 
 Available utilities:
