@@ -27,7 +27,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Latest status of the Client 1 warehouse setup DAG.",
+      "description": "Latest status of the Client 1 lakehouse setup DAG.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -40,7 +40,7 @@
                 "0": {
                   "color": "red",
                   "index": 0,
-                  "text": "Failed"
+                  "text": "Failed or Not Run"
                 },
                 "1": {
                   "color": "green",
@@ -98,14 +98,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "customerdna_pipeline_last_status{dag_id=\"customerdna_client1_dw_setup_pipeline\"}",
+          "expr": "max(customerdna_pipeline_last_status{dag_id=\"customerdna_client1_lakehouse_setup_pipeline\"} or vector(0))",
           "instant": true,
-          "legendFormat": "DW setup",
+          "legendFormat": "Lakehouse setup",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "DW Setup Pipeline Status",
+      "title": "Lakehouse Setup Pipeline Status",
       "type": "stat"
     },
     {
@@ -113,7 +113,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Latest status of the Client 1 raw load DAG.",
+      "description": "Latest status of the Client 1 Kafka -> HDFS bronze -> Spark -> Iceberg raw pipeline.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -126,7 +126,7 @@
                 "0": {
                   "color": "red",
                   "index": 0,
-                  "text": "Failed"
+                  "text": "Failed or Not Run"
                 },
                 "1": {
                   "color": "green",
@@ -184,14 +184,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "customerdna_pipeline_last_status{dag_id=\"customerdna_client1_raw_load_pipeline\"}",
+          "expr": "max(customerdna_pipeline_last_status{dag_id=\"customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline\"} or vector(0))",
           "instant": true,
-          "legendFormat": "Raw load",
+          "legendFormat": "Raw lakehouse load",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Raw Load Pipeline Status",
+      "title": "Kafka-HDFS-Spark Raw Pipeline Status",
       "type": "stat"
     },
     {
@@ -199,7 +199,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Latest status of the Client 1 transformation and quality DAG.",
+      "description": "Latest status of the Client 1 dbt-spark transformation DAG over the Iceberg lakehouse.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -270,14 +270,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "customerdna_pipeline_last_status{dag_id=\"customerdna_client1_transformation_quality_pipeline\"}",
+          "expr": "max(customerdna_pipeline_last_status{dag_id=\"customerdna_client1_dbt_spark_lakehouse_pipeline\"} or vector(0))",
           "instant": true,
-          "legendFormat": "Transformation",
+          "legendFormat": "dbt-spark transformations",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Transformation Pipeline Status",
+      "title": "dbt-Spark Transformation Status",
       "type": "stat"
     },
     {
@@ -285,7 +285,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Total rows inserted during the latest raw loading execution.",
+      "description": "Total rows inserted into Iceberg raw tables during the latest raw loading execution.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -340,7 +340,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "customerdna_raw_last_run_rows_inserted_total",
+          "expr": "max(customerdna_raw_last_run_rows_inserted_total or vector(0))",
           "instant": true,
           "legendFormat": "Rows inserted",
           "range": false,
@@ -355,27 +355,40 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "How many raw files were skipped because they were unchanged.",
+      "description": "Latest status of the Client 1 lakehouse readiness and core service validation DAG.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
           "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "Failed or Not Run"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "Success"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
+                "color": "red",
                 "value": 0
               },
               {
-                "color": "yellow",
+                "color": "green",
                 "value": 1
-              },
-              {
-                "color": "orange",
-                "value": 3
               }
             ]
           }
@@ -413,14 +426,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "customerdna_raw_last_run_skipped_files",
+          "expr": "max(customerdna_pipeline_last_status{dag_id=\"customerdna_client1_lakehouse_readiness_pipeline\"} or vector(0))",
           "instant": true,
-          "legendFormat": "Skipped files",
+          "legendFormat": "Lakehouse readiness",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Raw Files Skipped (Last Run)",
+      "title": "Lakehouse Readiness Status",
       "type": "stat"
     },
     {
@@ -428,7 +441,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "How many hours have elapsed since the transformation pipeline last completed successfully.",
+      "description": "How many hours have elapsed since the dbt-spark transformation pipeline last completed successfully.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -487,14 +500,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "(time() - customerdna_pipeline_last_success_timestamp_seconds{dag_id=\"customerdna_client1_transformation_quality_pipeline\"}) / 3600",
+          "expr": "((time() - customerdna_pipeline_last_success_timestamp_seconds{dag_id=\"customerdna_client1_dbt_spark_lakehouse_pipeline\"}) / 3600) or vector(0)",
           "instant": true,
           "legendFormat": "Hours since last success",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Transformation Freshness (Hours)",
+      "title": "dbt-Spark Freshness (Hours)",
       "type": "stat"
     },
     {
@@ -588,7 +601,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Execution status history for the critical dbt and Great Expectations tasks.",
+      "description": "Execution status history for critical lakehouse services, raw quality checks, and dbt-spark execution tasks.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -674,13 +687,13 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "customerdna_task_last_status{task_id=~\"dbt_run_all_models|dbt_test_all_models|validate_raw_data_quality|validate_analytics_quality|validate_serving_quality|validate_ml_feature_readiness\"}",
+          "expr": "customerdna_task_last_status{task_id=~\"validate_hdfs_bronze_service|validate_hive_metastore_service|validate_spark_cluster_service|validate_spark_thrift_service|validate_trino_query_service|validate_raw_lakehouse_quality|run_dbt_spark_lakehouse_models|test_dbt_spark_lakehouse_models\"}",
           "legendFormat": "{{task_id}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "dbt and GX Task Status",
+      "title": "Lakehouse Services, Raw Quality, and dbt-Spark Status",
       "type": "timeseries"
     },
     {
@@ -775,7 +788,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Outcome breakdown of the latest raw load execution.",
+      "description": "Outcome breakdown of the latest raw load execution across bronze files and Spark-driven Iceberg refresh decisions.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -987,7 +1000,7 @@
     "pipeline",
     "prometheus",
     "airflow",
-    "dbt",
+    "lakehouse",
     "great_expectations"
   ],
   "templating": {
@@ -1000,7 +1013,7 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "CustomerDNA - Pipeline Health",
-  "uid": "adzk8v4",
+  "uid": "customerdna-pipeline-health",
   "version": 1,
   "weekStart": ""
 }

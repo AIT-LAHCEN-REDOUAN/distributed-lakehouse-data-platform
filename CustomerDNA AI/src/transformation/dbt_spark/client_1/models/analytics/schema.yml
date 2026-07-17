@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: analytics_customer_overview
+    description: Final analytics mart for customer-level segmentation and commercial monitoring.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+  - name: analytics_sales_performance
+    description: Final analytics mart for monthly country-level sales tracking.
+  - name: analytics_retailrocket_engagement
+    description: Final analytics mart for daily retailrocket behavioral trends.

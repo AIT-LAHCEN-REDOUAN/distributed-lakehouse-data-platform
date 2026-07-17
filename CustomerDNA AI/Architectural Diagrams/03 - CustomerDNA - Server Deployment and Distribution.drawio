@@ -1,0 +1,152 @@
+<mxfile host="app.diagrams.net" modified="2026-07-12T10:00:00.000Z" agent="Codex" version="24.7.17" editor="draw.io">
+  <diagram id="deployment" name="Server Deployment">
+    <mxGraphModel dx="1700" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1500" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="CustomerDNA AI - Server Deployment and Distribution Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=24;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="470" y="20" width="1360" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="Containerized deployment topology for the CustomerDNA AI platform" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="620" y="72" width="1060" height="28" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="actorsGroup" value="External Actors" style="swimlane;html=1;rounded=1;startSize=32;horizontal=0;fillColor=#f7f7f7;strokeColor=#666666;fontStyle=1;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="30" y="130" width="250" height="920" as="geometry"/>
+        </mxCell>
+        <mxCell id="hostGroup" value="Ubuntu Server / Production Host - Docker Compose" style="swimlane;html=1;rounded=1;startSize=36;horizontal=0;fillColor=#eef5ff;strokeColor=#2b6cb0;fontStyle=1;fontSize=17;" vertex="1" parent="1">
+          <mxGeometry x="320" y="130" width="2040" height="1180" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="admin" value="Data Engineer / Administrator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="75" y="240" width="160" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="manager" value="Manager / Stakeholder" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="75" y="400" width="160" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="analyst" value="Future Analyst / Consumer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="75" y="560" width="160" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="orchGroup" value="Orchestration Services" style="swimlane;html=1;rounded=1;startSize=30;horizontal=0;fillColor=#eef7ff;strokeColor=#2b6cb0;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="200" width="560" height="300" as="geometry"/>
+        </mxCell>
+        <mxCell id="streamGroup" value="Streaming Services" style="swimlane;html=1;rounded=1;startSize=30;horizontal=0;fillColor=#fff0f0;strokeColor=#c0392b;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="990" y="200" width="420" height="300" as="geometry"/>
+        </mxCell>
+        <mxCell id="bronzeGroup" value="Bronze Data Lake" style="swimlane;html=1;rounded=1;startSize=30;horizontal=0;fillColor=#fff9e8;strokeColor=#d4a017;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="560" width="560" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="warehouseGroup" value="Warehouse Services" style="swimlane;html=1;rounded=1;startSize=30;horizontal=0;fillColor=#edf9f0;strokeColor=#4f9d69;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="990" y="560" width="420" height="280" as="geometry"/>
+        </mxCell>
+        <mxCell id="monitoringGroup" value="Monitoring Services" style="swimlane;html=1;rounded=1;startSize=30;horizontal=0;fillColor=#fff4ea;strokeColor=#dd8b00;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="380" y="900" width="1030" height="250" as="geometry"/>
+        </mxCell>
+        <mxCell id="volumesGroup" value="Mounted Project Code Volumes" style="swimlane;html=1;rounded=1;startSize=30;horizontal=0;fillColor=#f7f7f7;strokeColor=#666666;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="1470" y="200" width="820" height="950" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="airflowWeb" value="Airflow Webserver&#xa;:8080" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6cb0;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="260" width="150" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="airflowScheduler" value="Airflow Scheduler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6cb0;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="260" width="150" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="airflowWorker" value="Airflow Worker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6cb0;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="790" y="260" width="120" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="airflowMeta" value="Airflow Metadata PostgreSQL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6cb0;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="380" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="airflowInfo" value="Triggers DAGs, dbt runs, GX checkpoints, and pipeline scripts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2b6cb0;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="372" width="180" height="76" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="broker" value="Kafka Broker&#xa;:9092" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c0392b;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="270" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="kafkaUI" value="Kafka UI&#xa;:8081" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c0392b;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="270" width="120" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="minioServer" value="MinIO Server&#xa;API :9000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d4a017;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="470" y="650" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="minioConsole" value="MinIO Console&#xa;:9001" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d4a017;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="650" width="170" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="postgresDW" value="PostgreSQL DW&#xa;:5440" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#4f9d69;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="640" width="150" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="dwDB" value="Database&#xa;client1_DW" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#ffffff;strokeColor=#4f9d69;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="640" width="130" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="prometheus" value="Prometheus&#xa;:9090" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dd8b00;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="980" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="grafana" value="Grafana&#xa;:3001" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dd8b00;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="980" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="pgExporter" value="PostgreSQL Exporter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dd8b00;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="980" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="cadvisor" value="cAdvisor&#xa;container metrics" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dd8b00;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="980" width="160" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="pipelineExporter" value="Pipeline Metrics Exporter" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#dd8b00;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="980" width="170" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="vol1" value="Airflow DAGs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="280" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="vol2" value="Kafka producer / consumer scripts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1760" y="280" width="210" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="vol3" value="dbt project" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="2010" y="280" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="vol4" value="Great Expectations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="390" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="vol5" value="Monitoring config" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1760" y="390" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="vol6" value="Project documentation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1980" y="390" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="volNote" value="Volumes are mounted into containers at runtime." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="500" width="380" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="d1" value="Airflow UI :8080" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="admin" target="airflowWeb"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d2" value="Kafka UI :8081" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="admin" target="kafkaUI"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d3" value="MinIO Console :9001" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="admin" target="minioConsole"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d4" value="Grafana :3001" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="admin" target="grafana"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d5" value="View dashboards" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="manager" target="grafana"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d6" value="Query serving" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="analyst" target="postgresDW"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="d7" value="trigger scripts" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="airflowWorker" target="broker"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d8" value="bronze write" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="broker" target="minioServer"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d9" value="raw load" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="minioServer" target="postgresDW"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d10" value="dbt / GX" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="airflowWorker" target="postgresDW"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d11" value="metadata" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="airflowWeb" target="airflowMeta"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;" edge="1" parent="1" source="postgresDW" target="dwDB"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="d13" value="scrape" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;strokeWidth=2;dashed=1;strokeColor=#dd8b00;" edge="1" parent="1" source="prometheus" target="cadvisor"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d14" value="scrape" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;strokeWidth=2;dashed=1;strokeColor=#dd8b00;" edge="1" parent="1" source="prometheus" target="pgExporter"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d15" value="scrape" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;strokeWidth=2;dashed=1;strokeColor=#dd8b00;" edge="1" parent="1" source="prometheus" target="pipelineExporter"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d16" value="query" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;strokeWidth=2;dashed=1;strokeColor=#dd8b00;" edge="1" parent="1" source="grafana" target="prometheus"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d17" value="metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=open;strokeWidth=2;dashed=1;strokeColor=#dd8b00;" edge="1" parent="1" source="pipelineExporter" target="orchGroup"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="footer" value="Future scale-out option: Kafka, MinIO, PostgreSQL, Airflow, and monitoring services can be distributed across multiple servers as workload grows." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="380" y="1225" width="1450" height="30" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -16,32 +16,52 @@ Generated outputs are intentionally redirected to `CustomerDNA AI/artifacts/` so
 
 - `lake/`
   Contains the bronze data-lake layer:
-  MinIO services and Client 1 bronze utilities for reset, inspection, and object-level persistence.
+  HDFS services and Client 1 bronze utilities for reset, inspection, and file-level persistence.
 
-- `ELT/`
-  Contains the structured warehouse pipeline:
-  PostgreSQL setup, bronze-to-raw loading logic, dbt transformations, Great Expectations validation, and dataset-level EDA.
+- `processing/`
+  Contains the distributed processing layer:
+  Spark cluster scaffolding, Spark jobs for bronze-to-raw loading, and distributed processing configuration.
+
+- `catalog/`
+  Contains the metastore layer:
+  Hive Metastore services and configuration for the lakehouse catalog.
+
+- `query/`
+  Contains the query-service layer:
+  Trino configuration and runtime assets for interactive SQL access over the lakehouse.
 
 - `monitoring/`
   Contains observability assets:
   Prometheus, Grafana, pipeline exporters, runtime log export helpers, and monitoring state files.
 
-- `ML/`
-  Contains downstream experimentation assets:
-  serving-data extraction, preprocessing, training, inference, and ML-focused EDA built on curated warehouse outputs.
-
 ## Data Flow View
 
-The implemented Client 1 platform follows this path:
+`Source files -> Kafka -> HDFS bronze -> Spark bronze-to-Iceberg load -> Trino-ready raw lakehouse tables -> Airflow -> Great Expectations raw checks -> Prometheus/Grafana`
 
-`Source files -> Kafka -> MinIO bronze -> PostgreSQL raw_data -> dbt -> GX -> Airflow -> Prometheus/Grafana`
+## Runtime Configuration
+
+The project now follows an example-driven configuration approach:
+
+- real local secrets and machine-specific values live in untracked `.env` files
+- tracked `.env.example` files document the required variables for each runtime area
+- service-specific compose stacks still work locally, but the repo no longer relies on committing real credentials
+
+Relevant examples:
+
+- `src/airflow/.env.example`
+- `src/lake/hdfs/.env.example`
+- `src/processing/spark/.env.example`
+- `src/catalog/hive/.env.example`
+- `src/query/trino/.env.example`
+- `src/monitoring/prometheus/.env.example`
+- `src/monitoring/grafana/.env.example`
 
 ## Code vs Runtime Artifacts
 
 The repository keeps source code and generated artifacts conceptually separate:
 
 - Source logic lives in the folders above.
-- Runtime outputs such as logs, dbt targets, Kafka samples, ML generated outputs, and EDA outputs are treated as generated artifacts.
+- Runtime outputs such as logs, Kafka samples, HDFS bronze files, Spark event logs, and monitoring state are treated as generated artifacts.
 - The preferred destination for generated business artifacts is `CustomerDNA AI/artifacts/`.
 - The repository `.gitignore` is configured to reduce future clutter from these generated files.
 
@@ -51,9 +71,10 @@ When presenting the project, explain the folders in this order:
 
 1. `streaming/` for ingestion transport
 2. `lake/` for bronze persistence
-3. `ELT/` for warehouse loading and transformation
-4. `airflow/` for orchestration
-5. `monitoring/` for observability
-6. `ML/` as downstream reuse of curated data products
+3. `processing/` for distributed bronze-to-raw execution
+4. `catalog/` for the Hive metastore service
+5. `query/` for Trino SQL access to Iceberg tables
+6. `airflow/` for orchestration
+7. `monitoring/` for observability
 
 This order matches the real technical flow and makes the architecture easier to understand.

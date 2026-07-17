@@ -20,9 +20,10 @@ GX_STATE_PATH = STATE_DIR / "gx_state.json"
 MONITORING_ERROR_LOG_PATH = STATE_DIR / "monitoring_errors.log"
 
 FINAL_TASK_BY_DAG = {
-    "customerdna_client1_dw_setup_pipeline": "create_client1_raw_base_tables",
-    "customerdna_client1_raw_load_pipeline": "validate_raw_data_quality",
-    "customerdna_client1_transformation_quality_pipeline": "validate_ml_feature_readiness",
+    "customerdna_client1_lakehouse_setup_pipeline": "validate_trino_query_service",
+    "customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline": "validate_raw_lakehouse_quality",
+    "customerdna_client1_lakehouse_readiness_pipeline": "validate_trino_query_service",
+    "customerdna_client1_dbt_spark_lakehouse_pipeline": "validate_trino_query_service",
 }
 
 _STATE_LOCK = threading.Lock()

@@ -26,7 +26,15 @@ CustomerDNA AI is organized so that the implementation code, generated artifacts
 
 The implemented Client 1 data platform follows this sequence:
 
-`Source datasets -> Kafka -> MinIO bronze -> PostgreSQL raw_data -> dbt -> Great Expectations -> Airflow -> Prometheus/Grafana`
+`Source datasets -> Kafka -> HDFS bronze -> Spark raw loading -> PostgreSQL raw_data -> dbt -> Great Expectations -> Airflow -> Prometheus/Grafana`
+
+In the current architecture:
+
+- Apache Kafka is the transport and event-driven loading backbone.
+- HDFS is the bronze persistence layer for dataset-run files before structured loading.
+- Apache Spark is the distributed raw-loading and heavy-processing execution layer between bronze and the warehouse.
+- PostgreSQL is the warehouse engine for `raw_data`, `staging`, `intermediate`, `analytics`, and `serving`.
+- dbt, Great Expectations, Airflow, Prometheus, and Grafana complete the transformation, quality, orchestration, and observability stack.
 
 ## Design Principle
 

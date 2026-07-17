@@ -27,7 +27,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Shows whether the PostgreSQL warehouse is reachable through postgres_exporter.",
+      "description": "Shows whether the PostgreSQL database that backs the Hive metastore is reachable through postgres_exporter.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -100,7 +100,7 @@
           "editorMode": "code",
           "expr": "max(pg_up{job=\"postgres_exporter\"})",
           "instant": true,
-          "legendFormat": "PostgreSQL availability",
+          "legendFormat": "Hive metastore PostgreSQL availability",
           "range": false,
           "refId": "A"
         }
@@ -113,7 +113,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Current physical size of the Client 1 warehouse database (`client1_DW`).",
+      "description": "Current physical size of the Hive metastore metadata database (`metastore_db`).",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -171,9 +171,9 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "max(pg_database_size_bytes{datname=\"client1_DW\"})",
+          "expr": "max(pg_database_size_bytes{datname=\"metastore_db\"})",
           "instant": true,
-          "legendFormat": "client1_DW size",
+          "legendFormat": "metastore_db size",
           "range": false,
           "refId": "A"
         }
@@ -186,7 +186,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Current number of active backends connected to `client1_DW`.",
+      "description": "Current number of active backends connected to `metastore_db`.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -244,9 +244,9 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(pg_stat_database_numbackends{datname=\"client1_DW\"})",
+          "expr": "sum(pg_stat_database_numbackends{datname=\"metastore_db\"})",
           "instant": true,
-          "legendFormat": "client1_DW connections",
+          "legendFormat": "metastore_db connections",
           "range": false,
           "refId": "A"
         }
@@ -259,7 +259,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Committed transactions per second in `client1_DW` over the last 5 minutes.",
+      "description": "Committed transactions per second in `metastore_db` over the last 5 minutes.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -332,7 +332,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(pg_stat_database_xact_commit{datname=\"client1_DW\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_xact_commit{datname=\"metastore_db\"}[5m]))",
           "legendFormat": "Commit rate",
           "range": true,
           "refId": "A"
@@ -346,7 +346,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Rolled-back transactions per second in `client1_DW` over the last 5 minutes.",
+      "description": "Rolled-back transactions per second in `metastore_db` over the last 5 minutes.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -419,7 +419,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(pg_stat_database_xact_rollback{datname=\"client1_DW\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_xact_rollback{datname=\"metastore_db\"}[5m]))",
           "legendFormat": "Rollback rate",
           "range": true,
           "refId": "A"
@@ -433,7 +433,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Rows returned per second by `client1_DW` over the last 5 minutes.",
+      "description": "Rows returned per second by `metastore_db` over the last 5 minutes.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -506,7 +506,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(pg_stat_database_tup_returned{datname=\"client1_DW\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_returned{datname=\"metastore_db\"}[5m]))",
           "legendFormat": "Rows returned rate",
           "range": true,
           "refId": "A"
@@ -523,7 +523,9 @@
     "customerdna",
     "database",
     "monitoring",
-    "postgres"
+    "postgres",
+    "hive",
+    "metastore"
   ],
   "templating": {
     "list": []
@@ -534,8 +536,8 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "CustomerDNA - PostgreSQL",
-  "uid": "ad7mpgg",
+  "title": "CustomerDNA - Hive Metastore PostgreSQL",
+  "uid": "customerdna-hive-metastore-postgresql",
   "version": 1,
   "weekStart": ""
 }

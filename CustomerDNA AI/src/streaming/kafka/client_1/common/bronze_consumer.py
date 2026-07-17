@@ -1,4 +1,4 @@
-"""Shared Kafka-to-MinIO bronze consumer workflow for Client 1 datasets."""
+"""Shared Kafka-to-HDFS bronze consumer workflow for Client 1 datasets."""
 
 from __future__ import annotations
 
@@ -13,18 +13,18 @@ from kafka import KafkaConsumer
 from kafka_config import BRONZE_READY_TOPICS, KAFKA_BOOTSTRAP_SERVERS, TOPICS, get_dataset_config
 from producer_utils import build_reliable_producer, ensure_topic_exists, get_topic_message_count
 
-MINIO_COMMON_DIR = Path(__file__).resolve().parents[4] / "lake" / "minio" / "client_1" / "common"
-if str(MINIO_COMMON_DIR) not in sys.path:
-    sys.path.insert(0, str(MINIO_COMMON_DIR))
+HDFS_COMMON_DIR = Path(__file__).resolve().parents[4] / "lake" / "hdfs" / "client_1" / "common"
+if str(HDFS_COMMON_DIR) not in sys.path:
+    sys.path.insert(0, str(HDFS_COMMON_DIR))
 
-from minio_bronze_utils import (  # noqa: E402
+from hdfs_bronze_utils import (  # noqa: E402
     bronze_dataset_prefix,
     bronze_run_prefix,
-    build_minio_client,
-    ensure_bucket_exists,
+    build_hdfs_client,
+    ensure_bronze_root_exists,
     upload_bronze_batch_file,
 )
-from minio_bronze_config import MINIO_BUCKET_NAME  # noqa: E402
+from hdfs_bronze_config import HDFS_NAMENODE_URI, HDFS_WEB_ENDPOINT  # noqa: E402
 
 
 def build_consumer(*, topic_name: str, consumer_group: str, consumer_timeout_ms: int) -> KafkaConsumer:
@@ -42,7 +42,7 @@ def build_consumer(*, topic_name: str, consumer_group: str, consumer_timeout_ms:
     )
 
 
-def flush_batch_to_minio(
+def flush_batch_to_hdfs(
     *,
     client,
     dataset_key: str,
@@ -50,7 +50,7 @@ def flush_batch_to_minio(
     batch_index: int,
     records: list[dict[str, object]],
 ) -> str:
-    """Persist one in-memory Kafka batch as a JSONL bronze object in MinIO."""
+    """Persist one in-memory Kafka batch as a JSONL bronze file in HDFS."""
     with NamedTemporaryFile(mode="w", encoding="utf-8", suffix=".jsonl", delete=False) as handle:
         temp_path = Path(handle.name)
         for record in records:
@@ -86,12 +86,14 @@ def build_bronze_ready_event(
         "dataset_name": dataset_key,
         "source_topic_name": source_topic_name,
         "bronze_ready_topic_name": BRONZE_READY_TOPICS[dataset_key],
-        "bucket_name": MINIO_BUCKET_NAME,
         "bronze_dataset_prefix": bronze_dataset_prefix(dataset_key),
         "bronze_run_prefix": bronze_run_prefix(dataset_key, run_id),
+        "storage_type": "hdfs",
+        "hdfs_web_endpoint": HDFS_WEB_ENDPOINT,
+        "hdfs_namenode_uri": HDFS_NAMENODE_URI,
         "run_id": run_id,
         "target_table": target_table,
-        "object_count": uploaded_objects,
+        "file_count": uploaded_objects,
         "row_count": total_consumed,
         "published_at_utc": datetime.now(timezone.utc).isoformat(),
         "load_mode": "kafka_bronze_ready_event",
@@ -125,7 +127,7 @@ def publish_bronze_ready_event(dataset_key: str, event_payload: dict[str, object
 
 
 def run_bronze_consumer(dataset_key: str) -> None:
-    """Consume one dataset topic fully and persist it into the MinIO bronze layer."""
+    """Consume one dataset topic fully and persist it into the HDFS bronze layer."""
     dataset_config = get_dataset_config(dataset_key)
     topic_name = TOPICS[dataset_key]
     target_table = str(dataset_config["target_table"])
@@ -137,15 +139,16 @@ def run_bronze_consumer(dataset_key: str) -> None:
     progress_interval = int(dataset_config["bronze_progress_interval"])
 
     print("=" * 80)
-    print("CUSTOMERDNA AI - KAFKA TO MINIO BRONZE")
+    print("CUSTOMERDNA AI - KAFKA TO HDFS BRONZE")
     print("=" * 80)
     print(f"Dataset: {dataset_key}")
     print(f"Topic: {topic_name}")
     print(f"Bronze prefix: {bronze_dataset_prefix(dataset_key)}")
+    print(f"WebHDFS endpoint: {HDFS_WEB_ENDPOINT}")
     print(f"Expected topic rows: {expected_rows:,}")
 
-    client = build_minio_client()
-    ensure_bucket_exists(client)
+    client = build_hdfs_client()
+    ensure_bronze_root_exists(client)
     consumer = build_consumer(
         topic_name=topic_name,
         consumer_group=consumer_group,
@@ -162,7 +165,7 @@ def run_bronze_consumer(dataset_key: str) -> None:
 
             if len(buffered_records) >= bronze_flush_rows:
                 uploaded_objects += 1
-                object_key = flush_batch_to_minio(
+                object_key = flush_batch_to_hdfs(
                     client=client,
                     dataset_key=dataset_key,
                     run_id=run_id,
@@ -181,7 +184,7 @@ def run_bronze_consumer(dataset_key: str) -> None:
 
         if buffered_records:
             uploaded_objects += 1
-            object_key = flush_batch_to_minio(
+            object_key = flush_batch_to_hdfs(
                 client=client,
                 dataset_key=dataset_key,
                 run_id=run_id,
@@ -218,10 +221,10 @@ def run_bronze_consumer(dataset_key: str) -> None:
         publish_bronze_ready_event(dataset_key, bronze_ready_event)
 
         print(f"Consumed rows: {total_consumed:,}")
-        print(f"Bronze objects uploaded: {uploaded_objects:,}")
+        print(f"Bronze files uploaded: {uploaded_objects:,}")
         print(f"Bronze run prefix: {bronze_run_prefix(dataset_key, run_id)}")
         print(f"Bronze-ready event topic: {BRONZE_READY_TOPICS[dataset_key]}")
-        print("Kafka-to-MinIO bronze completed successfully.")
+        print("Kafka-to-HDFS bronze completed successfully.")
         print("=" * 80)
     finally:
         consumer.close()

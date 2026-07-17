@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_marketing_campaign
+    description: Typed staging view for the customer personality and campaign dataset.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+  - name: stg_ecommerce_customer_churn
+    description: Typed staging view for the ecommerce churn dataset.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+  - name: stg_online_retail
+    description: Typed staging view for online retail transactions.
+  - name: stg_retailrocket_category_tree
+    description: Typed staging view for retailrocket category hierarchy.
+    columns:
+      - name: category_id
+        tests: [not_null]
+  - name: stg_retailrocket_events
+    description: Typed staging view for retailrocket events.
+  - name: stg_retailrocket_item_properties
+    description: Typed staging view for retailrocket item properties.

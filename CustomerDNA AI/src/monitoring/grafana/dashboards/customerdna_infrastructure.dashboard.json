@@ -27,7 +27,7 @@
         "type": "prometheus",
         "uid": "prometheus"
       },
-      "description": "Number of healthy Prometheus scrape targets that support the core CustomerDNA monitoring stack.",
+      "description": "Number of healthy Prometheus scrape targets that support the core lakehouse monitoring stack.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -48,7 +48,7 @@
               },
               {
                 "color": "green",
-                "value": 3
+                "value": 4
               }
             ]
           }
@@ -86,14 +86,14 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "count(up{job=~\"prometheus|postgres_exporter|cadvisor\"} == 1)",
+          "expr": "count(up{job=~\"prometheus|postgres_exporter|cadvisor|pipeline_metrics_exporter\"} == 1)",
           "instant": true,
           "legendFormat": "Healthy targets",
           "range": false,
           "refId": "A"
         }
       ],
-      "title": "Healthy Scrape Targets",
+      "title": "Healthy Monitoring Targets",
       "type": "stat"
     },
     {
@@ -316,13 +316,13 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "up{job=~\"prometheus|postgres_exporter|cadvisor\"}",
+          "expr": "up{job=~\"prometheus|postgres_exporter|cadvisor|pipeline_metrics_exporter\"}",
           "legendFormat": "{{job}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Exporter Availability",
+      "title": "Exporter and Probe Availability",
       "type": "timeseries"
     },
     {
@@ -522,7 +522,7 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "CustomerDNA - Infrastructure",
-  "uid": "adq7m95",
+  "uid": "customerdna-infrastructure",
   "version": 1,
   "weekStart": ""
 }

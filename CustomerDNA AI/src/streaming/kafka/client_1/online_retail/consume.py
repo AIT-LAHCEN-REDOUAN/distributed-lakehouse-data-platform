@@ -1,4 +1,4 @@
-"""Consume Client 1 online retail messages from Kafka into MinIO bronze."""
+"""Consume Client 1 online retail messages from Kafka into HDFS bronze."""
 
 from __future__ import annotations
 

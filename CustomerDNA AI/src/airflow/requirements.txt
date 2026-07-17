@@ -5,6 +5,7 @@ python-dotenv==1.0.1
 tqdm==4.66.2
 openpyxl==3.1.2
 kafka-python==2.1.5
-minio==7.2.7
-dbt-postgres==1.10.1
+requests==2.32.3
 great_expectations==1.18.2
+docker==7.1.0
+dbt-spark[PyHive]==1.10.3

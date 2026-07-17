@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_customer_profile
+    description: Cross-source customer profile built from marketing and ecommerce churn datasets.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+  - name: int_online_retail_customer_sales
+    description: Aggregated retail sales KPIs by customer.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+  - name: int_retailrocket_visitor_activity
+    description: Retailrocket visitor interaction summary.
+    columns:
+      - name: visitor_id
+        tests: [not_null, unique]
+  - name: int_customer_commercial_360
+    description: Business-ready customer commercial profile enriched with retail KPIs.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]

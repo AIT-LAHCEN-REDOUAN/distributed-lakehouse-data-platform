@@ -1,10 +1,21 @@
 ## CustomerDNA AI - Repository Hygiene
 
+# Local environment files
+**/.env
+!**/.env.example
+
 # Python cache
 **/__pycache__/
 **/*.pyc
 **/*.pyo
 **/*.pyd
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# OS / editor clutter
+**/.DS_Store
+**/Thumbs.db
 
 # Centralized runtime artifacts
 artifacts/*
@@ -31,6 +42,10 @@ src/monitoring/logs/
 src/monitoring/state/*.json
 !src/monitoring/state/.gitkeep
 
+# HDFS / Spark local runtime clutter
+src/lake/hdfs/logs/
+src/processing/spark/logs/
+
 # ELT EDA generated output
 src/ELT/client_1/EDA/**/output/
 
@@ -44,3 +59,6 @@ src/ML/client_1/models/model_metadata/
 src/ML/client_1/models/preprocessors/
 src/ML/client_1/models/saved_models/
 src/ML/client_1/reports/
+
+# Temporary local work folders
+tmp/

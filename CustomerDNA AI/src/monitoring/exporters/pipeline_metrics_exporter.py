@@ -2,11 +2,16 @@ from __future__ import annotations
 
 import json
 import math
+import os
+import socket
 import sys
+import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 
 MONITORING_ROOT = Path(__file__).resolve().parents[1]
@@ -22,6 +27,35 @@ from shared.pipeline_metrics import (  # noqa: E402
 
 
 EXPORTER_PORT = 9109
+DEFAULT_HTTP_TIMEOUT_SECONDS = float(os.getenv("CUSTOMERDNA_MONITORING_HTTP_TIMEOUT_SECONDS", "5"))
+DEFAULT_SOCKET_TIMEOUT_SECONDS = float(os.getenv("CUSTOMERDNA_MONITORING_SOCKET_TIMEOUT_SECONDS", "5"))
+STALE_RUNNING_RECONCILIATION_SECONDS = float(
+    os.getenv("CUSTOMERDNA_MONITORING_STALE_RUNNING_RECONCILIATION_SECONDS", "300")
+)
+
+
+def _normalized_http_url(value: str) -> str:
+    normalized = value.strip()
+    if not normalized.startswith(("http://", "https://")):
+        normalized = f"http://{normalized}"
+    return normalized
+
+
+def _http_probe_status(value: str) -> int:
+    try:
+        request = Request(_normalized_http_url(value), headers={"User-Agent": "customerdna-monitoring-exporter"})
+        with urlopen(request, timeout=DEFAULT_HTTP_TIMEOUT_SECONDS) as response:  # noqa: S310
+            return 1 if 200 <= response.status < 500 else 0
+    except (URLError, TimeoutError, ValueError, OSError):
+        return 0
+
+
+def _socket_probe_status(host: str, port: int) -> int:
+    try:
+        with socket.create_connection((host, port), timeout=DEFAULT_SOCKET_TIMEOUT_SECONDS):
+            return 1
+    except OSError:
+        return 0
 
 
 def _escape_label_value(value: Any) -> str:
@@ -68,8 +102,162 @@ def _append_metric(
         lines.append(f"{name} {numeric_value}")
 
 
+def _run_sort_timestamp(run_record: dict[str, Any]) -> float:
+    return (
+        iso_to_unix_seconds(run_record.get("ended_at"))
+        or iso_to_unix_seconds(run_record.get("started_at"))
+        or 0.0
+    )
+
+
+def _reconciled_run_status(run_record: dict[str, Any]) -> str:
+    run_status = str(run_record.get("status", "")).lower()
+    if run_status != "running":
+        return run_status
+
+    task_records = run_record.get("tasks", {})
+    if not isinstance(task_records, dict) or not task_records:
+        return run_status
+
+    normalized_task_statuses = {
+        str(task_record.get("status", "")).lower()
+        for task_record in task_records.values()
+        if isinstance(task_record, dict)
+    }
+    if "failed" in normalized_task_statuses:
+        return "failed"
+
+    if normalized_task_statuses and normalized_task_statuses == {"success"}:
+        latest_task_end = max(
+            (
+                iso_to_unix_seconds(task_record.get("ended_at"))
+                or iso_to_unix_seconds(task_record.get("started_at"))
+                or 0.0
+            )
+            for task_record in task_records.values()
+            if isinstance(task_record, dict)
+        )
+        if latest_task_end and (time.time() - latest_task_end) >= STALE_RUNNING_RECONCILIATION_SECONDS:
+            return "success"
+
+    return run_status
+
+
+def _build_reconciled_pipeline_metrics(airflow_state: dict[str, Any]) -> list[dict[str, Any]]:
+    pipelines = airflow_state.get("pipelines", {})
+    dag_runs = airflow_state.get("dag_runs", {})
+
+    latest_runs_by_dag: dict[str, dict[str, Any]] = {}
+    for run_record in dag_runs.values():
+        dag_id = run_record.get("dag_id")
+        if not dag_id:
+            continue
+
+        existing_record = latest_runs_by_dag.get(dag_id)
+        if existing_record is None or _run_sort_timestamp(run_record) >= _run_sort_timestamp(existing_record):
+            latest_runs_by_dag[dag_id] = run_record
+
+    all_dag_ids = set(pipelines.keys()) | set(latest_runs_by_dag.keys())
+    reconciled_records: list[dict[str, Any]] = []
+
+    for dag_id in sorted(all_dag_ids):
+        pipeline_record = dict(pipelines.get(dag_id, {}))
+        latest_run = latest_runs_by_dag.get(dag_id)
+
+        if latest_run:
+            latest_run_status = _reconciled_run_status(latest_run)
+            latest_run_ended_at = latest_run.get("ended_at") or latest_run.get("started_at")
+
+            pipeline_record.setdefault("dag_id", dag_id)
+
+            # If the persisted pipeline snapshot is stale or missing, derive it from the
+            # latest DAG run history so Grafana reflects the real latest pipeline outcome.
+            pipeline_snapshot_ts = iso_to_unix_seconds(pipeline_record.get("last_run_at")) or 0.0
+            latest_run_ts = iso_to_unix_seconds(latest_run_ended_at) or 0.0
+            if latest_run_ts >= pipeline_snapshot_ts:
+                pipeline_record["last_status"] = latest_run_status or pipeline_record.get("last_status", "unknown")
+                pipeline_record["last_run_id"] = latest_run.get("run_id", pipeline_record.get("last_run_id", ""))
+                pipeline_record["last_run_at"] = latest_run_ended_at
+
+                started_at = latest_run.get("started_at")
+                ended_at = latest_run.get("ended_at")
+                started_at_seconds = iso_to_unix_seconds(started_at)
+                ended_at_seconds = iso_to_unix_seconds(ended_at)
+                if started_at_seconds is not None and ended_at_seconds is not None:
+                    duration_value = ended_at_seconds - started_at_seconds
+                    pipeline_record["last_duration_seconds"] = round(max(duration_value, 0.0), 3)
+
+                if latest_run_status == "success" and latest_run_ended_at:
+                    pipeline_record["last_success_at"] = latest_run_ended_at
+
+        if pipeline_record:
+            reconciled_records.append(pipeline_record)
+
+    return reconciled_records
+
+
 def build_metrics_payload() -> str:
     lines: list[str] = []
+
+    service_targets = (
+        {
+            "service_name": "kafka_broker",
+            "check_type": "tcp",
+            "target": f"{os.getenv('CUSTOMERDNA_MONITORING_KAFKA_HOST', 'host.docker.internal')}:{os.getenv('CUSTOMERDNA_MONITORING_KAFKA_PORT', '9092')}",
+            "value": _socket_probe_status(
+                os.getenv("CUSTOMERDNA_MONITORING_KAFKA_HOST", "host.docker.internal"),
+                int(os.getenv("CUSTOMERDNA_MONITORING_KAFKA_PORT", "9092")),
+            ),
+        },
+        {
+            "service_name": "hdfs_namenode_web",
+            "check_type": "http",
+            "target": _normalized_http_url(os.getenv("CUSTOMERDNA_MONITORING_HDFS_WEB_ENDPOINT", "host.docker.internal:9870")),
+            "value": _http_probe_status(os.getenv("CUSTOMERDNA_MONITORING_HDFS_WEB_ENDPOINT", "host.docker.internal:9870")),
+        },
+        {
+            "service_name": "hive_metastore",
+            "check_type": "tcp",
+            "target": f"{os.getenv('CUSTOMERDNA_MONITORING_HIVE_METASTORE_HOST', 'host.docker.internal')}:{os.getenv('CUSTOMERDNA_MONITORING_HIVE_METASTORE_PORT', '9083')}",
+            "value": _socket_probe_status(
+                os.getenv("CUSTOMERDNA_MONITORING_HIVE_METASTORE_HOST", "host.docker.internal"),
+                int(os.getenv("CUSTOMERDNA_MONITORING_HIVE_METASTORE_PORT", "9083")),
+            ),
+        },
+        {
+            "service_name": "spark_master_ui",
+            "check_type": "http",
+            "target": _normalized_http_url(os.getenv("CUSTOMERDNA_MONITORING_SPARK_MASTER_UI_URL", "http://host.docker.internal:8086")),
+            "value": _http_probe_status(os.getenv("CUSTOMERDNA_MONITORING_SPARK_MASTER_UI_URL", "http://host.docker.internal:8086")),
+        },
+        {
+            "service_name": "spark_thrift_server",
+            "check_type": "tcp",
+            "target": f"{os.getenv('CUSTOMERDNA_MONITORING_SPARK_THRIFT_HOST', 'host.docker.internal')}:{os.getenv('CUSTOMERDNA_MONITORING_SPARK_THRIFT_PORT', '10000')}",
+            "value": _socket_probe_status(
+                os.getenv("CUSTOMERDNA_MONITORING_SPARK_THRIFT_HOST", "host.docker.internal"),
+                int(os.getenv("CUSTOMERDNA_MONITORING_SPARK_THRIFT_PORT", "10000")),
+            ),
+        },
+        {
+            "service_name": "trino_query_service",
+            "check_type": "http",
+            "target": _normalized_http_url(os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088")) + "/v1/info",
+            "value": _http_probe_status(os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088") + "/v1/info"),
+        },
+    )
+
+    for service in service_targets:
+        _append_metric(
+            lines,
+            "customerdna_service_health_status",
+            service["value"],
+            {
+                "service_name": service["service_name"],
+                "check_type": service["check_type"],
+                "target": service["target"],
+            },
+        )
 
     airflow_state = _read_json(AIRFLOW_STATE_PATH)
     tasks = airflow_state.get("tasks", {})
@@ -98,8 +286,7 @@ def build_metrics_payload() -> str:
             labels,
         )
 
-    pipelines = airflow_state.get("pipelines", {})
-    for pipeline in pipelines.values():
+    for pipeline in _build_reconciled_pipeline_metrics(airflow_state):
         labels = {
             "dag_id": pipeline.get("dag_id", "unknown"),
         }
@@ -145,6 +332,11 @@ def build_metrics_payload() -> str:
             lines,
             "customerdna_raw_last_run_rows_inserted_total",
             raw_last_run.get("total_rows_inserted"),
+        )
+        _append_metric(
+            lines,
+            "customerdna_raw_last_run_bronze_files_total",
+            raw_last_run.get("total_bronze_files"),
         )
         _append_metric(
             lines,
@@ -198,6 +390,18 @@ def build_metrics_payload() -> str:
                 lines,
                 "customerdna_raw_table_last_source_rows",
                 table.get("source_rows"),
+                labels,
+            )
+            _append_metric(
+                lines,
+                "customerdna_raw_table_last_bronze_files_read",
+                table.get("bronze_files_read"),
+                labels,
+            )
+            _append_metric(
+                lines,
+                "customerdna_raw_table_last_duration_seconds",
+                table.get("duration_seconds"),
                 labels,
             )
 

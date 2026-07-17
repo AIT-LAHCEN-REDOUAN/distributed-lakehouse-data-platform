@@ -1,439 +1,429 @@
-# CustomerDNA AI - Business Rules & Project Specification
+# AdOptimizer Customer Data Platform - Business Rules & Project Specification
 
-> **PFE Project Document** | Version 16.0
-> Status: Client 1 data-engineering platform implemented with PostgreSQL warehouse setup, Kafka ingestion backbone, MinIO bronze layer, Kafka bronze-ready event handoff, PostgreSQL `raw_data` loading, dbt transformation stack (`staging`, `intermediate`, `analytics`, `serving`), dbt tests/docs, Great Expectations raw/analytics/serving/ML-readiness validation, split Airflow orchestration, Prometheus + Grafana monitoring, and local downstream ML experimentation on curated serving data products
-> Last Updated: 2026-07-09
+> **Global Project Document** | Version 17.1
+> Status: Distributed lakehouse architecture operational for Client 1 with Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Airflow, Great Expectations, Prometheus, and Grafana
+> Last Updated: 2026-07-16
 
 ---
 
 ## 1. Document Purpose
 
-This document is the central business-rules and technical-specification reference for **CustomerDNA AI**.
+This document is the main business-rules and technical-specification reference for the implemented customer-data platform delivered inside the broader **AdOptimizer AI** initiative.
 
 It defines:
 
-- what the project is designed to solve,
-- what data currently exists for Client 1,
-- how data moves from source files to trusted warehouse outputs,
-- what each architectural layer is responsible for,
-- what standards must be respected as the platform evolves,
-- what is already implemented,
-- what remains future work.
+- the business problem being solved,
+- the target architecture and engineering standards,
+- the role of each technology in the platform,
+- the rules governing ingestion, storage, processing, querying, validation, orchestration, and monitoring,
+- the current Client 1 scope,
+- the expected evolution path of the platform.
 
-This file is the **global reference document**. It covers the current data-engineering platform in full detail and also records the downstream local AI/ML experimentation layer that has been built on top of curated serving datasets.
+This document is the **global architectural truth** of the project.
 
 ---
 
 ## 2. Project Identity
 
-### 2.1 Project Name
-**CustomerDNA AI** - Multi-Client Customer Data Platform for Analytics and AI/ML-Ready Products
+### 2.1 Official Project Name
+**AdOptimizer Customer Data Platform**
 
-### 2.2 Strategic Positioning
-CustomerDNA AI must be understood in two complementary ways:
+### 2.2 Relationship to AdOptimizer AI
+The platform must be understood as the **data-engineering foundation** of the broader **AdOptimizer AI** program.
 
-- first, as a **Data Engineering platform** that centralizes, preserves, transforms, validates, orchestrates, and monitors heterogeneous customer datasets,
-- second, as a **future-ready analytical foundation** that can support downstream AI/ML experimentation and later enterprise intelligent applications.
+In this relationship:
 
-### 2.3 PFE Positioning
-For the PFE, the primary academic and technical positioning remains **Data Engineering first**.
+- **AdOptimizer AI** is the umbrella business and intelligent-platform vision.
+- **AdOptimizer Customer Data Platform** is the implemented data platform responsible for collecting, standardizing, governing, storing, and exposing customer-related data products.
+- analytics and future AI/ML capabilities depend on this platform, but they are not the primary identity of the current implementation.
 
-The strongest value demonstrated by the project is:
+### 2.3 Core Positioning
+The platform is positioned first as a **Data Engineering and Distributed Data Platform**.
 
-- architecture design,
-- source preservation,
-- ingestion/load reliability,
-- layered transformation engineering,
-- validation and trust controls,
-- orchestration,
-- monitoring and observability,
-- readiness for deployment in a company-owned server environment.
+It is not to be presented primarily as:
 
-### 2.4 AI/ML Positioning
-AI/ML work exists in the current repository and has been implemented locally for experimentation. However, in the overall project positioning:
+- a machine-learning project,
+- a dashboarding project,
+- a standalone BI project,
+- or a simple ETL script collection.
 
-- AI/ML is a **consumer of curated serving outputs**,
-- AI/ML is not the main identity of the current PFE,
-- AI/ML implementation proves downstream extensibility, not the primary engineering focus.
+### 2.4 Architectural Identity
+The platform is now designed as a **distributed lakehouse-oriented architecture** based on:
+
+- **Kafka** for ingestion transport and event streaming,
+- **HDFS** for bronze-layer distributed storage,
+- **Spark** for distributed processing,
+- **Hive Metastore** for metadata and table catalog management,
+- **Apache Iceberg** as the managed analytical table format,
+- **Trino** for SQL query access over the lakehouse,
+- **dbt-spark** for transformation modeling over Iceberg-backed lakehouse tables,
+- **Airflow** for orchestration,
+- **Great Expectations** for data-quality validation,
+- **Prometheus + Grafana** for monitoring and observability.
 
 ### 2.5 Deployment Orientation
-The architecture is designed so that it can:
+The platform must remain:
 
-- run in the current development environment,
-- be orchestrated locally during development,
-- be transferred later to a **company-owned server environment** without redesigning the logical platform.
+- runnable in development,
+- portable to Docker-based environments,
+- explainable for deployment on a company-owned server cluster,
+- scalable toward multi-node execution later.
 
 ---
 
 ## 3. Problem Statement
 
-Customer data projects often fail because they are built around fragmented files, ad hoc scripts, weak validation, and undocumented transformation logic.
+Customer-related data is commonly fragmented across multiple heterogeneous sources, formats, and business perspectives.
 
-Typical recurring problems include:
+Typical operational problems include:
 
-1. **Fragmented inputs**
-   - customer-related information lives in separate files with different structures, formats, and business meanings.
+1. **Fragmented source landscape**
+   - customer, transaction, event, and campaign data arrive from different files and structures.
 
 2. **Weak ingestion discipline**
-   - loading logic is often manual, slow, or hard to rerun consistently.
+   - data loading may rely on manual or tightly coupled scripts that are difficult to replay and audit.
 
-3. **Poor layer separation**
-   - raw data, cleaning logic, analytics logic, and business outputs are mixed together.
+3. **Poor separation of responsibilities**
+   - ingestion, storage, transformation, validation, and monitoring are often mixed together.
 
-4. **Low data trust**
-   - transformed outputs are used without explicit tests, validation checkpoints, or observability.
+4. **Low trust in downstream outputs**
+   - data may be used in analytics or future intelligent applications without explicit validation or observability.
 
-5. **Limited reusability**
-   - many pipelines are built for one dataset only and cannot scale to multiple clients or future data products.
+5. **Limited scalability**
+   - architectures built around one local database or one direct script often become hard to scale, explain, or distribute.
 
-The project therefore addresses the following combined business and engineering challenge:
+The project therefore addresses the following question:
 
-> How can we build a customer-data platform that ingests heterogeneous source datasets, loads them safely into a warehouse, transforms them through controlled layers, validates quality explicitly, monitors operational health, and exposes reusable curated outputs for analytics and future AI/ML use cases?
+> How can we build a distributed customer-data engineering platform that ingests heterogeneous datasets, persists them in a bronze data lake, processes them through a scalable lakehouse architecture, validates data quality, orchestrates the complete flow, and exposes trusted analytical outputs for downstream consumption within the broader AdOptimizer AI vision?
 
 ---
 
 ## 4. Proposed Solution
 
-CustomerDNA AI solves this challenge through a layered warehouse-centric architecture with Kafka as the active ingestion backbone, MinIO as the bronze persistence layer, PostgreSQL as the structured raw/warehouse engine, and dbt as the transformation backbone.
-
-The implemented high-level flow is:
+The proposed solution is a **distributed batch-oriented lakehouse platform** with the following high-level flow:
 
 ```text
-Client source files
+Client source datasets
   -> Kafka producers
-  -> Kafka source topics
-  -> Kafka consumers
-  -> MinIO bronze layer
-  -> Kafka bronze-ready event topics
-  -> bronze-aware raw loaders
-  -> PostgreSQL raw_data schema
-  -> dbt staging views
-  -> dbt intermediate tables
-  -> dbt analytics marts
-  -> dbt serving data products
-  -> dbt tests + Great Expectations checkpoints
-  -> Airflow orchestration + Prometheus/Grafana monitoring
-  -> analytics consumption / future API / future enterprise AI-ML consumers
+  -> Kafka topics
+  -> bronze consumers
+  -> HDFS bronze storage
+  -> Spark processing
+  -> Iceberg tables registered in Hive Metastore
+  -> Trino SQL access
+  -> dbt-spark transformations
+  -> Great Expectations validation
+  -> Airflow orchestration
+  -> Prometheus + Grafana monitoring
+  -> downstream analytics / BI / future intelligent consumers
 ```
 
-This design ensures that:
+This design is chosen because it provides:
 
-- source datasets remain identifiable,
-- raw loading is explicit and repeatable,
-- transformation logic is versioned and layered,
-- quality gates are enforced,
-- business-facing and serving-facing outputs are curated,
-- monitoring is built into the platform,
-- future client onboarding can follow the same pattern.
+- clear separation of concerns,
+- distributed storage and compute,
+- replayable ingestion,
+- table-format governance,
+- SQL accessibility,
+- orchestration and observability,
+- future extensibility toward more clients and more use cases.
+
+### 4.1 Current Executable Runtime Sequence
+
+The implemented platform must also be explained through its concrete operational sequence:
+
+1. `customerdna_client1_lakehouse_setup_pipeline`
+2. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+3. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+4. `customerdna_client1_lakehouse_readiness_pipeline`
+
+In practical terms, the executed runtime flow is:
+
+```text
+initialize HDFS bronze + Hive/Iceberg namespaces + Trino validation
+  -> stream source datasets through Kafka
+  -> persist bronze files in HDFS
+  -> process bronze data with Spark
+  -> write raw Iceberg tables and register them in Hive Metastore
+  -> run dbt-spark staging/intermediate/analytics models over the lakehouse
+  -> expose SQL access through Trino
+  -> validate raw and transformed lakehouse quality through Great Expectations
+  -> monitor infrastructure and pipeline health with Prometheus + Grafana
+```
+
+The report and oral defense must describe the platform according to this real executed sequence rather than according to any previous local warehouse-oriented iteration.
 
 ---
 
-## 5. Business Objectives
+## 5. Strategic Objectives
 
 ### 5.1 Immediate Objectives
 
-- Build a stable Client 1 customer-data platform.
-- Centralize heterogeneous source datasets into one controlled warehouse flow.
-- Make Kafka the official ingestion backbone and event-driven raw-loading backbone.
-- Introduce MinIO as the bronze layer between Kafka transport and PostgreSQL raw storage.
-- Build trusted dbt layers from `raw_data` to `serving`.
-- Validate warehouse outputs with dbt tests and Great Expectations.
-- Orchestrate the end-to-end pipeline with Airflow.
-- Monitor infrastructure and pipeline state through Prometheus and Grafana.
-- Expose reliable analytics marts and customer-level serving products.
+- build a stable Client 1 distributed customer-data platform,
+- integrate multi-source datasets through a unified ingestion backbone,
+- make Kafka the official source-ingestion layer,
+- make HDFS the official bronze landing layer,
+- make Spark the official distributed processing layer,
+- make Hive Metastore + Iceberg the official structured lakehouse layer,
+- make Trino the official SQL query layer,
+- make dbt-spark the official transformation modeling layer for curated lakehouse outputs,
+- validate platform outputs with Great Expectations,
+- orchestrate the platform with Airflow,
+- monitor the platform with Prometheus and Grafana.
 
 ### 5.2 Medium-Term Objectives
 
-- Harden the pipeline for repeated server execution.
-- Improve operational monitoring depth and alerting.
-- Refine pipeline-performance optimization for large datasets.
-- Expose curated outputs through future API and dashboard consumers.
-- Stabilize future retraining or refresh patterns on top of serving outputs.
+- onboard additional datasets and future clients,
+- improve partitioning and performance tuning,
+- add stronger DataSecOps and governance controls,
+- expose curated outputs to downstream analytics and future applications.
 
 ### 5.3 Long-Term Objectives
 
-- Onboard additional clients.
-- Introduce a later explicit cross-client layer when justified.
-- Reuse the same ingestion, warehouse, validation, orchestration, and monitoring pattern for multiple tenants.
-- Enable broader AI/ML and decisioning modules built on standardized curated data products.
+- evolve toward a reusable multi-client customer data platform,
+- support broader AdOptimizer AI workloads,
+- scale from local development to server deployment and then to multi-node execution.
 
 ---
 
 ## 6. Scope and Non-Goals
 
-### 6.1 Current Implemented Scope
-The currently implemented scope includes:
+### 6.1 In Scope
 
-- Client 1 source dataset organization under the top-level `datasets` directory,
-- Client 1 warehouse initialization scripts,
-- Kafka broker and Kafka UI setup,
-- MinIO bronze object-storage layer,
-- dataset-specific Kafka producers,
-- dataset-specific Kafka sample consumers for verification,
-- dataset-specific Kafka-to-MinIO bronze consumers,
-- dataset-specific bronze-ready event raw loaders,
-- ordered Kafka raw pipeline runner for Client 1,
-- PostgreSQL `raw_data` and `metadata` schemas,
-- dbt `staging`, `intermediate`, `analytics`, and `serving` layers,
-- dbt tests and documentation assets,
-- Great Expectations validation for raw, analytics, serving, and ML-readiness scopes,
-- Airflow split DAG orchestration,
-- Prometheus metrics collection,
-- Grafana dashboards,
-- custom pipeline metrics exporter,
-- centralized monitoring state files,
-- serving-layer data products for customer 360, segmentation, churn, LTV, persona, and marketing recommendation workflows,
-- local ML experimentation built on serving-layer snapshots,
-- local ML EDA and interpretation artifacts.
+- Client 1 source dataset organization,
+- Kafka ingestion and event transport,
+- HDFS bronze persistence,
+- Spark processing jobs,
+- Hive Metastore integration,
+- Iceberg table management,
+- Trino SQL access,
+- dbt-spark transformation project and model execution,
+- Airflow pipeline orchestration,
+- Great Expectations validation,
+- Prometheus and Grafana monitoring,
+- architecture documentation and deployment readiness.
 
-### 6.2 Current Out-of-Scope or Future Work
-The following are not the main implemented center of the platform:
+### 6.2 Out of Scope for the Core Platform Identity
 
-- production cloud deployment,
-- streaming-first business logic at transformation level,
-- online inference APIs,
-- enterprise model registry and full MLOps lifecycle automation,
-- cross-client shared warehouse logic with multiple active clients,
-- enterprise-grade access-control and governance services,
-- full alerting/incident-management integration.
+- full enterprise AI/ML lifecycle automation,
+- production model serving,
+- real-time decision APIs,
+- cloud-provider-specific managed services,
+- fine-grained enterprise IAM/governance products.
 
 ### 6.3 Architectural Non-Goals
-The project must avoid:
 
-- putting business logic inside raw loading,
-- letting dashboards query `raw_data` directly,
-- treating staging as an analytics layer,
-- hiding source limitations through undocumented transformation shortcuts,
-- bypassing validation before downstream reuse,
-- reintroducing retired direct-loading paths as active architecture.
+The platform must avoid:
+
+- using a traditional PostgreSQL business warehouse as the core analytical storage layer,
+- mixing bronze persistence with business transformations,
+- bypassing distributed storage and compute once the lakehouse direction is adopted,
+- hiding validation behind undocumented scripts,
+- exposing raw engineering layers directly to business consumers.
 
 ---
 
-## 7. Stakeholders and Consumers
+## 7. Stakeholders
 
 ### 7.1 Primary Technical Stakeholder
-The primary technical stakeholder is the project owner delivering the PFE with strong Data Engineering focus.
+- the project owner delivering the PFE with a strong Data Engineering orientation
 
-### 7.2 Business Consumers
-Expected business-side consumers include:
+### 7.2 Business Stakeholders
+- managers,
+- analysts,
+- reporting consumers,
+- future business application stakeholders.
 
-- marketing managers,
-- business analysts,
-- decision makers,
-- future dashboard users.
-
-### 7.3 Technical Consumers
-Expected technical consumers include:
-
+### 7.3 Technical Stakeholders
 - data engineers,
 - analytics engineers,
-- dbt developers,
-- future ML engineers,
-- API developers,
-- dashboard developers,
-- deployment and operations stakeholders.
-
-### 7.4 Consumer Access Rule
-Each consumer must use the correct layer:
-
-- engineers may inspect all layers for debugging and development,
-- business consumers should use curated analytics outputs,
-- downstream ML or experimentation workflows should use validated serving outputs,
-- monitoring tools should inspect state/metrics rather than query business tables for operational status.
+- platform engineers,
+- DevOps / DataSecOps stakeholders,
+- future data scientists and ML engineers.
 
 ---
 
-## 8. Data Domains and Source Landscape
+## 8. Source Data Landscape
 
-### 8.1 Client 1 Source Datasets
-Client 1 currently uses four heterogeneous public dataset groups:
+### 8.1 Client 1 Active Source Groups
 
-| Dataset Group | Source Files | Business Meaning | Active Raw Table(s) |
-|---|---|---|---|
-| Customer Personality Analysis | `marketing_campaign.csv` | Demographics, household composition, campaign response, spending mix | `raw_data.marketing_campaign` |
-| E-commerce Customer Churn | `E-commerce_customer_churn.xlsx` | Customer churn behavior and service/usage indicators | `raw_data.e_commerce_customer_churn` |
-| RetailRocket Recommender System Dataset | `events.csv`, `item_properties_part1.csv`, `item_properties_part2.csv`, `category_tree.csv` | Clickstream events, item attributes, category structure | `raw_data.events`, `raw_data.item_properties`, `raw_data.category_tree` |
-| UCI Online Retail II | `online_retail_2.xlsx` | Transactional retail sales behavior | `raw_data.online_retail` |
+Client 1 currently uses four heterogeneous source groups:
 
-### 8.2 Active Source Dataset Locations
-The current active source files live under:
+| Dataset Group | Business Meaning |
+|---|---|
+| Customer Personality Analysis | demographics, spending patterns, campaign response |
+| E-commerce Customer Churn | churn behavior and usage indicators |
+| RetailRocket Dataset | behavioral events, item properties, category structure |
+| UCI Online Retail II | transaction and sales behavior |
 
-- `CustomerDNA AI/datasets/client_1/Customer_Personality_Analysis/marketing_campaign.csv`
-- `CustomerDNA AI/datasets/client_1/E-commerce_customer_churn/E-commerce_customer_churn.xlsx`
-- `CustomerDNA AI/datasets/client_1/Retailrocket_recommender_system_dataset/category_tree.csv`
-- `CustomerDNA AI/datasets/client_1/Retailrocket_recommender_system_dataset/events.csv`
-- `CustomerDNA AI/datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part1.csv`
-- `CustomerDNA AI/datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part2.csv`
-- `CustomerDNA AI/datasets/client_1/UCI_Online_Retail_2/online_retail_2.xlsx`
+### 8.2 Active Source Files
 
-### 8.3 Dataset Interpretation Rule
-These datasets contribute different customer-related perspectives. They are not one native operational enterprise source system. Therefore:
+- `datasets/client_1/Customer_Personality_Analysis/marketing_campaign.csv`
+- `datasets/client_1/E-commerce_customer_churn/E-commerce_customer_churn.xlsx`
+- `datasets/client_1/Retailrocket_recommender_system_dataset/category_tree.csv`
+- `datasets/client_1/Retailrocket_recommender_system_dataset/events.csv`
+- `datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part1.csv`
+- `datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part2.csv`
+- `datasets/client_1/UCI_Online_Retail_2/online_retail_2.xlsx`
 
-- each source keeps its identity in the raw layer,
-- joins must be justified at transformation level,
-- cross-dataset interpretation must remain honest,
-- serving outputs are engineered customer products, not proof of original enterprise identity resolution.
+### 8.3 Source Interpretation Rule
+
+The datasets represent heterogeneous but related business perspectives.
+
+Therefore:
+
+- source identity must be preserved,
+- ingestion must remain dataset-aware,
+- reconciliation or integration logic must be explicit,
+- downstream curated products must document their transformation assumptions.
 
 ---
 
-## 9. Multi-Client Architecture Principle
+## 9. Core Architecture Rules
 
-### 9.1 Core Rule
-The architecture is intentionally reusable for future clients.
+### 9.1 Kafka Rule
+Kafka is the official ingestion and event transport backbone.
 
-### 9.2 Standard Client Pattern
-Each client should eventually follow:
+Kafka is responsible for:
+
+- receiving source-derived records,
+- decoupling producers from downstream processors,
+- organizing per-dataset streams via topics,
+- enabling replay and observability at the transport layer.
+
+Kafka must not be used as the long-term storage layer.
+
+### 9.2 HDFS Rule
+HDFS is the official **bronze distributed storage layer**.
+
+HDFS is responsible for:
+
+- persisting bronze batches,
+- keeping replayable ingestion artifacts,
+- separating transport from processing,
+- providing distributed storage for later Spark jobs.
+
+### 9.3 Spark Rule
+Spark is the official **distributed processing engine**.
+
+Spark is responsible for:
+
+- reading bronze data from HDFS,
+- applying scalable data processing logic,
+- writing structured outputs into Iceberg tables,
+- supporting future performance scaling across multiple workers.
+
+### 9.4 Hive Metastore Rule
+Hive Metastore is the official metadata and catalog service for lakehouse tables.
+
+It is responsible for:
+
+- table registration,
+- schema visibility,
+- namespace management,
+- interoperability with Spark and Trino.
+
+### 9.5 Iceberg Rule
+Iceberg is the official analytical table format.
+
+It is responsible for:
+
+- structured table management over data-lake storage,
+- snapshot-based table evolution,
+- schema evolution support,
+- partition management,
+- reliable table semantics for large-scale analytical processing.
+
+### 9.6 Trino Rule
+Trino is the official SQL query and analytical access layer.
+
+It is responsible for:
+
+- interactive SQL querying,
+- inspection of Iceberg tables,
+- lakehouse consumption for analytics,
+- future BI connectivity.
+
+### 9.7 dbt-spark Rule
+dbt-spark is the official transformation-modeling layer for the curated lakehouse.
+
+It must be used to:
+
+- define staging, intermediate, and analytics transformations as versioned models,
+- keep transformation logic modular, auditable, and explainable,
+- separate business modeling from low-level ingestion and Spark raw-loading code,
+- materialize governed analytical tables on top of Iceberg-backed lakehouse data.
+
+### 9.8 Great Expectations Rule
+Great Expectations is the official quality-validation framework.
+
+It must validate:
+
+- bronze and processed data assumptions where relevant,
+- table-level quality contracts,
+- structural readiness before downstream reuse.
+
+### 9.9 Airflow Rule
+Airflow is the official orchestration layer.
+
+Airflow is responsible for:
+
+- workflow decomposition,
+- dependency control,
+- rerun management,
+- operational scheduling and traceability.
+
+### 9.10 Monitoring Rule
+Prometheus and Grafana are mandatory platform components.
+
+Monitoring must provide visibility into:
+
+- infrastructure health,
+- storage services,
+- processing services,
+- orchestration status,
+- pipeline execution metrics.
+
+---
+
+## 10. Target Layered Flow
+
+### 10.1 Logical Flow
 
 ```text
-client source files
-  -> client-specific Kafka ingestion/loading
-  -> clientX_DW.raw_data
-  -> clientX_DW.staging
-  -> clientX_DW.intermediate
-  -> clientX_DW.analytics
-  -> clientX_DW.serving
-  -> validation + orchestration + monitoring
+Sources
+  -> Kafka transport layer
+  -> HDFS bronze layer
+  -> Spark distributed processing
+  -> Hive Metastore + Iceberg raw tables
+  -> dbt-spark transformation layer
+  -> Trino analytical access
+  -> validated downstream outputs
 ```
 
-### 9.3 Client Isolation Rule
-Client data must remain isolated at warehouse level unless an explicit future cross-client layer is introduced.
+### 10.2 Layer Responsibility Rule
 
-### 9.4 Future Global Layer Rule
-A shared global warehouse or benchmarking layer is valid only after multiple clients are onboarded and standardization rules are strong enough to support safe comparison.
+Each layer must keep its own responsibility:
 
----
-
-## 10. Technology Stack
-
-### 10.1 Core Platform Stack
-
-- **Python** for platform scripts, configuration, validation helpers, monitoring exporter logic, and local downstream experimentation
-- **Apache Kafka** as the current active ingestion and event-driven raw-loading backbone
-- **Kafka UI** for operational topic inspection
-- **MinIO** as the bronze object-storage layer between Kafka and PostgreSQL `raw_data`
-- **PostgreSQL** as the warehouse engine
-- **dbt** for transformations, testing, lineage, and documentation
-- **Great Expectations** for data-quality contracts and Data Docs
-- **Apache Airflow** for workflow orchestration
-- **Prometheus** for metrics collection
-- **Grafana** for dashboard-based operational inspection
-- **Docker Compose** for local and portable service composition
-- **FastAPI** as future API layer
-- **React** as future frontend layer
-
-### 10.2 Tool-Fit Rule
-A tool belongs in the architecture only if it improves engineering quality and operational clarity without breaking the project’s deployability.
-
-### 10.3 Demonstrated Standards
-The stack must showcase:
-
-- source preservation,
-- explicit layering,
-- reproducible execution,
-- visible validation,
-- inspectable lineage,
-- separated orchestration concerns,
-- observability and operational feedback.
+- **source layer**: input ownership
+- **Kafka**: transport and decoupling
+- **HDFS bronze**: raw distributed persistence
+- **Spark**: processing and writing
+- **Iceberg raw**: structured raw analytical persistence
+- **dbt-spark**: governed transformation modeling
+- **Iceberg**: table management
+- **Hive**: catalog
+- **Trino**: query access
+- **GX**: validation
+- **Airflow**: orchestration
+- **Prometheus/Grafana**: observability
 
 ---
 
-## 11. End-to-End Data Flow
+## 11. Client 1 Topic and Dataset Rules
 
-### 11.1 Current Implemented Flow
-
-```text
-Source files in datasets/client_1
-  -> dataset-specific Kafka producer scripts
-  -> one source topic per dataset
-  -> dataset-specific Kafka-to-MinIO bronze consumer scripts
-  -> MinIO bronze JSONL batches
-  -> one bronze-ready event topic per dataset
-  -> dataset-specific bronze-event raw loader scripts
-  -> PostgreSQL raw_data tables
-  -> dbt staging views
-  -> dbt intermediate tables
-  -> dbt analytics marts
-  -> dbt serving data products
-  -> dbt tests
-  -> Great Expectations checkpoints
-  -> monitoring state + Grafana/Prometheus dashboards
-  -> analytics consumption / future API / future enterprise AI-ML
-```
-
-### 11.2 Operational Flow Rule
-Each stage must perform only its own responsibility:
-
-- Kafka handles ingestion transport, bronze-ready event signaling, and event-driven loading coordination,
-- MinIO preserves bronze ingestion batches,
-- raw tables preserve source-compatible structures,
-- dbt handles controlled transformation logic,
-- quality tools validate trust,
-- Airflow coordinates execution order,
-- monitoring tools observe platform health.
-
-### 11.3 Rerun Rule
-The platform must support clean reruns from the beginning. For Client 1 this is achieved by:
-
-- warehouse setup as a separate DAG,
-- Kafka topic reset as part of the raw pipeline,
-- bronze reset as part of the raw pipeline,
-- dataset-by-dataset Kafka -> bronze -> raw loading with verification,
-- downstream transformation and quality orchestration as a separate final DAG.
-
----
-
-## 12. Kafka Ingestion and Raw Loading Rules
-
-### 12.1 Strategic Role of Kafka
-Kafka is now the official ingestion and event-driven raw-loading backbone for Client 1.
-
-It replaces the earlier direct raw-load path as the active architecture because it offers:
-
-- clearer decoupling between source reading and warehouse loading,
-- observable dataset-level transport,
-- reusable topic-based ingestion design,
-- easier justification for future scaling beyond a single manual load script.
-
-### 12.1.1 Strategic Role of MinIO Bronze
-MinIO is the official bronze object-storage layer for Client 1.
-
-It exists to separate:
-
-- Kafka-based source transport,
-- bronze persistence of ingestion batches,
-- structured loading into PostgreSQL `raw_data`.
-
-This design provides:
-
-- replayable bronze files,
-- clearer traceability of each ingestion run,
-- a data-lake-style landing layer before structured warehouse storage,
-- stronger separation of concerns between transport, storage, and warehouse loading.
-
-### 12.2 Current Kafka and Bronze Design
-The Kafka layer currently includes:
-
-- one broker,
-- Kafka UI,
-- client-level common producer utilities,
-- source-specific row iterators,
-- dataset-specific producer scripts,
-- dataset-specific consumer verification scripts,
-- dataset-specific bronze consumers,
-- bronze-ready event topics,
-- dataset-specific bronze-event raw loaders,
-- one orchestrated raw pipeline runner.
-
-The MinIO bronze layer currently includes:
-
-- one MinIO service,
-- one Client 1 bronze bucket,
-- bronze utility helpers,
-- Client 1 bronze reset and inspection scripts,
-- one dataset-run object layout under the `bronze/` prefix.
-
-### 12.3 Dataset-Specific Kafka Topics
-The active Client 1 topic pattern follows:
+### 11.1 Dataset-Specific Topic Pattern
+Client 1 topics must follow:
 
 - `client1.marketing_campaign`
 - `client1.ecommerce_customer_churn`
@@ -442,931 +432,431 @@ The active Client 1 topic pattern follows:
 - `client1.retailrocket_item_properties`
 - `client1.online_retail`
 
-The active bronze-ready event topic pattern follows:
+### 11.2 Bronze Persistence Rule
+Each ingestion run must create dataset-specific bronze artifacts in HDFS under a client-aware structure.
 
-- `client1.marketing_campaign.bronze_ready`
-- `client1.ecommerce_customer_churn.bronze_ready`
-- `client1.retailrocket_category_tree.bronze_ready`
-- `client1.retailrocket_events.bronze_ready`
-- `client1.retailrocket_item_properties.bronze_ready`
-- `client1.online_retail.bronze_ready`
+### 11.3 Processing Rule
+Spark jobs must process bronze inputs deterministically and load them into registered Iceberg tables without silent row loss.
 
-### 12.4 Current Loading Strategy Rule
-The raw pipeline currently processes smaller datasets first and larger datasets last so that:
+### 11.4 Verification Rule
+Each dataset pipeline must be verifiable through:
 
-- early pipeline failures surface faster,
-- validation can begin on small datasets sooner,
-- long-running large loads are deferred until the smaller steps are already stable.
-
-### 12.4.1 Current Bronze-to-Raw Flow Rule
-For each dataset, the active raw-load sequence is:
-
-1. publish source rows to the dataset source topic,
-2. consume those rows into MinIO bronze JSONL batch objects,
-3. publish one bronze-ready Kafka event for that exact bronze run,
-4. consume that bronze-ready event and load the referenced bronze run into the matching PostgreSQL `raw_data` table,
-5. verify final target row counts.
-
-### 12.5 Kafka Ingestion Boundary Rule
-Kafka ingestion may:
-
-- read source rows from CSV/XLSX inputs,
-- serialize them into topic messages,
-- preserve dataset identity,
-- persist bronze JSONL batches safely,
-- publish bronze-ready load events,
-- verify final raw row counts.
-
-Kafka ingestion must not:
-
-- perform downstream business feature engineering,
-- compute analytics KPIs,
-- replace dbt transformation responsibilities,
-- silently discard records without explicit handling.
-
-### 12.5.1 Bronze Boundary Rule
-The MinIO bronze layer may:
-
-- store immutable bronze objects for each dataset run,
-- keep data under client-level and dataset-level prefixes,
-- support clean reruns through explicit bronze resets,
-- act as the replayable source for structured raw-table loading.
-
-The MinIO bronze layer must not:
-
-- replace PostgreSQL `raw_data`,
-- become the direct business-consumption layer,
-- contain hidden transformation logic.
-
-### 12.6 Verification Rule
-No dataset load should be considered complete unless:
-
-- the producer publishes the expected dataset volume,
-- the bronze consumer stores the expected bronze objects,
-- the bronze-ready event is published successfully,
-- the loader completes insertion successfully,
-- the target raw table row count is verified.
+- source count,
+- Kafka publish confirmation,
+- bronze write confirmation,
+- Spark processing success,
+- final table row verification,
+- monitoring signals.
 
 ---
 
-## 13. Retired Ingestion Policy
+## 12. Lakehouse Design Rules
 
-### 13.1 Retired Path Status
-The older direct ingestion path is no longer part of the active project structure.
+### 12.1 Core Table Organization
+The platform should organize lakehouse data into business-relevant namespaces and layers, for example:
 
-### 13.2 Current Rule
-The project must be documented and operated using the Kafka path as the only official Client 1 ingestion and raw-loading backbone.
+- `bronze`
+- `silver`
+- `gold`
 
-### 13.3 Architectural Rule
-Retired ingestion logic must not be reintroduced into the active platform unless there is an explicit redesign decision.
+or, if a domain-first organization is preferred:
 
----
+- `client1_bronze`
+- `client1_silver`
+- `client1_gold`
 
-## 14. Raw Data Layer Rules
+### 12.2 Bronze Rule
+Bronze tables or files preserve ingested source records with minimal interpretation.
 
-### 14.1 Raw Layer Purpose
-The `raw_data` schema is the preserved structured warehouse landing layer fed from validated bronze batches.
+### 12.3 Silver Rule
+Silver tables standardize, clean, and reconcile source records into reusable structured assets.
 
-### 14.2 Active Raw Tables
-The active Client 1 raw tables are:
+### 12.4 Gold Rule
+Gold tables expose trusted analytical outputs ready for reporting, downstream consumption, and future intelligent applications.
 
-- `category_tree`
-- `e_commerce_customer_churn`
-- `events`
-- `item_properties`
-- `marketing_campaign`
-- `online_retail`
-
-### 14.3 Raw Layer Principles
-
-- Raw tables must remain as close as practical to source-compatible structure.
-- Load safety is more important here than analytical convenience.
-- Typing and strong cleaning primarily belong downstream.
-- Raw data is a debug, audit, and lineage-preservation layer.
-- Raw loading must remain traceable through metadata, logs, and bronze-run references.
-
-### 14.4 Metadata Tracking Rule
-Raw loading must remain observable through metadata tables and monitoring state artifacts, including:
-
-- loaded file or dataset metadata,
-- pipeline run metadata,
-- row-count verification and run status logs.
-
-### 14.5 Raw Consumption Rule
-Raw data must not be used directly for final business dashboards or final downstream customer products.
+### 12.5 Query Boundary Rule
+Business and analytical consumers must query curated Iceberg tables through Trino rather than reading bronze artifacts directly.
 
 ---
 
-## 15. Warehouse Schema Rules
+## 13. Orchestration Design Rules
 
-### 15.1 Active Database
-The active warehouse database is:
+### 13.1 Four-Phase Orchestration Principle
+The platform should remain decomposed into clear orchestration phases:
 
-- `client1_DW`
+1. **Foundation / environment setup**
+2. **Bronze ingestion and processing**
+3. **dbt-spark transformation and curation**
+4. **Lakehouse readiness and quality validation**
 
-### 15.2 Active and Planned Schemas
+This decomposition is implemented concretely through the following DAGs:
 
-- `raw_data` - active
-- `metadata` - active
-- `staging` - active
-- `intermediate` - active
-- `analytics` - active
-- `serving` - active
-- `reports` - planned/future
-- `client_specific` - planned/future
+1. `customerdna_client1_lakehouse_setup_pipeline`
+2. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+3. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+4. `customerdna_client1_lakehouse_readiness_pipeline`
 
-### 15.3 Schema Responsibility Rule
-Every schema must have a single dominant purpose. Schema boundaries are a core trust mechanism, not an organizational detail.
+### 13.2 Orchestration Benefit Rule
+This split is intentional because it improves:
 
----
-
-## 16. dbt Transformation Architecture
-
-### 16.1 Core Transformation Backbone
-dbt is the official transformation backbone of the platform.
-
-### 16.2 Active dbt Flow
-
-```text
-raw_data -> staging -> intermediate -> analytics -> serving
-```
-
-### 16.3 Materialization Philosophy
-
-- `staging` models are materialized as **views**
-- `intermediate` models are materialized as **tables**
-- `analytics` models are materialized as **tables**
-- `serving` models are materialized as **tables**
-
-### 16.4 dbt Responsibility Rule
-dbt is responsible for:
-
-- type-safe transformation,
-- naming standardization,
-- business logic layering,
-- reusable model logic,
-- tests,
-- documentation,
-- lineage visibility,
-- curated output definition.
-
-### 16.5 dbt Boundary Rule
-dbt must not be used to hide source limitations. Model logic must remain explainable and aligned with each layer’s responsibility.
-
----
-
-## 17. Staging Layer Rules
-
-### 17.1 Staging Purpose
-The staging layer standardizes raw sources into usable relational forms while staying close to source meaning.
-
-### 17.2 Implemented Staging Models
-
-- `stg_customer_personality`
-- `stg_ecommerce_churn`
-- `stg_online_retail`
-- `stg_retailrocket_category_tree`
-- `stg_retailrocket_events`
-- `stg_retailrocket_item_properties`
-
-### 17.3 What Staging Must Do
-
-- rename columns consistently,
-- cast raw text-heavy values into usable types,
-- normalize basic source inconsistencies,
-- preserve source-level semantics,
-- expose clean source-shaped relations.
-
-### 17.4 What Staging Must Not Do
-
-- perform wide analytical aggregation,
-- create final business KPIs,
-- mix unrelated grains for convenience,
-- behave like a reporting layer.
-
----
-
-## 18. Intermediate Layer Rules
-
-### 18.1 Intermediate Purpose
-The intermediate layer creates reusable transformation building blocks and controlled joins.
-
-### 18.2 Implemented Intermediate Models
-
-- `int_customer_profile`
-- `int_online_retail_customer_summary`
-- `int_retailrocket_event_summary`
-- `int_retailrocket_latest_item_properties`
-- `int_customer_behavior`
-- `int_product_analysis`
-
-### 18.3 What Intermediate Must Do
-
-- combine staging models in controlled ways,
-- prepare reusable customer-level or product-level transformation logic,
-- create stable inputs for analytics and serving layers,
-- isolate complex transformation logic away from final marts.
-
-### 18.4 Intermediate Grain Rule
-Every intermediate model must have a clearly explainable grain and join logic.
-
-### 18.5 Join Honesty Rule
-If a join is analytical rather than operationally native, the model must still remain documented honestly and consistently.
-
----
-
-## 19. Analytics Layer Rules
-
-### 19.1 Analytics Purpose
-The analytics layer produces trusted business-facing marts and summary outputs.
-
-### 19.2 Implemented Analytics Models
-
-- `analytics_customer_segments`
-- `analytics_sales_analytics`
-- `analytics_product_performance`
-- `analytics_business_intelligence`
-
-### 19.3 What Analytics Must Do
-
-- expose stable aggregated outputs,
-- support BI and dashboard consumption,
-- package metrics and segment-level interpretations,
-- remain business-readable.
-
-### 19.4 What Analytics Must Not Do
-
-- behave like raw staging cleanup,
-- carry unvalidated final ML labels as hidden logic,
-- bypass intermediate logic to create fragile marts.
-
-### 19.5 Consumption Rule
-Business dashboards should prefer this layer unless a downstream use case explicitly requires a serving-layer product.
-
----
-
-## 20. Serving Layer Rules
-
-### 20.1 Serving Purpose
-The serving layer exposes curated customer-level data products intended for stable downstream reuse.
-
-### 20.2 Implemented Serving Models
-
-- `customer_360`
-- `segmentation_feature_base`
-- `churn_feature_base`
-- `ltv_feature_base`
-- `persona_base`
-- `marketing_recommendation_base`
-
-### 20.3 Serving Layer Interpretation
-For this project, the serving layer acts as:
-
-- a curated customer-product layer,
-- a future API-facing layer,
-- a future MLOps-ready layer,
-- a bridge between analytics engineering and downstream intelligent use cases.
-
-### 20.4 What Serving Must Do
-
-- centralize trusted customer-level outputs,
-- package validated features and labels,
-- support future experimentation or service layers,
-- stay stable enough for downstream consumers.
-
-### 20.5 What Serving Must Not Do
-
-- bypass testing and validation,
-- replace analytics marts for ordinary BI usage,
-- hide unclear label-generation logic,
-- serve as a dumping ground for unrelated features.
-
----
-
-## 21. dbt Project Assets and Standards
-
-### 21.1 Key dbt Configuration Files
-
-- `src/ELT/client_1/dbt/dbt_project.yml`
-- `src/ELT/client_1/dbt/profiles.yml`
-- `src/ELT/client_1/dbt/docs/project_overview.md`
-
-### 21.2 Key Model Metadata Files
-
-- `models/staging/sources.yml`
-- `models/staging/staging_models.yml`
-- `models/intermediate/intermediate_models.yml`
-- `models/analytics/analytics_models.yml`
-- `models/analytics/exposures.yml`
-- `models/serving/serving_models.yml`
-- `models/serving/churn_feature_base.yml`
-- `models/serving/ltv_feature_base.yml`
-- `models/serving/persona_base.yml`
-- `models/serving/segmentation_feature_base.yml`
-- `models/serving/marketing_recommendation_base.yml`
-
-### 21.3 Naming Rule
-Model names must clearly indicate their layer and purpose.
-
-### 21.4 Documentation Rule
-All major curated models must be documented sufficiently for lineage inspection and explainable downstream reuse.
-
----
-
-## 22. Testing and Quality Rules
-
-### 22.1 dbt Testing Rule
-dbt tests verify structural integrity of warehouse models and must pass before curated outputs are considered stable.
-
-### 22.2 Great Expectations Rule
-Great Expectations complements dbt by validating dataset-level contracts and downstream-readiness conditions that go beyond simple model builds.
-
-### 22.3 Trust Rule
-A model that builds successfully is not automatically trustworthy. Trust requires:
-
-- successful build,
-- passing dbt tests,
-- relevant Great Expectations success,
-- explainable layer logic,
-- observable execution state.
-
----
-
-## 23. Great Expectations Quality Layer
-
-### 23.1 Great Expectations Purpose
-Great Expectations exists to validate:
-
-- raw source contracts,
-- analytics consistency,
-- serving-layer readiness,
-- downstream ML-readiness conditions.
-
-### 23.2 Key Great Expectations Files
-
-- `src/ELT/client_1/great_expectations/bootstrap_gx.py`
-- `src/ELT/client_1/great_expectations/run_gx_validations.py`
-- `src/ELT/client_1/great_expectations/gx_config.py`
-- `src/ELT/client_1/great_expectations/gx_suite_definitions.py`
-- `src/ELT/client_1/great_expectations/README.md`
-- `src/ELT/client_1/great_expectations/gx/great_expectations.yml`
-
-### 23.3 Implemented Checkpoints
-
-- `raw_data_quality_checkpoint`
-- `analytics_data_quality_checkpoint`
-- `serving_data_quality_checkpoint`
-- `ml_feature_readiness_checkpoint`
-
-### 23.4 Great Expectations Separation Rule
-
-- dbt controls transformation logic and model tests,
-- Great Expectations validates dataset contracts and readiness conditions,
-- Airflow orchestrates when each checkpoint runs.
-
----
-
-## 24. Orchestration Rules
-
-### 24.1 Orchestration Principle
-The platform must not depend on ad hoc manual end-to-end execution as its intended operating mode.
-
-### 24.2 Active Airflow DAGs
-The implemented Client 1 orchestration layer currently uses three active DAGs:
-
-1. `customerdna_client1_dw_setup_pipeline`
-2. `customerdna_client1_raw_load_pipeline`
-3. `customerdna_client1_transformation_quality_pipeline`
-
-### 24.3 DAG Responsibilities
-
-#### `customerdna_client1_dw_setup_pipeline`
-Responsible for:
-
-- warehouse setup,
-- schema creation,
-- base-table creation,
-- metadata table readiness.
-
-#### `customerdna_client1_raw_load_pipeline`
-Responsible for:
-
-- running the Kafka raw pipeline,
-- resetting Client 1 Kafka topics for clean reruns,
-- resetting Client 1 bronze objects in MinIO,
-- producing all source datasets into Kafka topics,
-- consuming Kafka source topics into MinIO bronze batches,
-- publishing bronze-ready Kafka events per dataset run,
-- consuming bronze-ready events and loading referenced bronze batches into `raw_data`,
-- bootstrapping Great Expectations,
-- validating raw-layer quality.
-
-#### `customerdna_client1_transformation_quality_pipeline`
-Responsible for:
-
-- running all dbt models,
-- bootstrapping Great Expectations after transformed layers exist,
-- running dbt tests,
-- validating analytics quality,
-- validating serving quality,
-- validating ML-readiness conditions.
-
-### 24.4 Execution Order Rule
-The official full reset-and-run order is:
-
-1. `customerdna_client1_dw_setup_pipeline`
-2. `customerdna_client1_raw_load_pipeline`
-3. `customerdna_client1_transformation_quality_pipeline`
-
-### 24.5 Orchestration Design Rule
-Splitting the pipeline by responsibility is intentional because it improves:
-
-- rerun control,
-- debugging,
 - restartability,
-- auditability,
-- operational explanation during presentation and deployment.
+- troubleshooting,
+- partial reruns,
+- operational readability during the defense,
+- production deployment readiness.
 
 ---
 
-## 25. Monitoring and Observability Rules
+## 14. Monitoring and Observability Rules
 
-### 25.1 Monitoring Purpose
-The monitoring layer provides visibility into both infrastructure and pipeline behavior.
-
-### 25.2 Active Monitoring Components
+### 14.1 Active Monitoring Components
 
 - Prometheus
 - Grafana
-- PostgreSQL exporter
-- cAdvisor metrics
+- cAdvisor
+- Kafka/HDFS/Spark/Hive/Trino operational metrics where available
 - custom pipeline metrics exporter
-- script-generated monitoring state files
 
-### 25.3 Key Monitoring Files
+### 14.2 Dashboard Expectations
+The monitoring layer should expose at least:
 
-- `src/monitoring/README.md`
-- `src/monitoring/exporters/pipeline_metrics_exporter.py`
-- `src/monitoring/shared/pipeline_metrics.py`
-- `src/monitoring/prometheus/docker-compose.yml`
-- `src/monitoring/prometheus/prometheus.yml`
-- `src/monitoring/prometheus/README.md`
-- `src/monitoring/grafana/docker-compose.yml`
-- `src/monitoring/grafana/provisioning/datasources/prometheus.yml`
-- `src/monitoring/grafana/provisioning/dashboards/customerdna.yml`
-- `src/monitoring/grafana/dashboards/customerdna_infrastructure.dashboard.json`
-- `src/monitoring/grafana/dashboards/customerdna_postgres.dashboard.json`
-- `src/monitoring/grafana/dashboards/customerdna_pipeline_health.dashboard.json`
+- infrastructure dashboard,
+- lakehouse services dashboard,
+- pipeline-health dashboard,
+- PostgreSQL support-services dashboard where relevant,
+- query-platform dashboard.
 
-### 25.4 State Files
-The monitoring layer currently uses state artifacts such as:
+### 14.3 Monitoring Principle
+Monitoring is a first-class platform capability, not a presentation extra.
 
-- `src/monitoring/state/airflow_pipeline_state.json`
-- `src/monitoring/state/gx_state.json`
-- `src/monitoring/state/raw_load_state.json`
+It exists to prove that the system is:
 
-### 25.5 Monitoring Rule
-Monitoring is not optional decoration. It is part of platform trust because it proves the system is operable, inspectable, and defendable.
+- observable,
+- measurable,
+- debuggable,
+- explainable to operational stakeholders.
 
 ---
 
-## 26. Dashboard and API Consumption Rules
+## 15. Project Structure Rule
 
-### 26.1 Dashboard Rule
-Dashboards should read curated outputs, not raw engineering layers.
+The active project structure must reflect the distributed lakehouse architecture clearly.
 
-### 26.2 API Rule
-A future API should expose curated analytics or serving outputs depending on business need, never raw warehouse tables directly.
+The project structure must remain readable from the top business level down to the operational file level.
 
-### 26.3 Consumption Boundary Rule
-Operational monitoring dashboards and business analytics dashboards must remain conceptually separate even if both are visible in Grafana or future reporting layers.
-
----
-
-## 27. Local Downstream ML Experimentation Layer
-
-### 27.1 Current Status
-Local downstream ML experimentation has been implemented for Client 1, but it remains secondary to the Data Engineering identity of the platform.
-
-### 27.2 ML Dependency Rule
-Every ML workflow must depend on validated serving-layer outputs rather than bypassing the warehouse architecture.
-
-### 27.3 Current Implemented Local ML Use Cases
-
-- segmentation clustering
-- churn classification
-- LTV regression
-- persona classification
-- marketing recommendation classification
-
-### 27.4 Current Local ML Workflow
-The implemented local ML workflow currently includes:
-
-1. extract serving snapshots,
-2. audit snapshots,
-3. preprocess features,
-4. train baseline models,
-5. interpret predictions or clusters,
-6. generate ML EDA reports and plots.
-
-### 27.5 ML Positioning Rule
-These workflows prove that the serving layer is reusable and downstream-ready. They do not change the platform’s primary Data Engineering positioning.
-
----
-
-## 28. Dataset-Specific EDA Rules
-
-### 28.1 ELT-Facing EDA
-The project includes maximum EDA scripts for the main source datasets under:
-
-- `src/ELT/client_1/EDA/Customer_Personality_Analysis/scripts/customer_personality_max_eda.py`
-- `src/ELT/client_1/EDA/E-commerce_Personality_Analysis/scripts/ecommerce_max_eda.py`
-- `src/ELT/client_1/EDA/Retailrocket_recommender_system_dataset/scripts/retailrocket_max_eda.py`
-- `src/ELT/client_1/EDA/UCI_Online_Retail_II/scripts/online_retail_max_eda.py`
-
-### 28.2 ML-Facing EDA
-The project also includes ML-oriented EDA scripts under:
-
-- `src/ML/client_1/eda/scripts/run_segmentation_eda.py`
-- `src/ML/client_1/eda/scripts/run_churn_eda.py`
-- `src/ML/client_1/eda/scripts/run_ltv_eda.py`
-- `src/ML/client_1/eda/scripts/run_persona_eda.py`
-- `src/ML/client_1/eda/scripts/run_marketing_recommendation_eda.py`
-
-### 28.3 EDA Rule
-EDA exists to improve understanding and explainability. It must not replace formal transformation and validation logic.
-
----
-
-## 29. Current Client 1 Implementation Status
-
-### 29.1 Implemented Components
-
-- warehouse setup automation,
-- Kafka ingestion backbone,
-- MinIO bronze layer,
-- Kafka bronze-ready raw-loading backbone,
-- raw source preservation in PostgreSQL,
-- metadata tracking,
-- dbt staging layer,
-- dbt intermediate layer,
-- dbt analytics layer,
-- dbt serving layer,
-- dbt docs and tests,
-- Great Expectations validation across raw, analytics, serving, and ML-readiness scopes,
-- split Airflow DAG orchestration,
-- Prometheus-based monitoring,
-- Grafana dashboards,
-- Kafka UI,
-- local downstream ML experimentation assets.
-
-### 29.2 Key Technical Achievements
-
-- Clear separation between ingestion, loading, transformation, validation, orchestration, and monitoring.
-- Kafka now serves as the official ingestion and event-driven raw-load backbone.
-- MinIO now acts as the bronze layer between Kafka transport and PostgreSQL raw storage.
-- Three-DAG Airflow architecture provides controlled rerun order.
-- dbt serving layer exposes reusable customer-level data products.
-- Great Expectations now validates not only raw and analytics but also serving and ML-readiness conditions.
-- Prometheus and Grafana make the platform operationally inspectable.
-- The platform now separates transport, bronze persistence, and warehouse loading explicitly.
-
-### 29.3 Current Project Structure
-
-The project structure below reflects the active platform currently used by the project.
+The active structure must be understood as follows:
 
 ```text
 CustomerDNA AI/
-|-- datasets/
-|   `-- client_1/
-|       |-- Customer_Personality_Analysis/
-|       |   `-- marketing_campaign.csv
-|       |-- E-commerce_customer_churn/
-|       |   `-- E-commerce_customer_churn.xlsx
-|       |-- Retailrocket_recommender_system_dataset/
-|       |   |-- category_tree.csv
-|       |   |-- events.csv
-|       |   |-- item_properties_part1.csv
-|       |   `-- item_properties_part2.csv
-|       `-- UCI_Online_Retail_2/
-|           `-- online_retail_2.xlsx
-|
-|-- project_presentation/
-|-- project_requirements/
-|   |-- BUSINESS_RULES.md
-|   |-- BUSINESS_RULES_PFE_REPORT.md
-|   `-- initial_project_description.txt
-|
-`-- src/
-    |-- airflow/
-    |   |-- docker-compose.yml
-    |   |-- requirements.txt
-    |   `-- dags/
-    |       `-- client_1/
-    |           |-- __init__.py
-    |           |-- customerdna_client1_dag_common.py
-    |           |-- customerdna_client1_dw_setup_dag.py
-    |           |-- customerdna_client1_raw_load_dag.py
-    |           `-- customerdna_client1_transformation_quality_dag.py
-    |
-    |-- ELT/
-    |   `-- client_1/
-    |       |-- config/
-    |       |   `-- config.py
-    |       |-- setup_dw/
-    |       |   |-- setup_dw.py
-    |       |   `-- create_base_tables.py
-    |       |-- great_expectations/
-    |       |   |-- README.md
-    |       |   |-- bootstrap_gx.py
-    |       |   |-- gx_config.py
-    |       |   |-- gx_suite_definitions.py
-    |       |   |-- run_gx_validations.py
-    |       |   `-- gx/
-    |       |       |-- great_expectations.yml
-    |       |       `-- plugins/
-    |       |           `-- custom_data_docs/
-    |       |               `-- styles/
-    |       |                   `-- data_docs_custom_styles.css
-    |       |-- dbt/
-    |       |   |-- dbt_project.yml
-    |       |   |-- profiles.yml
-    |       |   |-- docs/
-    |       |   |   `-- project_overview.md
-    |       |   `-- models/
-    |       |       |-- staging/
-    |       |       |   |-- sources.yml
-    |       |       |   `-- staging_models.yml
-    |       |       |-- intermediate/
-    |       |       |   `-- intermediate_models.yml
-    |       |       |-- analytics/
-    |       |       |   |-- analytics_models.yml
-    |       |       |   `-- exposures.yml
-    |       |       `-- serving/
-    |       |           |-- serving_models.yml
-    |       |           |-- churn_feature_base.yml
-    |       |           |-- ltv_feature_base.yml
-    |       |           |-- marketing_recommendation_base.yml
-    |       |           |-- persona_base.yml
-    |       |           `-- segmentation_feature_base.yml
-    |       |-- EDA/
-    |       |   |-- Customer_Personality_Analysis/
-    |       |   |   |-- scripts/
-    |       |   |   |   `-- customer_personality_max_eda.py
-    |       |   |   `-- output/
-    |       |   |-- E-commerce_Personality_Analysis/
-    |       |   |   |-- scripts/
-    |       |   |   |   `-- ecommerce_max_eda.py
-    |       |   |   `-- output/
-    |       |   |-- Retailrocket_recommender_system_dataset/
-    |       |   |   |-- scripts/
-    |       |   |   |   `-- retailrocket_max_eda.py
-    |       |   |   `-- output/
-    |       |   `-- UCI_Online_Retail_II/
-    |       |       |-- scripts/
-    |       |       |   `-- online_retail_max_eda.py
-    |       |       `-- output/
-    |       `-- verfiy_dw.py
-    |
-    |-- monitoring/
-    |   |-- README.md
-    |   |-- exporters/
-    |   |   `-- pipeline_metrics_exporter.py
-    |   |-- grafana/
-    |   |   |-- docker-compose.yml
-    |   |   |-- dashboards/
-    |   |   |   |-- README.md
-    |   |   |   |-- customerdna_infrastructure.dashboard.json
-    |   |   |   |-- customerdna_pipeline_health.dashboard.json
-    |   |   |   `-- customerdna_postgres.dashboard.json
-    |   |   `-- provisioning/
-    |   |       |-- dashboards/
-    |   |       |   `-- customerdna.yml
-    |   |       `-- datasources/
-    |   |           `-- prometheus.yml
-    |   |-- prometheus/
-    |   |   |-- .env
-    |   |   |-- README.md
-    |   |   |-- docker-compose.yml
-    |   |   `-- prometheus.yml
-    |   |-- shared/
-    |   |   |-- __init__.py
-    |   |   `-- pipeline_metrics.py
-    |   |-- tools/
-    |   |   `-- export_runtime_logs.py
-    |   `-- state/
-    |       `-- .gitkeep
-    |
-    |-- lake/
-    |   `-- minio/
-    |       |-- README.md
-    |       |-- docker-compose.yml
-    |       |-- requirements.txt
-    |       `-- client_1/
-    |           |-- reset_client1_bronze.py
-    |           |-- list_client1_bronze_objects.py
-    |           `-- common/
-    |               |-- minio_bronze_config.py
-    |               `-- minio_bronze_utils.py
-    |
-    |-- streaming/
-    |   `-- kafka/
-    |       |-- docker-compose.yml
-    |       |-- requirements.txt
-    |       `-- client_1/
-    |           |-- __init__.py
-    |           |-- reset_client1_kafka.py
-    |           |-- run_client1_kafka_raw_pipeline.py
-    |           |-- common/
-    |           |   |-- __init__.py
-    |           |   |-- bronze_consumer.py
-    |           |   |-- dataset_producer.py
-    |           |   |-- kafka_config.py
-    |           |   |-- load_event_consumer.py
-    |           |   |-- producer_utils.py
-    |           |   `-- source_row_iterators.py
-    |           |-- marketing_campaign/
-    |           |   |-- __init__.py
-    |           |   |-- consume.py
-    |           |   |-- load.py
-    |           |   `-- produce.py
-    |           |-- ecommerce_customer_churn/
-    |           |   |-- __init__.py
-    |           |   |-- consume.py
-    |           |   |-- load.py
-    |           |   `-- produce.py
-    |           |-- retailrocket_category_tree/
-    |           |   |-- __init__.py
-    |           |   |-- consume.py
-    |           |   |-- load.py
-    |           |   `-- produce.py
-    |           |-- retailrocket_events/
-    |           |   |-- __init__.py
-    |           |   |-- consume.py
-    |           |   |-- load.py
-    |           |   `-- produce.py
-    |           |-- retailrocket_item_properties/
-    |           |   |-- __init__.py
-    |           |   |-- consume.py
-    |           |   |-- load.py
-    |           |   `-- produce.py
-    |           `-- online_retail/
-    |               |-- __init__.py
-    |               |-- consume.py
-    |               |-- load.py
-    |               `-- produce.py
-    |
-    `-- ML/
-        `-- client_1/
-            |-- README.md
-            |-- configs/
-            |-- datasets/
-            |-- data_access/
-            |   |-- audit_serving_snapshot.py
-            |   |-- extract_serving_data.py
-            |   `-- schema_manifest.py
-            |-- preprocessing/
-            |   |-- prepare_segmentation_features.py
-            |   |-- prepare_churn_features.py
-            |   |-- prepare_ltv_features.py
-            |   |-- prepare_persona_features.py
-            |   `-- prepare_marketing_recommendation_features.py
-            |-- training/
-            |   |-- train_segmentation_clusters.py
-            |   |-- train_churn_classifier.py
-            |   |-- train_ltv_regressor.py
-            |   |-- train_persona_classifier.py
-            |   `-- train_marketing_recommendation_classifier.py
-            |-- inference/
-            |   |-- interpret_segmentation_clusters.py
-            |   |-- interpret_churn_predictions.py
-            |   |-- interpret_ltv_predictions.py
-            |   |-- interpret_persona_predictions.py
-            |   `-- interpret_marketing_recommendation_predictions.py
-            |-- eda/
-            |   |-- README.md
-            |   |-- scripts/
-            |   |   |-- eda_common.py
-            |   |   |-- run_segmentation_eda.py
-            |   |   |-- run_churn_eda.py
-            |   |   |-- run_ltv_eda.py
-            |   |   |-- run_persona_eda.py
-            |   |   `-- run_marketing_recommendation_eda.py
-            |   |-- plots/
-            |   `-- reports/
-            |-- models/
-            |   |-- model_metadata/
-            |   |-- preprocessors/
-            |   `-- saved_models/
-            `-- reports/
-                |-- business_summaries/
-                `-- experiment_reports/
+  Architectural Diagrams/
+  datasets/
+    client_1/
+      Customer_Personality_Analysis/
+        marketing_campaign.csv
+      E-commerce_customer_churn/
+        E-commerce_customer_churn.xlsx
+      Retailrocket_recommender_system_dataset/
+        category_tree.csv
+        events.csv
+        item_properties_part1.csv
+        item_properties_part2.csv
+      UCI_Online_Retail_2/
+        online_retail_2.xlsx
+    client_2/
+      database.sqlite
+      Reviews.csv
+  project_presentation/
+    PFE_presentation/
+    PFE_Report/
+      main.tex
+      README.md
+    PFE_resources/
+      Figures/
+      Logos/
+        company_image.png
+        School_image.png
+        University_image.png
+  project_requirements/
+    BUSINESS_RULES.md
+    BUSINESS_RULES_PFE_REPORT.md
+    initial_project_description.txt
+  Resources_by_azmani/
+  src/
+    README.md
+    SECURITY_AND_DATASECOPS_GUIDE.md
+    airflow/
+      .env
+      .env.example
+      docker-compose.yml
+      requirements.txt
+      dags/
+        client_1/
+          __init__.py
+          client_1_dag_common.py
+          client_1_lakehouse_setup_dag.py
+          client_1_kafka_hdfs_spark_raw_dag.py
+          client_1_dbt_spark_transformations_dag.py
+          client_1_lakehouse_readiness_dag.py
+    catalog/
+      hive/
+        .env.example
+        docker-compose.yml
+        README.md
+        config/
+          core-site.xml
+          hdfs-site.xml
+          hive-site.xml
+        metastore/
+          Dockerfile
+        client_1/
+          external_tables/
+          iceberg_catalog/
+          namespaces/
+    lake/
+      hdfs/
+        .env
+        .env.example
+        docker-compose.yml
+        README.md
+        client_1/
+          initialize_client1_bronze_zone.py
+          list_client1_bronze_objects.py
+          reset_client1_bronze.py
+          bronze/
+            ecommerce_customer_churn/
+            marketing_campaign/
+            online_retail/
+            retailrocket_category_tree/
+            retailrocket_events/
+            retailrocket_item_properties/
+          silver/
+          gold/
+          common/
+            hdfs_bronze_config.py
+            hdfs_bronze_utils.py
+    monitoring/
+      README.md
+      exporters/
+        pipeline_metrics_exporter.py
+        pipeline_metrics/
+        hdfs_metrics/
+        spark_metrics/
+      grafana/
+        .env.example
+        docker-compose.yml
+        dashboards/
+          customerdna_infrastructure.dashboard.json
+          customerdna_pipeline_health.dashboard.json
+          customerdna_postgres.dashboard.json
+          README.md
+        provisioning/
+          dashboards/
+            customerdna.yml
+          datasources/
+            prometheus.yml
+      prometheus/
+        .env
+        .env.example
+        docker-compose.yml
+        prometheus.yml
+        README.md
+      shared/
+        pipeline_metrics.py
+      state/
+        airflow_pipeline_state.json
+        gx_state.json
+        raw_load_state.json
+      tools/
+        export_runtime_logs.py
+    processing/
+      spark/
+        .env
+        .env.example
+        docker-compose.yml
+        Dockerfile
+        README.md
+        config/
+          hive-site.xml
+          spark-defaults.conf
+        jobs/
+          client_1/
+            load_hdfs_bronze_to_iceberg.py
+        client_1/
+          bronze_to_silver/
+          silver_to_gold/
+          quality_helpers/
+          schemas/
+          sql/
+          common/
+            spark_raw_loader_submitter.py
+    quality/
+      great_expectations/
+        client_1/
+          bootstrap_gx.py
+          run_gx_validations.py
+          checkpoints/
+          expectations/
+            bronze/
+            silver/
+            gold/
+          data_docs/
+            index.html
+          artifacts/
+    query/
+      trino/
+        .env.example
+        docker-compose.yml
+        README.md
+        etc/
+          config.properties
+          core-site.xml
+          hdfs-site.xml
+          jvm.config
+          node.properties
+          catalog/
+            lakehouse.properties
+        client_1/
+          initialize_lakehouse_namespace.py
+          common/
+            trino_rest.py
+    streaming/
+      kafka/
+        .gitignore
+        docker-compose.yml
+        requirements.txt
+        client_1/
+          reset_client1_kafka.py
+          run_client1_kafka_raw_pipeline.py
+          common/
+            bronze_consumer.py
+            dataset_producer.py
+            kafka_config.py
+            load_event_consumer.py
+            producer_utils.py
+            source_row_iterators.py
+          ecommerce_customer_churn/
+            __init__.py
+            produce.py
+            consume.py
+            load.py
+          marketing_campaign/
+            __init__.py
+            produce.py
+            consume.py
+            load.py
+          online_retail/
+            __init__.py
+            produce.py
+            consume.py
+            load.py
+          retailrocket_category_tree/
+            __init__.py
+            produce.py
+            consume.py
+            load.py
+          retailrocket_events/
+            __init__.py
+            produce.py
+            consume.py
+            load.py
+          retailrocket_item_properties/
+            __init__.py
+            produce.py
+            consume.py
+            load.py
+    transformation/
+      dbt_spark/
+        README.md
+        client_1/
+          .env.example
+          .user.yml
+          dbt_project.yml
+          profiles.yml
+          requirements.txt
+          macros/
+            lakehouse_schema_management.sql
+            safe_casts.sql
+          models/
+            staging/
+            intermediate/
+            analytics/
+          dbt_packages/
+          logs/
+          target/
+  verify_installations/
+  README.md
+  tools_port.txt
 ```
 
-### 29.4 Structure Rule
-The active project structure must clearly separate:
+The project must no longer keep a traditional PostgreSQL business-warehouse layer as the core analytical storage design.
 
-- source data,
-- streaming ingestion,
-- warehouse logic,
-- orchestration,
-- monitoring,
-- downstream experimentation.
+PostgreSQL may exist only as:
 
----
-
-## 30. Expected Outcomes
-
-### 30.1 Technical Outcomes
-
-- reliable source-to-warehouse loading,
-- explicit warehouse schema boundaries,
-- documented and tested transformation logic,
-- validated analytics and serving products,
-- inspectable orchestration,
-- observable platform runtime behavior,
-- reusable project structure for future clients.
-
-### 30.2 Business-Facing Outcomes
-
-- stronger trust in analytics outputs,
-- clearer customer-level data products,
-- better readiness for future predictive applications,
-- easier explanation of data lineage to stakeholders.
-
-### 30.3 PFE Value Outcomes
-
-- a defendable end-to-end data-engineering architecture,
-- clear separation of concerns,
-- operational maturity beyond basic ETL scripting,
-- strong basis for deployment and future extension.
+- a metadata backend service for Hive Metastore,
+- an Airflow metadata support component,
+- or another infrastructure support component,
+- but not as the main client analytical warehouse.
 
 ---
 
-## 31. Immediate Next Steps
+## 16. Current Shift Rule
 
-The most logical next steps after the current implemented state are:
+The project is undergoing a **strategic architectural shift**:
 
-1. validate the complete platform repeatedly under full reruns,
-2. continue refining monitoring thresholds and pipeline-health interpretation,
-3. optimize large-volume raw loading performance where justified,
-4. prepare deployment packaging for a company-owned server environment,
-5. decide whether future orchestration should include optional downstream ML refresh flows or keep them separate.
+- from a PostgreSQL warehouse-centric design,
+- toward a distributed **HDFS + Spark + Hive + Iceberg + Trino** lakehouse design.
 
----
+This shift is justified because it better supports:
 
-## 32. Future Roadmap
-
-### 32.1 Near-Term Roadmap
-
-- harden Kafka operational practices,
-- expand monitoring and alerting,
-- refine raw-load performance for the largest datasets,
-- document deployment and operations procedures in more detail.
-
-### 32.2 Medium-Term Roadmap
-
-- onboard more clients,
-- expose curated outputs via API,
-- enrich business dashboards,
-- formalize broader governance and benchmarking rules.
-
-### 32.3 Long-Term Roadmap
-
-- cross-client standardization,
-- global benchmarking layer,
-- enterprise AI/ML lifecycle automation,
-- broader data-product platform capabilities.
+- distributed storage,
+- distributed processing,
+- stronger Big Data positioning,
+- cleaner lakehouse semantics,
+- better alignment with jury expectations for a modern Big Data engineering platform.
 
 ---
 
-## 33. Final Business Rules Summary
+## 17. PFE Positioning Rule
 
-The most important final rules are:
+For the defense, the platform must be presented in the following order:
 
-1. **Kafka is the official Client 1 ingestion backbone and event-driven raw-loading backbone.**
-2. **MinIO is the official bronze layer between Kafka transport and PostgreSQL warehouse landing storage.**
-3. **Bronze objects must be created before `raw_data` loading, and bronze-ready events must drive warehouse ingestion.**
-4. **Raw data must preserve source identity and must not become a business layer.**
-5. **dbt is the official transformation backbone from `staging` through `serving`.**
-6. **Analytics outputs must come from validated curated layers, not direct raw access.**
-7. **Serving outputs are curated customer-level data products for downstream reuse.**
-8. **dbt tests and Great Expectations are both required parts of trust.**
-9. **Airflow must orchestrate the platform in the order: setup -> raw load -> transformation-quality.**
-10. **Prometheus and Grafana are part of the platform, not optional extras.**
-11. **Retired ingestion paths must not return as active architecture without an explicit redesign decision.**
-12. **The platform must be presented primarily as a Data Engineering system, with AI/ML as downstream capability.**
+1. business context inside AdOptimizer AI
+2. multi-source customer data challenge
+3. ingestion backbone with Kafka
+4. bronze persistence in HDFS
+5. distributed processing in Spark
+6. catalog and table governance through Hive + Iceberg
+7. transformation governance through dbt-spark
+8. SQL query access through Trino
+9. validation with Great Expectations
+10. orchestration with Airflow
+11. observability with Prometheus and Grafana
+
+This is the correct narrative order for the project.
 
 ---
 
-## 34. Document History
+## 18. Final Business Rules Summary
+
+1. **Kafka is the official ingestion transport layer.**
+2. **HDFS is the official bronze distributed storage layer.**
+3. **Spark is the official distributed processing layer.**
+4. **Hive Metastore is the official metadata catalog.**
+5. **Iceberg is the official analytical table format.**
+6. **Trino is the official SQL access layer.**
+7. **dbt-spark is the official transformation-modeling layer for curated lakehouse outputs.**
+8. **Great Expectations is the official quality-validation layer.**
+9. **Airflow is the official orchestration layer.**
+10. **Prometheus and Grafana are mandatory observability components.**
+11. **Traditional PostgreSQL business-warehouse logic is no longer the target architecture.**
+12. **The platform must be presented primarily as a distributed Data Engineering platform under AdOptimizer AI.**
+
+---
+
+## 19. Document History
 
 | Version | Date | Change |
 |---|---|---|
-| 13.0 | 2026-06-29 | Updated the document to reflect split Airflow DAG orchestration, metadata-aware raw loading, and the earlier monitoring additions. |
-| 13.1 | 2026-07-01 | Documented centralized monitoring under `src/monitoring`, the custom pipeline exporter, and provisioned Grafana dashboards. |
-| 13.3 | 2026-07-02 | Added the implemented `serving` schema and the serving-layer customer products. |
-| 13.4 | 2026-07-03 | Expanded Great Expectations coverage to serving and ML-readiness validation. |
-| 14.0 | 2026-07-04 | Added the implemented local ML experimentation layer and ML EDA workflow. |
-| 15.0 | 2026-07-08 | Rewrote the document to align with the finalized Kafka-first ingestion architecture, the active three-DAG Airflow flow, the centralized monitoring stack, the current project structure, and the final Data Engineering-first project positioning. |
-| 16.0 | 2026-07-09 | Updated the document for the Kafka -> MinIO bronze -> PostgreSQL raw flow, bronze-ready event loading, monitoring state-file corrections, and the current active project structure. |
+| 16.2 | 2026-07-14 | Previous version aligned to Kafka -> HDFS -> Spark -> PostgreSQL raw flow. |
+| 17.0 | 2026-07-15 | Rewritten to reflect the architecture shift toward Kafka + HDFS + Spark + Hive Metastore + Iceberg + Trino as the target distributed lakehouse platform. |
+| 17.1 | 2026-07-16 | Updated to reflect the operational 4-DAG runtime, the dbt-spark transformation layer, the current monitoring stack, and the detailed live project structure with important files. |

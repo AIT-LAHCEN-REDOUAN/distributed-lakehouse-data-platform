@@ -33,6 +33,49 @@ def ensure_source_paths_exist(dataset_key: str) -> list[Path]:
     return source_paths
 
 
+def get_source_columns(dataset_key: str) -> list[str]:
+    """Read the source header contract without scanning the full dataset."""
+    source_paths = ensure_source_paths_exist(dataset_key)
+
+    if dataset_key == "marketing_campaign":
+        return _get_csv_columns(source_paths[0], delimiter="\t")
+    if dataset_key == "ecommerce_customer_churn":
+        dataframe = pd.read_excel(
+            source_paths[0],
+            sheet_name="E Comm",
+            engine="openpyxl",
+            nrows=0,
+        )
+        return [str(column_name) for column_name in dataframe.columns]
+    if dataset_key == "retailrocket_category_tree":
+        return _get_csv_columns(source_paths[0], delimiter=",")
+    if dataset_key == "retailrocket_events":
+        return _get_csv_columns(source_paths[0], delimiter=",")
+    if dataset_key == "retailrocket_item_properties":
+        combined_columns: list[str] = []
+        for source_path in source_paths:
+            for column_name in _get_csv_columns(source_path, delimiter=","):
+                if column_name not in combined_columns:
+                    combined_columns.append(column_name)
+        return combined_columns
+    if dataset_key == "online_retail":
+        combined_columns: list[str] = []
+        for sheet_name in SOURCE_DATASET_CONFIGS["online_retail"]["sheet_names"]:
+            dataframe = pd.read_excel(
+                source_paths[0],
+                sheet_name=sheet_name,
+                engine="openpyxl",
+                nrows=0,
+            )
+            for column_name in dataframe.columns:
+                column_as_text = str(column_name)
+                if column_as_text not in combined_columns:
+                    combined_columns.append(column_as_text)
+        return combined_columns
+
+    raise KeyError(f"Unsupported dataset key: {dataset_key}")
+
+
 def iter_source_rows(dataset_key: str) -> Iterator[dict[str, str | None]]:
     """Stream normalized rows from the configured raw source dataset."""
     source_paths = ensure_source_paths_exist(dataset_key)
@@ -88,6 +131,12 @@ def _iter_csv_rows(source_path: Path, *, delimiter: str) -> Iterator[dict[str, s
                 key: _normalize_value(value)
                 for key, value in row.items()
             }
+
+
+def _get_csv_columns(source_path: Path, *, delimiter: str) -> list[str]:
+    with source_path.open("r", encoding="utf-8", newline="") as csv_file:
+        reader = csv.DictReader(csv_file, delimiter=delimiter)
+        return list(reader.fieldnames or [])
 
 
 def _iter_marketing_campaign_rows(source_path: Path) -> Iterator[dict[str, str | None]]:

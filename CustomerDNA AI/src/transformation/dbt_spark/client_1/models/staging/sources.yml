@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: raw_data
+    schema: raw_data
+    tables:
+      - name: marketing_campaign
+      - name: e_commerce_customer_churn
+      - name: category_tree
+      - name: events
+      - name: item_properties
+      - name: online_retail

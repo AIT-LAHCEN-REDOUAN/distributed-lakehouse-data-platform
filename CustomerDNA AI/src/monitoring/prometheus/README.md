@@ -4,9 +4,9 @@ This folder contains the local Prometheus stack for CustomerDNA AI.
 
 Included services:
 - `prometheus`: metrics collection and querying
-- `postgres_exporter`: PostgreSQL database metrics for `client1_DW`
+- `postgres_exporter`: PostgreSQL database metrics for the Hive metastore metadata database (`metastore_db`)
 - `cadvisor`: Docker container resource metrics
-- `pipeline_metrics_exporter`: custom exporter for project-specific Airflow / Kafka raw-load / dbt / GX metrics
+- `pipeline_metrics_exporter`: custom exporter for project-specific Airflow / Kafka / HDFS / Spark / GX pipeline metrics
 
 Setup:
 1. Fill in your PostgreSQL password in `.env`.
@@ -19,7 +19,7 @@ Suggested Grafana datasource:
 - URL: `http://host.docker.internal:9090`
 
 Notes:
-- `postgres_exporter` connects to the PostgreSQL warehouse through `${CUSTOMERDNA_MONITORING_POSTGRES_HOST:-host.docker.internal}` on port `5440`.
+- `postgres_exporter` connects to the Hive metastore PostgreSQL service through `${CUSTOMERDNA_MONITORING_POSTGRES_HOST:-host.docker.internal}` on port `5435`.
 - The compose file adds a `host.docker.internal -> host-gateway` mapping so the same config works more reliably on Linux Docker hosts.
 - `cadvisor` is included for container-level CPU and memory monitoring.
 - `pipeline_metrics_exporter` reads generated monitoring state files from `src/monitoring/state` and exposes them on port `9109`.

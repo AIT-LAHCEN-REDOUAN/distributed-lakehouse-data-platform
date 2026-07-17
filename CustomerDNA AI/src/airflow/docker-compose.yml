@@ -16,18 +16,16 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: ${AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK:-true}
     AIRFLOW__CORE__TEST_CONNECTION: ${AIRFLOW__CORE__TEST_CONNECTION:-Enabled}
 
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${AIRFLOW_POSTGRES_USER:-airflow}:${AIRFLOW_POSTGRES_PASSWORD}@airflow-postgres:5432/${AIRFLOW_POSTGRES_DB:-airflow}
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: http://airflow-api-server:8080/execution/
-    AIRFLOW__API__BASE_URL: http://localhost:8080
+    AIRFLOW__API__BASE_URL: ${AIRFLOW__API__BASE_URL:-http://localhost:8080}
 
     AIRFLOW__API_AUTH__JWT_SECRET: ${AIRFLOW__API_AUTH__JWT_SECRET}
     AIRFLOW__API_AUTH__JWT_ISSUER: ${AIRFLOW__API_AUTH__JWT_ISSUER:-airflow}
     CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS: ${CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS:-broker:29092}
-    CUSTOMERDNA_AIRFLOW_MINIO_ENDPOINT: ${CUSTOMERDNA_AIRFLOW_MINIO_ENDPOINT:-minio:9000}
-    CUSTOMERDNA_MINIO_ACCESS_KEY: ${CUSTOMERDNA_MINIO_ACCESS_KEY}
-    CUSTOMERDNA_MINIO_SECRET_KEY: ${CUSTOMERDNA_MINIO_SECRET_KEY}
-    CUSTOMERDNA_MINIO_BUCKET: ${CUSTOMERDNA_MINIO_BUCKET:-customerdna-bronze}
-    CUSTOMERDNA_MINIO_OBJECT_PREFIX: ${CUSTOMERDNA_MINIO_OBJECT_PREFIX:-bronze}
+    CUSTOMERDNA_AIRFLOW_HDFS_WEB_ENDPOINT: ${CUSTOMERDNA_AIRFLOW_HDFS_WEB_ENDPOINT:-namenode:9870}
+    CUSTOMERDNA_AIRFLOW_HDFS_NAMENODE_URI: ${CUSTOMERDNA_AIRFLOW_HDFS_NAMENODE_URI:-hdfs://namenode:9000}
+    CUSTOMERDNA_HDFS_BRONZE_ROOT: ${CUSTOMERDNA_HDFS_BRONZE_ROOT:-/bronze/client_1}
 
     _PIP_ADDITIONAL_REQUIREMENTS: -r /requirements.txt
 
@@ -39,10 +37,11 @@ x-airflow-common:
     - ./config:/opt/airflow/config
 
     # Mount full CustomerDNA AI project
-    - ../..:/opt/airflow/CustomerDNA_AI
+    - ${CUSTOMERDNA_PROJECT_ROOT_MOUNT:-../..}:${CUSTOMERDNA_PROJECT_ROOT_IN_CONTAINER:-/opt/airflow/CustomerDNA_AI}
 
     # Airflow Python dependencies
     - ./requirements.txt:/requirements.txt
+    - /var/run/docker.sock:/var/run/docker.sock
 
   user: "${AIRFLOW_UID:-50000}:0"
   extra_hosts:
@@ -61,9 +60,9 @@ services:
     image: postgres:16
     container_name: customerdna_airflow_postgres
     environment:
-      POSTGRES_USER: airflow
+      POSTGRES_USER: ${AIRFLOW_POSTGRES_USER:-airflow}
       POSTGRES_PASSWORD: ${AIRFLOW_POSTGRES_PASSWORD}
-      POSTGRES_DB: airflow
+      POSTGRES_DB: ${AIRFLOW_POSTGRES_DB:-airflow}
     ports:
       - "5433:5432"
     volumes:
@@ -88,16 +87,19 @@ services:
         airflow users create \
           --username "$${_AIRFLOW_WWW_USER_USERNAME}" \
           --password "$${_AIRFLOW_WWW_USER_PASSWORD}" \
-          --firstname Redouan \
-          --lastname CustomerDNA \
+          --firstname "$${_AIRFLOW_WWW_USER_FIRSTNAME}" \
+          --lastname "$${_AIRFLOW_WWW_USER_LASTNAME}" \
           --role Admin \
-          --email admin@example.com || true
+          --email "$${_AIRFLOW_WWW_USER_EMAIL}" || true
 
         echo "Airflow initialization completed."
     environment:
       <<: *airflow-common-env
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD}
+      _AIRFLOW_WWW_USER_FIRSTNAME: ${_AIRFLOW_WWW_USER_FIRSTNAME:-Platform}
+      _AIRFLOW_WWW_USER_LASTNAME: ${_AIRFLOW_WWW_USER_LASTNAME:-Admin}
+      _AIRFLOW_WWW_USER_EMAIL: ${_AIRFLOW_WWW_USER_EMAIL:-admin@example.com}
     restart: "no"
 
 

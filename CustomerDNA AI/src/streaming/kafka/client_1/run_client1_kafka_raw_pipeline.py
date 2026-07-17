@@ -1,4 +1,4 @@
-"""Run the Client 1 Kafka -> MinIO bronze -> PostgreSQL raw pipeline."""
+"""Run the Client 1 Kafka -> HDFS bronze -> Spark -> Iceberg raw pipeline."""
 
 from __future__ import annotations
 
@@ -11,254 +11,223 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-CLIENT_KAFKA_ROOT = Path(__file__).resolve().parent
-SRC_ROOT = CLIENT_KAFKA_ROOT.parents[2]
-MONITORING_ROOT = SRC_ROOT / "monitoring"
-CLIENT_MINIO_ROOT = SRC_ROOT / "lake" / "minio" / "client_1"
+CLIENT_ROOT = Path(__file__).resolve().parent
+COMMON_ROOT = CLIENT_ROOT / "common"
+PROJECT_SRC_ROOT = CLIENT_ROOT.parents[2]
+MONITORING_ROOT = PROJECT_SRC_ROOT / "monitoring"
 
-if str(MONITORING_ROOT) not in sys.path:
-    sys.path.insert(0, str(MONITORING_ROOT))
-
-from shared.pipeline_metrics import record_raw_load_run  # noqa: E402
-
-COMMON_DIR = CLIENT_KAFKA_ROOT / "common"
-if str(COMMON_DIR) not in sys.path:
-    sys.path.insert(0, str(COMMON_DIR))
+for import_root in (COMMON_ROOT, MONITORING_ROOT):
+    if str(import_root) not in sys.path:
+        sys.path.insert(0, str(import_root))
 
 from kafka_config import DATASET_ORDER, get_dataset_config  # noqa: E402
+from shared.pipeline_metrics import record_raw_load_run  # noqa: E402
 
 
 ROWS_LOADED_PATTERN = re.compile(r"Rows loaded:\s*([0-9,]+)")
 DURATION_PATTERN = re.compile(r"Duration \(seconds\):\s*([0-9]+(?:\.[0-9]+)?)")
+BRONZE_FILES_PATTERN = re.compile(r"Bronze files read:\s*([0-9,]+)")
 
 
 @dataclass(frozen=True)
 class DatasetPipelineStep:
-    """Define one dataset's produce -> bronze -> raw loading sequence."""
-
     dataset_key: str
-
-    @property
-    def dataset_dir(self) -> Path:
-        return CLIENT_KAFKA_ROOT / self.dataset_key
-
-    @property
-    def producer_script(self) -> Path:
-        return self.dataset_dir / "produce.py"
-
-    @property
-    def bronze_consumer_script(self) -> Path:
-        return self.dataset_dir / "consume.py"
-
-    @property
-    def load_event_script(self) -> Path:
-        return self.dataset_dir / "load.py"
-
-    @property
-    def target_table(self) -> str:
-        return str(get_dataset_config(self.dataset_key)["target_table"])
+    producer_script: Path
+    bronze_consumer_script: Path
+    spark_raw_builder_script: Path
+    iceberg_table: str
 
 
 @dataclass(frozen=True)
-class ScriptRunResult:
-    """Store subprocess text output for later parsing."""
-
+class StreamedCommandResult:
     stdout: str
-    stderr: str
+    returncode: int
 
 
-DATASET_STEPS = [DatasetPipelineStep(dataset_key) for dataset_key in DATASET_ORDER]
-
-
-def run_script(command: list[str], cwd: Path, task_label: str) -> ScriptRunResult:
-    """Run one subprocess step and surface its full stdout/stderr."""
-    print("-" * 80)
-    print(f"[TASK] {task_label}")
-    print(f"[SCRIPT] {' '.join(command)}")
-
-    try:
-        completed = subprocess.run(
-            command,
-            cwd=str(cwd),
-            check=True,
-            capture_output=True,
-            text=True,
+def build_dataset_steps() -> list[DatasetPipelineStep]:
+    steps: list[DatasetPipelineStep] = []
+    for dataset_key in DATASET_ORDER:
+        dataset_dir = CLIENT_ROOT / dataset_key
+        dataset_config = get_dataset_config(dataset_key)
+        steps.append(
+            DatasetPipelineStep(
+                dataset_key=dataset_key,
+                producer_script=dataset_dir / "produce.py",
+                bronze_consumer_script=dataset_dir / "consume.py",
+                spark_raw_builder_script=dataset_dir / "load.py",
+                iceberg_table=str(dataset_config["target_table"]),
+            )
         )
-    except subprocess.CalledProcessError as exc:
-        if exc.stdout:
-            print(exc.stdout, end="" if exc.stdout.endswith("\n") else "\n")
-        if exc.stderr:
-            print(exc.stderr, end="" if exc.stderr.endswith("\n") else "\n", file=sys.stderr)
-        raise
-
-    if completed.stdout:
-        print(completed.stdout, end="" if completed.stdout.endswith("\n") else "\n")
-    if completed.stderr:
-        print(completed.stderr, end="" if completed.stderr.endswith("\n") else "\n", file=sys.stderr)
-    return ScriptRunResult(stdout=completed.stdout, stderr=completed.stderr)
+    return steps
 
 
-def extract_rows_loaded(stdout: str) -> int:
-    """Parse the loader's final row-count line."""
+def run_python(script_path: Path, *, label: str) -> StreamedCommandResult:
+    command = [sys.executable, str(script_path)]
+    print("-" * 80)
+    print(f"[TASK] {label}")
+    print(f"[SCRIPT] {' '.join(command)}")
+    process = subprocess.Popen(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+    )
+
+    output_lines: list[str] = []
+    assert process.stdout is not None
+    for line in process.stdout:
+        print(line, end="")
+        output_lines.append(line)
+
+    returncode = process.wait()
+    stdout = "".join(output_lines)
+    if returncode != 0:
+        raise subprocess.CalledProcessError(returncode, command, output=stdout)
+
+    return StreamedCommandResult(stdout=stdout, returncode=returncode)
+
+
+def echo_output(result: StreamedCommandResult) -> None:
+    _ = result
+
+
+def parse_rows_loaded(stdout: str) -> int:
     match = ROWS_LOADED_PATTERN.search(stdout)
     if not match:
-        raise RuntimeError("Unable to parse 'Rows loaded' from bronze loader output.")
+        raise RuntimeError("Unable to parse 'Rows loaded' from Spark raw builder output.")
     return int(match.group(1).replace(",", ""))
 
 
-def extract_duration_seconds(stdout: str) -> float | None:
-    """Parse the loader's reported duration if present."""
+def parse_duration(stdout: str) -> float:
     match = DURATION_PATTERN.search(stdout)
     if not match:
-        return None
+        raise RuntimeError("Unable to parse 'Duration (seconds)' from Spark raw builder output.")
     return float(match.group(1))
 
 
-def build_raw_load_summary(
-    *,
-    status: str,
-    started_at: datetime,
-    ended_at: datetime,
-    tables: list[dict[str, object]],
-) -> dict[str, object]:
-    """Build a monitoring summary for the entire Client 1 raw-load run."""
-    total_rows_inserted = sum(int(table.get("rows_inserted", 0)) for table in tables)
-    successful_files = sum(1 for table in tables if table.get("status") == "success")
-    failed_files = sum(1 for table in tables if table.get("status") != "success")
-    return {
-        "status": status,
-        "started_at": started_at.astimezone(timezone.utc).isoformat(),
-        "ended_at": ended_at.astimezone(timezone.utc).isoformat(),
-        "duration_seconds": round(max((ended_at - started_at).total_seconds(), 0.0), 3),
-        "total_rows_inserted": total_rows_inserted,
-        "successful_files": successful_files,
-        "failed_files": failed_files,
-        "skipped_files": 0,
-        "refreshed_files": successful_files,
-        "incremental_files": 0,
-        "tables": tables,
-    }
-
-
-def record_pipeline_state(
-    *,
-    status: str,
-    started_at: datetime,
-    ended_at: datetime,
-    table_summaries: list[dict[str, object]],
-    success_message: str,
-    failure_message: str,
-) -> None:
-    monitoring_recorded = record_raw_load_run(
-        build_raw_load_summary(
-            status=status,
-            started_at=started_at,
-            ended_at=ended_at,
-            tables=table_summaries,
-        )
-    )
-    print(success_message if monitoring_recorded else failure_message)
+def parse_bronze_files(stdout: str) -> int:
+    match = BRONZE_FILES_PATTERN.search(stdout)
+    if not match:
+        raise RuntimeError("Unable to parse 'Bronze files read' from Spark raw builder output.")
+    return int(match.group(1).replace(",", ""))
 
 
 def main() -> int:
-    """Execute the full raw pipeline from clean Kafka topics to raw_data tables."""
+    dataset_steps = build_dataset_steps()
     started_at = datetime.now(timezone.utc)
     start_counter = time.perf_counter()
     table_summaries: list[dict[str, object]] = []
+    failed_datasets: list[str] = []
 
     print("=" * 80)
-    print("CUSTOMERDNA AI - CLIENT 1 KAFKA RAW PIPELINE")
+    print("CUSTOMERDNA AI - CLIENT 1 KAFKA HDFS SPARK LAKEHOUSE PIPELINE")
     print("=" * 80)
-    print("Mode: source -> Kafka -> MinIO bronze -> Kafka bronze-ready event -> PostgreSQL raw_data")
-    print("Flow: reset Kafka -> reset bronze -> produce -> consume to bronze -> publish load event -> consume load event")
+    print("Mode: source -> Kafka -> HDFS bronze -> Spark -> Iceberg raw")
+    print("Flow: reset Kafka -> reset bronze -> produce -> consume to bronze -> build Iceberg raw tables")
     print("Dataset order: small datasets first, largest datasets last")
     print("=" * 80)
 
-    try:
-        run_script(
-            [sys.executable, str(CLIENT_KAFKA_ROOT / "reset_client1_kafka.py")],
-            CLIENT_KAFKA_ROOT,
-            "Reset Client 1 Kafka topics and local Kafka artifacts",
-        )
-        run_script(
-            [sys.executable, str(CLIENT_MINIO_ROOT / "reset_client1_bronze.py")],
-            CLIENT_MINIO_ROOT,
-            "Reset Client 1 MinIO bronze objects",
-        )
+    reset_result = run_python(CLIENT_ROOT / "reset_client1_kafka.py", label="Reset Client 1 Kafka topics and local Kafka artifacts")
+    echo_output(reset_result)
 
-        for step in DATASET_STEPS:
-            try:
-                run_script(
-                    [sys.executable, str(step.producer_script)],
-                    step.dataset_dir,
-                    f"Publish {step.dataset_key} into Kafka",
-                )
-                run_script(
-                    [sys.executable, str(step.bronze_consumer_script)],
-                    step.dataset_dir,
-                    f"Consume {step.dataset_key} from Kafka into MinIO bronze",
-                )
-                loader_result = run_script(
-                    [sys.executable, str(step.load_event_script)],
-                    step.dataset_dir,
-                    f"Consume {step.dataset_key} bronze-ready event and load raw_data",
-                )
-                rows_loaded = extract_rows_loaded(loader_result.stdout)
-                load_duration = extract_duration_seconds(loader_result.stdout)
-                table_summaries.append(
-                    {
-                        "table_name": step.target_table,
-                        "load_mode": "kafka_bronze_ready_event",
-                        "status": "success",
-                        "rows_inserted": rows_loaded,
-                        "source_rows": rows_loaded,
-                        "duration_seconds": load_duration,
-                    }
-                )
-            except subprocess.CalledProcessError:
-                table_summaries.append(
-                    {
-                        "table_name": step.target_table,
-                        "load_mode": "kafka_bronze_ready_event",
-                        "status": "failed",
-                        "rows_inserted": 0,
-                        "source_rows": 0,
-                        "duration_seconds": None,
-                    }
-                )
-                raise
+    bronze_reset_script = PROJECT_SRC_ROOT / "lake" / "hdfs" / "client_1" / "reset_client1_bronze.py"
+    bronze_reset_result = run_python(bronze_reset_script, label="Reset Client 1 HDFS bronze area")
+    echo_output(bronze_reset_result)
 
-        ended_at = datetime.now(timezone.utc)
-        duration_seconds = round(time.perf_counter() - start_counter, 3)
-        record_pipeline_state(
-            status="success",
-            started_at=started_at,
-            ended_at=ended_at,
-            table_summaries=table_summaries,
-            success_message="[MONITORING] Raw load state recorded successfully",
-            failure_message="[MONITORING] Raw load state recording failed",
-        )
-        print("=" * 80)
-        print("[SUCCESS] Client 1 Kafka raw pipeline completed successfully.")
-        print(f"[DURATION] {duration_seconds} seconds")
-        print("=" * 80)
-        return 0
-    except subprocess.CalledProcessError as exc:
-        ended_at = datetime.now(timezone.utc)
-        duration_seconds = round(time.perf_counter() - start_counter, 3)
-        record_pipeline_state(
-            status="failed",
-            started_at=started_at,
-            ended_at=ended_at,
-            table_summaries=table_summaries,
-            success_message="[MONITORING] Raw load failure state recorded successfully",
-            failure_message="[MONITORING] Raw load failure state recording failed",
-        )
-        print("=" * 80)
-        print(f"[ERROR] Kafka raw pipeline failed while running: {exc.cmd}")
-        print(f"[DURATION] {duration_seconds} seconds")
-        print("=" * 80)
-        return exc.returncode or 1
+    for step in dataset_steps:
+        try:
+            produce_result = run_python(
+                step.producer_script,
+                label=f"Publish source dataset '{step.dataset_key}' into Kafka",
+            )
+            echo_output(produce_result)
+
+            bronze_consumer_result = run_python(
+                step.bronze_consumer_script,
+                label=f"Persist dataset '{step.dataset_key}' from Kafka into HDFS bronze",
+            )
+            echo_output(bronze_consumer_result)
+
+            spark_builder_result = run_python(
+                step.spark_raw_builder_script,
+                label=f"Build Iceberg raw table for dataset '{step.dataset_key}' with Spark",
+            )
+            echo_output(spark_builder_result)
+
+            rows_loaded = parse_rows_loaded(spark_builder_result.stdout)
+            bronze_files_read = parse_bronze_files(spark_builder_result.stdout)
+            dataset_duration = parse_duration(spark_builder_result.stdout)
+
+            table_summaries.append(
+                {
+                    "table_name": step.iceberg_table,
+                    "iceberg_namespace": "raw_data",
+                    "status": "success",
+                    "rows_inserted": rows_loaded,
+                    "source_rows": rows_loaded,
+                    "bronze_files_read": bronze_files_read,
+                    "load_mode": "kafka_hdfs_spark_iceberg",
+                    "duration_seconds": dataset_duration,
+                }
+            )
+        except subprocess.CalledProcessError as exc:
+            failed_datasets.append(step.dataset_key)
+            print(f"[ERROR] Dataset '{step.dataset_key}' failed with exit code {exc.returncode}")
+            if exc.output:
+                print(exc.output.rstrip())
+            table_summaries.append(
+                {
+                    "table_name": step.iceberg_table,
+                    "iceberg_namespace": "raw_data",
+                    "status": "failed",
+                    "rows_inserted": 0,
+                    "source_rows": 0,
+                    "bronze_files_read": 0,
+                    "load_mode": "kafka_hdfs_spark_iceberg",
+                    "duration_seconds": 0.0,
+                }
+            )
+            break
+
+    ended_at = datetime.now(timezone.utc)
+    total_duration = round(time.perf_counter() - start_counter, 3)
+    successful_tables = sum(1 for table in table_summaries if table["status"] == "success")
+    total_rows_loaded = sum(int(table["rows_inserted"]) for table in table_summaries)
+    total_bronze_files = sum(int(table.get("bronze_files_read", 0)) for table in table_summaries)
+    overall_success = len(failed_datasets) == 0 and successful_tables == len(dataset_steps)
+
+    summary = {
+        "pipeline_name": "client1_kafka_hdfs_spark_lakehouse_pipeline",
+        "status": "success" if overall_success else "failed",
+        "started_at": started_at.isoformat(),
+        "ended_at": ended_at.isoformat(),
+        "duration_seconds": total_duration,
+        "successful_files": successful_tables,
+        "failed_files": len(failed_datasets),
+        "skipped_files": 0,
+        "refreshed_files": successful_tables,
+        "incremental_files": 0,
+        "total_rows_inserted": total_rows_loaded,
+        "total_bronze_files": total_bronze_files,
+        "failed_datasets": failed_datasets,
+        "tables": table_summaries,
+    }
+    record_raw_load_run(summary)
+
+    print("=" * 80)
+    if overall_success:
+        print("[SUCCESS] Client 1 Kafka HDFS Spark lakehouse pipeline completed successfully.")
+    else:
+        print("[ERROR] Client 1 Kafka HDFS Spark lakehouse pipeline failed.")
+        print(f"Failed datasets: {', '.join(failed_datasets)}")
+    print(f"Datasets processed successfully: {successful_tables}/{len(dataset_steps)}")
+    print(f"Bronze files read this run: {total_bronze_files:,}")
+    print(f"Rows loaded into Iceberg raw tables this run: {total_rows_loaded:,}")
+    print(f"Duration (seconds): {total_duration}")
+    print("=" * 80)
+
+    return 0 if overall_success else 1
 
 
 if __name__ == "__main__":

@@ -47,12 +47,16 @@ services:
   pipeline_metrics_exporter:
     image: python:3.11-slim
     container_name: customerdna_pipeline_metrics_exporter
-    working_dir: /monitoring
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env
+    working_dir: ${CUSTOMERDNA_MONITORING_ROOT_IN_CONTAINER:-/monitoring}
     command:
       - python
-      - /monitoring/exporters/pipeline_metrics_exporter.py
+      - ${CUSTOMERDNA_MONITORING_EXPORTER_SCRIPT:-/monitoring/exporters/pipeline_metrics_exporter.py}
     volumes:
-      - ../:/monitoring:ro
+      - ../:${CUSTOMERDNA_MONITORING_ROOT_IN_CONTAINER:-/monitoring}:ro
     ports:
       - "9109:9109"
     restart: unless-stopped

@@ -14,6 +14,10 @@ APP_ROOT = SRC_ROOT.parent
 
 AIRFLOW_LOG_ROOT = SRC_ROOT / "airflow" / "logs" / "system"
 KAFKA_LOG_ROOT = SRC_ROOT / "streaming" / "kafka" / "logs"
+HDFS_LOG_ROOT = SRC_ROOT / "lake" / "hdfs" / "logs"
+HIVE_LOG_ROOT = SRC_ROOT / "catalog" / "hive" / "logs"
+SPARK_LOG_ROOT = SRC_ROOT / "processing" / "spark" / "logs"
+TRINO_LOG_ROOT = SRC_ROOT / "query" / "trino" / "logs"
 MONITORING_LOG_ROOT = MONITORING_ROOT / "logs"
 GRAFANA_LOG_ROOT = MONITORING_LOG_ROOT / "grafana"
 PROMETHEUS_LOG_ROOT = MONITORING_LOG_ROOT / "prometheus"
@@ -71,6 +75,60 @@ LOG_SPECS: tuple[ContainerLogSpec, ...] = (
         description="Kafka UI runtime log",
     ),
     ContainerLogSpec(
+        group="lakehouse",
+        container_name="namenode",
+        output_path=HDFS_LOG_ROOT / "namenode.log",
+        description="HDFS NameNode runtime log",
+    ),
+    ContainerLogSpec(
+        group="lakehouse",
+        container_name="datanode",
+        output_path=HDFS_LOG_ROOT / "datanode.log",
+        description="HDFS DataNode runtime log",
+    ),
+    ContainerLogSpec(
+        group="lakehouse",
+        container_name="hive-metastore-db",
+        output_path=HIVE_LOG_ROOT / "hive_metastore_db.log",
+        description="Hive metastore PostgreSQL runtime log",
+    ),
+    ContainerLogSpec(
+        group="lakehouse",
+        container_name="hive-metastore",
+        output_path=HIVE_LOG_ROOT / "hive_metastore.log",
+        description="Hive metastore service runtime log",
+    ),
+    ContainerLogSpec(
+        group="lakehouse",
+        container_name="spark-master",
+        output_path=SPARK_LOG_ROOT / "spark_master.log",
+        description="Spark master runtime log",
+    ),
+    ContainerLogSpec(
+        group="lakehouse",
+        container_name="spark-worker",
+        output_path=SPARK_LOG_ROOT / "spark_worker.log",
+        description="Spark worker runtime log",
+    ),
+    ContainerLogSpec(
+        group="lakehouse",
+        container_name="spark-history-server",
+        output_path=SPARK_LOG_ROOT / "spark_history_server.log",
+        description="Spark history server runtime log",
+    ),
+    ContainerLogSpec(
+        group="lakehouse",
+        container_name="spark-thrift-server",
+        output_path=SPARK_LOG_ROOT / "spark_thrift_server.log",
+        description="Spark Thrift Server runtime log",
+    ),
+    ContainerLogSpec(
+        group="lakehouse",
+        container_name="trino",
+        output_path=TRINO_LOG_ROOT / "trino.log",
+        description="Trino runtime log",
+    ),
+    ContainerLogSpec(
         group="monitoring",
         container_name="customerdna_grafana",
         output_path=GRAFANA_LOG_ROOT / "grafana.log",
@@ -109,7 +167,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--group",
-        choices=["all", "airflow", "kafka", "monitoring"],
+        choices=["all", "airflow", "kafka", "lakehouse", "monitoring"],
         default="all",
         help="Limit export to one service group.",
     )
@@ -141,6 +199,10 @@ def selected_specs(group: str) -> Iterable[ContainerLogSpec]:
 def ensure_output_dirs() -> None:
     AIRFLOW_LOG_ROOT.mkdir(parents=True, exist_ok=True)
     KAFKA_LOG_ROOT.mkdir(parents=True, exist_ok=True)
+    HDFS_LOG_ROOT.mkdir(parents=True, exist_ok=True)
+    HIVE_LOG_ROOT.mkdir(parents=True, exist_ok=True)
+    SPARK_LOG_ROOT.mkdir(parents=True, exist_ok=True)
+    TRINO_LOG_ROOT.mkdir(parents=True, exist_ok=True)
     GRAFANA_LOG_ROOT.mkdir(parents=True, exist_ok=True)
     PROMETHEUS_LOG_ROOT.mkdir(parents=True, exist_ok=True)
 
