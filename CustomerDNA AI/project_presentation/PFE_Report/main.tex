@@ -1,750 +1,432 @@
 \documentclass[12pt,a4paper,oneside]{report}
 
-% =========================================================
-% Encoding, language, typography
-% =========================================================
+% ============================================================
+% PFE Report Skeleton
+% Project: AdOptimizer Customer Data Platform
+% Language: English
+% Overleaf entry point:
+%   PFE_Report/main.tex
+%
+% Important:
+% - Resource paths support both the local structure and the Overleaf structure:
+%   PFE_Report/main.tex
+%   PFE_resources/Logos/...
+%   PFE_resources/Figures/Logos/...
+% - This file intentionally keeps only:
+%   cover page, dedication, acknowledgements, abstracts with keywords,
+%   and the planned table of contents.
+% - Chapter content will be written step by step later.
+% ============================================================
+
+% ----------------------------
+% Encoding and Language
+% ----------------------------
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[english]{babel} % Change to [french] if needed
-\usepackage{newtxtext,newtxmath}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{calligra}
 \usepackage{microtype}
-\usepackage{setspace}
-\usepackage{indentfirst}
-\usepackage{ragged2e}
-\usepackage{xurl}
 
-% =========================================================
-% Page layout and overflow prevention
-% =========================================================
+% ----------------------------
+% Page Layout and Overflow Safety
+% ----------------------------
 \usepackage[
-  top=2.5cm,
-  bottom=2.5cm,
-  left=3cm,
-  right=2.5cm,
-  headheight=15pt,
-  headsep=0.6cm,
-  footskip=1cm
+    a4paper,
+    top=2.5cm,
+    bottom=2.5cm,
+    left=3cm,
+    right=2.5cm,
+    headheight=15pt
 ]{geometry}
 
-\raggedbottom
-\setlength{\emergencystretch}{3em}
-\clubpenalty=10000
-\widowpenalty=10000
-\displaywidowpenalty=10000
-\setlength{\parskip}{0.35em}
-\setlength{\parindent}{1.2em}
+\usepackage{setspace}
 \onehalfspacing
 
-% =========================================================
-% Colors, links, graphics
-% =========================================================
-\usepackage[dvipsnames]{xcolor}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\emergencystretch=3em
+\sloppy
+
+% ----------------------------
+% Figures, Tables, and Diagrams
+% ----------------------------
 \usepackage{graphicx}
-\usepackage{float}
-\usepackage{placeins}
-\usepackage{pdflscape}
-\usepackage{caption}
-\usepackage{subcaption}
 \usepackage{adjustbox}
-\usepackage{wrapfig}
-\usepackage{tikz}
-\usepackage{pgfplots}
-\usetikzlibrary{
-  arrows.meta,
-  positioning,
-  shapes.geometric,
-  shapes.misc,
-  fit,
-  calc,
-  backgrounds,
-  shadows.blur
-}
-\pgfplotsset{compat=1.18}
-
-\usepackage[
-  colorlinks=true,
-  linkcolor=black,
-  citecolor=black,
-  urlcolor=blue!50!black,
-  pdfauthor={AIT-LAHCEN REDOUAN},
-  pdftitle={AdOptimizer Customer Data Platform - Master's PFE Report}
-]{hyperref}
-
-% =========================================================
-% Tables and long content handling
-% =========================================================
-\usepackage{booktabs}
 \usepackage{array}
 \usepackage{tabularx}
 \usepackage{longtable}
-\usepackage{ltablex}
-\usepackage{multirow}
-\usepackage{makecell}
-\keepXColumns
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{tikz}
 
-% =========================================================
-% Lists, math, code, appendix
-% =========================================================
-\usepackage{enumitem}
-\usepackage{amsmath,amssymb,amsthm,mathtools}
-\usepackage{listings}
-\usepackage{appendix}
-
-% =========================================================
-% Header / footer
-% =========================================================
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[L]{\nouppercase{\leftmark}}
-\fancyhead[R]{Master's PFE Report}
-\fancyfoot[C]{\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0pt}
-
-% =========================================================
-% Captions and floats
-% =========================================================
-\captionsetup{
-  font=small,
-  labelfont=bf,
-  labelsep=period
+% ----------------------------
+% Links and PDF Metadata
+% ----------------------------
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue,
+    pdftitle={AdOptimizer Customer Data Platform - PFE Report},
+    pdfauthor={AIT-LAHCEN REDOUAN},
+    pdfsubject={Distributed Big Data Lakehouse Platform for Multi-Source Customer Data},
+    pdfkeywords={Big Data, Data Engineering, Distributed Systems, Kafka, HDFS, Spark, Iceberg, Trino, Airflow, Data Quality}
 }
-\setcounter{topnumber}{3}
-\setcounter{bottomnumber}{2}
-\setcounter{totalnumber}{5}
-\renewcommand{\topfraction}{0.9}
-\renewcommand{\bottomfraction}{0.8}
-\renewcommand{\textfraction}{0.07}
-\renewcommand{\floatpagefraction}{0.8}
 
-% =========================================================
-% Listings: safe code wrapping for Overleaf
-% =========================================================
-\lstdefinestyle{pfeCode}{
-  basicstyle=\ttfamily\small,
-  keywordstyle=\color{blue!70!black}\bfseries,
-  commentstyle=\color{green!40!black}\itshape,
-  stringstyle=\color{BrickRed},
-  numbers=left,
-  numberstyle=\scriptsize\color{gray},
-  stepnumber=1,
-  numbersep=8pt,
-  showstringspaces=false,
-  showspaces=false,
-  showtabs=false,
-  tabsize=2,
-  breaklines=true,
-  breakatwhitespace=true,
-  breakautoindent=true,
-  postbreak=\mbox{\textcolor{gray}{$\hookrightarrow$}\space},
-  frame=single,
-  rulecolor=\color{black!20},
-  frameround=tttt,
-  xleftmargin=1em,
-  xrightmargin=0em,
-  keepspaces=true,
-  columns=fullflexible,
-  captionpos=b
-}
-\lstset{style=pfeCode}
+% ----------------------------
+% Manual Table of Contents Styling
+% ----------------------------
+\usepackage{tocloft}
 
-% =========================================================
-% Custom commands
-% =========================================================
-\newcommand{\CountryName}{Kingdom of Morocco}
-\newcommand{\UniversityName}{Abdelmalek Essaadi University}
-\newcommand{\SchoolName}{Higher School of Education}
-\newcommand{\DepartmentName}{Department of Computer Science and Data Systems}
-\newcommand{\ProgramName}{Master's in Data Science and Intelligent Systems}
-\newcommand{\ReportType}{Final Year Project Report}
-\newcommand{\DegreeName}{Master's Degree}
-\newcommand{\ReportTitle}{AdOptimizer Customer Data Platform}
-\newcommand{\ReportSubtitle}{Design and Implementation of a Distributed Lakehouse Platform for Multi-Source Customer Data under AdOptimizer AI}
-\newcommand{\StudentName}{AIT-LAHCEN REDOUAN}
-\newcommand{\SupervisorName}{Professor / Academic Supervisor Name}
-\newcommand{\CoSupervisorName}{Industrial Supervisor Name}
-\newcommand{\AcademicYear}{2025--2026}
-\newcommand{\DefenseDate}{Month DD, YYYY}
-
-% Overleaf structure assumed:
-% PFE_Report/main.tex
-% PFE_resources/Figures/...
-% PFE_resources/Logos/...
-\newcommand{\ResourcesRoot}{../PFE_resources}
-\newcommand{\FiguresRoot}{\ResourcesRoot/Figures}
-\newcommand{\LogosRoot}{\ResourcesRoot/Logos}
-\newcommand{\LeftLogoFile}{\LogosRoot/Logo Universite.png}
-\newcommand{\RightLogoFile}{\LogosRoot/image.png}
-\newcommand{\CompanyLogoFile}{\LogosRoot/company_image.png}
-\newcommand{\LogoBoxSize}{3.2cm}
-
-\newcommand{\SafeLogo}[1]{%
-  \IfFileExists{#1}
-    {%
-      \makebox[\LogoBoxSize][c]{%
-        \raisebox{0pt}[\LogoBoxSize][\LogoBoxSize]{%
-          \includegraphics[width=\LogoBoxSize,height=\LogoBoxSize,keepaspectratio]{#1}%
+% Logo paths:
+% The report is compiled from PFE_Report/main.tex in Overleaf, while local
+% testing may resolve paths differently. This block selects the first valid
+% structure automatically and keeps image loading stable.
+\newcommand{\LogoPath}{PFE_resources/Figures/Logos}
+\IfFileExists{PFE_resources/Figures/Logos/University_image.png}{%
+    \renewcommand{\LogoPath}{PFE_resources/Figures/Logos}%
+}{%
+    \IfFileExists{../PFE_resources/Figures/Logos/University_image.png}{%
+        \renewcommand{\LogoPath}{../PFE_resources/Figures/Logos}%
+    }{%
+        \IfFileExists{PFE_resources/Logos/University_image.png}{%
+            \renewcommand{\LogoPath}{PFE_resources/Logos}%
+        }{%
+            \renewcommand{\LogoPath}{../PFE_resources/Logos}%
         }%
-      }%
-    }
-    {\fbox{\parbox[c][\LogoBoxSize][c]{\LogoBoxSize}{\centering\footnotesize Logo\\placeholder}}}%
+    }%
 }
 
-\newcommand{\ChapterQuote}[2]{%
-  \begin{flushright}
-    \itshape ``#1''\\
-    \normalfont\small --- #2
-  \end{flushright}
+\newcommand{\UniversityLogo}{\LogoPath/University_image.png}
+\newcommand{\SchoolLogo}{\LogoPath/School_image.png}
+\newcommand{\CompanyLogo}{\LogoPath/company_image.png}
+
+\newcommand{\coverlogobox}[1]{%
+    \begin{minipage}[c][3.2cm][c]{4.2cm}
+        \centering
+        \includegraphics[width=3cm,height=2.7cm,keepaspectratio]{#1}
+    \end{minipage}
 }
 
-% =========================================================
-% Document
-% =========================================================
+\newcommand{\frontchapter}[1]{%
+    \clearpage
+    \phantomsection
+    \chapter*{#1}
+    \addcontentsline{toc}{chapter}{#1}
+}
+
+\newcommand{\tocfront}[2]{%
+    \noindent\textbf{#1}\dotfill\textbf{#2}\par
+}
+
+\newcommand{\tocchapter}[3]{%
+    \vspace{0.45em}
+    \noindent\textbf{#1\quad #2}\dotfill\textbf{#3}\par
+}
+
+\newcommand{\tocsection}[3]{%
+    \noindent\hspace{1.2cm}#1\quad #2\dotfill #3\par
+}
+
+\newcommand{\tocsubsection}[3]{%
+    \noindent\hspace{2.2cm}#1\quad #2\dotfill #3\par
+}
+
+\newcommand{\tocunnumbered}[2]{%
+    \vspace{0.45em}
+    \noindent\textbf{#1}\dotfill\textbf{#2}\par
+}
+
 \begin{document}
 
-% ---------------------------------------------------------
-% Cover page
-% ---------------------------------------------------------
+% ============================================================
+% Cover Page
+% ============================================================
 \begin{titlepage}
-\thispagestyle{empty}
+    \thispagestyle{empty}
+    \begin{center}
+        \begin{minipage}[t]{0.42\textwidth}
+            \raggedright
+            \coverlogobox{\SchoolLogo}
+        \end{minipage}
+        \hfill
+        \begin{minipage}[t]{0.42\textwidth}
+            \raggedleft
+            \coverlogobox{\UniversityLogo}
+        \end{minipage}
 
-\noindent
-\begin{minipage}[c][\LogoBoxSize][c]{0.22\textwidth}
-  \centering
-  \SafeLogo{\LeftLogoFile}
-\end{minipage}
-\hfill
-\begin{minipage}[c][\LogoBoxSize][c]{0.22\textwidth}
-  \centering
-  \SafeLogo{\RightLogoFile}
-\end{minipage}
+        \vspace{1.6cm}
 
-\vspace{1cm}
+        {\bfseries Kingdom of Morocco}\\
+        {\bfseries Abdelmalek Essaadi University}\\
+        {\bfseries Higher School of Education}\\
+        {Department of Computer Science and Data Systems}
 
-\begin{center}
-{\large \textbf{\CountryName}}\\[0.2cm]
-{\Large \textbf{\UniversityName}}\\[0.25cm]
-{\Large \textbf{\SchoolName}}\\[0.25cm]
-{\normalsize \DepartmentName}\\[1cm]
+        \vspace{1.2cm}
 
-{\large Submitted in partial fulfillment of the requirements for the}\\[0.15cm]
-{\large \textbf{\DegreeName}}\\[0.15cm]
-{\large \textbf{\ProgramName}}\\[0.95cm]
+        Submitted in partial fulfillment of the requirements for the\\
+        {\bfseries Master's Degree}\\
+        {\bfseries Master's in Data Science and Intelligent Systems}
 
-{\large \textbf{\ReportType}}\\[1cm]
+        \vspace{1.2cm}
 
-\noindent\makebox[\textwidth][c]{%
-\begin{tikzpicture}
-\node[
-  rounded corners=10pt,
-  fill=blue!65,
-  text=white,
-  text width=0.90\textwidth,
-  align=center,
-  inner sep=16pt
-]{
-\Large \textbf{Project Title}\\[6pt]
-\LARGE \textbf{\ReportTitle}\\[5pt]
-\large \ReportSubtitle
-};
-\end{tikzpicture}
-}
-\end{center}
+        {\bfseries Final Year Project Report}
 
-\vspace{1.4cm}
+        \vspace{0.8cm}
 
-\begin{center}
-{\large \textbf{Prepared by}}\\[0.25cm]
-{\Large \textbf{\StudentName}}\\[0.9cm]
+        \begin{tikzpicture}
+            \node[
+                rounded corners=8pt,
+                fill=blue!65,
+                text=white,
+                inner sep=14pt,
+                text width=0.78\textwidth,
+                align=center
+            ] {
+                {\Large\bfseries AdOptimizer Customer Data Platform}\\[0.25cm]
+                {\normalsize\bfseries Design and Implementation of a Distributed Big Data Lakehouse Platform for Multi-Source Customer Data}\\[0.2cm]
+                {\small Under the AdOptimizer AI Program}
+            };
+        \end{tikzpicture}
 
-{\large \textbf{Supervised by}}\\[0.25cm]
-{\large \textbf{\SupervisorName}}\\[0.15cm]
-{\large \CoSupervisorName}\\[1cm]
+        \vfill
 
-{\large Academic Year: \textbf{\AcademicYear}}\\[0.15cm]
-{\large Defense Date: \textbf{\DefenseDate}}
-\end{center}
+        {\bfseries Prepared by}\\
+        {\large\bfseries AIT-LAHCEN REDOUAN}
 
-\vfill
+        \vspace{0.8cm}
 
-\begin{center}
-\small
-Internship / academic project submitted to the jury for evaluation and defense.
-\end{center}
+        {\bfseries Supervised by}\\
+        {\bfseries Professor / Academic Supervisor Name}
+
+        \vspace{0.8cm}
+
+        {\bfseries Academic Year: 2025--2026}
+    \end{center}
 \end{titlepage}
 
-% ---------------------------------------------------------
-% Front matter
-% ---------------------------------------------------------
+% ============================================================
+% Front Matter
+% ============================================================
 \pagenumbering{roman}
+\setcounter{page}{1}
 
-\chapter*{Dedication}
-\addcontentsline{toc}{chapter}{Dedication}
-\thispagestyle{empty}
-\vspace*{3cm}
-\begin{flushright}
-\begin{minipage}{0.72\textwidth}
-\begin{spacing}{1.4}
-\itshape
-To my parents,\\[0.4cm]
-for their unconditional love, endless sacrifices, and unwavering support throughout my academic journey.\\[0.7cm]
+\frontchapter{Dedication}
 
-To my family,\\[0.4cm]
-for their encouragement, patience, and constant belief in my abilities.\\[0.7cm]
+\vspace*{1.6cm}
 
-To my teachers and mentors,\\[0.4cm]
-whose guidance, knowledge, and advice have shaped both my academic path and my professional ambition.\\[0.7cm]
-
-And to everyone who supported me, directly or indirectly,\\[0.4cm]
-this work is dedicated with sincere gratitude and deep respect.
-\end{spacing}
-\end{minipage}
-\end{flushright}
-\clearpage
-
-\chapter*{Acknowledgements}
-\addcontentsline{toc}{chapter}{Acknowledgements}
-\thispagestyle{empty}
-I would like to express my sincere gratitude to all the people who contributed, directly or indirectly, to the completion of this final year project.
-
-First and foremost, I would like to thank my academic supervisor, \textbf{\SupervisorName}, for their guidance, valuable advice, and continuous support throughout the realization of this work. Their remarks and recommendations greatly helped me structure the project in a rigorous and professional manner.
-
-I would also like to extend my appreciation to \textbf{\CoSupervisorName}, whose support, feedback, and practical orientation helped me better align the project with real-world data engineering practices and industry expectations.
-
-My sincere thanks also go to the professors and administrative staff of \textbf{\SchoolName} and \textbf{\UniversityName} for the quality of the education they provided and for the academic environment that allowed me to develop my knowledge and skills.
-
-I would like to express my gratitude to the host company, its managers, and all the professionals who gave me the opportunity to work on a meaningful and technically enriching project. Their trust, availability, and encouragement were essential in the progress of this work.
-
-I also wish to thank my friends, classmates, and everyone who supported me during this journey, whether through technical discussions, moral support, or constructive feedback.
-
-Finally, I would like to express my deepest gratitude to my family, especially my parents, for their unconditional support, encouragement, patience, and sacrifices throughout my academic path. Without them, this achievement would not have been possible.
-\clearpage
-
-\chapter*{Abstract}
-\addcontentsline{toc}{chapter}{Abstract}
-\thispagestyle{empty}
-This report presents the design and implementation of the \textbf{AdOptimizer Customer Data Platform}, a distributed data engineering platform built to centralize, govern, and expose multi-source customer datasets for trusted analytical use. The project addresses the challenge of integrating heterogeneous business data into a replayable, scalable, traceable, and observable architecture that can support enterprise analytics and future intelligent services.
-
-The platform is developed as the \textbf{data engineering foundation of the broader AdOptimizer AI initiative}. In this wider vision, AdOptimizer AI targets intelligent advertising and customer-centric decision support, while the present project delivers the governed customer-data platform required to make such higher-level capabilities technically reliable and reusable.
-
-The implemented solution is based on a complete Big Data engineering stack combining \textbf{Apache Kafka} as the ingestion backbone, \textbf{HDFS} as the bronze distributed storage layer, \textbf{Apache Spark} as the distributed processing engine, \textbf{Hive Metastore} as the metadata catalog, \textbf{Apache Iceberg} as the analytical table format, \textbf{Trino} as the SQL query engine, \textbf{Great Expectations} for data quality validation, \textbf{Apache Airflow} for orchestration, and \textbf{Prometheus} with \textbf{Grafana} for monitoring and observability.
-
-The platform follows a distributed lakehouse architecture. Source datasets are first ingested through Kafka, landed into HDFS bronze storage, then processed by Spark and persisted as structured Iceberg tables registered in Hive Metastore. Trino provides analytical SQL access over the lakehouse, while Great Expectations enforces quality contracts and monitoring services provide visibility over infrastructure resources, processing behavior, and pipeline execution.
-
-The final result is a reproducible, modular, and extensible platform aligned with modern data engineering and lakehouse practices. This project demonstrates how ingestion, distributed storage, distributed processing, metadata management, SQL analytics, orchestration, validation, and observability can be integrated into one coherent system. Beyond solving the immediate problem of customer-data centralization, the platform establishes a strong technical foundation for future analytics, dashboarding, and intelligent extensions.
-\clearpage
-
-\chapter*{R\'esum\'e}
-\addcontentsline{toc}{chapter}{R\'esum\'e}
-\thispagestyle{empty}
-Ce rapport pr\'esente la conception et la mise en oeuvre de la \textbf{plateforme AdOptimizer Customer Data Platform}, une plateforme distribu\'ee de \textit{data engineering} con\c{c}ue pour centraliser, gouverner et exposer des donn\'ees clients multi-sources de mani\`ere fiable pour l'analyse. Le projet r\'epond au probl\`eme de l'int\'egration de donn\'ees h\'et\'erog\`enes dans une architecture rejouable, scalable, tra\c{c}able et observable.
-
-Cette plateforme est d\'evelopp\'ee comme la \textbf{fondation data engineering de l'initiative plus large AdOptimizer AI}. Dans cette vision globale, AdOptimizer AI vise l'optimisation publicitaire intelligente et l'aide \`a la d\'ecision orient\'ee client, tandis que le pr\'esent projet fournit la plateforme de donn\'ees gouvern\'ee n\'ecessaire pour rendre ces usages techniquement fiables et r\'eutilisables.
-
-La solution mise en place repose sur une cha\^ine Big Data compl\`ete combinant \textbf{Apache Kafka} comme colonne vert\'ebrale d'ingestion, \textbf{HDFS} comme couche de stockage bronze distribu\'e, \textbf{Apache Spark} comme moteur de traitement distribu\'e, \textbf{Hive Metastore} comme catalogue m\'etadonn\'ees, \textbf{Apache Iceberg} comme format de tables analytiques, \textbf{Trino} comme moteur SQL, \textbf{Great Expectations} pour la validation de la qualit\'e des donn\'ees, \textbf{Apache Airflow} pour l'orchestration, ainsi que \textbf{Prometheus} et \textbf{Grafana} pour la supervision et l'observabilit\'e.
-
-La plateforme suit une architecture lakehouse distribu\'ee. Les jeux de donn\'ees sources sont d'abord ing\'er\'es via Kafka, stock\'es dans la couche bronze HDFS, puis trait\'es par Spark et persist\'es sous forme de tables Iceberg catalogu\'ees dans Hive Metastore. Trino fournit un acc\`es SQL analytique au lakehouse, tandis que Great Expectations applique des contr\^oles de qualit\'e et que la supervision fournit une visibilit\'e sur l'infrastructure, le traitement et l'ex\'ecution des pipelines.
-
-Le r\'esultat final est une plateforme de donn\'ees reproductible, modulaire et extensible, conforme aux pratiques modernes du \textit{data engineering} et du lakehouse distribu\'e. Ce projet montre comment l'ingestion, le stockage distribu\'e, le traitement distribu\'e, le catalogage, l'acc\`es SQL, l'orchestration, la validation et l'observabilit\'e peuvent \^etre int\'egr\'es dans un seul syst\`eme coh\'erent. Au-del\`a de la centralisation imm\'ediate des donn\'ees clients, cette plateforme constitue une base technique solide pour de futures extensions analytiques et intelligentes.
-\clearpage
-
-\chapter*{Keywords}
-\addcontentsline{toc}{chapter}{Keywords}
-\thispagestyle{empty}
-\textbf{Keywords:} Data engineering, Big Data, distributed lakehouse, HDFS, Apache Kafka, Apache Spark, Hive Metastore, Apache Iceberg, Trino, Great Expectations, Apache Airflow, Prometheus, Grafana, observability, data quality.
-
-\vspace{0.8cm}
-\textbf{Mots-cl\'es :} Ing\'enierie des donn\'ees, Big Data, lakehouse distribu\'e, HDFS, Apache Kafka, Apache Spark, Hive Metastore, Apache Iceberg, Trino, Great Expectations, Apache Airflow, Prometheus, Grafana, observabilit\'e, qualit\'e des donn\'ees.
-\clearpage
-
-\tableofcontents
-\clearpage
-\listoffigures
-\addcontentsline{toc}{chapter}{List of Figures}
-\clearpage
-\listoftables
-\addcontentsline{toc}{chapter}{List of Tables}
-\clearpage
-
-\chapter*{List of Acronyms}
-\addcontentsline{toc}{chapter}{List of Acronyms}
-\thispagestyle{empty}
-\begin{tabularx}{\textwidth}{>{\bfseries}l X}
-API & Application Programming Interface \\
-BI & Business Intelligence \\
-CSV & Comma-Separated Values \\
-CDC & Change Data Capture \\
-DAG & Directed Acyclic Graph \\
-EDA & Exploratory Data Analysis \\
-ELT & Extract, Load, Transform \\
-ETL & Extract, Transform, Load \\
-GE / GX & Great Expectations \\
-GUI & Graphical User Interface \\
-HDFS & Hadoop Distributed File System \\
-HMS & Hive Metastore Service \\
-HQL & Hive Query Language \\
-ICEBERG & Apache Iceberg Table Format \\
-JSON & JavaScript Object Notation \\
-KPI & Key Performance Indicator \\
-OLTP & Online Transaction Processing \\
-OLAP & Online Analytical Processing \\
-PFE & Final Year Project \\
-REST & Representational State Transfer \\
-SLA & Service Level Agreement \\
-SQL & Structured Query Language \\
-UI & User Interface \\
-URI & Uniform Resource Identifier \\
-UX & User Experience \\
-TRINO & Distributed SQL Query Engine \\
-\end{tabularx}
-
-\vspace{0.8cm}
-\noindent This list includes the main abbreviations used throughout the report in relation to ingestion, distributed storage, distributed processing, lakehouse management, orchestration, validation, and monitoring.
-
-\clearpage
-\pagenumbering{arabic}
-
-% ---------------------------------------------------------
-% Main matter
-% ---------------------------------------------------------
-\chapter{General Introduction}
-\label{chap:introduction}
-
-\section{Context}
-Digital businesses increasingly depend on customer, behavioral, transactional, and campaign-related data to improve decision-making and optimize commercial performance. In the broader \textbf{AdOptimizer AI} vision, this need appears in the context of intelligent advertising, customer understanding, and future campaign optimization. However, these ambitions cannot be achieved directly if the underlying data remains fragmented, heterogeneous, poorly governed, and operationally difficult to trust.
-
-Organizations therefore need robust data engineering platforms capable of centralizing multi-source customer data, preserving source traceability, structuring distributed storage and analytical layers, and guaranteeing data quality and observability. In this context, the \textbf{AdOptimizer Customer Data Platform} represents the data-engineering response: it is the implemented customer-data platform designed to serve as the technical foundation of the wider AdOptimizer AI initiative.
-
-\section{Problem Statement}
-The main challenge addressed in this project is the absence of a unified platform capable of collecting, structuring, validating, monitoring, and exposing multi-source customer data in a scalable and maintainable manner. Without a proper engineering pipeline, data remains fragmented, poorly governed, and difficult to reuse in analytics and future intelligent systems. For AdOptimizer AI in particular, this means that higher-level functions such as customer intelligence, analytics, and future decision support would lack a reliable and reusable data backbone.
-
-\section{Objectives}
-\begin{enumerate}[leftmargin=1.5em]
-  \item Design a complete end-to-end data engineering architecture for multi-source customer data within the broader AdOptimizer AI vision.
-  \item Implement a modern ingestion backbone using Apache Kafka.
-  \item Introduce a bronze distributed storage layer using HDFS.
-  \item Implement distributed processing jobs with Apache Spark.
-  \item Build structured analytical tables with Apache Iceberg and register them through Hive Metastore.
-  \item Expose analytical access through Trino.
-  \item Integrate Great Expectations for data quality validation.
-  \item Orchestrate the full workflow with Apache Airflow.
-  \item Monitor infrastructure, lakehouse services, and pipeline health using Prometheus and Grafana.
-  \item Establish the reusable customer-data foundation required for future analytics and intelligent modules in AdOptimizer AI.
-\end{enumerate}
-
-\section{Report Structure}
-This report is organized into chapters covering the project context, state of the art, requirements analysis, architecture design, implementation, validation, results, and future perspectives.
-
-\chapter{Host Organization and Project Context}
-\label{chap:organization}
-
-\section{Host Organization}
-This project was carried out in an academic-professional context aligned with enterprise digital transformation needs. The host environment expects a solution that goes beyond isolated scripts and instead demonstrates a structured, deployment-oriented data platform capable of evolving toward real organizational use.
-
-\section{Business Context}
-The wider business context is defined by the \textbf{AdOptimizer AI} initiative, whose long-term goal is to support intelligent advertising, customer-centric analysis, and future optimization-oriented decision support. Such a vision requires a governed and reusable customer-data foundation.
-
-The AdOptimizer Customer Data Platform answers this need by focusing on the upstream engineering problem: integrating heterogeneous customer-related datasets, preserving them across clear architectural layers, and exposing trusted data products for analytics and future intelligent use cases. In other words, AdOptimizer AI represents the broader strategic destination, while the AdOptimizer Customer Data Platform represents the concrete data-engineering platform that makes that destination technically feasible.
-
-\section{Project Scope}
-The current PFE phase focuses on the design and implementation of the \textbf{data engineering backbone}. This includes source ingestion, bronze persistence in HDFS, distributed processing with Spark, Iceberg lakehouse construction through Hive Metastore, SQL analytical access through Trino, quality validation, orchestration, and monitoring.
-
-The current scope does not claim to implement the full final AdOptimizer AI product vision. Instead, it delivers the foundational platform on top of which future modules such as advanced campaign intelligence, recommendation services, broader application layers, or production AI services may later be built.
-
-\section{Functional and Technical Requirements}
-At a functional level, the platform must ingest heterogeneous datasets, preserve source identity, structure bronze and curated analytical layers, expose analytics-ready outputs, and support repeatable end-to-end execution.
-
-At a technical level, it must guarantee traceability, modularity, data quality, rerunnability, observability, and deployment-oriented organization. These requirements are essential because the platform is intended to serve as a reliable foundation inside a broader intelligent-system roadmap.
-
-\chapter{State of the Art and Theoretical Background}
-\label{chap:state_of_art}
-
-\section{Data Engineering Concepts}
-Discuss ingestion backbones, distributed storage, distributed processing, lakehouse systems, metadata catalogs, analytical query engines, and observability.
-
-\section{Modern Batch and Streaming Architectures}
-Explain the role of batch pipelines, event streaming, bronze landing, distributed lakehouse design, and analytical query services.
-
-\section{Data Quality and Observability}
-Present key concepts related to validation, lineage, monitoring, reliability, and governance.
-
-\section{Related Tools and Technologies}
-Introduce Apache Kafka, HDFS, Apache Spark, Hive Metastore, Apache Iceberg, Trino, Great Expectations, Airflow, Prometheus, and Grafana.
-
-\chapter{Analysis and Architecture Design}
-\label{chap:architecture}
-
-\section{Requirements Analysis}
-Explain the business and technical requirements that shaped the solution.
-
-\section{Global Architecture}
-Describe the overall architecture from source datasets to final data products.
-
-\section{Logical Data Flow}
-Present the flow: source data $\rightarrow$ Kafka $\rightarrow$ HDFS bronze $\rightarrow$ Spark processing $\rightarrow$ Iceberg tables in Hive Metastore $\rightarrow$ Trino analytical access.
-
-\section{Technology Selection Justification}
-Justify each selected tool from a data engineering perspective.
-
-\section{Architecture Diagram Example}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{\FiguresRoot/example_architecture_diagram.png}
-  \caption{End-to-end architecture of the proposed platform}
-  \label{fig:global_architecture}
-\end{figure}
-
-\section{Native TikZ Diagram Example}
-\begin{figure}[H]
-  \centering
-  \begin{tikzpicture}[
-    node distance=1.8cm,
-    box/.style={
-      draw,
-      rounded corners,
-      minimum width=3.2cm,
-      minimum height=1cm,
-      align=center,
-      fill=blue!8
-    },
-    arrow/.style={-{Latex[length=3mm]}, thick}
-  ]
-    \node[box] (src) {Source Data};
-    \node[box, right=of src] (kafka) {Kafka};
-    \node[box, right=of kafka] (hdfs) {HDFS Bronze};
-    \node[box, below=of hdfs] (spark) {Spark Processing};
-    \node[box, left=of spark] (lakehouse) {Hive + Iceberg + Trino};
-
-    \draw[arrow] (src) -- (kafka);
-    \draw[arrow] (kafka) -- (hdfs);
-    \draw[arrow] (hdfs) -- (spark);
-    \draw[arrow] (spark) -- (lakehouse);
-  \end{tikzpicture}
-  \caption{Minimal architecture diagram created directly with TikZ}
-  \label{fig:tikz_architecture}
-\end{figure}
-
-\chapter{Implementation}
-\label{chap:implementation}
-
-\section{Project Structure}
-Describe the repository organization and how each folder supports the architecture.
-
-\section{Infrastructure and Services}
-Explain the Docker-based local platform and service composition for Kafka, HDFS, Hive Metastore, Spark, Trino, Airflow, and monitoring.
-
-\section{Data Ingestion Layer}
-Detail how Kafka producers handle dataset streaming and how bronze artifacts are persisted for downstream processing.
-
-\section{Bronze and Lakehouse Layers}
-Explain HDFS bronze storage, Spark-based table creation, and Iceberg lakehouse organization.
-
-\section{Processing and Query Layer}
-Describe Spark jobs, Hive Metastore registration, Iceberg table layout, and Trino query access.
-
-\section{Data Quality Layer}
-Explain Great Expectations checkpoints and validation scopes.
-
-\section{Monitoring Layer}
-Describe Prometheus exporters and Grafana dashboards.
-
-\section{Orchestration Layer}
-Explain the Airflow DAGs and execution order.
-
-\chapter{Testing, Validation, and Results}
-\label{chap:results}
-
-\section{Functional Validation}
-Demonstrate that the three main Airflow DAGs execute successfully end to end.
-
-\section{Data Quality Validation}
-Show Great Expectations validation results for bronze-to-lakehouse contracts and curated analytical outputs.
-
-\section{Performance Validation}
-Discuss ingestion duration, HDFS landing time, Spark processing duration, and query-readiness times.
-
-\section{Monitoring and Observability Results}
-Present what the infrastructure, Hive Metastore PostgreSQL, and pipeline health dashboards reveal.
-
-\subsection{Wide Table Example}
 \begin{center}
-\begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lllll}
-\toprule
-Metric & Description & Tool & Result & Comment \\
-\midrule
-Pipeline Success Rate & Percentage of successful DAG runs & Airflow & 100\% & Stable in development \\
-Raw Validation Status & Source contract validation result & GX & Success & No critical failures \\
-Catalog Availability & Hive Metastore backend exporter status & Prometheus & Up & Healthy instance \\
-Dashboard Refresh & Monitoring availability & Grafana & OK & Dashboards accessible \\
-\bottomrule
-\end{tabular}
-\end{adjustbox}
+    \begin{minipage}{0.72\textwidth}
+        \centering
+        {\large\itshape
+        To my dear parents,\\[0.45cm]
+        for their unconditional love, sacrifices, prayers, and constant support.\\[0.65cm]
+
+        To my family,\\[0.45cm]
+        for their encouragement, patience, and confidence throughout this journey.\\[0.65cm]
+
+        To my teachers and mentors,\\[0.45cm]
+        for their guidance, inspiration, and valuable advice.\\[0.9cm]
+
+        I dedicate this work with deep gratitude and respect.
+        }
+
+        \vspace{1.1cm}
+
+        {\normalsize\itshape AIT-LAHCEN REDOUAN}
+    \end{minipage}
 \end{center}
 
-\subsection{Long Table Across Pages Example}
-\begin{longtable}{p{0.17\textwidth}p{0.22\textwidth}p{0.18\textwidth}p{0.32\textwidth}}
-\caption{Example of a long table that safely spans multiple pages}\label{tab:long_example}\\
-\toprule
-\textbf{Component} & \textbf{Role} & \textbf{Technology} & \textbf{Notes} \\
-\midrule
-\endfirsthead
+\frontchapter{Acknowledgements}
+I would like to express my sincere gratitude to my academic supervisor for the guidance, availability, constructive feedback, and encouragement provided throughout this final year project. The advice received helped me clarify the project scope, strengthen the technical choices, and maintain a rigorous engineering approach.
 
-\multicolumn{4}{l}{\small\itshape Table \thetable\ continued from previous page} \\
-\toprule
-\textbf{Component} & \textbf{Role} & \textbf{Technology} & \textbf{Notes} \\
-\midrule
-\endhead
+I would also like to thank the academic staff for the knowledge and methodological foundations shared during my Master's program. Their teaching contributed directly to my understanding of data engineering, distributed systems, databases, software development, and reliable information system design.
 
-\midrule
-\multicolumn{4}{r}{\small\itshape Continued on next page} \\
-\endfoot
+My appreciation goes to the professional environment that supported the context of this project and helped me understand practical data engineering requirements. Working under the broader AdOptimizer AI initiative allowed me to position this work as a customer data engineering platform, focused on ingestion, distributed storage, lakehouse organization, transformation, quality validation, orchestration, and observability.
 
-\bottomrule
-\endlastfoot
+I am grateful to my colleagues and classmates for their discussions, shared ideas, and support during this academic journey. I also extend my deepest thanks to my family for their patience, encouragement, and confidence during the long periods of research, implementation, testing, and documentation.
 
-Kafka & Event backbone & Apache Kafka & Responsible for dataset streaming between source and landing layers. \\
-HDFS & Bronze storage & Hadoop HDFS & Stores source-aligned files in distributed bronze format before Spark processing. \\
-Spark & Distributed processing & Apache Spark & Reads bronze files and writes structured Iceberg tables. \\
-Hive Metastore & Metadata catalog & Hive Metastore & Registers namespaces and table definitions for the lakehouse. \\
-Iceberg & Analytical table format & Apache Iceberg & Manages structured analytical tables with snapshots and schema evolution. \\
-Trino & SQL query layer & Trino & Exposes analytical access over Iceberg tables. \\
-Great Expectations & Data quality & GX & Validates bronze, curated analytical, and consumption-oriented data contracts. \\
-Airflow & Orchestration & Apache Airflow & Coordinates setup, ingestion, processing, validation, and observability workflows. \\
-Prometheus & Metrics collection & Prometheus & Scrapes infrastructure and pipeline metrics. \\
-Grafana & Visualization & Grafana & Displays infrastructure, Hive Metastore PostgreSQL, and pipeline health dashboards. \\
-\end{longtable}
+Finally, I would like to thank the members of the jury for the time and attention devoted to evaluating this work. I hope this report clearly reflects the effort invested in designing and implementing a modern, distributed, and production-oriented data engineering platform.
 
-\subsection{Code Example}
-\begin{lstlisting}[language=Python, caption={Example Python snippet with safe line wrapping}, label={lst:python_example}]
-def submit_spark_lakehouse_job(dataset_name: str, bronze_path: str, iceberg_table: str) -> None:
-    print(f"Processing {dataset_name} from {bronze_path} into {iceberg_table}")
-    # Long lines wrap automatically in this template, which helps prevent page overflow.
-\end{lstlisting}
+\frontchapter{Abstract}
+Modern organizations increasingly rely on data produced from multiple heterogeneous sources, including transactional systems, e-commerce platforms, behavioral event streams, and customer profile datasets. However, transforming these raw inputs into reliable, governed, and analytics-ready data products requires a structured data engineering platform capable of ingestion, storage, distributed processing, validation, orchestration, and monitoring.
 
-\chapter{Discussion}
-\label{chap:discussion}
+This final year project presents the design and implementation of the \textbf{AdOptimizer Customer Data Platform}, a distributed Big Data lakehouse platform developed under the broader AdOptimizer AI program. The platform focuses on building a scalable data engineering foundation for multi-source customer data. It integrates Apache Kafka for ingestion, Hadoop HDFS for distributed storage, Apache Spark for distributed processing, Apache Iceberg and Hive Metastore for lakehouse table management, Trino for SQL exploration, dbt-Spark for transformation modeling, Great Expectations for data quality validation, Apache Airflow for orchestration, and Prometheus with Grafana for observability.
 
-\section{Achievements}
-Summarize the main technical achievements of the project.
+The project demonstrates an end-to-end architecture that transforms raw customer-related datasets into structured lakehouse layers and trusted analytical data products. The implemented solution emphasizes modularity, reproducibility, scalability, data quality, observability, and readiness for future analytics and machine learning use cases.
 
-\section{Limitations}
-Explain current limitations, including scope, deployment status, or future optimization opportunities.
+\textbf{Keywords:} Big Data, Data Engineering, Distributed Systems, Data Lakehouse, Apache Kafka, Hadoop HDFS, Apache Spark, Apache Iceberg, Hive Metastore, Trino, dbt-Spark, Great Expectations, Apache Airflow, Prometheus, Grafana, Data Quality, Observability, Data Governance, Customer Data Platform.
 
-\section{Lessons Learned}
-Discuss technical, organizational, and methodological lessons learned.
+\frontchapter{Résumé}
+Les organisations modernes exploitent des donnees issues de sources heterogenes telles que les systemes transactionnels, les plateformes e-commerce, les evenements comportementaux et les donnees de profil client. Cependant, la transformation de ces donnees brutes en produits de donnees fiables, gouvernes et exploitables necessite une plateforme d'ingenierie de donnees structuree, capable d'assurer l'ingestion, le stockage, le traitement distribue, la validation, l'orchestration et la supervision.
 
-\section{Future Work}
-Mention production deployment, horizontal scaling, advanced governance, security hardening, and future AI/ML integration.
+Ce projet de fin d'etudes presente la conception et la mise en oeuvre de la plateforme \textbf{AdOptimizer Customer Data Platform}, une plateforme Big Data lakehouse distribuee realisee dans le cadre du programme AdOptimizer AI. Le projet se concentre sur la construction d'une fondation d'ingenierie de donnees scalable pour les donnees client multi-sources. L'architecture integre Apache Kafka pour l'ingestion, Hadoop HDFS pour le stockage distribue, Apache Spark pour le traitement distribue, Apache Iceberg et Hive Metastore pour la gestion des tables lakehouse, Trino pour l'exploration SQL, dbt-Spark pour les transformations, Great Expectations pour la qualite des donnees, Apache Airflow pour l'orchestration, ainsi que Prometheus et Grafana pour l'observabilite.
 
-\chapter{General Conclusion}
-\label{chap:conclusion}
-This project resulted in the design and implementation of a complete modern data engineering platform capable of ingesting, landing, processing, validating, orchestrating, and monitoring customer data from multiple heterogeneous sources. By integrating Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, Great Expectations, Airflow, Prometheus, and Grafana into a unified architecture, the project demonstrates a strong practical application of modern Big Data engineering principles.
+La solution realisee illustre une chaine de traitement complete permettant de convertir des donnees client brutes en couches lakehouse structurees et en produits de donnees analytiques fiables. Elle met l'accent sur la modularite, la reproductibilite, la scalabilite, la qualite des donnees, l'observabilite et la preparation de futurs cas d'usage analytiques et machine learning.
 
-Beyond the technical implementation, the platform establishes a reusable foundation for future analytics and intelligent use cases. It improves data centralization, traceability, quality assurance, and operational observability. Within the broader AdOptimizer AI vision, the AdOptimizer Customer Data Platform must therefore be understood as the implemented customer-data engineering foundation that prepares the ground for future customer intelligence, analytics, and AI-assisted decision systems.
+\textbf{Mots-cles :} Big Data, Ingenierie des donnees, Systemes distribues, Data Lakehouse, Ingestion de donnees, Apache Kafka, Hadoop HDFS, Apache Spark, Apache Iceberg, Hive Metastore, Trino, dbt-Spark, Great Expectations, Apache Airflow, Prometheus, Grafana, Qualite des donnees, Observabilite, Gouvernance des donnees.
 
-Therefore, the project not only satisfies its current academic and engineering objectives, but also positions the organization for future extensions in analytics, reporting, and intelligent applications built on trusted and well-governed data.
+% ============================================================
+% Planned Table of Contents
+% ============================================================
+\clearpage
+\phantomsection
+\chapter*{Table of Contents}
+\addcontentsline{toc}{chapter}{Table of Contents}
 
-% ---------------------------------------------------------
-% Bibliography
-% ---------------------------------------------------------
-\begin{thebibliography}{99}
-
-\bibitem{kimball}
-Ralph Kimball and Margy Ross,
-\textit{The Data Warehouse Toolkit},
-3rd edition, Wiley, 2013.
-
-\bibitem{kafka}
-Neha Narkhede, Gwen Shapira, and Todd Palino,
-\textit{Kafka: The Definitive Guide},
-O'Reilly Media, 2017.
-
-\bibitem{hdfs}
-Apache Hadoop,
-\textit{HDFS Documentation},
-\url{https://hadoop.apache.org/docs/}.
-
-\bibitem{spark}
-Apache Spark,
-\textit{Apache Spark Documentation},
-\url{https://spark.apache.org/docs/latest/}.
-
-\bibitem{hive}
-Apache Hive,
-\textit{Hive Metastore Documentation},
-\url{https://hive.apache.org/}.
-
-\bibitem{iceberg}
-Apache Iceberg,
-\textit{Apache Iceberg Documentation},
-\url{https://iceberg.apache.org/}.
-
-\bibitem{trino}
-Trino,
-\textit{Trino Documentation},
-\url{https://trino.io/docs/current/}.
-
-\bibitem{gx}
-Great Expectations,
-\textit{Great Expectations Documentation},
-\url{https://docs.greatexpectations.io/}.
-
-\bibitem{airflow}
-Apache Airflow,
-\textit{Apache Airflow Documentation},
-\url{https://airflow.apache.org/docs/}.
-
-\bibitem{prometheus}
-Prometheus,
-\textit{Prometheus Documentation},
-\url{https://prometheus.io/docs/}.
-
-\bibitem{grafana}
-Grafana Labs,
-\textit{Grafana Documentation},
-\url{https://grafana.com/docs/}.
-
-\end{thebibliography}
-
-% ---------------------------------------------------------
-% Appendices
-% ---------------------------------------------------------
-\begin{appendices}
-
-\chapter{Practical Rules to Avoid Overflow in Overleaf}
-\begin{itemize}[leftmargin=1.5em]
-  \item Use \verb|\includegraphics[width=\textwidth]{...}| instead of fixed large sizes.
-  \item For wide tables, wrap them with \verb|adjustbox| or move them to landscape using \verb|pdflscape|.
-  \item For multi-page tables, prefer \verb|longtable| instead of forcing a normal \verb|tabular|.
-  \item For code, use \verb|listings| with \verb|breaklines=true| as configured in this template.
-  \item Avoid very long unbreakable words in normal text; use \verb|\url| or insert manual breaks when necessary.
-  \item Use \verb|\FloatBarrier| after figure-heavy sections to keep floats under control.
-\end{itemize}
-
-\chapter{Figure and Table Insertion Patterns}
-\section{Safe Figure Pattern}
-\begin{lstlisting}[language={[LaTeX]TeX}, caption={Safe figure insertion pattern}]
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\textwidth]{my_figure.png}
-  \caption{My caption}
-  \label{fig:my_figure}
-\end{figure}
-\end{lstlisting}
-
-\section{Safe Wide Table Pattern}
-\begin{lstlisting}[language={[LaTeX]TeX}, caption={Safe wide table insertion pattern}]
 \begin{center}
-\begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{llll}
-...
-\end{tabular}
-\end{adjustbox}
+    {\Large\bfseries TABLE OF CONTENTS}
 \end{center}
-\end{lstlisting}
 
-\end{appendices}
+\vspace{0.6cm}
+
+\tocfront{DEDICATION}{I}
+\tocfront{ACKNOWLEDGEMENTS}{II}
+\tocfront{ABSTRACT}{III}
+\tocfront{RESUME}{IV}
+\tocfront{TABLE OF CONTENTS}{V}
+\tocfront{LIST OF FIGURES}{VII}
+\tocfront{LIST OF TABLES}{VIII}
+\tocfront{LIST OF ACRONYMS AND ABBREVIATIONS}{IX}
+
+\vspace{0.6cm}
+
+\tocunnumbered{GENERAL INTRODUCTION}{1}
+
+\tocchapter{I}{GENERAL PROJECT CONTEXT}{4}
+\tocsection{I.1}{Introduction}{5}
+\tocsection{I.2}{Host Organization and Project Environment}{5}
+\tocsubsection{I.2.1}{Company Context and Digital Transformation Needs}{6}
+\tocsubsection{I.2.2}{Data-Driven Decision-Making Challenges}{7}
+\tocsubsection{I.2.3}{AdOptimizer AI as the Global Program}{8}
+\tocsection{I.3}{Target Project Presentation}{9}
+\tocsubsection{I.3.1}{AdOptimizer Customer Data Platform Principle}{9}
+\tocsubsection{I.3.2}{Problem Statement}{10}
+\tocsubsection{I.3.3}{Project Objectives}{12}
+\tocsubsection{I.3.4}{Project Scope and Boundaries}{13}
+\tocsubsection{I.3.5}{Expected Outcomes}{15}
+\tocsubsection{I.3.6}{Project Planning and Methodology}{16}
+\tocsection{I.4}{Conclusion}{17}
+
+\tocchapter{II}{STATE OF THE ART AND THEORETICAL BACKGROUND}{18}
+\tocsection{II.1}{Introduction}{19}
+\tocsection{II.2}{Big Data Fundamentals}{19}
+\tocsubsection{II.2.1}{Emergence and Evolution of Big Data}{20}
+\tocsubsection{II.2.2}{The Five Vs of Big Data}{21}
+\tocsubsection{II.2.3}{Distributed Storage and Distributed Processing}{23}
+\tocsection{II.3}{Big Data Architectures}{25}
+\tocsubsection{II.3.1}{Traditional Data Warehouse Architecture}{25}
+\tocsubsection{II.3.2}{Data Lake Architecture}{27}
+\tocsubsection{II.3.3}{Data Lakehouse Architecture}{29}
+\tocsubsection{II.3.4}{Lambda Architecture}{31}
+\tocsubsection{II.3.5}{Kappa Architecture}{33}
+\tocsubsection{II.3.6}{Comparison Between Lambda and Kappa}{35}
+\tocsection{II.4}{Technology Watch}{37}
+\tocsubsection{II.4.1}{Apache Kafka for Data Ingestion}{37}
+\tocsubsection{II.4.2}{Hadoop HDFS for Distributed Storage}{38}
+\tocsubsection{II.4.3}{Apache Spark for Distributed Processing}{39}
+\tocsubsection{II.4.4}{Apache Iceberg and Hive Metastore for Lakehouse Tables}{40}
+\tocsubsection{II.4.5}{Trino, dbt-Spark, Great Expectations, and Airflow}{41}
+\tocsection{II.5}{Conclusion}{41}
+
+\tocchapter{III}{REQUIREMENTS ANALYSIS AND SYSTEM DESIGN}{42}
+\tocsection{III.1}{Introduction}{43}
+\tocsection{III.2}{Requirements Analysis}{43}
+\tocsubsection{III.2.1}{Functional Requirements}{44}
+\tocsubsection{III.2.2}{Non-Functional Requirements}{46}
+\tocsubsection{III.2.3}{Data Quality and Governance Requirements}{48}
+\tocsubsection{III.2.4}{Observability and Operational Requirements}{49}
+\tocsection{III.3}{Conceptual Design}{50}
+\tocsubsection{III.3.1}{Actors and Use Cases}{50}
+\tocsubsection{III.3.2}{Data Source Analysis}{52}
+\tocsubsection{III.3.3}{Lakehouse Layering Strategy}{54}
+\tocsection{III.4}{Global Architecture}{56}
+\tocsubsection{III.4.1}{End-to-End Data Flow}{57}
+\tocsubsection{III.4.2}{Tool Interaction and Integration}{59}
+\tocsubsection{III.4.3}{Deployment and Distribution View}{61}
+\tocsection{III.5}{Conclusion}{62}
+
+\tocchapter{IV}{IMPLEMENTATION OF THE DISTRIBUTED LAKEHOUSE PLATFORM}{63}
+\tocsection{IV.1}{Introduction}{64}
+\tocsection{IV.2}{Development Environment Preparation}{64}
+\tocsubsection{IV.2.1}{Project Repository Organization}{65}
+\tocsubsection{IV.2.2}{Environment Variables and Configuration Strategy}{66}
+\tocsubsection{IV.2.3}{Docker-Based Service Deployment}{67}
+\tocsection{IV.3}{Streaming and Ingestion Layer}{68}
+\tocsubsection{IV.3.1}{Kafka Broker and Kafka UI Setup}{68}
+\tocsubsection{IV.3.2}{Dataset-Specific Producers}{69}
+\tocsubsection{IV.3.3}{Topic Reset and Idempotent Reprocessing}{71}
+\tocsection{IV.4}{Distributed Storage Layer}{72}
+\tocsubsection{IV.4.1}{HDFS Namenode and Datanode Setup}{72}
+\tocsubsection{IV.4.2}{Bronze Zone Directory Structure}{73}
+\tocsubsection{IV.4.3}{Landing Raw Files from Kafka into HDFS}{74}
+\tocsection{IV.5}{Distributed Processing and Lakehouse Table Layer}{76}
+\tocsubsection{IV.5.1}{Spark Cluster Setup}{76}
+\tocsubsection{IV.5.2}{Hive Metastore and Iceberg Catalog}{78}
+\tocsubsection{IV.5.3}{Spark Raw Table Loading}{80}
+\tocsubsection{IV.5.4}{Trino SQL Query Service}{82}
+\tocsection{IV.6}{Transformation Layer with dbt-Spark}{83}
+\tocsubsection{IV.6.1}{Staging Models}{84}
+\tocsubsection{IV.6.2}{Intermediate Models}{86}
+\tocsubsection{IV.6.3}{Analytics Models}{88}
+\tocsection{IV.7}{Data Quality Layer with Great Expectations}{89}
+\tocsection{IV.8}{Orchestration with Apache Airflow}{90}
+\tocsection{IV.9}{Monitoring with Prometheus and Grafana}{91}
+\tocsection{IV.10}{Conclusion}{92}
+
+\tocchapter{V}{CASE STUDY: MULTI-SOURCE CUSTOMER DATA LAKEHOUSE}{93}
+\tocsection{V.1}{Introduction}{94}
+\tocsection{V.2}{Source Dataset Description}{94}
+\tocsubsection{V.2.1}{Customer Personality Dataset}{95}
+\tocsubsection{V.2.2}{E-commerce Customer Churn Dataset}{96}
+\tocsubsection{V.2.3}{RetailRocket Events Dataset}{97}
+\tocsubsection{V.2.4}{Online Retail Dataset}{98}
+\tocsection{V.3}{Data Ingestion Execution}{99}
+\tocsection{V.4}{Bronze Layer Validation}{100}
+\tocsection{V.5}{Raw Iceberg Table Construction}{101}
+\tocsection{V.6}{Analytical Data Products}{102}
+\tocsection{V.7}{Future AI and Machine Learning Readiness}{103}
+\tocsection{V.8}{Conclusion}{104}
+
+\tocchapter{VI}{TESTING, VALIDATION, AND PERFORMANCE EVALUATION}{105}
+\tocsection{VI.1}{Introduction}{106}
+\tocsection{VI.2}{Service Readiness Tests}{106}
+\tocsubsection{VI.2.1}{HDFS Readiness}{107}
+\tocsubsection{VI.2.2}{Hive Metastore Readiness}{107}
+\tocsubsection{VI.2.3}{Spark and Spark Thrift Readiness}{108}
+\tocsubsection{VI.2.4}{Trino Query Service Readiness}{109}
+\tocsection{VI.3}{Data Quality Validation}{110}
+\tocsubsection{VI.3.1}{Raw Lakehouse Quality Checks}{110}
+\tocsubsection{VI.3.2}{Transformation Quality Checks}{111}
+\tocsection{VI.4}{End-to-End Pipeline Validation}{112}
+\tocsection{VI.5}{Monitoring Dashboard Validation}{114}
+\tocsection{VI.6}{Performance Evaluation Approach}{116}
+\tocsubsection{VI.6.1}{Local Execution Baseline}{116}
+\tocsubsection{VI.6.2}{Distributed Deployment Benchmark Plan}{117}
+\tocsection{VI.7}{Conclusion}{118}
+
+\tocchapter{VII}{DEPLOYMENT STRATEGY AND SCALABILITY PERSPECTIVE}{119}
+\tocsection{VII.1}{Introduction}{120}
+\tocsection{VII.2}{Target Multi-Machine Deployment Context}{120}
+\tocsection{VII.3}{Service Distribution Strategy}{121}
+\tocsubsection{VII.3.1}{Coordination, Ingestion, and Orchestration Node}{122}
+\tocsubsection{VII.3.2}{Storage and Catalog Node}{123}
+\tocsubsection{VII.3.3}{Processing and Query Node}{123}
+\tocsection{VII.4}{Scalability and Fault-Tolerance Considerations}{124}
+\tocsection{VII.5}{Security and DataSecOps Considerations}{124}
+\tocsection{VII.6}{Conclusion}{124}
+
+\tocunnumbered{GENERAL CONCLUSION AND PERSPECTIVES}{125}
+
+\tocunnumbered{REFERENCES}{127}
+
+\tocchapter{A}{APPENDICES}{128}
+\tocsection{A.1}{Technical Runbook}{128}
+\tocsection{A.2}{Environment Variables}{129}
+\tocsection{A.3}{Docker Services and Ports}{129}
+\tocsection{A.4}{Airflow DAG Execution Order}{130}
+\tocsection{A.5}{Monitoring Dashboard Inventory}{130}
 
 \end{document}

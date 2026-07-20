@@ -1,8 +1,8 @@
 # AdOptimizer Customer Data Platform - Business Rules & Project Specification
 
-> **Global Project Document** | Version 17.1
-> Status: Distributed lakehouse architecture operational for Client 1 with Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Airflow, Great Expectations, Prometheus, and Grafana
-> Last Updated: 2026-07-16
+> **Global Project Document** | Version 17.2
+> Status: Distributed lakehouse architecture fully validated end to end for Client 1 with Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Airflow, Great Expectations, Prometheus, and Grafana
+> Last Updated: 2026-07-17
 
 ---
 
@@ -128,6 +128,8 @@ This design is chosen because it provides:
 - orchestration and observability,
 - future extensibility toward more clients and more use cases.
 
+At the current state of the project, this architecture is no longer only a target design. It has been executed and validated locally end to end through the active Airflow DAG chain, with successful monitoring visibility and successful quality-validation runs.
+
 ### 4.1 Current Executable Runtime Sequence
 
 The implemented platform must also be explained through its concrete operational sequence:
@@ -152,6 +154,21 @@ initialize HDFS bronze + Hive/Iceberg namespaces + Trino validation
 ```
 
 The report and oral defense must describe the platform according to this real executed sequence rather than according to any previous local warehouse-oriented iteration.
+
+### 4.2 Final Validated Runtime State
+
+The project has now reached a **validated local operational state** in which:
+
+- the HDFS bronze zone initializes correctly,
+- Hive Metastore namespaces are initialized correctly,
+- Spark processes source data and writes Iceberg raw tables successfully,
+- dbt-spark transformations run successfully,
+- Trino exposes the curated lakehouse objects successfully,
+- Great Expectations checkpoints succeed on the implemented scope,
+- Airflow orchestrates the four-DAG chain successfully,
+- Prometheus and Grafana expose working infrastructure and pipeline-health dashboards.
+
+This validated state must be treated as the current architectural baseline of the project.
 
 ---
 
@@ -799,20 +816,30 @@ PostgreSQL may exist only as:
 
 ---
 
-## 16. Current Shift Rule
+## 16. Final Architecture Consolidation Rule
 
-The project is undergoing a **strategic architectural shift**:
+The project has completed its strategic architecture transition:
 
 - from a PostgreSQL warehouse-centric design,
-- toward a distributed **HDFS + Spark + Hive + Iceberg + Trino** lakehouse design.
+- to a distributed **Kafka + HDFS + Spark + Hive Metastore + Iceberg + Trino + dbt-spark** lakehouse design.
 
-This shift is justified because it better supports:
+This final architecture is now the only architecture that should be used in:
+
+- the report,
+- the oral defense,
+- the architecture diagrams,
+- the deployment narrative,
+- and the future evolution roadmap.
+
+Its advantages are:
 
 - distributed storage,
 - distributed processing,
 - stronger Big Data positioning,
-- cleaner lakehouse semantics,
-- better alignment with jury expectations for a modern Big Data engineering platform.
+- cleaner separation between bronze landing and curated modeling,
+- standards-based SQL access through Trino,
+- governed transformation logic through dbt-spark,
+- better alignment with modern enterprise lakehouse practice.
 
 ---
 
@@ -853,10 +880,120 @@ This is the correct narrative order for the project.
 
 ---
 
-## 19. Document History
+## 19. Local Runtime and Distributed Deployment Comparison Rule
+
+The current project must continue to run correctly on the local development machine. The local environment is the validated development and demonstration baseline. It proves that the architecture, DAG ordering, data contracts, transformations, quality checks, and dashboards work end to end before deployment.
+
+The future company-server deployment must use the same logical architecture and the same project responsibilities:
+
+```text
+source datasets
+  -> Kafka
+  -> HDFS bronze
+  -> Spark distributed processing
+  -> Iceberg lakehouse tables registered in Hive Metastore
+  -> dbt-spark curated transformations
+  -> Trino analytical access
+  -> Great Expectations validation
+  -> Airflow orchestration
+  -> Prometheus/Grafana monitoring
+```
+
+The deployment must not change the conceptual pipeline. It should only change the runtime distribution:
+
+- local mode runs the platform on one development machine through Docker Compose,
+- deployment mode can distribute services across multiple machines,
+- HDFS can distribute blocks across several DataNodes,
+- Spark can distribute jobs across several workers,
+- Kafka can be scaled with more broker capacity if needed,
+- Trino can be extended for multi-node query execution if workload grows,
+- monitoring must remain centralized through Prometheus and Grafana.
+
+### 19.1 Local Mode Rule
+
+The local development mode must remain operational because it is required for:
+
+- iterative development,
+- debugging,
+- demonstrations before deployment,
+- controlled pipeline validation,
+- reproducible jury screenshots,
+- confirming that changes do not break the platform.
+
+Local mode is allowed to use local `.env` files for development and demonstration. These values are acceptable in the development branch, but production deployment must move toward stronger secrets management and environment-specific configuration.
+
+### 19.2 Multi-Machine Deployment Rule
+
+The future deployment should be positioned as a scale-out version of the same platform, not as a different project. The expected production-style distribution is:
+
+- one or more machines for Kafka ingestion,
+- multiple machines for HDFS NameNode/DataNode responsibilities,
+- multiple machines for Spark master/worker execution,
+- one machine or service group for Hive Metastore,
+- one or more machines for Trino query access,
+- one orchestration layer for Airflow,
+- one monitoring layer for Prometheus and Grafana.
+
+The important defense point is that HDFS and Spark are designed for distributed execution. When the company provides several machines, the architecture can use them to distribute storage and processing work instead of keeping all workload on one machine.
+
+### 19.3 Performance and Latency Comparison Rule
+
+The report should include a comparison between:
+
+- the validated local Docker-based environment,
+- and the future deployed multi-machine environment.
+
+The comparison must use the same datasets and the same DAG sequence. The goal is not to claim theoretical performance only, but to measure concrete pipeline behavior.
+
+Recommended metrics:
+
+| Metric | Local Measurement | Deployment Measurement | Why It Matters |
+|---|---:|---:|---|
+| Total end-to-end pipeline duration | measured from Airflow | measured from Airflow | Shows full platform execution time |
+| Kafka publish throughput | records/second | records/second | Shows ingestion speed |
+| HDFS bronze write duration | seconds/minutes | seconds/minutes | Shows landing-zone performance |
+| Spark raw table build duration | seconds/minutes | seconds/minutes | Shows distributed processing benefit |
+| dbt-spark transformation duration | seconds/minutes | seconds/minutes | Shows curated-model build time |
+| Great Expectations validation duration | seconds/minutes | seconds/minutes | Shows quality-control overhead |
+| Trino query latency | seconds/query | seconds/query | Shows analytical access performance |
+| CPU and memory utilization | Grafana | Grafana | Shows resource pressure |
+| Failed task count | Airflow/Grafana | Airflow/Grafana | Shows operational reliability |
+
+### 19.4 Fair Benchmarking Rule
+
+For a fair comparison, both environments should:
+
+- use the same source datasets,
+- run the same DAGs in the same order,
+- run the same dbt-spark models,
+- run the same Great Expectations checks,
+- use the same dashboard metrics where possible,
+- document hardware details clearly,
+- repeat measurements several times when possible,
+- report average, minimum, and maximum duration.
+
+The report must explain that local execution is useful for validation, while distributed deployment is useful for scalability and workload distribution.
+
+### 19.5 Expected Interpretation
+
+The expected result is not that every single operation is always faster in a cluster. Small workloads can be faster locally because there is less coordination overhead. The important Big Data argument is:
+
+- as data volume grows,
+- as jobs become heavier,
+- and as more workloads run concurrently,
+
+distributed storage and distributed processing become more valuable because work can be split across machines.
+
+This is the correct scientific and engineering interpretation for the PFE report.
+
+---
+
+## 20. Document History
 
 | Version | Date | Change |
 |---|---|---|
 | 16.2 | 2026-07-14 | Previous version aligned to Kafka -> HDFS -> Spark -> PostgreSQL raw flow. |
 | 17.0 | 2026-07-15 | Rewritten to reflect the architecture shift toward Kafka + HDFS + Spark + Hive Metastore + Iceberg + Trino as the target distributed lakehouse platform. |
 | 17.1 | 2026-07-16 | Updated to reflect the operational 4-DAG runtime, the dbt-spark transformation layer, the current monitoring stack, and the detailed live project structure with important files. |
+| 17.2 | 2026-07-17 | Refined for the final validated state: architecture transition marked as completed, runtime validation status clarified, and the global document aligned with the fully successful local end-to-end lakehouse execution. |
+| 17.3 | 2026-07-18 | Added local-vs-distributed deployment comparison rules, benchmark metrics, and guidance for preserving local runnable behavior while preparing future multi-machine evaluation. |

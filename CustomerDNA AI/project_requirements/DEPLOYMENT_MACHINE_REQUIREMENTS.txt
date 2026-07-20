@@ -1,0 +1,346 @@
+AdOptimizer Customer Data Platform
+Machine Preparation Requirements for IT Administrator
+
+Purpose
+=======
+This document defines only the machine preparation requirements for a
+3-machine distributed test environment.
+
+Important:
+The IT administrator is only requested to prepare the machines, network access,
+SSH access, disk availability, and basic operating system readiness.
+
+The installation and configuration of the data engineering platform will be
+done later by the project owner.
+
+
+Requested Machines
+==================
+Please prepare 3 Linux machines with the following minimum specifications:
+
+Machine count: 3
+CPU per machine: 3 cores minimum
+RAM per machine: 4 GB minimum
+Disk per machine: 50 GB minimum
+Operating system: Ubuntu Server 22.04 LTS or Ubuntu Server 24.04 LTS
+Architecture: x86_64
+Network: all machines must communicate with each other on the same private LAN
+
+Preferred hostnames:
+- adoptimizer-node-01
+- adoptimizer-node-02
+- adoptimizer-node-03
+
+If these hostnames cannot be used, any clear naming convention is acceptable.
+
+
+Important Sizing Note
+=====================
+The requested 3 cores / 4 GB RAM / 50 GB disk per machine is acceptable for a
+PFE distributed proof-of-concept and benchmark.
+
+If more resources are available, the preferred configuration would be:
+
+- 4 to 8 CPU cores per machine
+- 8 GB RAM per machine or more
+- 100 GB disk per machine or more
+
+This is not mandatory, but it would make the distributed Spark, HDFS, Kafka,
+Trino, Airflow, and monitoring tests more comfortable.
+
+
+Expected Use of the Machines
+============================
+The machines will later be used to deploy a distributed data engineering
+platform based on:
+
+- Apache Kafka
+- Apache Hadoop HDFS
+- Apache Spark
+- Apache Iceberg
+- Hive Metastore
+- Trino
+- Apache Airflow
+- Great Expectations
+- Prometheus
+- Grafana
+
+The IT administrator does not need to install these tools.
+They are mentioned only to explain why network access, disk space, and stable
+machine configuration are required.
+
+
+Machine Role Plan
+=================
+The exact deployment will be configured later, but the expected role separation
+is:
+
+Machine 1 - Orchestration and Access Node
+-----------------------------------------
+Expected future use:
+- Airflow
+- Grafana
+- Prometheus
+- Kafka UI
+- Trino coordinator
+- Main administration access point
+
+Machine 2 - Streaming and Storage Node
+--------------------------------------
+Expected future use:
+- Kafka broker
+- HDFS DataNode
+- Hive Metastore support services
+- Spark worker
+
+Machine 3 - Processing and Storage Node
+---------------------------------------
+Expected future use:
+- HDFS NameNode
+- HDFS DataNode
+- Spark master
+- Spark worker
+- Spark Thrift Server
+- Trino worker
+
+This role plan is provided only for infrastructure planning.
+
+
+Operating System Requirements
+=============================
+Please install a clean Ubuntu Server environment on each machine.
+
+Required:
+- Ubuntu Server 22.04 LTS or 24.04 LTS
+- 64-bit x86_64 architecture
+- SSH server enabled
+- System time synchronized
+- Static private IP address or reserved DHCP address
+- Machines reachable from the project owner's workstation
+- Machines reachable from each other
+
+Please do not install Hadoop, Spark, Kafka, Trino, Airflow, Grafana, or any
+project-specific tools. These will be installed later by the project owner.
+
+
+User Access Requirements
+========================
+Please create or provide one Linux user for deployment and administration.
+
+Suggested username:
+  adoptimizer
+
+Required:
+- SSH access enabled for this user
+- sudo privileges for this user
+- Ability to install packages later
+- Ability to create directories under /opt or /srv
+- Ability to manage services and firewall rules later
+
+Preferred authentication:
+- SSH key authentication
+
+Password authentication is acceptable temporarily if SSH key setup is not
+available immediately.
+
+
+Network Requirements
+====================
+All machines must be on the same private network and must communicate with each
+other.
+
+Required:
+- Machine 1 can reach Machine 2 and Machine 3
+- Machine 2 can reach Machine 1 and Machine 3
+- Machine 3 can reach Machine 1 and Machine 2
+- The project owner's workstation can reach Machine 1
+- The project owner's workstation can reach Machine 2 and Machine 3 if allowed
+
+Please provide:
+
+Machine 1:
+  Hostname:
+  Private IP:
+  SSH user:
+
+Machine 2:
+  Hostname:
+  Private IP:
+  SSH user:
+
+Machine 3:
+  Hostname:
+  Private IP:
+  SSH user:
+
+
+DNS / Hostname Resolution
+=========================
+Please ensure one of the following:
+
+Option 1:
+- Hostnames resolve correctly through internal DNS.
+
+Option 2:
+- The IP/hostname mapping is provided so it can be added manually to /etc/hosts.
+
+Required hostname communication:
+- adoptimizer-node-01 can resolve adoptimizer-node-02 and adoptimizer-node-03
+- adoptimizer-node-02 can resolve adoptimizer-node-01 and adoptimizer-node-03
+- adoptimizer-node-03 can resolve adoptimizer-node-01 and adoptimizer-node-02
+
+
+Time Synchronization Requirement
+================================
+Please enable time synchronization on all machines.
+
+Reason:
+- Distributed logs must be comparable.
+- Airflow scheduling requires consistent time.
+- Benchmark measurements require reliable timestamps.
+
+Acceptable options:
+- systemd-timesyncd
+- chrony
+- internal company NTP server
+
+
+Disk Preparation Requirements
+=============================
+Each machine must have at least 50 GB available disk space.
+
+If possible, please prepare a dedicated data directory:
+
+  /data
+
+Recommended subdirectories:
+
+  /data/hdfs
+  /data/docker
+  /data/logs
+  /data/spark-events
+  /data/monitoring
+
+If the IT administrator does not want to create these directories, it is enough
+to ensure that the deployment user can create them later.
+
+
+Internet Access Requirement
+===========================
+During the future installation phase, the machines will need internet access to
+download packages and container images.
+
+Please confirm whether the machines have access to:
+
+- Ubuntu package repositories
+- Docker Hub
+- Maven Central
+- GitHub or company Git server
+
+If internet access is restricted, please provide proxy details or explain the
+restriction so an offline installation plan can be prepared.
+
+
+Firewall / Port Preparation
+===========================
+The following ports may be required later.
+
+For now, the IT administrator does not need to configure every service.
+The request is only to confirm whether these ports can be opened when needed.
+
+Administration:
+- 22 SSH
+
+Future browser access:
+- 8080 Airflow UI
+- 8081 Kafka UI
+- 8086 Spark Master UI
+- 8087 Spark Worker UI
+- 18080 Spark History Server
+- 9870 HDFS NameNode UI
+- 8088 Trino UI / JDBC
+- 9090 Prometheus
+- 3001 Grafana
+
+Future internal service communication:
+- 9092 Kafka
+- 29092 Kafka internal listener
+- 9000 HDFS NameNode RPC
+- 9864 HDFS DataNode UI
+- 9866 HDFS DataNode transfer
+- 9083 Hive Metastore
+- 10000 Spark Thrift Server
+- 5432 PostgreSQL metadata services
+
+Security note:
+Only the required ports should be exposed externally. Internal service ports
+should remain private between the 3 machines whenever possible.
+
+
+Firewall Policy Request
+=======================
+Please confirm:
+
+1. Whether a firewall is enabled.
+2. Whether inter-machine communication is unrestricted inside the private LAN.
+3. Whether the project owner can request ports to be opened later.
+4. Whether browser access from the project owner's workstation is allowed.
+5. Whether SSH access is allowed from the project owner's workstation.
+
+
+Information Needed from IT Administrator
+========================================
+Please provide the following information after machine preparation:
+
+1. Machine hostnames
+2. Machine private IP addresses
+3. SSH username
+4. SSH authentication method
+5. Whether sudo access is available
+6. Ubuntu version installed
+7. Available CPU/RAM/disk per machine
+8. Whether internet access is available
+9. Whether a proxy is required
+10. Firewall restrictions, if any
+11. Whether internal DNS is configured
+12. Whether time synchronization is enabled
+
+
+What the Project Owner Will Do Later
+====================================
+The project owner will handle:
+
+- Docker installation if not already available
+- Docker Compose setup
+- Kafka deployment
+- HDFS deployment
+- Spark deployment
+- Hive Metastore deployment
+- Iceberg configuration
+- Trino deployment
+- Airflow deployment
+- Monitoring deployment
+- Project code deployment
+- Pipeline testing
+- Benchmark execution
+
+
+Deployment Goal
+===============
+The prepared machines will be used to compare the local development execution
+against a distributed multi-machine execution.
+
+The comparison will focus on:
+
+- pipeline duration,
+- data ingestion speed,
+- HDFS write performance,
+- Spark distributed processing time,
+- dbt-spark transformation time,
+- Trino query latency,
+- CPU and memory usage,
+- reliability and task success rate.
+
+This comparison will support the PFE report and demonstrate the value of
+distributed processing when several machines are available.
+

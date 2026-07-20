@@ -2,8 +2,8 @@
 
 > **PFE Jury-Focused Document**
 > Scope: Data Engineering and Big Data positioning only
-> Version: 4.1
-> Last Updated: 2026-07-16
+> Version: 4.2
+> Last Updated: 2026-07-17
 
 ---
 
@@ -135,6 +135,21 @@ prepare HDFS bronze and Iceberg/Hive namespaces
 ```
 
 This concrete sequence is important for the defense because it proves that the architecture is not only conceptual, but actually executed end to end.
+
+### 4.2 Final Validated State for Defense
+
+At the moment of defense preparation, the platform must be described as a **validated working implementation**, not as a draft target architecture.
+
+The validated state includes:
+
+- successful HDFS bronze initialization,
+- successful Hive/Iceberg namespace initialization,
+- successful Kafka -> HDFS -> Spark -> Iceberg raw execution,
+- successful dbt-spark transformation execution,
+- successful Trino analytical access,
+- successful Great Expectations validation on the implemented scope,
+- successful Airflow orchestration,
+- successful Grafana and Prometheus monitoring visibility.
 
 ---
 
@@ -340,7 +355,7 @@ The chosen lakehouse architecture is stronger for this PFE because it provides:
 - better Big Data justification,
 - clearer extensibility toward larger workloads.
 
-This is the main reason the project shifts away from a traditional PostgreSQL-centered warehouse identity.
+This is the main reason the project definitively moves away from a traditional PostgreSQL-centered warehouse identity.
 
 ---
 
@@ -516,10 +531,94 @@ This order creates the strongest and cleanest Data Engineering defense narrative
 
 ---
 
-## 17. Document History
+## 17. Local Validation and Future Distributed Deployment Evaluation
+
+The PFE report should clearly separate two ideas:
+
+1. the platform has been validated locally,
+2. the same architecture is designed to scale on a multi-machine deployment.
+
+This distinction is important for the jury. The local machine proves correctness and reproducibility. The future deployed environment proves scalability and distributed-processing value.
+
+### 17.1 Why Local Validation Is Still Important
+
+The local environment is not a weakness. It is the controlled engineering baseline.
+
+It allows the project to prove:
+
+- the architecture works end to end,
+- the DAGs run in the correct order,
+- Kafka can transport the datasets,
+- HDFS can persist the bronze zone,
+- Spark can build Iceberg raw tables,
+- dbt-spark can create curated analytical layers,
+- Great Expectations can validate quality,
+- Trino can expose SQL access,
+- Prometheus and Grafana can observe the platform.
+
+This local validation gives confidence before deploying the same logical system on company infrastructure.
+
+### 17.2 Why the Multi-Machine Deployment Matters
+
+The future company deployment is useful because the architecture uses technologies that are designed for distributed execution:
+
+- **HDFS** distributes data blocks across machines,
+- **Spark** distributes processing tasks across workers,
+- **Kafka** decouples ingestion from downstream storage and processing,
+- **Iceberg** manages analytical table metadata over distributed files,
+- **Trino** provides SQL access over distributed lakehouse tables,
+- **Airflow** orchestrates the full workflow,
+- **Prometheus and Grafana** observe system behavior.
+
+This makes the platform suitable for larger customer datasets and future production workloads.
+
+### 17.3 Benchmarking Plan for the Report
+
+The report should include a measured comparison between local execution and deployed execution.
+
+Recommended comparison table:
+
+| Evaluation Area | Local Environment | Multi-Machine Deployment | Expected Interpretation |
+|---|---|---|---|
+| Ingestion duration | Airflow task duration | Airflow task duration | Kafka throughput comparison |
+| Bronze landing time | HDFS write time | HDFS write time | Effect of distributed storage |
+| Spark raw-table build time | Spark job duration | Spark job duration | Effect of distributed processing |
+| dbt-spark transformation time | dbt task duration | dbt task duration | Curated-layer build speed |
+| Quality validation time | GX task duration | GX task duration | Validation overhead |
+| SQL query latency | Trino query duration | Trino query duration | Analytics responsiveness |
+| Resource usage | Grafana CPU/RAM | Grafana CPU/RAM | Hardware pressure and scalability |
+| Reliability | failed tasks/runs | failed tasks/runs | Operational stability |
+
+### 17.4 Fair Comparison Rules
+
+The comparison should be fair and reproducible:
+
+- use the same source datasets,
+- use the same DAG execution order,
+- use the same dbt-spark models,
+- use the same Great Expectations validations,
+- measure with Airflow and Grafana,
+- document local hardware specifications,
+- document deployed server specifications,
+- repeat key runs when possible,
+- compare averages rather than a single isolated run.
+
+### 17.5 Defense Interpretation
+
+The strongest explanation is:
+
+> The local platform validates the engineering architecture. The future server deployment will evaluate the scalability of the same architecture when HDFS and Spark can distribute storage and computation across several machines.
+
+This avoids overclaiming. It also gives a professional Data Engineering explanation: distributed systems are most valuable when data size, concurrency, and processing complexity increase.
+
+---
+
+## 18. Document History
 
 | Version | Date | Change |
 |---|---|---|
 | 3.2 | 2026-07-14 | Previous jury-focused version still centered on PostgreSQL warehouse and dbt transformation wording. |
 | 4.0 | 2026-07-15 | Rewritten for the distributed lakehouse shift based on Kafka + HDFS + Spark + Hive Metastore + Iceberg + Trino. |
 | 4.1 | 2026-07-16 | Updated to reflect the operational 4-DAG flow, the explicit dbt-spark transformation layer, and the detailed current project structure used in the running platform. |
+| 4.2 | 2026-07-17 | Finalized for the validated local state of the platform, clarifying that the lakehouse architecture is fully operational and ready to be defended as the active Big Data implementation. |
+| 4.3 | 2026-07-18 | Added the local validation versus future distributed deployment evaluation plan, including benchmark metrics and defense interpretation for performance, latency, and scalability comparison. |

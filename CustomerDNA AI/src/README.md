@@ -78,3 +78,18 @@ When presenting the project, explain the folders in this order:
 7. `monitoring/` for observability
 
 This order matches the real technical flow and makes the architecture easier to understand.
+
+## Local Baseline and Future Deployment
+
+The current source tree must remain runnable on the local development machine. Local execution is the validated baseline used for development, debugging, screenshots, and demonstrations.
+
+The future deployment should keep the same source responsibilities but distribute the runtime across several machines:
+
+- HDFS can distribute bronze and warehouse files across DataNodes.
+- Spark can distribute processing across workers.
+- Kafka can scale ingestion throughput.
+- Trino can provide SQL access over the lakehouse.
+- Airflow remains the orchestrator.
+- Prometheus and Grafana remain the observability layer.
+
+Use `CustomerDNA AI/RUNBOOK.md` for the exact local run order, DAG order, browser URLs, and the local-vs-deployed benchmark plan.
