@@ -139,6 +139,22 @@
     \noindent\textbf{#1}\dotfill\textbf{#2}\par
 }
 
+\newcommand{\keywordblock}[2]{%
+    \vspace{0.35cm}
+    \noindent\rule{\textwidth}{0.4pt}
+    \vspace{0.08cm}
+
+    \noindent\begin{minipage}{\textwidth}
+    \small
+    \setlength{\parindent}{0pt}
+    \setlength{\emergencystretch}{2em}
+    \textbf{#1 :} #2
+    \end{minipage}
+
+    \vspace{0.08cm}
+    \noindent\rule{\textwidth}{0.4pt}
+}
+
 \begin{document}
 
 % ============================================================
@@ -257,7 +273,7 @@ This final year project presents the design and implementation of the \textbf{Ad
 
 The project demonstrates an end-to-end architecture that transforms raw customer-related datasets into structured lakehouse layers and trusted analytical data products. The implemented solution emphasizes modularity, reproducibility, scalability, data quality, observability, and readiness for future analytics and machine learning use cases.
 
-\textbf{Keywords:} Big Data, Data Engineering, Distributed Systems, Data Lakehouse, Apache Kafka, Hadoop HDFS, Apache Spark, Apache Iceberg, Hive Metastore, Trino, dbt-Spark, Great Expectations, Apache Airflow, Prometheus, Grafana, Data Quality, Observability, Data Governance, Customer Data Platform.
+\keywordblock{Keywords}{Big Data, Data Engineering, Distributed Systems, Data Lakehouse, Apache Kafka, HDFS, Apache Spark, Apache Iceberg, Trino, dbt-Spark, Data Quality, Observability.}
 
 \frontchapter{Résumé}
 Les organisations modernes exploitent des donnees issues de sources heterogenes telles que les systemes transactionnels, les plateformes e-commerce, les evenements comportementaux et les donnees de profil client. Cependant, la transformation de ces donnees brutes en produits de donnees fiables, gouvernes et exploitables necessite une plateforme d'ingenierie de donnees structuree, capable d'assurer l'ingestion, le stockage, le traitement distribue, la validation, l'orchestration et la supervision.
@@ -266,7 +282,7 @@ Ce projet de fin d'etudes presente la conception et la mise en oeuvre de la plat
 
 La solution realisee illustre une chaine de traitement complete permettant de convertir des donnees client brutes en couches lakehouse structurees et en produits de donnees analytiques fiables. Elle met l'accent sur la modularite, la reproductibilite, la scalabilite, la qualite des donnees, l'observabilite et la preparation de futurs cas d'usage analytiques et machine learning.
 
-\textbf{Mots-cles :} Big Data, Ingenierie des donnees, Systemes distribues, Data Lakehouse, Ingestion de donnees, Apache Kafka, Hadoop HDFS, Apache Spark, Apache Iceberg, Hive Metastore, Trino, dbt-Spark, Great Expectations, Apache Airflow, Prometheus, Grafana, Qualite des donnees, Observabilite, Gouvernance des donnees.
+\keywordblock{Mots-cles}{Big Data, Ingenierie des donnees, Systemes distribues, Data Lakehouse, Apache Kafka, HDFS, Apache Spark, Apache Iceberg, Trino, dbt-Spark, Qualite des donnees, Observabilite.}
 
 % ============================================================
 % Planned Table of Contents

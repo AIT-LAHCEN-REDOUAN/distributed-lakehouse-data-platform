@@ -1,0 +1,48 @@
+{
+  "checkpoint_name": "raw_lakehouse_quality_checkpoint",
+  "status": "success",
+  "success": true,
+  "started_at": "2026-07-21T11:51:43.447777+00:00",
+  "ended_at": "2026-07-21T11:51:50.547887+00:00",
+  "duration_seconds": 7.1,
+  "validation_count": 6,
+  "validation_results": 6,
+  "validations": [
+    {
+      "dataset_key": "retailrocket_category_tree",
+      "target_table": "raw_data.category_tree",
+      "row_count": 1669,
+      "success": true
+    },
+    {
+      "dataset_key": "marketing_campaign",
+      "target_table": "raw_data.marketing_campaign",
+      "row_count": 2240,
+      "success": true
+    },
+    {
+      "dataset_key": "ecommerce_customer_churn",
+      "target_table": "raw_data.e_commerce_customer_churn",
+      "row_count": 5630,
+      "success": true
+    },
+    {
+      "dataset_key": "online_retail",
+      "target_table": "raw_data.online_retail",
+      "row_count": 1067371,
+      "success": true
+    },
+    {
+      "dataset_key": "retailrocket_events",
+      "target_table": "raw_data.events",
+      "row_count": 2756101,
+      "success": true
+    },
+    {
+      "dataset_key": "retailrocket_item_properties",
+      "target_table": "raw_data.item_properties",
+      "row_count": 20275902,
+      "success": true
+    }
+  ]
+}
