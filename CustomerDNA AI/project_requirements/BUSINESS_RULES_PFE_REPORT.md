@@ -2,8 +2,8 @@
 
 > **PFE Jury-Focused Document**
 > Scope: Data Engineering and Big Data positioning only
-> Version: 4.2
-> Last Updated: 2026-07-17
+> Version: 4.4
+> Last Updated: 2026-07-27
 
 ---
 
@@ -116,10 +116,13 @@ This is the correct architecture to position in the report.
 
 The jury-facing explanation should also mention the real orchestration order used by the implemented platform:
 
-1. `customerdna_client1_lakehouse_setup_pipeline`
-2. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
-3. `customerdna_client1_dbt_spark_lakehouse_pipeline`
-4. `customerdna_client1_lakehouse_readiness_pipeline`
+Recommended operational order (from a clean start):
+
+1. `customerdna_client1_lakehouse_readiness_pipeline` (pre-check)
+2. `customerdna_client1_lakehouse_setup_pipeline`
+3. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+4. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+5. `customerdna_client1_lakehouse_readiness_pipeline` (post-check, optional)
 
 This means the effective runtime chain is:
 
@@ -130,7 +133,7 @@ prepare HDFS bronze and Iceberg/Hive namespaces
   -> process data with Spark and create Iceberg raw tables
   -> run dbt-spark transformations for staging/intermediate/analytics outputs
   -> query them through Trino
-  -> validate raw and transformed quality with Great Expectations
+  -> validate quality with Great Expectations and generate Data Docs
   -> supervise the platform through Prometheus and Grafana
 ```
 
@@ -252,6 +255,12 @@ It is responsible for:
 - enforcing explicit quality contracts,
 - verifying structural and semantic expectations,
 - increasing trust before downstream reuse.
+
+In this project, Great Expectations is executed as an explicit Airflow step and produces:
+
+- a versioned expectation suite stored inside a Great Expectations project folder,
+- validation result artifacts stored per execution,
+- an HTML Data Docs site (used as evidence in the report).
 
 ### 6.9 Airflow
 Airflow is the orchestration layer.
@@ -488,11 +497,18 @@ CustomerDNA AI/
         client_1/
           bootstrap_gx.py
           run_gx_validations.py
+          artifacts/
           checkpoints/
-          expectations/
-            bronze/
-            silver/
-            gold/
+          data_docs/
+          gx_project/
+            gx/
+              great_expectations.yml
+              expectations/
+                raw_lakehouse_metrics_suite.json
+              uncommitted/
+                validations/
+                data_docs/
+                  local_site/
     monitoring/
       prometheus/
       grafana/
@@ -622,3 +638,4 @@ This avoids overclaiming. It also gives a professional Data Engineering explanat
 | 4.1 | 2026-07-16 | Updated to reflect the operational 4-DAG flow, the explicit dbt-spark transformation layer, and the detailed current project structure used in the running platform. |
 | 4.2 | 2026-07-17 | Finalized for the validated local state of the platform, clarifying that the lakehouse architecture is fully operational and ready to be defended as the active Big Data implementation. |
 | 4.3 | 2026-07-18 | Added the local validation versus future distributed deployment evaluation plan, including benchmark metrics and defense interpretation for performance, latency, and scalability comparison. |
+| 4.4 | 2026-07-27 | Updated Great Expectations implementation to generate stored validation results and HTML Data Docs within the project scope, and clarified the recommended Airflow DAG rerun order (pre-check, execution, post-check). |
