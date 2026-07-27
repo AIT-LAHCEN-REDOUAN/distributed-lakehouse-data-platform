@@ -41,12 +41,28 @@
 ]{geometry}
 
 \usepackage{setspace}
+\usepackage{needspace}
+\usepackage{etoolbox}
 \onehalfspacing
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.45em}
 \emergencystretch=3em
 \sloppy
+
+% ----------------------------
+% Print-Oriented Page-Break Safety
+% ----------------------------
+% Move a heading to the next page when too little space remains for the
+% heading and its opening content. Normal paragraphs may still continue
+% naturally across pages.
+\pretocmd{\section}{\Needspace{8\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{7\baselineskip}}{}{}
+\pretocmd{\subsubsection}{\Needspace{5\baselineskip}}{}{}
+\pretocmd{\paragraph}{\Needspace{3\baselineskip}}{}{}
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
 
 % ----------------------------
 % Figures, Tables, and Diagrams
@@ -57,8 +73,12 @@
 \usepackage{tabularx}
 \usepackage{longtable}
 \usepackage{booktabs}
-\usepackage{xcolor}
+\usepackage{float}
+\usepackage[table]{xcolor}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shadows.blur,fit,backgrounds,shapes.geometric,shapes.symbols}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
 
 % ----------------------------
 % Links and PDF Metadata
@@ -86,7 +106,7 @@
 % structure automatically and keeps image loading stable.
 \newcommand{\LogoPath}{PFE_resources/Figures/Logos}
 \IfFileExists{PFE_resources/Figures/Logos/University_image.png}{%
-    \renewcommand{\LogoPath}{PFE_resources/Figures/Logos}%
+    \renewcommand{\LogoPath}{PFE_resources/Figures/Logos}%  
 }{%
     \IfFileExists{../PFE_resources/Figures/Logos/University_image.png}{%
         \renewcommand{\LogoPath}{../PFE_resources/Figures/Logos}%
@@ -103,6 +123,80 @@
 \newcommand{\SchoolLogo}{\LogoPath/School_image.png}
 \newcommand{\CompanyLogo}{\LogoPath/company_image.png}
 
+\newcommand{\FigurePath}{PFE_resources/Figures}
+\IfFileExists{PFE_resources/Figures/Task_diagram.png}{\renewcommand{\FigurePath}{PFE_resources/Figures}}{\renewcommand{\FigurePath}{../PFE_resources/Figures}}
+\newcommand{\CompanyValuesFigure}{\FigurePath/SAT_values.png}
+\newcommand{\TasksDiagramFigure}{\FigurePath/Task_diagram.png}
+
+\newcommand{\BigDataTimelineFigure}{\FigurePath/bigdata_timeline.png}
+\newcommand{\BigDataFiveVsFigure}{\FigurePath/bigdata_5vs.png}
+\newcommand{\DistributedStorageVsProcessingFigure}{\FigurePath/distributed_storage_vs_processing.png}
+\newcommand{\WarehouseLakeLakehouseFigure}{\FigurePath/warehouse_lake_lakehouse.png}
+\newcommand{\LambdaArchitectureFigure}{\FigurePath/lambda_architecture.png}
+\newcommand{\KappaArchitectureFigure}{\FigurePath/kappa_architecture.png}
+\newcommand{\LambdaVsKappaFigure}{\FigurePath/lambda_vs_kappa_comparison.png}
+\newcommand{\TechLogoPath}{PFE_resources/Figures/Tech_logos}
+\IfFileExists{PFE_resources/Figures/Tech_logos/spark.png}{\renewcommand{\TechLogoPath}{PFE_resources/Figures/Tech_logos}}{\renewcommand{\TechLogoPath}{../PFE_resources/Figures/Tech_logos}}
+\newcommand{\TechLogo}[1]{\raisebox{-0.22\height}{\includegraphics[height=1.15em]{\TechLogoPath/#1}}}
+\newcommand{\FigurePlaceholderBox}[1]{%
+    \begin{adjustbox}{width=0.92\textwidth,center}%
+        \fbox{\begin{minipage}{0.92\textwidth}\centering #1\end{minipage}}%
+    \end{adjustbox}%
+}
+
+\definecolor{ModernTableHeader}{RGB}{79,129,189}
+\definecolor{ModernTableStripe}{RGB}{221,235,247}
+\definecolor{ModernTableRule}{RGB}{79,129,189}
+\newcommand{\ModernTableHeaderRow}[1]{\rowcolor{ModernTableHeader}\color{white}\textbf{#1}}
+
+\definecolor{WorkflowBlue}{RGB}{79,129,189}
+\definecolor{WorkflowTeal}{RGB}{46,162,151}
+\definecolor{WorkflowOrange}{RGB}{245,124,0}
+\definecolor{WorkflowPurple}{RGB}{123,97,255}
+\definecolor{WorkflowGray}{RGB}{90,90,90}
+\tikzset{
+    workflow/step/.style={
+        draw=WorkflowGray!35,
+        line width=0.9pt,
+        rounded corners=7pt,
+        blur shadow={shadow blur steps=5,shadow xshift=0.6mm,shadow yshift=-0.6mm,shadow opacity=20},
+        text=black,
+        align=center,
+        font=\normalsize,
+        minimum height=1.35cm,
+        text width=4.0cm,
+        inner sep=6pt
+    },
+    workflow/arrow/.style={
+        -{Latex[length=3.2mm,width=2.2mm]},
+        line width=0.9pt,
+        draw=WorkflowGray!70
+    },
+    workflow/dasharrow/.style={
+        -{Latex[length=3.2mm,width=2.2mm]},
+        line width=0.9pt,
+        draw=WorkflowGray!70,
+        dashed
+    },
+    workflow/mini/.style={
+        draw=WorkflowGray!35,
+        line width=0.8pt,
+        rounded corners=5pt,
+        fill=white,
+        align=center,
+        font=\normalsize,
+        inner sep=4pt,
+        minimum height=0.9cm,
+        text width=1.25cm
+    },
+    workflow/label/.style={
+        font=\small,
+        text=WorkflowGray!85,
+        fill=white,
+        inner sep=1.5pt
+    }
+}
+
 \newcommand{\coverlogobox}[1]{%
     \begin{minipage}[c][3.2cm][c]{4.2cm}
         \centering
@@ -115,6 +209,8 @@
     \phantomsection
     \chapter*{#1}
     \addcontentsline{toc}{chapter}{#1}
+    \thispagestyle{frontplain}
+    \pagestyle{frontplain}
 }
 
 \newcommand{\tocfront}[2]{%
@@ -155,7 +251,33 @@
     \noindent\rule{\textwidth}{0.4pt}
 }
 
+\fancypagestyle{main}{%
+    \fancyhf{}%
+    \fancyhead[L]{\nouppercase{\leftmark}}%
+    \fancyfoot[C]{\thepage}%
+    \renewcommand{\headrulewidth}{0.4pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+}
+
+\fancypagestyle{plain}{%
+    \fancyhf{}%
+    \fancyhead[L]{\nouppercase{\leftmark}}%
+    \fancyfoot[C]{\thepage}%
+    \renewcommand{\headrulewidth}{0.4pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+}
+
+\fancypagestyle{frontplain}{%
+    \fancyhf{}%
+    \fancyfoot[C]{\thepage}%
+    \renewcommand{\headrulewidth}{0pt}%
+    \renewcommand{\footrulewidth}{0pt}%
+}
+
+\renewcommand{\chaptermark}[1]{\markboth{Chapter \thechapter.\ #1}{}}
+
 \begin{document}
+\pagenumbering{gobble}
 
 % ============================================================
 % Cover Page
@@ -291,12 +413,18 @@ La solution realisee illustre une chaine de traitement complete permettant de co
 \phantomsection
 \chapter*{Table of Contents}
 \addcontentsline{toc}{chapter}{Table of Contents}
+\thispagestyle{frontplain}
+\pagestyle{frontplain}
 
 \begin{center}
     {\Large\bfseries TABLE OF CONTENTS}
 \end{center}
 
 \vspace{0.6cm}
+
+\begingroup
+\footnotesize
+\setlength{\parskip}{0.05em}
 
 \tocfront{DEDICATION}{I}
 \tocfront{ACKNOWLEDGEMENTS}{II}
@@ -343,8 +471,13 @@ La solution realisee illustre une chaine de traitement complete permettant de co
 \tocsubsection{II.4.1}{Apache Kafka for Data Ingestion}{37}
 \tocsubsection{II.4.2}{Hadoop HDFS for Distributed Storage}{38}
 \tocsubsection{II.4.3}{Apache Spark for Distributed Processing}{39}
-\tocsubsection{II.4.4}{Apache Iceberg and Hive Metastore for Lakehouse Tables}{40}
-\tocsubsection{II.4.5}{Trino, dbt-Spark, Great Expectations, and Airflow}{41}
+\tocsubsection{II.4.4}{Apache Iceberg for Lakehouse Tables}{40}
+\tocsubsection{II.4.5}{Hive Metastore for Catalog Management}{40}
+\tocsubsection{II.4.6}{Trino for SQL Query and Exploration}{41}
+\tocsubsection{II.4.7}{dbt-Spark for Transformation Modeling}{41}
+\tocsubsection{II.4.8}{Great Expectations for Data Quality}{41}
+\tocsubsection{II.4.9}{Apache Airflow for Orchestration}{41}
+\tocsubsection{II.4.10}{Prometheus and Grafana for Observability}{41}
 \tocsection{II.5}{Conclusion}{41}
 
 \tocchapter{III}{REQUIREMENTS ANALYSIS AND SYSTEM DESIGN}{42}
@@ -444,5 +577,1762 @@ La solution realisee illustre une chaine de traitement complete permettant de co
 \tocsection{A.3}{Docker Services and Ports}{129}
 \tocsection{A.4}{Airflow DAG Execution Order}{130}
 \tocsection{A.5}{Monitoring Dashboard Inventory}{130}
+\endgroup
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagestyle{main}
+
+\chapter*{GENERAL INTRODUCTION}
+\addcontentsline{toc}{chapter}{GENERAL INTRODUCTION}
+\markboth{GENERAL INTRODUCTION}{}
+
+Modern organizations continuously generate customer-related data across heterogeneous sources: transactional systems, e-commerce platforms, marketing tools, behavioral event tracking, and operational applications. While the volume and variety of this information can enable more personalized experiences and better decision-making, it also creates a major engineering challenge: raw data arrives with different formats, update frequencies, quality levels, and semantics, which makes end-to-end analytics difficult without a structured data platform.
+
+In many environments, customer data pipelines are implemented as a collection of scripts and manual exports. This approach does not scale when the number of sources increases, when data volume grows, or when analytics teams require frequent refreshes. The absence of standardized ingestion, versioned storage, and automated validation often leads to recurring issues such as duplicated work, inconsistent dashboards, and low trust in metrics. These problems become even more critical when downstream use cases depend on reliable data products, such as customer segmentation, churn analysis, recommendation systems, and marketing optimization.
+
+A modern customer data platform must therefore combine multiple capabilities: it must ingest multi-format sources and event streams, store data efficiently and durably, support distributed processing, guarantee traceability and reproducibility, and provide a governance layer through consistent modeling and validation. From an engineering perspective, this leads naturally to a \textbf{lakehouse} architecture: a design that combines the scalability and flexibility of data lakes with the structure and reliability of data warehouses. In a lakehouse, raw data and curated data products coexist in a layered structure, while table formats and metadata services enforce consistency and enable reliable SQL access.
+
+At the same time, business stakeholders expect reliable indicators that can be updated frequently and audited easily. This requires a data engineering foundation that is scalable, reproducible, and observable. In practice, such a foundation must address four core needs:
+\begin{itemize}
+    \item reliable ingestion of multi-source data, including event streams and batch files
+    \item distributed storage with a clear organization strategy (raw, curated, analytics-ready)
+    \item distributed processing and transformation with governance and data quality controls
+    \item orchestration and monitoring to ensure operational reliability and traceability
+\end{itemize}
+
+This final year project presents the design and implementation of the \textbf{AdOptimizer Customer Data Platform}, a distributed Big Data lakehouse platform developed under the AdOptimizer AI initiative. The solution integrates Apache Kafka for ingestion, Hadoop HDFS for distributed storage, Apache Spark for distributed processing, Apache Iceberg and Hive Metastore for lakehouse table management, Trino for SQL query and exploration, dbt-Spark for transformation modeling, a lightweight Great Expectations-based validation step for data quality, Apache Airflow for orchestration, and Prometheus with Grafana for observability.
+
+Beyond implementing the technical components, this project emphasizes operational engineering practices:
+\begin{itemize}
+    \item modularization of the platform into clear layers (ingestion, storage, processing, transformation, query, quality, orchestration, monitoring)
+    \item container-based deployment for reproducibility and portability across environments
+    \item idempotent reprocessing capabilities to support experimentation and debugging
+    \item monitoring of service health and pipeline execution to improve reliability
+\end{itemize}
+
+The remainder of this report is organized to first introduce the project context, then establish the theoretical background, before detailing the requirements, design, implementation, validation, and deployment strategy of the proposed platform. The report concludes with a case study on multi-source customer datasets, a validation and performance evaluation chapter, and a deployment and scalability perspective.
+
+\clearpage
+\renewcommand{\thechapter}{\Roman{chapter}}
+
+\chapter{GENERAL PROJECT CONTEXT}
+
+\section{Introduction}
+The global context of this project is the growing need for modern data platforms capable of unifying and governing customer data at scale. Customer information is not limited to a single database: it is scattered across marketing systems, sales transactions, web events, product interaction logs, and customer support channels. Without a unified engineering layer, organizations face duplicated work, inconsistent metrics, low trust in dashboards, and slow experimentation cycles for analytics and machine learning.
+
+This chapter presents the environment in which the project was conducted, the motivating problem, and the objectives and scope of the AdOptimizer Customer Data Platform.
+
+In addition to the technical challenge, customer data introduces important constraints on operational quality. A customer identifier may be missing or represented differently across sources. Dates may be encoded in multiple formats. Event streams may arrive with duplicates or late data. If these issues are not addressed early, they propagate through the pipeline and compromise the credibility of final analytics models. For this reason, this project treats \textbf{data quality} and \textbf{observability} as first-class requirements and integrates validation and monitoring into the platform, not as external afterthoughts.
+
+\section{Host Organization and Project Environment}
+This project is positioned in a professional environment focused on applied innovation in information systems, data engineering, and artificial intelligence. The host organization provides a practical context where data-driven solutions are expected to be robust, maintainable, and ready for operational execution.
+
+In this context, the project emphasizes engineering discipline: containerized deployment, explicit configuration through environment variables, idempotent re-processing, and end-to-end observability. These aspects are crucial for turning a technical prototype into a reproducible platform that can be executed consistently across machines and environments.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.65\textwidth,keepaspectratio]{\CompanyLogo}
+    \caption{Company logo of Smart Automation Technologies (SAT)}
+    \label{fig:company-logo}
+\end{figure}
+
+\subsection{Company Context and Digital Transformation Needs}
+The host organization operates in a context where companies and public administrations increasingly rely on digital transformation to modernize their services and improve performance. In such environments, data becomes a strategic asset, but it is often fragmented across operational systems and external tools. Building value from data therefore requires a strong data engineering layer that can ingest, standardize, validate, and expose reliable datasets for analytics and decision-making.
+
+From an organizational perspective, recurring needs include:
+\begin{itemize}
+    \item consolidating customer data from multiple business domains into a unified view
+    \item enabling traceable, auditable, and reproducible data pipelines
+    \item reducing the operational cost of reprocessing and troubleshooting data issues
+    \item preparing structured, trusted datasets for advanced analytics and machine learning
+\end{itemize}
+
+In practice, digital transformation initiatives often begin with dashboards and reporting, but quickly evolve toward more advanced use cases such as churn prediction, customer lifetime value estimation, marketing campaign optimization, and personalization. These use cases require an engineering layer that is able to continuously produce curated datasets, not only a one-time extraction. For this reason, the platform built in this project is designed to be executed repeatedly, with clear separation between raw landing zones and refined analytical products.
+
+In the context of the host organization and the project environment, the activities relevant to this work include support from requirements and architecture definition to implementation and operational follow-up. Typical delivery areas aligned with this project include:
+\begin{itemize}
+    \item \textbf{information systems and digital consulting}: requirements analysis, architecture design, and modernization roadmaps
+    \item \textbf{data engineering and analytics enablement}: ingestion pipelines, lake/lakehouse organization, modeling, and BI-ready datasets
+    \item \textbf{automation and operational improvement}: process automation and engineering of reliable operational data flows
+    \item \textbf{artificial intelligence integration}: preparing data foundations for ML use cases and supporting experimentation workflows
+    \item \textbf{capacity building}: technical training, workshops, and knowledge transfer for engineering teams
+\end{itemize}
+
+To ensure sustainable delivery, Smart Automation Technologies adopts an approach where engineering excellence is linked to ethics, transparency, and long-term partnership. This approach is particularly relevant for data projects, where trust is a strict requirement: data products must be traceable, transformations must be explainable, and results must be reproducible.
+
+The relationship with stakeholders is built on proximity and continuous communication to better understand operational needs and anticipate future expectations. In the context of this project, this translates into aligning the platform with real execution constraints: multi-source integration, reprocessing capabilities, service readiness, and monitoring that supports fast diagnosis.
+
+In addition, the company considers human capital as a key asset and invests in developing team skills through guidance, evaluation, and continuous learning. A data platform is not only a set of tools; it is also a shared methodology and a set of practices that teams must be able to maintain and evolve.
+
+This philosophy is reflected through values that directly impact engineering quality and delivery outcomes:
+\begin{itemize}
+    \item \textbf{team spirit}: collaboration between data engineering, analytics, and operations to deliver consistent results
+    \item \textbf{integrity}: rigorous validation, transparent reporting, and reliable pipeline traceability
+    \item \textbf{commitment}: operational responsibility through repeatable execution and clear monitoring
+    \item \textbf{excellence}: testing, documentation, and structured modeling to build trusted data products
+    \item \textbf{innovation}: adoption of modern lakehouse practices to support scalable analytics and AI readiness
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.68\textwidth,keepaspectratio]{\CompanyValuesFigure}
+    \caption{Core values of Smart Automation Technologies (SAT)}
+    \label{fig:company-values}
+\end{figure}
+
+These values provide a natural framing for the AdOptimizer Customer Data Platform. The platform is designed to produce reliable data products (integrity), to be executable and observable in operational conditions (commitment), to follow structured engineering patterns (excellence), to leverage modern scalable tooling (innovation), and to remain maintainable by teams through clear separation of concerns (team spirit).
+
+\subsection{Data-Driven Decision-Making Challenges}
+Data-driven decision-making requires more than data availability. Common difficulties observed in real-world contexts include inconsistent definitions of key metrics, missing lineage between raw sources and dashboards, limited scalability when data volume increases, and the absence of continuous validation and monitoring.
+
+These challenges motivate a platform approach where ingestion, storage, transformation, and quality checks are treated as a coherent system. In this project, this coherence is ensured through a lakehouse design that separates responsibilities by layers (bronze, raw, staging, intermediate, analytics) and provides clear contracts between each stage.
+
+In concrete terms, the project targets challenges such as:
+\begin{itemize}
+    \item \textbf{heterogeneous formats}: CSV, Excel, multi-sheet spreadsheets, and event-style records
+    \item \textbf{schema instability}: evolving columns and inconsistent naming conventions across sources
+    \item \textbf{data consistency}: missing identifiers, duplicated events, invalid dates, and inconsistent types
+    \item \textbf{reprocessing difficulty}: inability to reliably rebuild datasets after a bug or a logic change
+    \item \textbf{limited observability}: lack of metrics about which datasets were loaded, when, and with what outcome
+\end{itemize}
+
+\subsection{AdOptimizer AI as the Global Program}
+The AdOptimizer AI initiative represents the broader context framing this project. It targets the implementation of customer-centric data and AI foundations that can support optimization use cases such as customer segmentation, personalization, churn prevention, and campaign performance analysis.
+
+Within this global program, the \textbf{AdOptimizer Customer Data Platform} is positioned as the engineering backbone: it is responsible for ingesting heterogeneous datasets, organizing them in a lakehouse architecture, applying transformations and quality checks, and exposing analytics-ready tables that can later power business intelligence and machine learning workflows.
+
+The program perspective influences key design decisions. First, datasets must be structured in a way that is usable both for BI and for machine learning, which motivates the layered transformation approach. Second, pipelines must be observable to ensure operational reliability. Third, the platform must support extensibility: new datasets and new clients should be integrated by adding configurations and models rather than rewriting the pipeline.
+
+\section{Target Project Presentation}
+The target project consists of building a distributed lakehouse platform that transforms raw customer-related datasets into structured, trusted, and queryable data products. The implemented solution is designed to be modular and reproducible, with each subsystem deployed using Docker and connected through well-defined interfaces.
+
+The platform is demonstrated through a case study using multiple customer-related datasets. The selected datasets intentionally represent different business angles (marketing, churn, sales transactions, and behavioral events) to illustrate how a lakehouse can unify heterogeneous sources and produce consistent analytical views.
+
+\subsection{AdOptimizer Customer Data Platform Principle}
+The core principle of the platform is to establish an end-to-end pipeline that is both scalable and operationally manageable. The platform follows a layered organization:
+\begin{itemize}
+    \item ingestion layer for publishing multi-source data into Kafka topics
+    \item bronze layer for immutable storage of raw batches in HDFS
+    \item raw lakehouse layer where Spark loads data into Iceberg tables managed by Hive Metastore
+    \item transformation layers where dbt-Spark produces staging, intermediate, and analytics tables
+    \item query layer where Trino enables SQL exploration and consumption
+    \item validation and observability layers for quality checks and operational monitoring
+\end{itemize}
+
+This principle is validated through a multi-source case study. The project integrates a set of heterogeneous datasets that cover customer profile signals, churn labels, transactional sales activity, and behavioral events. For each dataset, the platform standardizes ingestion through Kafka, lands immutable bronze batches in HDFS, and builds Iceberg raw tables as a foundation for dbt-Spark transformations.
+
+\begin{table}[htbp]
+    \centering
+    \normalsize
+    \setlength{\tabcolsep}{8pt}
+    \renewcommand{\arraystretch}{1.14}
+    \arrayrulecolor{ModernTableRule}
+    \rowcolors{2}{ModernTableStripe}{white}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|>{\raggedright\arraybackslash}p{0.18\textwidth}|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Dataset} &
+        \color{white}\textbf{Source / format} &
+        \color{white}\textbf{Iceberg raw table} &
+        \color{white}\textbf{Main analytical purpose} \\
+        \hline
+        Customer Personality (Marketing Campaign) & batch (CSV) & {\ttfamily raw\_data.\newline marketing\_\allowbreak campaign} & customer segmentation and campaign performance indicators \\
+        \hline
+        E-commerce Customer Churn & batch (CSV) & {\ttfamily raw\_data.\newline ecommerce\_\allowbreak customer\_\allowbreak churn} & churn analysis, retention strategy, and customer risk profiling \\
+        \hline
+        Online Retail II & batch (CSV) & {\ttfamily raw\_data.\newline online\_retail} & sales performance, customer value indicators, and purchase behavior analysis \\
+        \hline
+        RetailRocket Category Tree & batch (CSV) & {\ttfamily raw\_data.\newline retailrocket\_\allowbreak category\_\allowbreak tree} & category-based enrichment for behavioral event analysis \\
+        \hline
+        RetailRocket Events & events (CSV) & {\ttfamily raw\_data.\newline retailrocket\_\allowbreak 
+        events} & engagement and funnel indicators (views, add-to-cart, transactions) \\
+        \hline
+        RetailRocket Item Properties & batch (CSV) & {\ttfamily raw\_data.\newline retailrocket\_\allowbreak item\_\allowbreak properties} & product attribute enrichment and temporal catalog context \\
+        \hline
+    \end{tabularx}
+    \caption{Case-study datasets used to validate the AdOptimizer Customer Data Platform}
+    \label{tab:case-study-datasets}
+\arrayrulecolor{black}
+\end{table}
+
+From a functional perspective, the end-to-end execution can be summarized as:
+\begin{itemize}
+    \item ingest source datasets and publish records into Kafka topics with consistent metadata
+    \item consume Kafka topics, batch records, and land immutable JSONL files into an HDFS bronze zone
+    \item trigger distributed Spark jobs that convert bronze batches into Iceberg raw tables
+    \item model and curate data with dbt-Spark into staging, intermediate, and analytics layers
+    \item query curated tables through Trino for exploration and downstream consumption
+    \item validate pipeline outcomes using lightweight Great Expectations checks and expose metrics through monitoring
+\end{itemize}
+
+\subsection{Problem Statement}
+The main problem addressed by this project is the absence of a unified and governed data engineering workflow for multi-source customer data. In practice, raw datasets are heterogeneous (CSV, Excel, event logs), arrive at different cadences, and may contain inconsistent types, missing identifiers, and invalid values.
+
+Without a structured platform, teams typically rely on manual preprocessing or ad-hoc scripts, which creates recurring issues: lack of reproducibility, weak traceability, and limited scalability. This project therefore aims to deliver a system where ingestion, storage, transformation, and quality validation are standardized, automated, and observable.
+
+More precisely, the problem can be decomposed into operational questions that a platform must answer reliably:
+\begin{itemize}
+    \item How can we ingest multiple datasets repeatedly while guaranteeing consistent results?
+    \item How can we store raw data in a distributed system while keeping the ability to trace every transformation?
+    \item How can we provide SQL access to both raw and curated data without exporting to a separate warehouse?
+    \item How can we validate that the pipeline produced usable outputs and detect failures early?
+    \item How can we monitor service readiness and pipeline execution in a way that supports debugging and reporting?
+\end{itemize}
+
+\subsection{Project Objectives}
+The objectives of this project are both technical and operational:
+\begin{itemize}
+    \item design a distributed lakehouse architecture adapted to multi-source customer datasets
+    \item implement an end-to-end pipeline from ingestion to analytics-ready tables
+    \item ensure reproducibility through containerized deployment and explicit configuration
+    \item provide data quality validation to improve trust in downstream analytics
+    \item integrate orchestration and monitoring for production-oriented execution
+\end{itemize}
+
+In addition, the project aims to deliver a coherent repository structure and execution strategy that can be reused as a foundation for future extensions: onboarding additional datasets, adding new dbt models, integrating stronger data quality tests, and preparing feature stores or machine learning training pipelines.
+
+\subsection{Project Scope and Boundaries}
+The scope of the implemented platform is focused on data engineering and lakehouse construction. The project covers ingestion, distributed storage, distributed processing, transformation modeling, service readiness checks, and monitoring.
+
+The platform is demonstrated using a defined set of customer-related datasets and is designed so that additional datasets and clients can be integrated by extending the configuration and pipeline scripts. Advanced machine learning model training and deployment are considered future extensions enabled by the resulting analytics-ready data products.
+
+To keep the scope achievable and consistent with the objectives, the following boundaries are considered:
+\begin{itemize}
+    \item the project focuses on the engineering platform and curated analytical tables, not on delivering a final ML model in production
+    \item security and access control are introduced as considerations and configuration practices, while full enterprise IAM integration is outside the scope
+    \item the platform is validated through functional runs, data checks, and monitoring dashboards; full-scale distributed benchmarks are prepared as a perspective
+\end{itemize}
+
+\subsection{Expected Outcomes}
+At the end of the project, the expected outcomes include:
+\begin{itemize}
+    \item a working distributed pipeline that converts raw multi-source datasets into curated lakehouse tables
+    \item a modular repository structure with separated layers and reproducible deployment procedures
+    \item validated raw tables and tested transformation models, increasing trust in data products
+    \item observable service health and pipeline execution metrics through Prometheus and Grafana
+\end{itemize}
+
+From a deliverables perspective, the expected outputs can be interpreted as:
+\begin{itemize}
+    \item Docker-based service stack to deploy Kafka, HDFS, Spark, Hive Metastore, Trino, Airflow, Prometheus, and Grafana
+    \item ingestion scripts that publish datasets to Kafka, with topic management and message confirmation
+    \item bronze landing process that writes immutable batch files to HDFS and emits load events
+    \item Spark job that loads bronze batches into Iceberg raw tables with verification steps
+    \item dbt-Spark project producing multi-layer curated tables and associated tests
+    \item quality validation step producing structured artifacts and run summaries
+    \item monitoring exporter exposing metrics for service readiness and pipeline execution history
+\end{itemize}
+
+\subsection{Project Planning and Methodology}
+The project methodology follows an engineering workflow organized around iterative delivery and validation. The main steps include requirements analysis, architecture design, technology selection, infrastructure implementation, incremental pipeline development, quality validation, and monitoring instrumentation.
+
+Each major capability is implemented in a way that supports re-execution without manual cleanup: Kafka topics can be reset, the HDFS bronze zone can be re-initialized, raw tables can be rebuilt, and transformations can be re-run and tested. This approach ensures that the platform remains maintainable and verifiable throughout the report implementation and future experimentation.
+
+In order to translate these steps into actionable engineering work, the project follows an incremental approach where every layer is validated before moving to the next:
+\begin{itemize}
+    \item validate the infrastructure layer by checking service readiness and connectivity
+    \item validate ingestion by comparing produced message counts and consumed batch sizes
+    \item validate storage by ensuring bronze files are created with stable naming and directory structure
+    \item validate processing by comparing expected and actual row counts in raw tables
+    \item validate transformations through dbt tests and curated table inspection
+    \item validate quality and operations through monitoring metrics and dashboards
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[
+        node distance=10mm and 14mm,
+        workflow/pill/.style={
+            workflow/step,
+            rounded corners=18pt,
+            text width=3.0cm,
+            minimum height=1.0cm,
+            fill=white
+        }
+    ]
+        \node (start) [workflow/pill] {Start};
+
+        \node (tests) [workflow/step, fill=white, text width=3.35cm, below left=16mm and 34mm of start] {Run tests and\\validate execution};
+        \node (analyze) [workflow/step, fill=white, text width=3.35cm, below=16mm of start] {Analyze needs\\and define\\objectives};
+        \node (select) [workflow/step, fill=white, text width=3.35cm, below right=16mm and 34mm of start] {Select technologies\\and appropriate\\tools};
+
+        \node (docs) [workflow/step, fill=white, text width=3.35cm, below=12mm of tests] {Produce\\documentation};
+
+        \node (design) [workflow/step, fill=white, text width=3.35cm, below=22mm of analyze] {Design\\architecture};
+        \node (impl) [workflow/step, fill=white, text width=3.35cm, below=22mm of select] {Implement\\infrastructure};
+
+        \node (deploy) [workflow/step, fill=white, text width=3.1cm, below=22mm of docs] {Deploy};
+        \node (opt) [workflow/step, fill=white, text width=3.1cm, below=10mm of deploy] {Optimize};
+        \node (end) [workflow/pill, below=10mm of opt] {End of project};
+
+        \begin{pgfonlayer}{background}
+            \node (tasksbg) [
+                draw=WorkflowOrange!55,
+                line width=0.9pt,
+                rounded corners=10pt,
+                fill=WorkflowOrange!6,
+                fit=(tests)(analyze)(select)(docs),
+                inner sep=8mm
+            ] {};
+        \end{pgfonlayer}
+        \node[anchor=north west, font=\normalsize, text=WorkflowOrange!80] at ([xshift=6mm,yshift=-4mm]tasksbg.north west) {TASKS};
+
+        \node[draw=WorkflowBlue, fill=WorkflowBlue, circle, inner sep=1.6pt, text=white, font=\normalsize] at ([xshift=-1.55cm,yshift=3.5mm]tests.north) {1};
+        \node[draw=WorkflowTeal, fill=WorkflowTeal, circle, inner sep=1.6pt, text=white, font=\normalsize] at ([xshift=-1.55cm,yshift=3.5mm]analyze.north) {2};
+        \node[draw=WorkflowPurple, fill=WorkflowPurple, circle, inner sep=1.6pt, text=white, font=\normalsize] at ([xshift=-1.55cm,yshift=3.5mm]select.north) {3};
+
+        \draw[workflow/arrow] (start) -- (analyze);
+        \draw[workflow/arrow] (start.south) |- (select.north);
+        \draw[workflow/arrow] (analyze.west) |- (tests.east);
+        \draw[workflow/arrow] (tests) -- (docs);
+        \draw[workflow/arrow] (docs) -- (deploy);
+        \draw[workflow/arrow] (deploy) -- (opt);
+        \draw[workflow/arrow] (opt) -- (end);
+        \draw[workflow/arrow] (analyze) -- (design);
+        \draw[workflow/arrow] (select) -- (impl);
+        \draw[workflow/arrow] (impl.west) -- (design.east);
+        \draw[workflow/arrow] (design.west) |- (deploy.east);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Global project workflow used to guide implementation}
+    \label{fig:project-workflow}
+\end{figure}
+
+\subsection{Project Difficulties}
+Implementing the distributed lakehouse platform introduced four main engineering challenges:
+
+\begin{enumerate}
+    \item \textbf{Technology compatibility.} Coordinating versions, configurations, and network connectivity across Kafka, HDFS, Spark, Iceberg, Trino, Airflow, and the remaining services required continuous verification.
+    \item \textbf{End-to-end integration.} Connecting ingestion, storage, processing, transformation, quality, and monitoring layers required clear interfaces and systematic validation at every stage.
+    \item \textbf{Limited computing resources.} Local hardware constraints required representative datasets and optimized configurations, while larger distributed benchmarks were retained as a future extension.
+    \item \textbf{Fragmented documentation.} Differences between documented deployment contexts complicated configuration and troubleshooting, making precise project documentation essential for reproducibility.
+\end{enumerate}
+
+\section{Conclusion}
+This chapter established the context of the project and clarified why a distributed lakehouse platform is necessary to manage multi-source customer data reliably. The next chapters will present the theoretical background and justify the architectural choices before detailing the implementation and validation of the AdOptimizer Customer Data Platform.
+
+\clearpage
+
+\chapter{STATE OF THE ART AND THEORETICAL BACKGROUND}
+
+\section{Introduction}
+The goal of this chapter is to present the theoretical concepts and architectural patterns that motivate the design choices of the AdOptimizer Customer Data Platform. The objective is not to provide an exhaustive academic survey, but rather a structured foundation that explains why each technology is relevant for a distributed, multi-source customer data lakehouse.
+
+For each topic, the discussion is connected to the needs of the project: heterogeneous datasets, repeatable ingestion, distributed storage and processing, governance through structured layers, data quality validation, orchestration, and observability. The practical implementation is detailed later in the report.
+
+\section{Big Data Fundamentals}
+
+\subsection{Emergence and Evolution of Big Data}
+Historically, organizations relied on relational databases and data warehouses to store and analyze structured business data. Over time, new sources such as web logs, mobile applications, social platforms, sensors, and e-commerce ecosystems introduced much larger volumes of data with higher variety and faster update rates.
+
+This evolution created engineering requirements that exceed the capabilities of single-machine systems: parallel storage, parallel processing, fault tolerance, and the ability to integrate heterogeneous formats. The Big Data ecosystem emerged to address these constraints through distributed systems and scalable architectures.
+
+From an engineering perspective, the shift can be summarized by two changes. First, data growth became continuous rather than occasional, which forces platforms to ingest data reliably at scale. Second, data became more heterogeneous, which makes early rigid modeling difficult and increases the need for layered refinement from raw inputs to governed analytical products.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}
+        \coordinate (t1) at (0,0);
+        \coordinate (t2) at (3.0,0);
+        \coordinate (t3) at (6.0,0);
+        \coordinate (t4) at (9.0,0);
+        \coordinate (t5) at (12.0,0);
+
+        \draw[draw=WorkflowGray!70, line width=1.0pt] (t1) -- (t5);
+
+        \foreach \p/\lbl in {t1/1990s,t2/2000s,t3/2010s,t4/2015+,t5/2020s+} {
+            \filldraw[fill=white, draw=WorkflowGray!70, line width=1.0pt] (\p) circle (2.2mm);
+            \node[workflow/label, below=5mm of \p] {\lbl};
+        }
+
+        \node (rdbms) [workflow/step, fill=WorkflowBlue!10, text width=2.55cm, above=10mm of t1] {\textbf{RDBMS + BI}\\\small structured reporting};
+        \node (dwh) [workflow/step, fill=WorkflowBlue!10, text width=2.55cm, below=15mm of t2] {\textbf{Data warehouses}\\\small ETL + governance};
+        \node (web) [workflow/step, fill=WorkflowTeal!10, text width=2.55cm, above=10mm of t3] {\textbf{Web \& mobile}\\\small logs + clickstreams};
+        \node (hadoop) [workflow/step, fill=WorkflowOrange!10, text width=2.55cm, below=15mm of t4] {\textbf{Hadoop era}\\\small HDFS + batch};
+        \node (lakehouse) [workflow/step, fill=WorkflowPurple!10, text width=2.55cm, above=10mm of t5] {\textbf{Lakehouse}\\\small table formats + SQL};
+
+        \draw[workflow/arrow] (t1) -- (t2);
+        \draw[workflow/arrow] (t2) -- (t3);
+        \draw[workflow/arrow] (t3) -- (t4);
+        \draw[workflow/arrow] (t4) -- (t5);
+
+        \draw[draw=WorkflowGray!60, line width=0.9pt] (rdbms.south) -- (t1);
+        \draw[draw=WorkflowGray!60, line width=0.9pt] (dwh.north) -- (t2);
+        \draw[draw=WorkflowGray!60, line width=0.9pt] (web.south) -- (t3);
+        \draw[draw=WorkflowGray!60, line width=0.9pt] (hadoop.north) -- (t4);
+        \draw[draw=WorkflowGray!60, line width=0.9pt] (lakehouse.south) -- (t5);
+
+        \node[workflow/step, fill=white, text width=13.2cm, minimum height=1.9cm, below=40mm of t3] {\textbf{Main drivers:}\\\small Volume $\rightarrow$ distributed storage; Velocity $\rightarrow$ streaming ingestion; Variety $\rightarrow$ schema-on-read; Veracity and Value $\rightarrow$ validation, governance, and observability.};
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Evolution and emergence of Big Data}
+    \label{fig:bigdata-timeline}
+\end{figure}
+
+\subsection{The Five Vs of Big Data}
+Big Data is commonly described through five key characteristics:
+\begin{itemize}
+    \item \textbf{Volume}: large datasets requiring scalable storage and parallel processing.
+    \item \textbf{Velocity}: data that arrives continuously or needs frequent refresh cycles.
+    \item \textbf{Variety}: heterogeneous sources and formats (tables, logs, events, files).
+    \item \textbf{Veracity}: data quality challenges, inconsistencies, and incomplete records.
+    \item \textbf{Value}: the need to transform raw data into trusted analytical products.
+\end{itemize}
+
+In the context of this project, variety is reflected by multi-source datasets (profiles, churn labels, transactions, and behavioral events), while veracity motivates validation and monitoring practices. Volume and velocity drive the need for distributed ingestion, storage, and processing, and value is achieved through curated staging, intermediate, and analytics models.
+
+\paragraph{From 3Vs to 5Vs.}
+Historically, the Big Data problem was first summarized through three core characteristics: \textbf{Volume}, \textbf{Velocity}, and \textbf{Variety}. These ``traditional'' Vs describe why classical single-system data management becomes insufficient: data becomes too large to store and process on one machine, arrives too fast to be handled by slow batch-only pipelines, and comes in formats that do not fit a rigid schema from the beginning.
+
+As Big Data platforms matured, two additional Vs became essential for operational success. \textbf{Veracity} reflects that raw data is often incomplete, noisy, or inconsistent, which creates risks of incorrect decisions if quality is not continuously validated. \textbf{Value} emphasizes that storing data is not an objective by itself; the platform must transform raw sources into reusable analytical products (metrics, curated tables, and features) that deliver measurable impact.
+
+From a lakehouse perspective, the transition from 3Vs to 5Vs explains why architecture must include not only ingestion and storage at scale, but also governance practices such as layered modeling, validation, and observability.
+
+\paragraph{Quantifying volume and velocity.}
+If a platform ingests on average $r$ records per second and each record has average size $s$ bytes, then the approximate data rate is:
+\begin{equation}
+    D = r \cdot s
+\end{equation}
+Over an ingestion horizon $T$ seconds, the approximate raw volume is $V = D \cdot T$. With a storage replication factor $k$ (or redundant copies for reliability), the stored volume becomes:
+\begin{equation}
+    V_{\text{stored}} = k \cdot V
+\end{equation}
+In practice, this motivates distributed storage and clear lifecycle management because raw data quickly grows even for moderate ingestion rates.
+
+\paragraph{Quantifying veracity through basic quality ratios.}
+A simple but useful quality indicator is the completeness ratio of a required field:
+\begin{equation}
+    C = \frac{n_{\text{non-null}}}{n_{\text{total}}}
+\end{equation}
+Such ratios can be tracked for critical identifiers (customer or visitor keys) and used to validate that datasets are usable for downstream analytics and future machine learning.
+
+\subsection{Distributed Storage and Distributed Processing}
+Distributed systems address scale and reliability by distributing responsibilities across multiple nodes. Two complementary capabilities are essential in Big Data platforms:
+\begin{itemize}
+    \item \textbf{distributed storage}: a system that stores large datasets across multiple machines while providing fault tolerance and parallel access.
+    \item \textbf{distributed processing}: an engine that executes computations in parallel across worker nodes, enabling scalable transformations and analytics.
+\end{itemize}
+
+In practice, a modern platform often separates storage and compute. Storage is optimized for throughput and durability, while compute is optimized for parallel execution and resource scheduling. This separation is a key principle in lakehouse architectures, where multiple engines can access the same stored data.
+
+\paragraph{Parallel speedup and scalability.}
+If a workload takes time $T_1$ on one worker and $T_p$ on $p$ workers, the speedup is:
+\begin{equation}
+    S(p) = \frac{T_1}{T_p}
+\end{equation}
+Amdahl's law provides an upper bound when only a fraction $f$ of the workload can be parallelized:
+\begin{equation}
+    S(p) \le \frac{1}{(1-f) + \frac{f}{p}}
+\end{equation}
+This theoretical constraint explains why distributed platforms must reduce serial bottlenecks (for example, centralized metadata operations or heavy shuffle steps) and why careful partitioning and efficient I/O are critical for performance.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=12mm and 18mm]
+        \node (storage) [workflow/step, fill=WorkflowTeal!10, text width=6.0cm, minimum height=1.9cm] {\textbf{Distributed storage}\\\small data at rest (durable)\\\small HDFS bronze + lakehouse files};
+        \node (compute) [workflow/step, fill=WorkflowOrange!10, text width=6.0cm, minimum height=1.9cm, right=8mm of storage] {\textbf{Distributed processing}\\\small transformations at scale\\\small Spark jobs + SQL queries};
+
+        \node (bronze) [workflow/step, fill=WorkflowTeal!6, text width=5.5cm, minimum height=1.6cm, below=12mm of storage] {\textbf{Bronze zone}\\\small immutable batches for audit and replay};
+        \node (raw) [workflow/step, fill=WorkflowOrange!6, text width=5.5cm, minimum height=1.6cm, below=12mm of compute] {\textbf{Processing jobs}\\\small normalize schema + load tables};
+        \node (tables) [workflow/step, fill=WorkflowPurple!10, text width=7.2cm, minimum height=1.6cm, below=16mm of $(bronze)!0.5!(raw)$] {\textbf{Lakehouse tables}\\\small raw $\rightarrow$ staging $\rightarrow$ intermediate $\rightarrow$ analytics};
+
+        \draw[workflow/arrow] (storage) -- (compute);
+        \draw[workflow/arrow] (storage) -- (bronze);
+        \draw[workflow/arrow] (compute) -- (raw);
+        \draw[workflow/arrow] (bronze) -- (tables);
+        \draw[workflow/arrow] (raw) -- (tables);
+
+        \node[workflow/label, below=6mm of tables] {Storage provides durability; compute provides parallel execution.};
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Distributed storage vs distributed processing}
+    \label{fig:storage-vs-processing}
+\end{figure}
+
+\clearpage
+\section{Big Data Architectures}
+
+\subsection{Traditional Data Warehouse Architecture}
+A traditional data warehouse is designed for structured data and provides strong governance through schema-on-write. Data is typically extracted from operational systems, transformed into a curated schema, and then used for reporting and analytics.
+
+This approach supports reliable business intelligence, but it can be less flexible for semi-structured sources and can become costly when the number of sources and data volume increase. It also encourages long ingestion cycles, which can be incompatible with high-velocity data needs.
+
+From an operational standpoint, warehouses are strong when the business model is stable and the primary objective is consistent reporting. However, as the number of sources grows, maintaining strict schema-on-write pipelines can slow down onboarding of new datasets and can create bottlenecks for experimental analytics.
+
+\subsection{Data Lake Architecture}
+A data lake stores raw data in its original form, often using a distributed file system or object storage. It promotes schema-on-read: data is interpreted at query time rather than enforced at ingestion time.
+
+The lake model improves flexibility and supports a wide range of formats. However, without governance mechanisms, lakes can become difficult to manage, leading to inconsistent datasets, weak quality guarantees, and reduced trust in analytics outputs.
+
+In practice, the main risk is a ``data swamp'' effect: raw files accumulate without clear ownership, naming standards, validation, or curated access patterns. This is why modern architectures introduce layered zones and data quality checks even when adopting a lake model.
+
+\subsection{Data Lakehouse Architecture}
+The lakehouse architecture aims to combine the flexibility of data lakes with the reliability of data warehouses. A lakehouse typically relies on:
+\begin{itemize}
+    \item scalable distributed storage for raw and curated data
+    \item a table format that supports transactional guarantees, schema evolution, and metadata management
+    \item a catalog or metastore to enable consistent access across engines
+    \item one or more query and processing engines to build and consume curated tables
+\end{itemize}
+
+This project adopts a lakehouse approach to organize customer data into clear layers while keeping the ability to scale, reprocess, and query data reliably.
+
+The key innovation is that lakehouse tables provide warehouse-like guarantees over lake storage. In particular, snapshot-based metadata and managed schemas enable reproducible reads. This is essential for analytics and for future machine learning pipelines, where training must be repeatable and datasets must be traceable across versions.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=10mm and 12mm]
+        \node (wh) [workflow/step, fill=WorkflowBlue!10, text width=4.0cm, minimum height=2.0cm] {\textbf{Data warehouse}\\\small schema-on-write\\\small governed reporting};
+        \node (lake) [workflow/step, fill=WorkflowTeal!10, text width=4.0cm, minimum height=2.0cm, right=7mm of wh] {\textbf{Data lake}\\\small schema-on-read\\\small flexible formats};
+        \node (lh) [workflow/step, fill=WorkflowPurple!10, text width=4.0cm, minimum height=2.0cm, right=7mm of lake] {\textbf{Data lakehouse}\\\small lake storage + tables\\\small multi-engine SQL};
+
+        \draw[workflow/arrow] (wh) -- (lake);
+        \draw[workflow/arrow] (lake) -- (lh);
+
+        \node (row1) [workflow/step, fill=white, text width=13.2cm, minimum height=1.45cm, below=12mm of $(wh)!0.5!(lh)$] {\textbf{Main trade-off:} \small consistency (warehouse) vs flexibility (lake); the lakehouse aims to provide both.};
+        \node (row2) [workflow/step, fill=white, text width=13.2cm, minimum height=1.45cm, below=7mm of row1] {\textbf{Fit for this project:} \small flexible ingestion with reproducible, governed analytics tables.};
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Data warehouse vs data lake vs data lakehouse}
+    \label{fig:warehouse-lake-lakehouse}
+\end{figure}
+
+\subsection{Lambda Architecture}
+The Lambda architecture separates processing into two paths: a batch layer for accuracy and a speed layer for low latency. Results are combined in a serving layer to deliver queries that benefit from both approaches.
+
+Lambda can be effective when real-time insights are required, but it introduces architectural complexity because it may require maintaining two different processing pipelines and ensuring consistency between them.
+
+From a design perspective, Lambda addresses the trade-off between freshness and completeness. The speed layer delivers quick updates, while the batch layer periodically recomputes a reliable ground truth. In practice, an important engineering concern is ensuring that both layers implement consistent business logic and that reconciliation does not introduce inconsistent metrics in dashboards.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=12mm and 20mm]
+        \node (src) [workflow/step, fill=WorkflowBlue!10, text width=4.2cm, minimum height=1.55cm] {\textbf{Data sources}\\\small events + batches};
+        \node (batch) [workflow/step, fill=WorkflowOrange!10, text width=5.2cm, minimum height=1.75cm, below left=12mm and 26mm of src] {\textbf{Batch layer}\\\small accurate recompute\\\small (ground truth)};
+        \node (speed) [workflow/step, fill=WorkflowTeal!10, text width=5.2cm, minimum height=1.75cm, below right=12mm and 26mm of src] {\textbf{Speed layer}\\\small near-real-time view\\\small (low latency)};
+        \node (serve) [workflow/step, fill=WorkflowPurple!10, text width=5.8cm, minimum height=1.7cm, below=18mm of src] {\textbf{Serving layer}\\\small unify batch + speed results};
+        \node (query) [workflow/step, fill=white, text width=4.2cm, minimum height=1.45cm, below=12mm of serve] {\textbf{Queries}\\\small dashboards / apps};
+
+        \draw[workflow/arrow] (src) |- (batch);
+        \draw[workflow/arrow] (src) |- (speed);
+        \draw[workflow/arrow] (batch) |- (serve);
+        \draw[workflow/arrow] (speed) |- (serve);
+        \draw[workflow/arrow] (serve) -- (query);
+
+        \node[font=\normalsize, text=WorkflowGray!80, below=6mm of query] {Two paths improve freshness, but increase complexity because logic is duplicated and must be reconciled.};
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Lambda architecture}
+    \label{fig:lambda-architecture}
+\end{figure}
+
+\subsection{Kappa Architecture}
+The Kappa architecture promotes a single stream processing path. Batch reprocessing is performed by replaying events through the same processing pipeline. This model reduces duplication of logic and is well suited for event-driven systems.
+
+In this project, ingestion is event-driven through Kafka, and reprocessing is enabled by reset and replay mechanisms, while raw and curated layers are rebuilt through repeatable jobs and transformations.
+
+Kappa is especially relevant when the event log is treated as the system of record. The ability to replay events supports reproducibility and debugging. However, it requires careful operational controls such as defining replay windows, ensuring idempotent writes, and maintaining stable schemas so that historical events remain interpretable.
+
+\clearpage
+\begin{figure}[H]
+    \centering
+    \vspace{0.5cm}
+    \begin{adjustbox}{max width=0.94\textwidth,max totalheight=0.78\textheight,center}
+    \begin{tikzpicture}[node distance=12mm]
+        \node (src) [workflow/step, fill=WorkflowBlue!10, text width=10.5cm, minimum height=2.45cm] {\textbf{Data sources}\\\normalsize events, files, and operational batches};
+        \node (log) [workflow/step, fill=WorkflowTeal!10, text width=10.5cm, minimum height=2.60cm, below=16mm of src] {\textbf{Durable event log}\\\normalsize Kafka topics, partitions, and retained offsets};
+        \node (proc) [workflow/step, fill=WorkflowOrange!10, text width=10.5cm, minimum height=2.60cm, below=16mm of log] {\textbf{Single processing path}\\\normalsize continuous processing and repeatable recomputation};
+        \node (serve) [workflow/step, fill=WorkflowPurple!10, text width=10.5cm, minimum height=2.45cm, below=16mm of proc] {\textbf{Serving state}\\\normalsize lakehouse tables and materialized views};
+        \node (query) [workflow/step, fill=white, text width=10.5cm, minimum height=2.30cm, below=16mm of serve] {\textbf{Analytics consumers}\\\normalsize SQL queries, dashboards, and downstream applications};
+
+        \draw[workflow/arrow] (src) -- node[workflow/label, right] {publish} (log);
+        \draw[workflow/arrow] (log) -- node[workflow/label, right] {process} (proc);
+        \draw[workflow/arrow] (proc) -- node[workflow/label, right] {materialize} (serve);
+        \draw[workflow/arrow] (serve) -- node[workflow/label, right] {serve} (query);
+
+        \draw[workflow/dasharrow] (proc.east) to[out=25,in=-25,looseness=1.45]
+            node[workflow/label, right=3mm] {Replay / reprocess} (log.east);
+
+        \node[workflow/step, fill=WorkflowTeal!5, text width=11.6cm, minimum height=1.80cm, below=13mm of query]
+            {\textbf{Core principle:} one processing path simplifies engineering, while replay enables reproducible rebuilds.};
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Kappa architecture}
+    \label{fig:kappa-architecture}
+\end{figure}
+
+\clearpage
+\subsection{Comparison Between Lambda and Kappa}
+\subsubsection{Definition}
+Lambda and Kappa share the objective of supporting scalable analytics, but they differ in how they treat batch and streaming. Lambda separates concerns between a \textbf{batch layer} (accurate recompute) and a \textbf{speed layer} (low-latency updates), while Kappa relies on a \textbf{single event-driven pipeline} and replays data when needed.
+
+\subsubsection{Architecture diagram}
+The following diagram maps the concrete building blocks of this project to Kappa-inspired ingestion and Lambda-style batch recomputation.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=10mm and 12mm]
+        \node (sources) [workflow/step, fill=WorkflowBlue!10, text width=11.4cm, minimum height=1.55cm] {\textbf{Data sources}\\\small files (CSV/Excel) and event datasets};
+
+        \node (kafka) [workflow/step, fill=WorkflowTeal!10, text width=4.8cm, minimum height=1.9cm, below=14mm of sources, xshift=-3.1cm] {\textbf{Kafka topics}\\\small durable event log + offsets};
+        \node (bronze) [workflow/step, fill=WorkflowTeal!6, text width=4.8cm, minimum height=1.9cm, below=10mm of kafka] {\textbf{HDFS bronze zone}\\\small immutable JSONL batches};
+
+        \node (spark) [workflow/step, fill=WorkflowOrange!10, text width=4.8cm, minimum height=1.9cm, below=14mm of sources, xshift=3.1cm] {\textbf{Spark batch jobs}\\\small distributed compute / recompute};
+        \node (iceberg) [workflow/step, fill=WorkflowPurple!10, text width=4.8cm, minimum height=1.9cm, below=10mm of spark] {\textbf{Iceberg raw tables}\\\small consistent snapshot-based state};
+        \node (dbt) [workflow/step, fill=WorkflowOrange!6, text width=4.8cm, minimum height=1.9cm, below=10mm of iceberg] {\textbf{dbt transformations}\\\small staging $\rightarrow$ intermediate $\rightarrow$ analytics};
+
+        \node (trino) [workflow/step, fill=WorkflowPurple!6, text width=11.4cm, minimum height=1.55cm, below=14mm of dbt, xshift=-3.1cm] {\textbf{Trino serving / SQL access}\\\small exploration, validation queries, analytics consumption};
+
+        \draw[workflow/arrow] (sources.south west) -- (kafka.north);
+        \draw[workflow/arrow] (sources.south east) -- (spark.north);
+        \draw[workflow/arrow] (kafka) -- node[workflow/label, right] {consume} (bronze);
+        \draw[workflow/dasharrow] (kafka.west) to[out=180,in=180,looseness=1.2] (bronze.west);
+
+        \draw[workflow/arrow] (bronze) -- node[workflow/label, above] {batch load} (spark);
+        \draw[workflow/arrow] (spark) -- (iceberg);
+        \draw[workflow/arrow] (iceberg) -- (dbt);
+        \draw[workflow/arrow] (bronze.south) -- ($(trino.north west)!0.25!(trino.north east)$);
+        \draw[workflow/arrow] (dbt.south) -- ($(trino.north west)!0.75!(trino.north east)$);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Project mapping to Kappa-inspired ingestion and Lambda-style batch processing}
+    \label{fig:lambda-kappa-project-mapping}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{6pt}
+    \renewcommand{\arraystretch}{1.25}
+    \arrayrulecolor{ModernTableRule}
+    \rowcolors{2}{ModernTableStripe}{white}
+    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.22\textwidth}|X|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Aspect} &
+        \color{white}\textbf{Lambda architecture} &
+        \color{white}\textbf{Kappa architecture} \\
+        \hline
+        Processing model & Two parallel paths: batch layer for accuracy + speed layer for low-latency updates. & Single streaming path; batch reprocessing is handled by replaying events through the same pipeline. \\
+        \hline
+        Main objective & Combine low-latency views with complete batch recomputation. & Simplify the architecture by avoiding duplicate batch and streaming implementations. \\
+        \hline
+        Typical use cases & Real-time dashboards with strong accuracy guarantees and historical recomputation needs. & Event-driven systems where the log is the source of truth and replay is feasible. \\
+        \hline
+        Advantages & Clear separation of responsibilities; batch layer provides a reliable ground truth. & Reduced complexity; one code path for processing; replay supports reprocessing and traceability. \\
+        \hline
+        Limitations & Higher engineering and operational complexity; duplicated logic; consistency management between layers. & Requires durable event logs; late or corrected data may require controlled replay strategies; some workloads still prefer dedicated batch paths. \\
+        \hline
+        Reprocessing strategy & Recompute the batch layer and reconcile results with the speed layer. & Replay the event stream or rebuild derived datasets from the log. \\
+        \hline
+        Fit for this project & Relevant as a conceptual reference for balancing batch and near-real-time needs. & Closest inspiration for ingestion: Kafka-based event flow with repeatable rebuilds of lakehouse tables. \\
+        \hline
+    \end{tabularx}
+    \caption{Comparison between Lambda and Kappa architectures}
+    \label{tab:lambda-vs-kappa}
+\arrayrulecolor{black}
+\end{table}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:lambda-kappa-project-mapping} shows how the platform combines event-driven ingestion (Kappa-inspired) with batch recomputation of lakehouse tables (Lambda-style in practice) to produce stable, auditable analytics outputs.
+
+\paragraph{Data sources}
+This block represents the heterogeneous inputs used in the project: batch-oriented files (CSV/Excel exports) and event datasets (interaction logs). The role of the platform is to normalize these sources into a unified ingestion flow, so downstream processing does not depend on source-specific formats.
+
+\paragraph{Kafka topics (durable event log + offsets)}
+Kafka acts as the ingestion backbone by storing produced records in topic partitions as an append-only log. Offsets represent the position of each consumer group in this log, which enables controlled progress tracking and reproducible reprocessing. This decouples producers from consumers: producers can publish continuously while multiple downstream consumers read independently.
+
+\paragraph{HDFS bronze zone (immutable JSONL batches)}
+The bronze zone is the persistent landing area for raw ingested data, stored as immutable JSONL batch files. It provides auditability (what exactly was ingested at a given time) and a stable batch interface for distributed processing. Keeping bronze immutable reduces the risk of silently changing raw history and supports repeatable table rebuilds.
+
+\paragraph{Offset-based replay}
+The dashed replay arrow indicates that ingestion can be replayed by resetting consumer offsets and re-consuming data from Kafka. Practically, this is used when parsing rules evolve, a dataset must be reloaded, or an ingestion run must be reproduced for validation. Replay is the core Kappa-inspired mechanism that supports reprocessing without changing upstream producers.
+
+\paragraph{Spark batch jobs (distributed compute / recompute)}
+Spark represents the batch compute engine that reads bronze batches and applies distributed transformations (schema normalization, flattening nested fields, type casting, and standardization). This is the project's main mechanism to build a reliable ground truth in table form. Batch recomputation also allows consistent rebuilds when data corrections or transformation logic changes.
+
+\paragraph{Iceberg raw tables (snapshot-based state)}
+Iceberg provides the managed table layer: Spark writes raw tables in a format that supports consistent snapshots, schema evolution, and efficient SQL reads. The snapshot property matters for analytics and ML: a query (or training job) can rely on a stable table state rather than a partially updated dataset.
+
+\paragraph{dbt transformations (staging $\rightarrow$ intermediate $\rightarrow$ analytics)}
+dbt structures SQL transformations as a dependency graph and materializes curated layers. Staging focuses on cleaning and standardizing fields, intermediate models implement reusable business logic and joins (e.g., customer profiles and aggregations), and analytics models expose final marts and KPIs. This separation makes transformation logic easier to maintain and test.
+
+\paragraph{Trino serving / SQL access}
+Trino is the interactive SQL layer used to query Iceberg tables for exploration and validation. It enables fast access to raw and curated datasets without exporting data to another system, and it supports the “consumption” side of the platform (analytics queries and verification queries).
+
+\paragraph{Latency perspective}
+Operationally, end-to-end latency can be summarized as:
+\begin{equation}
+    L_{\text{total}} = L_{\text{ingest}} + L_{\text{process}} + L_{\text{serve}}
+\end{equation}
+
+\subsubsection{Project rationale}
+This hybrid interpretation matches the project requirements: event-driven ingestion enables decoupling and replay, while batch recomputation ensures consistent and auditable lakehouse tables suitable for analytics and future ML training.
+
+\section{Technology Watch}
+
+\subsection{Apache Kafka for Data Ingestion}
+\begin{center}
+    \includegraphics[height=2.6cm,keepaspectratio]{\TechLogoPath/apache_kafka.png}
+\end{center}
+\subsubsection{Definition}
+Apache Kafka is a distributed event streaming platform designed to ingest, buffer, and distribute data streams with high throughput. It acts as a durable commit log where producers append events and consumers read them independently, which enables decoupling between data producers and downstream processing systems.
+
+\subsubsection{Architecture diagram}
+The following diagram summarizes the main Kafka components relevant to this project: producers, brokers, partitions, consumer groups, offset commits, and offset-based replay.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=11mm and 7mm]
+        \node (producer) [workflow/step, fill=WorkflowBlue!6, text width=4.0cm, minimum height=2.0cm] {\textbf{Producers}\\\small publish records\\\small (keyed or unkeyed)};
+
+        \node (brokers) [workflow/step, fill=WorkflowTeal!8, text width=4.6cm, minimum height=2.55cm, right=7mm of producer] {\textbf{Brokers (data plane)}\\\small store partition logs\\\small leader/follower replicas};
+
+        \node (consumers) [workflow/step, fill=WorkflowOrange!8, text width=4.0cm, minimum height=2.55cm, right=7mm of brokers] {\textbf{Consumer group}\\\small fetch records\\\small commit offsets};
+
+        \node (controllers) [workflow/step, fill=white, text width=5.2cm, minimum height=1.7cm, above=11mm of brokers] {\textbf{KRaft controllers}\\\small metadata quorum and cluster metadata};
+
+        \node (p1) [workflow/mini, below left=16mm and 10mm of brokers] {P1\\L/F};
+        \node (p2) [workflow/mini, right=6mm of p1] {P2\\L/F};
+        \node (p3) [workflow/mini, right=6mm of p2] {P3\\L/F};
+        \begin{pgfonlayer}{background}
+            \node (topic) [draw=WorkflowGray!35, rounded corners=7pt, line width=0.8pt, fill=WorkflowTeal!4, fit=(p1)(p2)(p3), inner sep=7pt] {};
+        \end{pgfonlayer}
+        \node[font=\normalsize, text=WorkflowGray!85, above=2mm of topic] {\textbf{Topic partitions}};
+
+        \node (offsets) [workflow/step, fill=white, text width=4.0cm, minimum height=1.7cm, below=14mm of consumers] {\textbf{Offset commits}\\\small stored in \texttt{\_\_consumer\_offsets}};
+
+        \draw[workflow/arrow] (producer) -- node[workflow/label, above] {produce} (brokers);
+        \draw[workflow/arrow] (consumers) -- node[workflow/label, above] {fetch} (brokers);
+        \draw[workflow/arrow] (brokers) -- (topic);
+        \draw[workflow/arrow] (consumers) -- node[workflow/label, right] {commit} (offsets);
+        \draw[workflow/arrow] (brokers) -- (controllers);
+        \draw[workflow/dasharrow] (offsets.west) to[out=180,in=-35] (brokers.south east);
+        \node[workflow/label, below=2mm of topic] {Replay by resetting consumer offsets};
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Architecture overview of Apache Kafka}
+    \label{fig:kafka-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:kafka-architecture} illustrates the key components of Kafka that matter for building a reliable ingestion layer: producers publish records, brokers persist them into partition logs, and consumer groups read records while tracking progress through offsets.
+
+\paragraph{Producers}
+Producers are client applications that \textbf{publish records} into Kafka topics. A record contains a key (optional) and a value (payload). The key is important because it influences partitioning: for keyed messages, Kafka typically maps messages with the same key to the same partition. This property is used when ordering matters for a given entity (e.g., a customer, session, or visitor).
+
+\paragraph{Brokers (data plane)}
+Brokers are the storage and serving nodes of Kafka. They implement the \textbf{data plane}: persisting messages into partition logs and serving them to consumers. Each partition is an \textbf{append-only log}, which makes reads sequential and efficient, and allows consumers to re-read history by selecting an offset.
+
+\paragraph{Topic partitions (P1/P2/P3) and leader/follower replicas}
+Topics are split into partitions (P1, P2, P3 in the diagram). Each partition is replicated across brokers as \textbf{leader/follower replicas}. The leader handles reads and writes for the partition, while followers replicate data from the leader to provide fault tolerance. Replication also enables higher availability when a broker fails, because a follower can be elected as a new leader.
+
+\paragraph{KRaft controllers (metadata quorum)}
+The KRaft controllers manage the \textbf{control plane} of Kafka: cluster metadata such as topics, partitions, replica assignments, and leader elections. In KRaft mode, controllers form a \textbf{metadata quorum} to keep metadata consistent without ZooKeeper. In practice, this ensures the cluster can coordinate partition leadership and membership changes reliably.
+
+\paragraph{Consumer group}
+Consumers read records from topics and process them. A consumer group provides scalable consumption: partitions are assigned across the group so that \textbf{each partition is processed by at most one consumer in the group at a given time}. This enables parallel processing while preserving ordering guarantees per partition.
+
+The effective parallelism is:
+\begin{equation}
+    C_{\text{effective}} = \min(P, C)
+\end{equation}
+where $P$ is the number of partitions and $C$ is the number of consumers in the group.
+
+\paragraph{Offset commits and \texttt{\_\_consumer\_offsets}}
+An offset is a cursor into a partition log. Offsets are committed to Kafka (stored in the internal topic \texttt{\_\_consumer\_offsets}) to persist consumer progress. This turns consumption into a measurable, auditable process: the system can know what has been processed and what remains.
+
+\paragraph{Offset-based replay}
+Replay is enabled by seeking to earlier offsets and consuming again. This is a key property for data engineering platforms because it supports reprocessing after correcting parsing rules, handling late-arriving data, or validating end-to-end reproducibility.
+
+\subsubsection{Project rationale}
+Kafka is used to standardize ingestion across heterogeneous datasets and to support repeatable reprocessing. By keeping data in topics with offsets, the platform can validate ingestion counts, replay datasets after corrections, and trigger downstream stages through explicit events rather than manual operations.
+
+\textbf{In our project:} dataset producer scripts publish records to Kafka topics; consumer services read records, persist immutable bronze batches in HDFS, and emit downstream load events that trigger the raw table build process.
+
+\subsection{Hadoop HDFS for Distributed Storage}
+\begin{center}
+    \includegraphics[height=1.55cm,keepaspectratio]{\TechLogoPath/hadoop_hdfs.png}
+\end{center}
+\subsubsection{Definition}
+Hadoop HDFS is a distributed file system optimized for high-throughput storage of large datasets. It stores files as replicated blocks across multiple nodes, enabling parallel reads and tolerance to node failures.
+
+\subsubsection{Architecture diagram}
+The diagram below highlights the separation between metadata management (NameNode) and block storage (DataNodes), as well as the replication mechanism used for durability.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=12mm and 8mm]
+        \node (client) [workflow/step, fill=WorkflowBlue!6, text width=4.0cm, minimum height=1.7cm] {\textbf{HDFS client}\\\small read/write requests};
+
+        \node (namenode) [workflow/step, fill=WorkflowTeal!10, text width=4.8cm, minimum height=1.9cm, right=18mm of client] {\textbf{NameNode}\\\small filesystem namespace\\\small block metadata};
+
+        \node (checkpoint) [workflow/step, fill=white, text width=4.8cm, minimum height=1.55cm, above=6mm of namenode] {\textbf{Checkpoint}\\\small periodic fsimage merge};
+
+        \node (dn2) [workflow/step, fill=WorkflowTeal!6, text width=3.7cm, minimum height=1.65cm, below=8mm of namenode] {\textbf{DataNode 2}\\\small block storage};
+        \node (dn1) [workflow/step, fill=WorkflowTeal!6, text width=3.7cm, minimum height=1.65cm, left=7mm of dn2] {\textbf{DataNode 1}\\\small block storage};
+        \node (dn3) [workflow/step, fill=WorkflowTeal!6, text width=3.7cm, minimum height=1.65cm, right=7mm of dn2] {\textbf{DataNode 3}\\\small block storage};
+
+        \node (rep) [workflow/step, fill=WorkflowPurple!8, text width=13.2cm, minimum height=1.45cm, below=8mm of dn2] {\textbf{Block replication}\\\small write pipeline replicates blocks across DataNodes; replication factor $r$ provides fault tolerance};
+
+        \draw[<->, line width=0.9pt, draw=WorkflowGray!70] (client) -- node[workflow/label, above, text width=2.7cm, align=center] {metadata requests / block locations} (namenode);
+        \draw[workflow/arrow] (checkpoint) -- (namenode);
+
+        \draw[workflow/arrow] (client) to[out=-35,in=180] node[workflow/label, above] {stream blocks} (dn2.west);
+        \draw[workflow/arrow] (dn2) -- (dn1);
+        \draw[workflow/arrow] (dn2) -- (dn3);
+        \draw[workflow/arrow] (dn1) -- (rep);
+        \draw[workflow/arrow] (dn2) -- (rep);
+        \draw[workflow/arrow] (dn3) -- (rep);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Architecture overview of Hadoop HDFS}
+    \label{fig:hdfs-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:hdfs-architecture} summarizes how HDFS separates metadata management from block storage and uses replication to provide durability and fault tolerance for large datasets.
+
+\paragraph{HDFS client}
+The HDFS client represents any application that reads or writes data into HDFS (for example, ingestion consumers, Spark jobs, or administrative utilities). Clients do not directly manage metadata; instead they interact with the NameNode to resolve file operations and then stream block data to DataNodes.
+
+\paragraph{NameNode (filesystem namespace + block metadata)}
+The NameNode is the \textbf{metadata authority} of HDFS. It stores the filesystem namespace (directories, files, permissions) and maintains mappings between files and their blocks, and between blocks and the DataNodes that store them. Because it is the control point for metadata, keeping it consistent and durable is critical for the whole filesystem.
+
+\paragraph{Checkpoint (periodic fsimage merge)}
+The checkpoint component represents periodic persistence/compaction of metadata state (fsimage edits management). The goal is operational: it reduces recovery time and improves stability by regularly consolidating the filesystem image and edit logs.
+
+\paragraph{DataNodes (block storage)}
+DataNodes store the actual data blocks and serve client read/write operations. In the diagram, three DataNodes illustrate distribution across nodes. DataNodes periodically report to the NameNode so the NameNode can maintain up-to-date block location information.
+
+\paragraph{Streaming blocks and the write pipeline}
+When writing, the client first requests target DataNodes from the NameNode (block locations), then \textbf{streams blocks} to a chosen DataNode. Replication is typically implemented as a pipeline: the first DataNode forwards the block to additional DataNodes, ensuring that all replicas are written.
+
+\paragraph{Block replication (replication factor $r$)}
+Replication is the main durability mechanism: each block is stored on multiple DataNodes. If the probability of losing one replica during a time window is approximated by $p$ and the replication factor is $r$, a simplified upper bound for losing all replicas is:
+\begin{equation}
+    P_{\text{loss}} \approx p^{r}
+\end{equation}
+While simplified, this illustrates why increasing $r$ reduces the likelihood of complete data loss.
+
+\subsubsection{Project rationale}
+HDFS is used as the bronze landing zone to store immutable batches generated from Kafka consumption. This ensures durability, supports auditing, and provides a stable interface for downstream Spark jobs that build Iceberg raw tables.
+
+\textbf{In our project:} HDFS stores the bronze zone as immutable JSONL batches and hosts the warehouse storage used by the lakehouse layers.
+
+\subsection{Apache Spark for Distributed Processing}
+\begin{center}
+    \includegraphics[height=2.4cm,keepaspectratio]{\TechLogoPath/spark.png}
+\end{center}
+\subsubsection{Definition}
+Apache Spark is a distributed processing engine for batch and analytical workloads. It supports structured transformations via DataFrames and Spark SQL and executes jobs as parallel stages across worker nodes.
+
+\subsubsection{Architecture diagram}
+The diagram below summarizes the driver/executor execution model and how Spark SQL fits into the distributed processing pipeline.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=12mm and 8mm]
+        \node (driver) [workflow/step, fill=WorkflowOrange!10, text width=4.8cm, minimum height=2.45cm] {\textbf{Driver}\\\small DAG Scheduler\\\small Task Scheduler};
+        \node (manager) [workflow/step, fill=WorkflowTeal!10, text width=4.8cm, minimum height=2.45cm, right=10mm of driver] {\textbf{Cluster manager}\\\small allocates executors\\\small (Standalone / YARN / K8s)};
+
+        \node (ex2) [workflow/step, fill=WorkflowOrange!6, text width=3.7cm, minimum height=2.1cm, below=14mm of manager] {\textbf{Executor 2}\\\small tasks + cache};
+        \node (ex1) [workflow/step, fill=WorkflowOrange!6, text width=3.7cm, minimum height=2.1cm, left=7mm of ex2] {\textbf{Executor 1}\\\small tasks + cache};
+        \node (ex3) [workflow/step, fill=WorkflowOrange!6, text width=3.7cm, minimum height=2.1cm, right=7mm of ex2] {\textbf{Executor 3}\\\small tasks + cache};
+
+        \node (sql) [workflow/step, fill=WorkflowPurple!10, text width=13.2cm, minimum height=1.75cm, below=18mm of ex2] {\textbf{Spark SQL engine}\\\small SQL parser + Catalyst optimizer + physical plan execution};
+
+        \draw[workflow/arrow] (driver) -- node[workflow/label, above] {submit} (manager);
+        \draw[workflow/arrow] (manager) -- (ex1);
+        \draw[workflow/arrow] (manager) -- (ex2);
+        \draw[workflow/arrow] (manager) -- (ex3);
+
+        \draw[workflow/arrow] (ex1) -- (sql);
+        \draw[workflow/arrow] (ex2) -- (sql);
+        \draw[workflow/arrow] (ex3) -- (sql);
+        \draw[workflow/dasharrow] (ex1) to[out=-30,in=-150] node[workflow/label, below] {shuffle exchange} (ex3);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Architecture overview of Apache Spark}
+    \label{fig:spark-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:spark-architecture} highlights the core Spark execution model used in distributed processing: a driver coordinates execution, a cluster manager allocates resources, and executors perform parallel work. Spark SQL provides the structured processing layer on top of that execution engine.
+
+\paragraph{Driver (DAG Scheduler + Task Scheduler)}
+The driver is the control component of a Spark application. It constructs the logical execution plan from user code (DataFrames/RDDs), builds a DAG of stages, and schedules tasks. It also tracks job progress and coordinates retries when tasks fail. Conceptually, the driver is responsible for transforming high-level transformations into low-level parallel tasks.
+
+\paragraph{Cluster manager (Standalone / YARN / Kubernetes)}
+The cluster manager allocates compute resources and launches executors. It decides where executors run and how many resources they receive (CPU/memory). Even in containerized deployments, the role remains the same: provide a stable mechanism for Spark to acquire and manage distributed execution capacity.
+
+\paragraph{Executors (tasks + cache)}
+Executors are the distributed worker processes that run tasks. They execute transformations on partitions of data, perform joins and aggregations, and can cache intermediate datasets to speed up repeated computations. Executors also perform local reads/writes to storage and participate in shuffle operations when required.
+
+\paragraph{Shuffle exchange}
+The dashed arrow indicates a shuffle: data redistribution across executors. Shuffles occur for operations like groupBy, joins, and sorting. They are powerful but expensive due to network and disk I/O; designing pipelines to minimize unnecessary shuffles improves performance and stability.
+
+\paragraph{Spark SQL engine (parser + Catalyst + physical plan)}
+Spark SQL enables structured transformations using SQL and DataFrames. It parses SQL, applies the Catalyst optimizer to produce an optimized logical plan, then generates a physical plan executed by the underlying Spark engine. This is a key bridge between “data engineering code” and “SQL modeling” in the platform.
+
+Distributed speedup is commonly measured by:
+\begin{equation}
+    S(p) = \frac{T_1}{T_p}
+\end{equation}
+but practical speedup is bounded when only a fraction $f$ is parallelizable:
+\begin{equation}
+    S(p) \le \frac{1}{(1-f) + \frac{f}{p}}
+\end{equation}
+This motivates reducing unnecessary shuffles and optimizing I/O patterns.
+
+\subsubsection{Project rationale}
+Spark provides the distributed compute layer that transforms bronze batches into standardized Iceberg raw tables and supports scalable SQL transformations. It is also used as the execution engine behind dbt-Spark through the Thrift server interface.
+
+\textbf{In our project:} Spark loads bronze batches into Iceberg raw tables and executes SQL transformations (directly and via dbt-Spark through Spark SQL / Thrift).
+
+\subsection{Apache Iceberg for Lakehouse Tables}
+\begin{center}
+    \includegraphics[height=1.7cm,keepaspectratio]{\TechLogoPath/Apache_Iceberg.png}
+\end{center}
+\subsubsection{Definition}
+Apache Iceberg is a lakehouse table format for large analytic datasets. It manages table metadata to support snapshot-based reads, schema evolution, and efficient queries over file-based storage.
+
+\subsubsection{Architecture diagram}
+The diagram below summarizes how lakehouse engines interact with the Iceberg catalog and metadata layer to locate and read Parquet data files in storage.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=12mm and 8mm]
+        \node (writer) [workflow/step, fill=WorkflowOrange!8, text width=5.4cm, minimum height=2.2cm] {\textbf{Writer engine}\\\small Spark writes data};
+        \node (reader) [workflow/step, fill=WorkflowPurple!8, text width=5.4cm, minimum height=2.2cm, right=16mm of writer] {\textbf{Reader engine}\\\small Trino reads snapshots};
+
+        \node (catalog) [workflow/step, fill=white, text width=6.4cm, minimum height=2.0cm, below=16mm of $(writer)!0.5!(reader)$] {\textbf{Catalog}\\\small Hive Metastore\\\small table location};
+
+        \node (meta) [workflow/step, fill=WorkflowPurple!10, text width=6.4cm, minimum height=2.35cm, below=16mm of catalog] {\textbf{Iceberg metadata layer}\\\small metadata.json\\\small manifest list + manifests};
+        \node (data) [workflow/step, fill=WorkflowTeal!10, text width=6.4cm, minimum height=2.25cm, right=16mm of meta] {\textbf{Data files}\\\small Parquet on HDFS\\\small partitioned};
+
+        \draw[workflow/arrow] (writer) -- (catalog);
+        \draw[workflow/arrow] (reader) -- (catalog);
+        \draw[workflow/arrow] (catalog) -- node[font=\normalsize, left, text=WorkflowGray!85] {resolves} (meta);
+        \draw[workflow/arrow] (meta) -- node[font=\normalsize, above, text=WorkflowGray!85] {references} (data);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Architecture overview of Apache Iceberg}
+    \label{fig:iceberg-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:iceberg-architecture} illustrates how Iceberg separates \textbf{catalog discovery}, \textbf{metadata management}, and \textbf{data file storage} so that multiple engines can safely read and write the same tables.
+
+\paragraph{Writer engine (Spark writes data)}
+The writer engine represents the compute system that produces table data. In this project, Spark writes data into Iceberg tables. A write is not only about producing Parquet files; it also includes committing new metadata so that readers can discover the new snapshot safely.
+
+\paragraph{Reader engine (Trino reads snapshots)}
+The reader engine represents SQL query engines that read the table state. In this project, Trino reads Iceberg tables by resolving the table through the catalog and then reading a consistent snapshot. Snapshot-based reads avoid “partial update” issues because each query targets a stable table state.
+
+\paragraph{Catalog (Hive Metastore table location)}
+The catalog is the discovery mechanism used to find tables and resolve their current metadata pointer. Hive Metastore stores table definitions, properties, and references to where the Iceberg metadata is located. This enables multiple engines to share a single registry of tables.
+
+\paragraph{Iceberg metadata layer (metadata.json, manifest list, manifests)}
+The metadata layer is where Iceberg’s reliability comes from. It tracks schema, partitioning, and a sequence of snapshots. Each snapshot points to a manifest list and manifests; manifests describe which data files belong to the snapshot and store file-level statistics that help pruning and efficient query planning.
+
+\paragraph{Data files (Parquet on HDFS)}
+The data layer contains the physical files, typically Parquet, stored on distributed storage (HDFS here). Iceberg treats these as immutable data files referenced by manifests. This design supports scalable storage while keeping table semantics consistent and queryable.
+
+\subsubsection{Project rationale}
+Iceberg provides the raw lakehouse layer where bronze batches are materialized into queryable tables. It enables consistent access by multiple engines (Spark for writes and transformations, Trino for SQL exploration) without duplicating data into a separate warehouse.
+
+\textbf{In our project:} Iceberg is the lakehouse table format for the raw and curated layers, providing a consistent SQL interface while keeping data stored as files on HDFS.
+
+\subsection{Hive Metastore for Catalog Management}
+\begin{center}
+    \includegraphics[height=2.0cm,keepaspectratio]{\TechLogoPath/Apache_Hive.png}
+\end{center}
+\subsubsection{Definition}
+Hive Metastore is a catalog service that stores table definitions, schemas, and metadata endpoints. It provides a shared registry that allows multiple engines to discover and interpret the same lakehouse tables.
+
+\subsubsection{Architecture diagram}
+The diagram below illustrates the metastore service, its backing metadata database, and how multiple engines use the same catalog to locate tables in warehouse storage.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=12mm and 18mm]
+        \node (svc) [workflow/step, fill=WorkflowOrange!8, text width=6.6cm, minimum height=2.35cm] {\textbf{Metastore service (Thrift)}\\\small table schemas\\\small storage descriptors};
+        \node (db) [workflow/step, fill=white, text width=5.2cm, minimum height=2.35cm, right=16mm of svc] {\textbf{Metadata DB}\\\small persistent catalog\\\small (PostgreSQL)};
+
+        \node (warehouse) [workflow/step, fill=WorkflowTeal!10, text width=6.6cm, minimum height=2.0cm, below=16mm of svc] {\textbf{Warehouse storage}\\\small HDFS paths\\\small table locations};
+
+        \node (spark) [workflow/step, fill=WorkflowOrange!6, text width=4.6cm, minimum height=2.0cm, below left=16mm and 14mm of svc] {\textbf{Spark}\\\small read/write};
+        \node (trino) [workflow/step, fill=WorkflowPurple!6, text width=4.6cm, minimum height=2.0cm, below right=16mm and 14mm of svc] {\textbf{Trino}\\\small query};
+
+        \draw[workflow/arrow] (svc) -- node[font=\normalsize, above, text=WorkflowGray!85] {stores} (db);
+        \draw[workflow/arrow] (svc) -- node[font=\normalsize, right, text=WorkflowGray!85] {points to} (warehouse);
+        \draw[workflow/arrow] (spark) -- (svc);
+        \draw[workflow/arrow] (trino) -- (svc);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Architecture overview of Hive Metastore}
+    \label{fig:hive-metastore-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:hive-metastore-architecture} shows how Hive Metastore acts as a shared catalog layer between storage (HDFS) and compute engines (Spark/Trino).
+
+\paragraph{Metastore service (Thrift)}
+The metastore service exposes an API (commonly Thrift) to create databases/tables, retrieve schemas, and resolve storage descriptors. Engines query the metastore service to discover table definitions and associated properties, rather than embedding schemas in each engine configuration.
+
+\paragraph{Metadata database (PostgreSQL)}
+The metadata database persists the catalog state: schemas, table definitions, and storage descriptors. Using a relational database improves reliability and supports concurrent access patterns from multiple engines and administrative tools.
+
+\paragraph{Warehouse storage (HDFS paths)}
+Warehouse storage represents the physical storage locations of table data. The metastore stores references to these locations (e.g., base table locations or Iceberg metadata locations), while the data itself lives in HDFS. This separation allows storage to scale independently from catalog services.
+
+\paragraph{Engine connectivity (Spark and Trino)}
+Spark and Trino connect to the metastore service to resolve table schemas and locations. This enables a \textbf{shared source of truth} across engines: Spark can write tables and update metadata, and Trino can read the same tables without redefining schemas. This reduces duplication and improves governance.
+
+\subsubsection{Project rationale}
+Hive Metastore acts as the central catalog for Iceberg tables so Spark and Trino can access the same raw and curated datasets consistently. This supports governance, avoids duplicated schema definitions, and makes the platform extensible when new datasets and tables are introduced.
+
+\textbf{In our project:} Hive Metastore is the shared catalog used by Spark (write/transform) and Trino (SQL exploration/validation) over the same Iceberg tables.
+
+\subsection{Trino for SQL Query and Exploration}
+\begin{center}
+    \includegraphics[height=2.0cm,keepaspectratio]{\TechLogoPath/trino.png}
+\end{center}
+\subsubsection{Definition}
+Trino is a distributed SQL query engine designed for interactive analytics. It enables fast SQL exploration over large datasets and can query multiple data sources through connectors.
+
+\subsubsection{Architecture diagram}
+The diagram below shows the coordinator/worker execution model and how Trino relies on connectors and catalogs to access Iceberg tables.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=12mm and 18mm]
+        \node (coord) [workflow/step, fill=WorkflowPurple!10, text width=5.6cm, minimum height=2.25cm] {\textbf{Coordinator}\\\small SQL parsing\\\small planning + scheduling};
+
+        \node (w2) [workflow/step, fill=WorkflowPurple!6, text width=3.7cm, minimum height=2.0cm, below=16mm of coord] {\textbf{Worker 2}\\\small executes tasks};
+        \node (w1) [workflow/step, fill=WorkflowPurple!6, text width=3.7cm, minimum height=2.0cm, left=7mm of w2] {\textbf{Worker 1}\\\small executes tasks};
+        \node (w3) [workflow/step, fill=WorkflowPurple!6, text width=3.7cm, minimum height=2.0cm, right=7mm of w2] {\textbf{Worker 3}\\\small executes tasks};
+
+        \node (catalog) [workflow/step, fill=WorkflowOrange!8, text width=6.0cm, minimum height=2.0cm, below=16mm of w2] {\textbf{Catalog + connector}\\\small Iceberg connector + Hive Metastore catalog};
+
+        \draw[workflow/arrow] (coord) -- (w1);
+        \draw[workflow/arrow] (coord) -- (w2);
+        \draw[workflow/arrow] (coord) -- (w3);
+        \draw[workflow/arrow] (w1) -- (catalog);
+        \draw[workflow/arrow] (w2) -- node[workflow/label, right] {metadata + data access} (catalog);
+        \draw[workflow/arrow] (w3) -- (catalog);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Architecture overview of Trino}
+    \label{fig:trino-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:trino-architecture} highlights Trino’s distributed query model and how it integrates with a lakehouse via an Iceberg connector and the Hive Metastore catalog.
+
+\paragraph{Coordinator (SQL parsing, planning, scheduling)}
+The coordinator receives SQL queries, parses them, applies optimizations, and generates a distributed execution plan. It splits the plan into fragments that can be executed concurrently across workers, and coordinates scheduling and task lifecycle. The coordinator is also responsible for exposing query status and diagnostics.
+
+\paragraph{Workers (execute tasks)}
+Workers execute fragments of the distributed plan. They scan data, apply filters and joins, and exchange intermediate results when required. Trino achieves performance by parallelizing scans and computation across workers, which makes it suitable for interactive exploration of large lakehouse tables.
+
+\paragraph{Catalog + connector (Iceberg connector, Hive Metastore catalog)}
+The connector is the integration layer that lets Trino understand how to read Iceberg tables. It uses the Hive Metastore catalog to resolve schemas and locate the Iceberg metadata, then plans scans over the referenced data files. This is why Trino can query Iceberg tables using standard SQL without custom ingestion into a separate warehouse.
+
+\subsubsection{Project rationale}
+Trino provides the SQL query layer over Iceberg tables. It supports validation queries, exploration of curated datasets, and acts as the consumption endpoint for analytics use cases without requiring data export to another system.
+
+\textbf{In our project:} Trino is the SQL endpoint for validating and exploring Iceberg tables across raw and curated layers.
+
+\subsection{dbt-Spark for Transformation Modeling}
+\begin{center}
+    \includegraphics[height=2.0cm,keepaspectratio]{\TechLogoPath/data_build_tool.png}
+\end{center}
+\subsubsection{Definition}
+dbt is an analytics engineering framework that organizes SQL transformations as modular models, tests, and documentation. With a Spark adapter, dbt can materialize tables and run tests inside a Spark SQL environment.
+
+\subsubsection{Architecture diagram}
+The diagram below summarizes the layered dbt workflow used to build curated tables from raw lakehouse data.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=11mm and 12mm]
+        \node (raw) [workflow/step, fill=WorkflowTeal!10, text width=5.4cm, minimum height=2.0cm] {\textbf{Raw tables}\\\small Iceberg raw\_data};
+        \node (stg) [workflow/step, fill=WorkflowBlue!10, text width=5.4cm, minimum height=2.0cm, right=12mm of raw] {\textbf{Staging}\\\small standardize fields};
+        \node (int) [workflow/step, fill=WorkflowOrange!10, text width=5.4cm, minimum height=2.0cm, below=12mm of stg] {\textbf{Intermediate}\\\small joins + aggregates};
+        \node (ana) [workflow/step, fill=WorkflowPurple!10, text width=5.4cm, minimum height=2.0cm, below=12mm of raw] {\textbf{Analytics}\\\small marts + KPIs};
+
+        \draw[workflow/arrow] (raw) -- (stg);
+        \draw[workflow/arrow] (stg) -- (int);
+        \draw[workflow/arrow] (int) -- (ana);
+
+        \node (tests) [workflow/step, fill=white, text width=12.4cm, minimum height=1.75cm, below=14mm of $(int)!0.5!(ana)$] {\textbf{dbt workflow}\\\small parse + compile builds a DAG; \texttt{dbt run} materializes models; \texttt{dbt test} validates assumptions.};
+        \draw[workflow/arrow] (ana) -- (tests);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Transformation architecture with dbt-Spark}
+    \label{fig:dbt-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:dbt-architecture} summarizes the layered ELT modeling approach used in this project and the operational workflow provided by dbt.
+
+\paragraph{Raw tables (Iceberg raw\_data)}
+Raw tables are the output of the ingestion + raw build pipeline. They represent standardized, queryable table forms of ingested datasets but still reflect the raw business meaning and granularity of each source.
+
+\paragraph{Staging layer (standardize fields)}
+Staging models apply normalization: consistent naming, type casting, null handling, and basic cleaning. This layer isolates source-specific quirks so that downstream logic can be written against stable fields.
+
+\paragraph{Intermediate layer (joins + aggregates)}
+Intermediate models implement reusable transformations such as joins across datasets, customer-level aggregations, and behavioral summaries. This layer is where cross-domain integration happens (e.g., combining marketing and transaction signals).
+
+\paragraph{Analytics layer (marts + KPIs)}
+Analytics models produce final tables optimized for consumption: reporting-ready marts and KPIs. They are designed for clarity and usability rather than raw fidelity, and they typically align with business questions.
+
+\paragraph{dbt workflow (parse/compile, run, test)}
+The workflow box emphasizes dbt’s operational approach: dbt parses and compiles models into a dependency graph (DAG), runs models in dependency order, and applies tests (e.g., not-null, uniqueness) to detect quality regressions early. This turns transformation code into an auditable, testable pipeline.
+
+\subsubsection{Project rationale}
+dbt-Spark implements the transformation layers of the lakehouse. It provides structure and maintainability through staging, intermediate, and analytics models, while also adding tests that validate key assumptions such as uniqueness and completeness.
+
+\textbf{In our project:} dbt-Spark materializes curated tables on Spark SQL, producing reusable customer and sales analytics marts over the Iceberg lakehouse.
+
+\subsection{Great Expectations for Data Quality}
+\begin{center}
+    \includegraphics[height=1.6cm,keepaspectratio]{\TechLogoPath/great_expectations.png}
+\end{center}
+\subsubsection{Definition}
+Great Expectations is a data quality framework that validates datasets against explicit expectations and produces human-readable reports. It supports operational checks that reduce the risk of silent data corruption.
+
+\subsubsection{Architecture diagram}
+The diagram below summarizes the separation between configuration, expectation definitions, checkpoint execution, and stored validation results.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=11mm and 12mm]
+        \node (context) [workflow/step, fill=WorkflowBlue!10, text width=5.4cm, minimum height=2.0cm] {\textbf{Data context}\\\small config + stores};
+        \node (suite) [workflow/step, fill=WorkflowBlue!6, text width=5.4cm, minimum height=2.0cm, right=12mm of context] {\textbf{Expectation suite}\\\small rules / checks};
+        \node (check) [workflow/step, fill=WorkflowOrange!10, text width=5.4cm, minimum height=2.0cm, below=12mm of suite] {\textbf{Checkpoint}\\\small run definition};
+        \node (art) [workflow/step, fill=WorkflowPurple!10, text width=5.4cm, minimum height=2.0cm, below=12mm of context] {\textbf{Validation results}\\\small JSON artifacts};
+
+        \node (docs) [workflow/step, fill=white, text width=12.4cm, minimum height=1.7cm, below=14mm of $(check)!0.5!(art)$] {\textbf{Reporting}\\\small summarized metrics + optional Data Docs; in this project: lightweight GX-based validation artifacts};
+
+        \draw[workflow/arrow] (context) -- (suite);
+        \draw[workflow/arrow] (suite) -- (check);
+        \draw[workflow/arrow] (check) -- (art);
+        \draw[workflow/arrow] (art) -- (docs);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Data quality validation workflow with Great Expectations}
+    \label{fig:gx-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:gx-architecture} illustrates the core Great Expectations workflow: configuration and stores, reusable rules (expectations), an execution unit (checkpoint), persisted results, and reporting.
+
+\paragraph{Data context (config + stores)}
+The data context is the configuration root of Great Expectations. It defines where expectation suites, checkpoints, and validation results are stored (local files, databases, or object stores). It is the entry point that makes the quality layer portable and reproducible across environments.
+
+\paragraph{Expectation suite (rules / checks)}
+Expectation suites contain reusable rules that data should satisfy (e.g., not-null constraints, value ranges, uniqueness). They encode quality requirements explicitly, so validation is not ad-hoc but standardized and repeatable.
+
+\paragraph{Checkpoint (run definition)}
+A checkpoint is an execution configuration that specifies which suite(s) to run, on which dataset/batch, and with which runtime parameters. It operationalizes data quality by defining how validations are triggered and how results are handled.
+
+\paragraph{Validation results (JSON artifacts)}
+Validation results are structured outputs of running expectations. They include success/failure status, counts of unexpected values, and metadata. Persisting these artifacts makes quality measurable over time and supports monitoring and audit requirements.
+
+\paragraph{Reporting}
+Reporting represents human-consumable summaries such as Data Docs or lightweight run summaries. In this project, reporting is implemented as lightweight artifacts and metrics so that quality outcomes can be integrated into pipeline monitoring.
+
+\subsubsection{Project rationale}
+The project integrates a lightweight Great Expectations-based validation step to confirm that raw tables are non-empty and that essential signals remain within acceptable quality ranges. This improves trust in the platform outputs and supports repeatability.
+
+\textbf{In our project:} we apply a lightweight validation layer on raw Iceberg tables and persist summarized artifacts so data quality becomes observable and auditable as part of pipeline execution.
+
+\subsection{Apache Airflow for Orchestration}
+\begin{center}
+    \includegraphics[height=2.5cm,keepaspectratio]{\TechLogoPath/Airflow.png}
+\end{center}
+\subsubsection{Definition}
+Apache Airflow is a workflow orchestration platform that models data pipelines as directed acyclic graphs (DAGs). It manages dependencies, scheduling, retries, and operational execution.
+
+\subsubsection{Architecture diagram}
+The following diagram summarizes the main Airflow 3 components relevant to orchestration: DAG bundle, DAG processor, scheduler, workers, API server, triggerer, and metadata database.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=11mm and 7mm]
+        \node (bundle) [workflow/step, fill=WorkflowBlue!10, text width=3.9cm, minimum height=2.0cm] {\textbf{DAG bundle}\\\small DAG files source};
+        \node (processor) [workflow/step, fill=WorkflowBlue!6, text width=3.9cm, minimum height=2.0cm, right=7mm of bundle] {\textbf{DAG processor}\\\small parses + serializes};
+        \node (sched) [workflow/step, fill=WorkflowOrange!10, text width=3.9cm, minimum height=2.0cm, right=7mm of processor] {\textbf{Scheduler}\\\small schedules + queues};
+        \node (worker) [workflow/step, fill=WorkflowOrange!6, text width=3.9cm, minimum height=2.0cm, below=12mm of sched] {\textbf{Workers}\\\small execute tasks};
+
+        \node (api) [workflow/step, fill=WorkflowTeal!10, text width=3.9cm, minimum height=2.0cm, below=12mm of processor] {\textbf{API server}\\\small UI + REST + task state API};
+        \node (triggerer) [workflow/step, fill=WorkflowPurple!10, text width=3.9cm, minimum height=2.0cm, below=12mm of bundle] {\textbf{Triggerer}\\\small deferred tasks};
+        \node (meta) [workflow/step, fill=white, text width=6.0cm, minimum height=2.0cm, below=15mm of api] {\textbf{Metadata DB}\\\small serialized DAGs, runs, task states, and history};
+
+        \draw[workflow/arrow] (bundle) -- (processor);
+        \draw[workflow/arrow] (processor) -- (sched);
+        \draw[workflow/arrow] (sched) -- (worker);
+        \draw[workflow/arrow] (processor) -- (api);
+        \draw[workflow/arrow] (sched) -- (meta);
+        \draw[workflow/arrow] (api) -- (meta);
+        \draw[workflow/arrow] (triggerer) -- (meta);
+        \draw[workflow/arrow] (worker) -- node[workflow/label, right] {task state} (meta);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Architecture overview of Apache Airflow}
+    \label{fig:airflow-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:airflow-architecture} summarizes the Airflow components that together support reliable orchestration: the system loads workflow definitions (DAGs), schedules tasks based on dependencies, executes them on workers, and persists all operational state for monitoring and audit.
+
+\paragraph{DAG bundle (DAG files source)}
+This is the source directory containing DAG code. It defines the workflow structure (task graph), scheduling settings, retries, and the commands/functions executed by each task. In practice, it must be available to the parsing component so Airflow can detect changes and keep the orchestrated logic consistent with the project code.
+
+\paragraph{DAG processor (parses + serializes)}
+The DAG processor reads DAG Python files and produces a serialized representation of DAG structure and task metadata. This separates parsing from scheduling, which improves stability and performance when there are many DAGs or when DAG import logic is non-trivial. Serialization also enables consistent UI/API rendering without repeatedly importing Python modules.
+
+\paragraph{Metadata DB (DAGs + runs + states)}
+The metadata database is the system of record for orchestration state. It stores serialized DAGs, DAG runs, task instances, schedules, retries, and historical outcomes. Because all components read and write state through this database (directly or via the API server), it enables traceability and auditability of pipeline executions.
+
+\paragraph{Scheduler (schedules + queues)}
+The scheduler evaluates dependencies and determines which task instances are ready to run. It then transitions tasks to runnable states and coordinates dispatch according to the executor model. The scheduler continuously updates and reads state from the metadata database to ensure correct ordering and retry behavior.
+
+\paragraph{Workers (execute tasks)}
+Workers execute the actual task payloads (operators). In this project, those payloads include service readiness checks, ingestion steps, raw loading, validations, and transformation runs. Workers report outcomes (success/failure) and runtime information back to Airflow so the platform can be monitored and rerun reliably.
+
+\paragraph{API server (UI + REST + task state API)}
+The API server provides the web UI and REST endpoints used to view DAGs, trigger runs, and inspect execution state. It also provides an interface for task state updates, which is useful for scaling and for simplifying how different components interact with orchestration state.
+
+\paragraph{Triggerer (deferred tasks)}
+The triggerer supports deferrable tasks that wait for external conditions without holding a worker slot. While not always required for every workflow, it is important for efficient orchestration when sensors or long waits are used, because it keeps worker capacity available for compute-heavy tasks.
+
+\paragraph{How this fits the project workflow}
+Within this platform, Airflow acts as the execution backbone that enforces the correct order of steps (readiness checks $\rightarrow$ ingestion/loading $\rightarrow$ validation $\rightarrow$ transformations) and records every run so the pipeline is reproducible and auditable.
+
+\subsubsection{Project rationale}
+Airflow orchestrates the end-to-end execution order: readiness checks, ingestion and loading pipelines, quality validation, and dbt transformations. This makes the platform operationally reproducible and auditable.
+\textbf{In our project:} Airflow orchestrates readiness checks, raw ingestion/loading pipelines, quality validations, and dbt transformation runs as reproducible DAG executions.
+
+\subsection{Prometheus and Grafana for Observability}
+\begin{center}
+    \includegraphics[height=1.9cm,keepaspectratio]{\TechLogoPath/Prometheus.png}\hspace{0.8cm}
+    \includegraphics[height=1.9cm,keepaspectratio]{\TechLogoPath/Grafana.png}
+\end{center}
+\subsubsection{Definition}
+Prometheus is a metrics collection system based on time series and pull-based scraping. Grafana is a visualization platform that renders dashboards on top of time series data sources such as Prometheus.
+
+\subsubsection{Architecture diagram}
+The diagram below shows how metrics are exposed by exporters, scraped into Prometheus, and visualized through Grafana dashboards.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=11mm and 7mm]
+        \node (export) [workflow/step, fill=WorkflowTeal!10, text width=4.0cm, minimum height=2.2cm] {\textbf{Metrics exporters}\\\small services + pipeline metrics\\\small expose \texttt{/metrics}};
+        \node (prom) [workflow/step, fill=WorkflowOrange!10, text width=4.0cm, minimum height=2.2cm, right=7mm of export] {\textbf{Prometheus}\\\small scrape + TSDB\\\small query engine};
+        \node (graf) [workflow/step, fill=WorkflowPurple!10, text width=4.0cm, minimum height=2.2cm, right=7mm of prom] {\textbf{Grafana}\\\small dashboards\\\small alerts (optional)};
+
+        \node (alert) [workflow/step, fill=white, text width=6.2cm, minimum height=1.55cm, below=16mm of prom] {\textbf{Operational outcomes}\\\small service readiness + pipeline success metrics};
+
+        \draw[workflow/arrow] (export) -- node[workflow/label, above] {scrape} (prom);
+        \draw[workflow/arrow] (prom) -- node[workflow/label, above] {query} (graf);
+        \draw[workflow/arrow] (prom) -- (alert);
+        \draw[workflow/arrow] (graf) -- (alert);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Observability architecture with Prometheus and Grafana}
+    \label{fig:observability-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive diagram explanation}
+Figure~\ref{fig:observability-architecture} summarizes the observability flow: systems expose metrics, Prometheus scrapes and stores time series, and Grafana visualizes dashboards and (optionally) alerts. The goal is to make both infrastructure readiness and pipeline health measurable.
+
+\paragraph{Metrics exporters (\texttt{/metrics})}
+Exporters are services that expose operational metrics through an HTTP endpoint (commonly \texttt{/metrics}) in a format Prometheus can scrape. Exporters can represent infrastructure components (e.g., container metrics) and also application-level metrics (pipeline runs, validation outcomes).
+
+\paragraph{Prometheus (scrape + TSDB + query engine)}
+Prometheus periodically scrapes exporters, timestamps measurements, and stores them as time series in its TSDB. It also provides a query language (PromQL) to compute aggregates, rates, and alert conditions over time windows. This makes it possible to track both instantaneous service health and long-term trends.
+
+\paragraph{Grafana (dashboards, alerts)}
+Grafana queries Prometheus and displays dashboards that organize key metrics into readable panels. Alerts are optional and can be used to notify when service readiness drops or when pipeline success ratios fall below a threshold.   
+
+\paragraph{Operational outcomes}
+This block represents the actionable outputs of observability: service readiness, pipeline reliability, and run-level indicators that support debugging and reporting.
+
+A simple reliability indicator over $N$ pipeline runs is:
+\begin{equation}
+    R = \frac{n_{\text{successful}}}{N}
+\end{equation}
+
+\subsubsection{Project rationale}
+Observability makes the platform operationally transparent by exposing service readiness and pipeline run outcomes. It improves troubleshooting, supports reporting, and provides measurable evidence of reliability.
+\textbf{In our project:} we expose service readiness probes and pipeline-run metrics to measure reliability end-to-end and support troubleshooting.
+
+\section{Conclusion}
+This chapter established the theoretical background required to justify the main architectural and technological choices of the AdOptimizer Customer Data Platform. The next chapter focuses on requirements analysis and system design, before presenting the detailed implementation, validation, and deployment strategy of the proposed lakehouse platform.
+
+\clearpage
+\chapter{REQUIREMENTS ANALYSIS AND SYSTEM DESIGN}
+
+\section{Introduction}
+After establishing the theoretical foundations in Chapter II, this chapter formalizes the \textbf{requirements} of the AdOptimizer Customer Data Platform and presents the corresponding \textbf{system design}. The objective is to define what the platform must achieve (functional and non-functional expectations), then translate these expectations into a coherent architecture that is realistic for the project scope and execution constraints.
+
+The requirements are written to remain \textbf{jury-safe}: they reflect the needs addressed by the platform without claiming unverified production-grade guarantees. The design choices emphasize reproducibility, clarity of layering, and operational discipline, so that the implementation presented in the next chapter can be evaluated against explicit criteria.
+
+To ensure traceability between objectives and implementation, the requirements are expressed in a way that can be verified through concrete evidence in Chapter IV (code, configuration, execution logs, and query results). In practice, this chapter answers two complementary questions:
+\begin{itemize}
+    \item \textbf{What must the platform deliver?} (requirements perspective)
+    \item \textbf{How is the platform organized to deliver it?} (design perspective)
+\end{itemize}
+
+\section{Requirements Analysis}
+\subsection{Functional Requirements}
+Functional requirements describe what the platform must do from an end-to-end data engineering perspective, starting from ingestion and ending with queryable, validated, and reusable analytical datasets.
+
+In order to keep the analysis structured, functional requirements are grouped by platform layers:
+\begin{itemize}
+    \item \textbf{Ingestion and landing} (Kafka, bronze zone)
+    \item \textbf{Raw table construction} (Spark $\rightarrow$ Iceberg)
+    \item \textbf{Transformation and modeling} (dbt layers)
+    \item \textbf{Serving and exploration} (Trino SQL access)
+    \item \textbf{Quality, orchestration, and operations} (validation, Airflow, monitoring)
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{6pt}
+    \renewcommand{\arraystretch}{1.25}
+    \arrayrulecolor{ModernTableRule}
+    \rowcolors{2}{ModernTableStripe}{white}
+    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.13\textwidth}|>{\raggedright\arraybackslash}p{0.55\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{ID} &
+        \color{white}\textbf{Functional requirement} &
+        \color{white}\textbf{Project motivation} \\
+        \hline
+        FR-1 & Ingest heterogeneous datasets (batch files and event-like records) into a unified ingestion backbone. & Avoid source-specific ingestion pipelines and enable a consistent downstream processing interface. \\
+        \hline
+        FR-2 & Persist an immutable bronze landing zone that preserves ingested history for auditability and reprocessing. & Enable traceability, debugging, and reproducible rebuilds when logic evolves. \\
+        \hline
+        FR-3 & Construct queryable raw tables from the bronze zone using distributed processing. & Provide a stable tabular representation for SQL access, transformation, and validation. \\
+        \hline
+        FR-4 & Support layered transformations (staging $\rightarrow$ intermediate $\rightarrow$ analytics) with explicit dependencies. & Separate cleaning from business logic and deliver reusable analytics-ready data products. \\
+        \hline
+        FR-5 & Provide an interactive SQL serving layer for exploration and validation queries. & Enable fast iteration and verification without exporting data to external tools. \\
+        \hline
+        FR-6 & Apply lightweight data quality validation and persist validation artifacts. & Prevent silent data corruption and provide measurable evidence of dataset usability. \\
+        \hline
+        FR-7 & Orchestrate the execution order of pipeline stages with run tracking and retries. & Ensure repeatable, auditable pipeline execution and reduce manual operations. \\
+        \hline
+        FR-8 & Expose operational metrics for service readiness and pipeline outcomes. & Improve troubleshooting and provide operational visibility for demonstrations and reporting. \\
+        \hline
+    \end{tabularx}
+    \caption{Functional requirements of the AdOptimizer Customer Data Platform}
+    \label{tab:functional-requirements}
+\arrayrulecolor{black}
+\end{table}
+
+\subsubsection{Functional requirement breakdown}
+The requirements in Table~\ref{tab:functional-requirements} translate into concrete capabilities that are essential for a customer data platform.
+
+\paragraph{Unified ingestion (FR-1)}
+The platform must accept heterogeneous sources without forcing each dataset to have its own isolated pipeline. The functional objective is to normalize ingestion into a common backbone so that downstream processing is not tightly coupled to the original file layout or extraction tool. This is especially important in customer analytics where sources often evolve (columns added, categorical values changed, naming inconsistencies) and onboarding new datasets should remain controlled and repeatable.
+
+\paragraph{Immutable landing zone and replayability (FR-2)}
+An immutable bronze layer is a practical requirement for auditability and controlled reprocessing. When transformation logic evolves, the platform should not depend on manual re-exports of original files. Instead, the ingestion history must remain accessible so that a rebuild becomes a deterministic engineering action. This requirement also prevents silent changes in raw history, which would undermine traceability.
+
+\paragraph{Raw tables as a stable contract (FR-3)}
+Downstream modeling should not be performed directly on raw files. Building raw tables establishes a stable contract: schemas are standardized, types are controlled, and consumers can rely on SQL access through engines. This reduces the operational cost of each new transformation because the base layer is predictable and reusable.
+
+\paragraph{Layered modeling and reuse (FR-4)}
+Layering is a functional requirement, not a documentation preference. It enforces separation of responsibilities: staging isolates source-specific cleaning, intermediate models host reusable integration logic, and analytics models expose final data products and KPIs. This structure improves maintainability and reduces the risk of inconsistent business logic scattered across scripts.
+
+\paragraph{SQL access for validation and exploration (FR-5)}
+Interactive SQL access is required for two reasons: validating that ingested datasets match expectations (row counts, basic distributions, join keys) and enabling iterative analytics work without exporting data. In a practical PFE context, this also allows the jury to verify results through clear SQL examples.
+
+\paragraph{Operational data quality (FR-6)}
+Data quality requirements are treated as operational controls. Even lightweight checks provide meaningful guarantees: datasets are non-empty, identifiers meet minimal completeness, and value ranges are reasonable. Persisted artifacts serve as evidence that data quality was evaluated rather than assumed.
+
+\paragraph{Orchestration as an execution contract (FR-7)}
+Pipeline execution must be repeatable and ordered. Orchestration provides explicit run history and task outcomes, which is essential for debugging and for proving that the platform can be executed in a deterministic sequence (readiness $\rightarrow$ ingestion $\rightarrow$ raw build $\rightarrow$ validation $\rightarrow$ transformations).
+
+\paragraph{Operational metrics (FR-8)}
+Metrics make the platform demonstrable. For each major run, the platform should expose basic indicators such as service readiness, execution durations, and success ratios. These indicators do not claim strict production SLAs, but they provide measurable evidence of operational control.
+
+\subsection{Non-Functional Requirements}
+Non-functional requirements define quality attributes that influence design decisions such as layering, storage format, orchestration, and operational monitoring.
+
+In a distributed data platform, non-functional requirements are often the main drivers behind architectural choices. For instance, scalability and reproducibility directly motivate separating storage from compute and using snapshot-based tables. Similarly, operational reliability motivates readiness checks and monitoring rather than purely manual execution.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{6pt}
+    \renewcommand{\arraystretch}{1.25}
+    \arrayrulecolor{ModernTableRule}
+    \rowcolors{2}{ModernTableStripe}{white}
+    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.13\textwidth}|>{\raggedright\arraybackslash}p{0.55\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{ID} &
+        \color{white}\textbf{Non-functional requirement} &
+        \color{white}\textbf{Design implication} \\
+        \hline
+        NFR-1 & Reproducibility of runs and outputs (same inputs $\rightarrow$ same results when logic is unchanged). & Favor immutable bronze storage, versioned tables, and orchestrated execution with stored run history. \\
+        \hline
+        NFR-2 & Scalability for multi-source growth (data volume, number of datasets, and number of transformations). & Separate storage and compute; use distributed processing and partition-friendly table layouts. \\
+        \hline
+        NFR-3 & Reliability and fault tolerance for core services used in the pipeline. & Define service readiness checks and apply retries at orchestration level; avoid hidden manual steps. \\
+        \hline
+        NFR-4 & Maintainability and clarity of transformations and business logic. & Use layered models, consistent naming conventions, and dependency-aware transformation graphs. \\
+        \hline
+        NFR-5 & Portability across machines and environments. & Use container-based deployment and explicit configuration through environment variables. \\
+        \hline
+        NFR-6 & Practical performance under limited hardware resources (development and testing constraints). & Design for incremental validation, selective recomputation, and controlled parallelism to avoid resource exhaustion. \\
+        \hline
+        NFR-7 & Security and data protection discipline for datasets and credentials. & Avoid hard-coded secrets, keep configuration externalized, and restrict access to services and data paths. \\
+        \hline
+    \end{tabularx}
+    \caption{Non-functional requirements driving the platform design}
+    \label{tab:non-functional-requirements}
+\arrayrulecolor{black}
+\end{table}
+
+\subsubsection{Non-functional requirement interpretation}
+The non-functional requirements in Table~\ref{tab:non-functional-requirements} are interpreted as practical constraints for the project scope.
+
+\paragraph{Reproducibility (NFR-1)}
+Reproducibility is required at two levels: pipeline execution reproducibility (same steps, same order) and dataset reproducibility (stable snapshots that can be queried consistently). This is particularly important for future ML readiness, where training datasets must be traceable and repeatable.
+
+\paragraph{Scalability (NFR-2)}
+Scalability is treated as the ability to grow along three axes: number of datasets, data volume, and transformation complexity. While the project is validated on limited hardware, the implementation is designed so that performance bottlenecks can be addressed with concrete engineering actions: improving I/O throughput (file format and partitioning), tuning compute parallelism, and reducing expensive shuffles caused by joins and aggregations. In Chapter IV, this is reflected through service configuration, partition-aware processing, and an execution order that allows incremental validation rather than full recomputation on every change.
+
+\paragraph{Reliability (NFR-3)}
+Reliability is implemented as controlled execution: service readiness checks, explicit retries, and run history. The objective is not to claim strict uptime guarantees, but to ensure the platform does not fail silently and that failures are diagnosable.
+
+\paragraph{Maintainability (NFR-4)}
+Maintainability is addressed through clear layering, consistent naming conventions, and dependency-aware transformations. In practice, this reduces the cognitive load when adding a new dataset or modifying business logic.
+
+\paragraph{Portability (NFR-5)}
+Portability is essential in PFE contexts because the platform must be executable on different machines. Containerization and environment variables ensure that configuration remains explicit and not embedded in code.
+
+\paragraph{Limited hardware constraints (NFR-6)}
+Local testing constraints influence design decisions: controlled parallelism, incremental validation, and the ability to re-run only affected parts of the pipeline. This also supports iterative development, where datasets and models are refined over multiple runs.
+
+\paragraph{Security discipline (NFR-7)}
+Security is treated as discipline rather than claiming enterprise security certification: externalized configuration, no hard-coded secrets, and restricted exposure of internal services. This is aligned with common DataSecOps best practices.
+
+\subsection{Data Quality and Governance Requirements}
+The platform is intended to produce datasets that are not only available, but also \textbf{trustworthy} for analytics and future ML usage. This requires explicit quality and governance expectations:
+\begin{itemize}
+    \item \textbf{Schema consistency:} raw and curated datasets must expose stable field names and types, with controlled schema evolution.
+    \item \textbf{Completeness and uniqueness:} critical identifiers (customer keys, transaction IDs, event/session identifiers) should be measurable through simple quality ratios and uniqueness checks.
+    \item \textbf{Traceability:} every curated dataset must be traceable back to raw tables and ultimately to bronze history (lineage through transformation dependencies).
+    \item \textbf{Layer separation:} raw landing, cleaned staging, business logic, and analytics marts must remain distinguishable to avoid mixing responsibilities.
+    \item \textbf{Version awareness:} table snapshots and run history must support reproducible reads for analytics and ML dataset construction.
+\end{itemize}
+
+\subsubsection{Minimal measurable quality indicators}
+To keep validation actionable and implementable, quality requirements are expressed through simple, implementation-friendly indicators that can be computed during validation queries and stored as artifacts:
+\begin{itemize}
+    \item \textbf{Completeness indicator:} total rows vs non-null rows for critical fields (e.g., compare \texttt{COUNT(*)} with \texttt{COUNT(customer\_id)}).
+    \item \textbf{Uniqueness indicator:} distinct identifier count vs total rows when uniqueness is expected (e.g., compare \texttt{COUNT(DISTINCT transaction\_id)} with \texttt{COUNT(*)}).
+    \item \textbf{Duplicate detection:} identify keys with frequency $> 1$ and track the number of duplicates as a regression signal.
+    \item \textbf{Range and domain checks:} verify that numerical metrics and categorical values remain within expected bounds and sets.
+\end{itemize}
+These indicators are not sufficient alone to prove correctness, but they provide a measurable baseline that quickly detects major regressions (empty loads, broken joins, duplicated events, or missing keys).
+
+\subsection{Observability and Operational Requirements}
+Operational requirements ensure the platform remains debuggable and demonstrable:
+\begin{itemize}
+    \item \textbf{Service readiness:} core services must expose readiness indicators so the pipeline can fail fast if prerequisites are not met.
+    \item \textbf{Run traceability:} orchestration must record run state, task outcomes, and execution order.
+    \item \textbf{Metrics visibility:} pipeline outcomes (success/failure counts, durations, validation outcomes) should be observable through metrics and dashboards.
+    \item \textbf{Controlled reprocessing:} replay and recomputation must be intentional and auditable, not accidental.
+\end{itemize}
+
+\subsubsection{Operational KPIs for a PFE demonstration}
+To make operational behavior visible during validation runs, a minimal set of KPIs is useful:
+\begin{itemize}
+    \item \textbf{End-to-end run duration} (per ingestion/load/transform run)
+    \item \textbf{Run success ratio} over multiple executions (computed as successful runs divided by total runs, tracked per DAG or per pipeline stage)
+    \item \textbf{Stage-level latency} (ingestion vs raw build vs transformations), which supports debugging by isolating bottlenecks
+    \item \textbf{Validation outcome metrics} (number of checks passed/failed, unexpected counts)
+\end{itemize}
+These metrics provide an objective layer of evidence that the pipeline is operational and repeatable.
+
+\section{Conceptual Design}
+\subsection{Actors and Use Cases}
+The platform is designed around a small set of actors that reflect typical responsibilities in a data platform project:
+\begin{itemize}
+    \item \textbf{Data Engineer:} onboards datasets, builds ingestion and raw loading logic, and ensures replayability.
+    \item \textbf{Analytics Engineer:} designs transformation layers, tests, and documentation for curated models.
+    \item \textbf{Data Analyst:} queries curated datasets and validates business logic through SQL exploration.
+    \item \textbf{Platform/DevOps Engineer:} maintains services, configuration, and monitoring for reliable execution.
+\end{itemize}
+
+From an end-to-end perspective, these actors collaborate through a shared lifecycle:
+\begin{itemize}
+    \item dataset onboarding (source analysis, schema mapping, ingestion contract)
+    \item pipeline execution (orchestrated runs with logs and validation artifacts)
+    \item consumption and iteration (SQL exploration and model refinement)
+    \item operational follow-up (monitoring, troubleshooting, and controlled reprocessing)
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=10mm and 10mm]
+        \node (actors) [workflow/step, fill=WorkflowBlue!10, text width=4.6cm, minimum height=2.3cm] {\textbf{Actors}\\\small Data Engineer\\\small Analytics Engineer\\\small Data Analyst\\\small Platform/DevOps};
+        \node (uc1) [workflow/step, fill=WorkflowTeal!10, text width=7.8cm, minimum height=1.55cm, right=12mm of actors] {\textbf{Onboard dataset}\\\small define source, topic, bronze path, raw table};
+        \node (uc2) [workflow/step, fill=WorkflowOrange!10, text width=7.8cm, minimum height=1.55cm, below=9mm of uc1] {\textbf{Run ingestion and raw build}\\\small publish/consume, persist bronze, build Iceberg raw};
+        \node (uc3) [workflow/step, fill=WorkflowPurple!10, text width=7.8cm, minimum height=1.55cm, below=9mm of uc2] {\textbf{Transform and validate}\\\small dbt models + quality checks};
+        \node (uc4) [workflow/step, fill=white, text width=7.8cm, minimum height=1.55cm, below=9mm of uc3] {\textbf{Query and monitor}\\\small SQL exploration + dashboards + run history};
+
+        \draw[workflow/arrow] (actors) -- (uc1);
+        \draw[workflow/arrow] (actors) -- (uc2);
+        \draw[workflow/arrow] (actors) -- (uc3);
+        \draw[workflow/arrow] (actors) -- (uc4);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Actors and main use cases addressed by the platform}
+    \label{fig:actors-usecases}
+\end{figure}
+
+\subsection{Data Source Analysis}
+The project validates the platform using public customer-related datasets that represent different formats and business signals. The objective is not to claim production representativeness, but to ensure that the platform supports \textbf{multi-source integration} with realistic cleaning and modeling needs.
+
+From a design perspective, sources differ across several dimensions that directly influence ingestion and modeling:
+\begin{itemize}
+    \item \textbf{granularity:} customer-level attributes vs event-level logs vs transaction-level facts
+    \item \textbf{identifiers:} presence/absence of stable keys and the need for surrogate keys in some cases
+    \item \textbf{quality risks:} missing values, duplicates, inconsistent date formats, and categorical drift
+    \item \textbf{update behavior:} static snapshots vs incremental arrivals vs event-like records
+\end{itemize}
+This analysis is important because it justifies why the platform must separate ingestion, raw standardization, and curated modeling rather than directly building analytics tables from raw files.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{6pt}
+    \renewcommand{\arraystretch}{1.25}
+    \arrayrulecolor{ModernTableRule}
+    \rowcolors{2}{ModernTableStripe}{white}
+    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.28\textwidth}|>{\raggedright\arraybackslash}p{0.18\textwidth}|>{\raggedright\arraybackslash}p{0.18\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Dataset category} &
+        \color{white}\textbf{Typical format} &
+        \color{white}\textbf{Main entity} &
+        \color{white}\textbf{Reason for inclusion} \\
+        \hline
+        Customer and marketing attributes & CSV/Excel & Customer profile & Supports segmentation-style features and profile consistency checks. \\
+        \hline
+        E-commerce behavior and churn signals & CSV & Customer/session & Introduces behavioral patterns and prediction-ready signals. \\
+        \hline
+        Event-level clickstream / interaction logs & CSV/JSON-like records & Event + item interaction & Validates event ingestion patterns and aggregation logic. \\
+        \hline
+        Transactional sales records & CSV & Order/transaction & Validates joins, revenue metrics, and business KPI modeling. \\
+        \hline
+    \end{tabularx}
+    \caption{High-level data source analysis for the case study validation}
+    \label{tab:data-source-analysis}
+\arrayrulecolor{black}
+\end{table}
+
+\subsection{Lakehouse Layering Strategy}
+To prevent a ``data swamp'' effect and ensure clarity of responsibilities, the platform follows a layered lakehouse organization:
+\begin{itemize}
+    \item \textbf{Bronze (immutable landing):} raw ingested history stored as append-only files for audit and replay.
+    \item \textbf{Raw (lakehouse tables):} standardized tabular form built from bronze, designed as the stable source for all downstream layers.
+    \item \textbf{Staging:} cleaning and normalization to isolate source-specific quirks and enforce consistent field semantics.
+    \item \textbf{Intermediate:} reusable integration logic (joins, aggregations, entity-level summarization).
+    \item \textbf{Analytics:} consumption-ready marts and KPIs designed for reporting and future ML dataset extraction.
+\end{itemize}
+
+This strategy ensures that reprocessing remains possible: bronze preserves history, raw tables provide stable snapshots, and curated layers remain reconstructible through explicit transformation dependencies.
+
+\subsubsection{Layer responsibilities and expected outputs}
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{6pt}
+    \renewcommand{\arraystretch}{1.25}
+    \arrayrulecolor{ModernTableRule}
+    \rowcolors{2}{ModernTableStripe}{white}
+    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.18\textwidth}|>{\raggedright\arraybackslash}p{0.34\textwidth}|>{\raggedright\arraybackslash}p{0.20\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Layer} &
+        \color{white}\textbf{Main role} &
+        \color{white}\textbf{Typical form} &
+        \color{white}\textbf{Example checks} \\
+        \hline
+        Bronze & Preserve ingested history exactly as received; enable replay and audit. & Immutable batch files & Non-empty batch, expected schema fields exist. \\
+        \hline
+        Raw & Provide standardized tabular datasets as a stable contract for all downstream logic. & Iceberg tables & Row counts, key completeness, basic type validation. \\
+        \hline
+        Staging & Normalize and clean fields; isolate source-specific quirks. & Views or tables & Not-null checks, value range checks, date parsing sanity. \\
+        \hline
+        Intermediate & Implement reusable joins and aggregates; build entity-level views (e.g., customer profile). & Tables & Uniqueness of entity keys, join coverage ratios. \\
+        \hline
+        Analytics & Expose final marts and KPIs for reporting and ML dataset extraction. & Tables & KPI plausibility checks, sampling-based verification queries. \\
+        \hline
+    \end{tabularx}
+    \caption{Lakehouse layering responsibilities and expected outputs}
+    \label{tab:layering-responsibilities}
+\arrayrulecolor{black}
+\end{table}
+
+\section{Global Architecture}
+\subsection{End-to-End Data Flow}
+The end-to-end flow follows a clear sequence: sources are ingested and persisted as immutable bronze data, then transformed into raw lakehouse tables, then refined into curated analytical datasets, and finally exposed through a SQL layer. Orchestration ensures the correct order and records run history.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=11mm and 10mm]
+        \node (sources) [workflow/step, fill=WorkflowBlue!10, text width=4.8cm, minimum height=2.0cm] {\textbf{Data sources}\\\small batch files\\\small event records};
+        \node (kafka) [workflow/step, fill=WorkflowTeal!10, text width=4.8cm, minimum height=2.0cm, right=10mm of sources] {\textbf{Kafka ingestion}\\\small topics + offsets\\\small replayable log};
+        \node (bronze) [workflow/step, fill=WorkflowTeal!6, text width=4.8cm, minimum height=2.0cm, right=10mm of kafka] {\textbf{HDFS bronze}\\\small immutable batches\\\small audit + replay};
+
+        \node (spark) [workflow/step, fill=WorkflowOrange!10, text width=4.8cm, minimum height=2.0cm, below=14mm of kafka] {\textbf{Spark compute}\\\small parsing + standardization};
+        \node (iceberg) [workflow/step, fill=WorkflowPurple!10, text width=4.8cm, minimum height=2.0cm, right=10mm of spark] {\textbf{Iceberg tables}\\\small raw $\rightarrow$ curated\\\small snapshots};
+        \node (meta) [workflow/step, fill=white, text width=4.8cm, minimum height=2.0cm, right=10mm of iceberg] {\textbf{Hive Metastore}\\\small shared catalog};
+
+        \node (dbt) [workflow/step, fill=WorkflowOrange!6, text width=4.8cm, minimum height=2.0cm, below=14mm of iceberg] {\textbf{dbt-Spark}\\\small layered models + tests};
+        \node (trino) [workflow/step, fill=WorkflowPurple!6, text width=4.8cm, minimum height=2.0cm, right=10mm of dbt] {\textbf{Trino SQL}\\\small exploration + serving};
+        \node (gx) [workflow/step, fill=WorkflowBlue!6, text width=4.8cm, minimum height=2.0cm, left=10mm of dbt] {\textbf{Quality checks}\\\small Great Expectations\\\small artifacts};
+
+        \node (airflow) [workflow/step, fill=WorkflowTeal!10, text width=7.5cm, minimum height=1.7cm, below=16mm of $(gx)!0.5!(trino)$] {\textbf{Airflow orchestration}\\\small execution order + run history};
+        \node (obs) [workflow/step, fill=WorkflowPurple!10, text width=7.5cm, minimum height=1.7cm, right=10mm of airflow] {\textbf{Observability}\\\small Prometheus + Grafana};
+
+        \draw[workflow/arrow] (sources) -- (kafka);
+        \draw[workflow/arrow] (kafka) -- (bronze);
+        \draw[workflow/arrow] (bronze) -- (meta);
+        \draw[workflow/arrow] (bronze) -- (spark);
+        \draw[workflow/arrow] (spark) -- (iceberg);
+        \draw[workflow/arrow] (meta) -- (iceberg);
+        \draw[workflow/arrow] (iceberg) -- (dbt);
+        \draw[workflow/arrow] (dbt) -- (trino);
+        \draw[workflow/arrow] (iceberg) -- (trino);
+        \draw[workflow/arrow] (iceberg) -- (gx);
+        \draw[workflow/arrow] (gx) -- (airflow);
+        \draw[workflow/arrow] (dbt) -- (airflow);
+        \draw[workflow/arrow] (airflow) -- (obs);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Target end-to-end architecture of the AdOptimizer Customer Data Platform}
+    \label{fig:global-architecture}
+\end{figure}
+
+\subsubsection{Comprehensive architecture explanation}
+Figure~\ref{fig:global-architecture} represents the target blueprint of the platform and clarifies how each technology maps to a specific responsibility.
+
+\paragraph{Data sources}
+Sources represent heterogeneous exports and event-like datasets. At this level, the platform does not assume consistent schemas, identifiers, or formats. The goal is to absorb this heterogeneity without breaking downstream logic.
+
+\paragraph{Kafka ingestion}
+Kafka standardizes ingestion as an append-only log. This decouples upstream production from downstream consumption and enables controlled replay through offsets. Conceptually, it makes the ingestion stage repeatable even when downstream logic changes.
+
+\paragraph{HDFS bronze}
+The bronze zone stores immutable batches that represent the ingestion ground truth for the platform. It enables auditing (what data was ingested) and supports raw table rebuilds without requiring the original external exports.
+
+\paragraph{Spark compute}
+Spark provides distributed transformations required to standardize datasets and load them into the raw table layer. This includes schema mapping, flattening, casting, deduplication steps when applicable, and basic normalization required for consistent SQL tables.
+
+\paragraph{Iceberg tables and Hive Metastore}
+Iceberg is the table format that provides snapshot-based consistency and schema evolution, while Hive Metastore is the shared catalog that allows Spark and Trino to discover the same tables. This combination is the core lakehouse contract: stable SQL access on top of file-based storage.
+
+\paragraph{dbt-Spark}
+dbt structures transformations into layers and a dependency graph. This converts transformation logic into a maintainable engineering artifact: models have clear ownership, can be tested, and are reproducible across runs.
+
+\paragraph{Quality checks}
+Validation acts as a control point: it verifies that the data reaching the raw layer satisfies minimal expectations before being used to build curated models. Persisted artifacts serve both debugging and reporting needs.
+
+\paragraph{Trino SQL serving}
+Trino provides the consumption interface for exploration, validation queries, and demonstration. It allows fast SQL access to Iceberg tables without extracting data into another system.
+
+\paragraph{Airflow orchestration and observability}
+Airflow coordinates execution and records run history, while monitoring dashboards expose readiness and run outcomes. Together they transform a set of services into an executable and observable pipeline.
+
+\subsection{Tool Interaction and Integration}
+The design relies on a small number of integration contracts:
+\begin{itemize}
+    \item \textbf{Kafka $\rightarrow$ HDFS:} consumers materialize ingested records into immutable bronze batches and keep replay possible through offset control.
+    \item \textbf{HDFS $\rightarrow$ Spark:} Spark reads bronze history to build standardized raw tables and to rebuild them when logic evolves.
+    \item \textbf{Spark $\rightarrow$ Iceberg/Hive Metastore:} table writes commit metadata so that readers can access a consistent snapshot state.
+    \item \textbf{Trino $\rightarrow$ Iceberg/Hive Metastore:} Trino reads Iceberg tables through a connector that resolves metadata and plans distributed scans.
+    \item \textbf{dbt-Spark:} dbt structures SQL transformations as a DAG executed on Spark SQL, producing curated layers and tests.
+    \item \textbf{Quality validation:} expectations/checks are executed on raw datasets and produce persisted artifacts that can be reviewed and monitored.
+    \item \textbf{Orchestration and monitoring:} Airflow coordinates the execution order, while metrics dashboards provide an operational view of readiness and pipeline outcomes.
+\end{itemize}
+
+\subsubsection{Controlled reprocessing and idempotency principles}
+Two operational principles reduce the risk of inconsistent results across runs:
+\begin{itemize}
+    \item \textbf{Idempotent writes:} repeating a run should not silently duplicate data. In practice, this motivates partition-aware writes, overwrite strategies where appropriate, and stable job boundaries.
+    \item \textbf{Explicit replay windows:} replay is a controlled action, not a side effect. Reprocessing should be triggered intentionally and recorded through orchestration so that outputs remain auditable.
+\end{itemize}
+These principles are particularly relevant when the platform is extended later to support continuous ingestion and more frequent refresh cycles.
+
+\subsection{Deployment and Distribution View}
+Although the project is validated in a local environment, the design anticipates distribution into logical roles. This view is a conceptual preparation for the multi-machine strategy detailed later in Chapter VII.
+
+This view clarifies that the platform is not a single monolithic service. It is a set of cooperating components that can be distributed by responsibility:
+\begin{itemize}
+    \item coordination and orchestration services that manage scheduling and metadata
+    \item storage and catalog services that hold durable datasets and metadata
+    \item processing and query engines that execute computation and serve SQL access
+\end{itemize}
+Even in local deployment, thinking in terms of roles improves clarity and prepares the platform for scalability discussions.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=12mm and 16mm]
+        \node (node1) [workflow/step, fill=WorkflowBlue!10, text width=5.2cm, minimum height=2.2cm] {\textbf{Coordination + orchestration}\\\small Kafka controllers\\\small Airflow + API};
+        \node (node2) [workflow/step, fill=WorkflowTeal!10, text width=5.2cm, minimum height=2.2cm, right=12mm of node1] {\textbf{Storage + catalog}\\\small HDFS\\\small Hive Metastore + DB};
+        \node (node3) [workflow/step, fill=WorkflowOrange!10, text width=5.2cm, minimum height=2.2cm, right=12mm of node2] {\textbf{Processing + query}\\\small Spark\\\small Trino + dbt};
+
+        \node (net) [workflow/step, fill=white, text width=16.6cm, minimum height=1.6cm, below=14mm of $(node1)!0.5!(node3)$] {\textbf{Network integration}\\\small service discovery, credentials, ports, and monitoring endpoints};
+
+        \draw[workflow/arrow] (node1) -- (node2);
+        \draw[workflow/arrow] (node2) -- (node3);
+        \draw[workflow/arrow] (node1) -- (net);
+        \draw[workflow/arrow] (node2) -- (net);
+        \draw[workflow/arrow] (node3) -- (net);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Conceptual deployment and distribution view (preparation for Chapter VII)}
+    \label{fig:deployment-view}
+\end{figure}
+
+\section{Conclusion}
+This chapter defined the requirements that guide the platform and translated them into a coherent system design: a layered lakehouse with replayable ingestion, reproducible raw table construction, governed transformations, and operational orchestration and monitoring. The next chapter presents the concrete implementation of these design choices in the project repository, including environment preparation, service deployment, pipeline execution, and integration details.
 
 \end{document}

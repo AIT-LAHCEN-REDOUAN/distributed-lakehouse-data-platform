@@ -9,6 +9,9 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+import pandas as pd
+import great_expectations as gx
+
 
 QUALITY_ROOT = Path(__file__).resolve().parent
 SRC_ROOT = QUALITY_ROOT.parents[2]
@@ -16,6 +19,13 @@ KAFKA_COMMON_ROOT = SRC_ROOT / "streaming" / "kafka" / "client_1" / "common"
 MONITORING_ROOT = SRC_ROOT / "monitoring"
 TRINO_COMMON_ROOT = SRC_ROOT / "query" / "trino" / "client_1" / "common"
 ARTIFACTS_DIR = QUALITY_ROOT / "artifacts"
+GX_PROJECT_ROOT = QUALITY_ROOT / "gx_project"
+
+DATASOURCE_NAME = "client1_quality_metrics"
+ASSET_NAME = "raw_lakehouse_metrics"
+BATCH_DEFINITION_NAME = "default"
+SUITE_NAME = "raw_lakehouse_metrics_suite"
+CHECKPOINT_NAME = "raw_lakehouse_quality_checkpoint"
 
 for import_root in (KAFKA_COMMON_ROOT, MONITORING_ROOT, TRINO_COMMON_ROOT):
     if str(import_root) not in sys.path:
@@ -53,26 +63,99 @@ def query_row_count(table_name: str) -> int:
     return int(result["rows"][0][0])
 
 
+def query_column_count(table_name: str) -> int:
+    result = execute_trino_statement(
+        f"SHOW COLUMNS FROM {TRINO_CATALOG}.{TRINO_SCHEMA}.{table_name}"
+    )
+    return len(result.get("rows", []))
+
+
+def _get_or_create_context() -> gx.DataContext:
+    GX_PROJECT_ROOT.mkdir(parents=True, exist_ok=True)
+    return gx.get_context(project_root_dir=str(GX_PROJECT_ROOT))
+
+
+def _ensure_pandas_asset(context: gx.DataContext) -> object:
+    try:
+        datasource = context.data_sources.get(DATASOURCE_NAME)
+    except Exception:
+        datasource = context.data_sources.add_pandas(name=DATASOURCE_NAME)
+
+    try:
+        asset = datasource.get_asset(ASSET_NAME)
+    except Exception:
+        asset = datasource.add_dataframe_asset(name=ASSET_NAME)
+
+    try:
+        asset.get_batch_definition(BATCH_DEFINITION_NAME)
+    except Exception:
+        asset.add_batch_definition_whole_dataframe(BATCH_DEFINITION_NAME)
+
+    return asset
+
+
 def run_raw_checkpoint() -> dict[str, object]:
     started_at = datetime.now(timezone.utc)
     validations: list[dict[str, object]] = []
 
+    context = _get_or_create_context()
+    asset = _ensure_pandas_asset(context)
+    try:
+        suite = context.suites.get(SUITE_NAME)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Expectation suite '{SUITE_NAME}' is missing. Run bootstrap_gx.py before validations."
+        ) from exc
+
+    batch_definition = asset.get_batch_definition(BATCH_DEFINITION_NAME)
+
     for dataset_key in DATASET_ORDER:
         target_table = str(get_dataset_config(dataset_key)["target_table"])
         row_count = query_row_count(target_table)
+        column_count = query_column_count(target_table)
+        batch_df = pd.DataFrame(
+            [
+                {
+                    "dataset_key": dataset_key,
+                    "target_table": f"{TRINO_SCHEMA}.{target_table}",
+                    "row_count": row_count,
+                    "column_count": column_count,
+                    "checked_at": datetime.now(timezone.utc).isoformat(),
+                }
+            ]
+        )
+        definition_name = f"{CHECKPOINT_NAME}__{dataset_key}"
+        try:
+            validation_definition = context.validation_definitions.get(definition_name)
+        except Exception:
+            validation_definition = context.validation_definitions.add(
+                gx.ValidationDefinition(
+                    data=batch_definition,
+                    suite=suite,
+                    name=definition_name,
+                )
+            )
+
+        validation_result = validation_definition.run(
+            batch_parameters={"dataframe": batch_df},
+        )
+        validation_success = bool(getattr(validation_result, "success", False))
         validations.append(
             {
                 "dataset_key": dataset_key,
                 "target_table": f"{TRINO_SCHEMA}.{target_table}",
                 "row_count": row_count,
-                "success": row_count > 0,
+                "column_count": column_count,
+                "success": validation_success,
+                "validation_definition": definition_name,
             }
         )
 
     ended_at = datetime.now(timezone.utc)
+    context.build_data_docs()
     overall_success = all(bool(item["success"]) for item in validations)
     return {
-        "checkpoint_name": "raw_lakehouse_quality_checkpoint",
+        "checkpoint_name": CHECKPOINT_NAME,
         "status": "success" if overall_success else "failed",
         "success": overall_success,
         "started_at": started_at.isoformat(),
