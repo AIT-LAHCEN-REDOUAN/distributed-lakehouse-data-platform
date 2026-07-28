@@ -1,0 +1,20 @@
+================================================================================
+ VM SPECIFICATIONS
+================================================================================
+
+Spec            | 10.10.252.11        | 10.10.252.12        | 10.10.252.13
+-----------------|---------------------|---------------------|---------------------
+Hostname         | redouan             | redouan             | redouan
+OS               | Ubuntu 22.04.5 LTS  | Ubuntu 22.04.5 LTS  | Ubuntu 22.04.5 LTS
+Kernel           | 5.15.0-119-generic  | 5.15.0-119-generic  | 5.15.0-119-generic
+CPU              | QEMU Virtual CPU    | QEMU Virtual CPU    | QEMU Virtual CPU
+                 | 2.5+ (2 sockets x   | 2.5+ (2 sockets x   | 2.5+ (2 sockets x
+                 | 2 cores)            | 2 cores)            | 2 cores)
+RAM (total)      | 3.8 GiB             | 3.8 GiB             | 3.8 GiB
+RAM (used)       | 196 MiB             | 176 MiB             | 185 MiB
+Disk (total)     | 26 GB               | 26 GB               | 26 GB
+Disk (used)      | 7.0 GB (29%)        | 7.6 GB (32%)        | 7.0 GB (29%)
+GPU              | No dedicated GPU    | No dedicated GPU    | No dedicated GPU
+                 | (basic VGA)         | (basic VGA)         | (basic VGA)
+
+================================================================================
