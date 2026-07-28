@@ -1,0 +1,22 @@
+{
+  "data": {
+    "asset": {
+      "id": "23602737-32f3-410f-9054-7a0acd73d6c4",
+      "name": "raw_lakehouse_metrics"
+    },
+    "batch_definition": {
+      "id": "cf0b2ad1-7cab-48c8-a6df-0a70dedfa646",
+      "name": "default"
+    },
+    "datasource": {
+      "id": "32cc5b86-cead-4427-a139-8b3029c8ae95",
+      "name": "client1_quality_metrics"
+    }
+  },
+  "id": "60d27504-fa0d-4f1f-a71c-f338f2cb3fc2",
+  "name": "raw_lakehouse_quality_checkpoint__marketing_campaign",
+  "suite": {
+    "id": "5840f431-f6dc-4745-8347-0dc69ce57d91",
+    "name": "raw_lakehouse_metrics_suite"
+  }
+}

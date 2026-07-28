@@ -61570,3 +61570,2058 @@ having count(*) > 1
 [0m17:57:52.533641 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7a08c3a03650>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7a08c3c723d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7a08c827a310>]}
 [0m17:57:52.534409 [debug] [MainThread]: Flushing usage events
 [0m17:57:52.983080 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m20:56:24.813004 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bf5b8f50>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bf6e3850>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bf5b8b10>]}
+
+
+============================== 20:56:24.819855 | d09bb934-2707-4ac6-8587-2ab5793d2299 ==============================
+[0m20:56:24.819855 [info ] [MainThread]: Running with dbt=1.11.12
+[0m20:56:24.821148 [debug] [MainThread]: running dbt with arguments {'use_experimental_parser': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'write_json': 'True', 'no_print': 'None', 'introspect': 'True', 'fail_fast': 'False', 'empty': 'False', 'partial_parse': 'True', 'target_path': 'None', 'log_cache_events': 'False', 'debug': 'False', 'quiet': 'False', 'invocation_command': 'dbt run', 'log_format': 'default', 'cache_selected_only': 'False', 'log_path': '/opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/logs', 'indirect_selection': 'eager', 'use_colors': 'True', 'warn_error': 'None', 'static_parser': 'True', 'profiles_dir': '/opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1', 'send_anonymous_usage_stats': 'True', 'printer_width': '80', 'version_check': 'True'}
+[0m20:56:25.068955 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m20:56:25.070329 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m20:56:25.071367 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m20:56:25.512748 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bf4c2e10>]}
+[0m20:56:25.599178 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bee40c50>]}
+[0m20:56:25.602229 [info ] [MainThread]: Registered adapter: spark=1.10.3
+[0m20:56:25.743181 [debug] [MainThread]: checksum: f368f5348cf42803b94ef7fb8257ecf3bf9a9a16dd9c8c51fe5172f2dbeb457f, vars: {}, profile: , target: , version: 1.11.12
+[0m20:56:26.371149 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m20:56:26.373140 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m20:56:26.374056 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m20:56:26.495010 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2beb05290>]}
+[0m20:56:26.717072 [debug] [MainThread]: Wrote artifact WritableManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/manifest.json
+[0m20:56:26.722926 [debug] [MainThread]: Wrote artifact SemanticManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/semantic_manifest.json
+[0m20:56:26.746299 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bf490590>]}
+[0m20:56:26.747735 [info ] [MainThread]: Found 13 models, 15 data tests, 6 sources, 525 macros
+[0m20:56:26.748840 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bf618650>]}
+[0m20:56:26.752662 [info ] [MainThread]: 
+[0m20:56:26.753702 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m20:56:26.754674 [info ] [MainThread]: 
+[0m20:56:26.755629 [debug] [MainThread]: Acquiring new spark connection 'master'
+[0m20:56:26.765597 [debug] [ThreadPool]: Acquiring new spark connection 'list_schemas'
+[0m20:56:26.766694 [debug] [ThreadPool]: Acquiring new spark connection 'list_schemas'
+[0m20:56:26.767542 [debug] [ThreadPool]: Acquiring new spark connection 'list_schemas'
+[0m20:56:26.789029 [debug] [ThreadPool]: Using spark connection "list_schemas"
+[0m20:56:26.792282 [debug] [ThreadPool]: Using spark connection "list_schemas"
+[0m20:56:26.795026 [debug] [ThreadPool]: Using spark connection "list_schemas"
+[0m20:56:26.796062 [debug] [ThreadPool]: On list_schemas: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_schemas"} */
+
+    show databases
+  
+[0m20:56:26.797423 [debug] [ThreadPool]: On list_schemas: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_schemas"} */
+
+    show databases
+  
+[0m20:56:26.798539 [debug] [ThreadPool]: On list_schemas: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_schemas"} */
+
+    show databases
+  
+[0m20:56:26.799502 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:56:26.800650 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:56:26.801572 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:56:32.240644 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.241298 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.241907 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.242567 [debug] [ThreadPool]: SQL status: OK in 5.443 seconds
+[0m20:56:32.243551 [debug] [ThreadPool]: SQL status: OK in 5.445 seconds
+[0m20:56:32.244409 [debug] [ThreadPool]: SQL status: OK in 5.444 seconds
+[0m20:56:32.326226 [debug] [ThreadPool]: On list_schemas: Close
+[0m20:56:32.327510 [debug] [ThreadPool]: On list_schemas: Close
+[0m20:56:32.328896 [debug] [ThreadPool]: On list_schemas: Close
+[0m20:56:32.381546 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_schemas, now list_None_intermediate)
+[0m20:56:32.382345 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_schemas, now list_None_analytics)
+[0m20:56:32.383270 [debug] [ThreadPool]: Re-using an available connection from the pool (formerly list_schemas, now list_None_staging)
+[0m20:56:32.388947 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:32.391834 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:32.394495 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:32.395360 [debug] [ThreadPool]: Using spark connection "list_None_intermediate"
+[0m20:56:32.396554 [debug] [ThreadPool]: Using spark connection "list_None_analytics"
+[0m20:56:32.397381 [debug] [ThreadPool]: Using spark connection "list_None_staging"
+[0m20:56:32.398081 [debug] [ThreadPool]: On list_None_intermediate: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_intermediate"} */
+show table extended in intermediate like '*'
+  
+[0m20:56:32.398766 [debug] [ThreadPool]: On list_None_analytics: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_analytics"} */
+show table extended in analytics like '*'
+  
+[0m20:56:32.399438 [debug] [ThreadPool]: On list_None_staging: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_staging"} */
+show table extended in staging like '*'
+  
+[0m20:56:32.400194 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m20:56:32.401099 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m20:56:32.401798 [debug] [ThreadPool]: Opening a new connection, currently in state closed
+[0m20:56:32.647249 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.647926 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.649031 [debug] [ThreadPool]: SQL status: OK in 0.249 seconds
+[0m20:56:32.649645 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.650415 [debug] [ThreadPool]: SQL status: OK in 0.249 seconds
+[0m20:56:32.651675 [debug] [ThreadPool]: SQL status: OK in 0.251 seconds
+[0m20:56:32.660435 [debug] [ThreadPool]: On list_None_intermediate: ROLLBACK
+[0m20:56:32.662888 [debug] [ThreadPool]: On list_None_staging: ROLLBACK
+[0m20:56:32.665277 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m20:56:32.667368 [debug] [ThreadPool]: On list_None_analytics: ROLLBACK
+[0m20:56:32.668886 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m20:56:32.670321 [debug] [ThreadPool]: On list_None_intermediate: Close
+[0m20:56:32.671445 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m20:56:32.672546 [debug] [ThreadPool]: On list_None_staging: Close
+[0m20:56:32.675255 [debug] [ThreadPool]: On list_None_analytics: Close
+[0m20:56:32.690713 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2c22dbb50>]}
+[0m20:56:32.698007 [debug] [MainThread]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:32.698893 [debug] [MainThread]: Spark adapter: NotImplemented: commit
+[0m20:56:32.704140 [debug] [Thread-1 (]: Began running node model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn
+[0m20:56:32.704675 [debug] [Thread-2 (]: Began running node model.customerdna_client1_lakehouse.stg_marketing_campaign
+[0m20:56:32.705224 [debug] [Thread-3 (]: Began running node model.customerdna_client1_lakehouse.stg_online_retail
+[0m20:56:32.705762 [debug] [Thread-4 (]: Began running node model.customerdna_client1_lakehouse.stg_retailrocket_category_tree
+[0m20:56:32.706523 [info ] [Thread-1 (]: 1 of 13 START sql table model staging.stg_ecommerce_customer_churn ............. [RUN]
+[0m20:56:32.707411 [info ] [Thread-2 (]: 2 of 13 START sql table model staging.stg_marketing_campaign ................... [RUN]
+[0m20:56:32.708353 [info ] [Thread-3 (]: 3 of 13 START sql table model staging.stg_online_retail ........................ [RUN]
+[0m20:56:32.709349 [info ] [Thread-4 (]: 4 of 13 START sql table model staging.stg_retailrocket_category_tree ........... [RUN]
+[0m20:56:32.710227 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_None_analytics, now model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn)
+[0m20:56:32.711136 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly list_None_staging, now model.customerdna_client1_lakehouse.stg_marketing_campaign)
+[0m20:56:32.711871 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly list_None_intermediate, now model.customerdna_client1_lakehouse.stg_online_retail)
+[0m20:56:32.712815 [debug] [Thread-4 (]: Acquiring new spark connection 'model.customerdna_client1_lakehouse.stg_retailrocket_category_tree'
+[0m20:56:32.713789 [debug] [Thread-1 (]: Began compiling node model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn
+[0m20:56:32.714535 [debug] [Thread-2 (]: Began compiling node model.customerdna_client1_lakehouse.stg_marketing_campaign
+[0m20:56:32.715413 [debug] [Thread-3 (]: Began compiling node model.customerdna_client1_lakehouse.stg_online_retail
+[0m20:56:32.716184 [debug] [Thread-4 (]: Began compiling node model.customerdna_client1_lakehouse.stg_retailrocket_category_tree
+[0m20:56:32.732262 [debug] [Thread-1 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"
+[0m20:56:32.741968 [debug] [Thread-2 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.stg_marketing_campaign"
+[0m20:56:32.753360 [debug] [Thread-4 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"
+[0m20:56:32.755367 [debug] [Thread-3 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.stg_online_retail"
+[0m20:56:32.759943 [debug] [Thread-1 (]: Began executing node model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn
+[0m20:56:32.781776 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"
+[0m20:56:32.784131 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"} */
+drop table if exists staging.stg_ecommerce_customer_churn
+[0m20:56:32.784677 [debug] [Thread-2 (]: Began executing node model.customerdna_client1_lakehouse.stg_marketing_campaign
+[0m20:56:32.785145 [debug] [Thread-3 (]: Began executing node model.customerdna_client1_lakehouse.stg_online_retail
+[0m20:56:32.785641 [debug] [Thread-4 (]: Began executing node model.customerdna_client1_lakehouse.stg_retailrocket_category_tree
+[0m20:56:32.786373 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:56:32.791060 [debug] [Thread-2 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_marketing_campaign"
+[0m20:56:32.797868 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_online_retail"
+[0m20:56:32.802216 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"
+[0m20:56:32.803541 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_marketing_campaign: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_marketing_campaign"} */
+drop table if exists staging.stg_marketing_campaign
+[0m20:56:32.804636 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.stg_online_retail: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_online_retail"} */
+drop table if exists staging.stg_online_retail
+[0m20:56:32.805631 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_category_tree: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"} */
+drop table if exists staging.stg_retailrocket_category_tree
+[0m20:56:32.806514 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m20:56:32.807228 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m20:56:32.808069 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m20:56:32.931634 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.934156 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.941045 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.943504 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:32.944065 [debug] [Thread-2 (]: SQL status: OK in 0.129 seconds
+[0m20:56:32.945105 [debug] [Thread-4 (]: SQL status: OK in 0.137 seconds
+[0m20:56:32.946363 [debug] [Thread-3 (]: SQL status: OK in 0.139 seconds
+[0m20:56:32.948738 [debug] [Thread-1 (]: SQL status: OK in 0.162 seconds
+[0m20:56:33.013672 [debug] [Thread-4 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"
+[0m20:56:33.018631 [debug] [Thread-2 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.stg_marketing_campaign"
+[0m20:56:33.021762 [debug] [Thread-3 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.stg_online_retail"
+[0m20:56:33.025228 [debug] [Thread-1 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"
+[0m20:56:33.032932 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:33.034904 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"
+[0m20:56:33.035820 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:33.036858 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:33.037642 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:33.038706 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_category_tree: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"} */
+
+  
+    
+        create or replace table staging.stg_retailrocket_category_tree
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Typed staging view for retailrocket category hierarchy.'
+      
+
+      as
+      select
+    cast(
+    coalesce(
+        try_cast(nullif(trim(categoryid), '') as bigint),
+        try_cast(nullif(trim(categoryid), '') as double)
+    ) as bigint
+) as category_id,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(parentid), '') as bigint),
+        try_cast(nullif(trim(parentid), '') as double)
+    ) as bigint
+) as parent_category_id
+from raw_data.category_tree
+  
+[0m20:56:33.039797 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"
+[0m20:56:33.040741 [debug] [Thread-2 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_marketing_campaign"
+[0m20:56:33.041993 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_online_retail"
+[0m20:56:33.043574 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"} */
+
+  
+    
+        create or replace table staging.stg_ecommerce_customer_churn
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Typed staging view for the ecommerce churn dataset.'
+      
+
+      as
+      select
+    cast(
+    coalesce(
+        try_cast(nullif(trim(customerid), '') as bigint),
+        try_cast(nullif(trim(customerid), '') as double)
+    ) as bigint
+) as customer_id,
+    case
+    when lower(trim(churn)) in ('1', 'true', 'yes', 'y') then true
+    when lower(trim(churn)) in ('0', 'false', 'no', 'n') then false
+    else null
+end as is_churned,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(tenure), '') as int),
+        try_cast(nullif(trim(tenure), '') as double)
+    ) as int
+) as tenure_months,
+    trim(preferredlogindevice) as preferred_login_device,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(citytier), '') as int),
+        try_cast(nullif(trim(citytier), '') as double)
+    ) as int
+) as city_tier,
+    try_cast(nullif(trim(warehousetohome), '') as double) as warehouse_to_home_km,
+    trim(preferredpaymentmode) as preferred_payment_mode,
+    trim(gender) as gender,
+    try_cast(nullif(trim(hourspendonapp), '') as double) as hours_spent_on_app,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(numberofdeviceregistered), '') as int),
+        try_cast(nullif(trim(numberofdeviceregistered), '') as double)
+    ) as int
+) as registered_device_count,
+    trim(preferedordercat) as preferred_order_category,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(satisfactionscore), '') as int),
+        try_cast(nullif(trim(satisfactionscore), '') as double)
+    ) as int
+) as satisfaction_score,
+    trim(maritalstatus) as marital_status,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(numberofaddress), '') as int),
+        try_cast(nullif(trim(numberofaddress), '') as double)
+    ) as int
+) as address_count,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(complain), '') as int),
+        try_cast(nullif(trim(complain), '') as double)
+    ) as int
+) as complaint_flag,
+    try_cast(nullif(trim(orderamounthikefromlastyear), '') as double) as order_amount_hike_pct,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(couponused), '') as int),
+        try_cast(nullif(trim(couponused), '') as double)
+    ) as int
+) as coupon_used_count,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(ordercount), '') as int),
+        try_cast(nullif(trim(ordercount), '') as double)
+    ) as int
+) as order_count,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(daysincelastorder), '') as int),
+        try_cast(nullif(trim(daysincelastorder), '') as double)
+    ) as int
+) as days_since_last_order,
+    try_cast(nullif(trim(cashbackamount), '') as double) as cashback_amount
+from raw_data.e_commerce_customer_churn
+  
+[0m20:56:33.044888 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_marketing_campaign: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_marketing_campaign"} */
+
+  
+    
+        create or replace table staging.stg_marketing_campaign
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Typed staging view for the customer personality and campaign dataset.'
+      
+
+      as
+      select
+    cast(
+    coalesce(
+        try_cast(nullif(trim(id), '') as bigint),
+        try_cast(nullif(trim(id), '') as double)
+    ) as bigint
+) as customer_id,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(year_birth), '') as int),
+        try_cast(nullif(trim(year_birth), '') as double)
+    ) as int
+) as year_birth,
+    trim(education) as education,
+    trim(marital_status) as marital_status,
+    try_cast(nullif(trim(income), '') as double) as income,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(kidhome), '') as int),
+        try_cast(nullif(trim(kidhome), '') as double)
+    ) as int
+) as kidhome,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(teenhome), '') as int),
+        try_cast(nullif(trim(teenhome), '') as double)
+    ) as int
+) as teenhome,
+    coalesce(
+    try_to_date(nullif(trim(dt_customer), ''), 'd-M-yyyy'),
+    try_to_date(nullif(trim(dt_customer), ''))
+) as customer_since_date,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(recency), '') as int),
+        try_cast(nullif(trim(recency), '') as double)
+    ) as int
+) as recency_days,
+    try_cast(nullif(trim(mntwines), '') as double) as amount_wines,
+    try_cast(nullif(trim(mntfruits), '') as double) as amount_fruits,
+    try_cast(nullif(trim(mntmeatproducts), '') as double) as amount_meat,
+    try_cast(nullif(trim(mntfishproducts), '') as double) as amount_fish,
+    try_cast(nullif(trim(mntsweetproducts), '') as double) as amount_sweets,
+    try_cast(nullif(trim(mntgoldprods), '') as double) as amount_gold,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(numdealspurchases), '') as int),
+        try_cast(nullif(trim(numdealspurchases), '') as double)
+    ) as int
+) as deal_purchases,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(numwebpurchases), '') as int),
+        try_cast(nullif(trim(numwebpurchases), '') as double)
+    ) as int
+) as web_purchases,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(numcatalogpurchases), '') as int),
+        try_cast(nullif(trim(numcatalogpurchases), '') as double)
+    ) as int
+) as catalog_purchases,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(numstorepurchases), '') as int),
+        try_cast(nullif(trim(numstorepurchases), '') as double)
+    ) as int
+) as store_purchases,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(numwebvisitsmonth), '') as int),
+        try_cast(nullif(trim(numwebvisitsmonth), '') as double)
+    ) as int
+) as monthly_web_visits,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(acceptedcmp1), '') as int),
+        try_cast(nullif(trim(acceptedcmp1), '') as double)
+    ) as int
+) as accepted_campaign_1,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(acceptedcmp2), '') as int),
+        try_cast(nullif(trim(acceptedcmp2), '') as double)
+    ) as int
+) as accepted_campaign_2,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(acceptedcmp3), '') as int),
+        try_cast(nullif(trim(acceptedcmp3), '') as double)
+    ) as int
+) as accepted_campaign_3,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(acceptedcmp4), '') as int),
+        try_cast(nullif(trim(acceptedcmp4), '') as double)
+    ) as int
+) as accepted_campaign_4,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(acceptedcmp5), '') as int),
+        try_cast(nullif(trim(acceptedcmp5), '') as double)
+    ) as int
+) as accepted_campaign_5,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(complain), '') as int),
+        try_cast(nullif(trim(complain), '') as double)
+    ) as int
+) as complaint_flag,
+    try_cast(nullif(trim(z_costcontact), '') as double) as campaign_contact_cost,
+    try_cast(nullif(trim(z_revenue), '') as double) as campaign_revenue,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(response), '') as int),
+        try_cast(nullif(trim(response), '') as double)
+    ) as int
+) as last_campaign_response_flag
+from raw_data.marketing_campaign
+  
+[0m20:56:33.046538 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.stg_online_retail: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_online_retail"} */
+
+  
+    
+        create or replace table staging.stg_online_retail
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Typed staging view for online retail transactions.'
+      
+
+      as
+      select
+    trim(invoice) as invoice_no,
+    trim(stockcode) as stock_code,
+    trim(description) as product_description,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(quantity), '') as int),
+        try_cast(nullif(trim(quantity), '') as double)
+    ) as int
+) as quantity,
+    
+try_to_timestamp(nullif(trim(invoicedate), ''))
+ as invoice_timestamp,
+    try_cast(nullif(trim(price), '') as double) as unit_price,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(customer_id), '') as bigint),
+        try_cast(nullif(trim(customer_id), '') as double)
+    ) as bigint
+) as customer_id,
+    trim(country) as country
+from raw_data.online_retail
+  
+[0m20:56:38.047377 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:38.052359 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:38.053222 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:38.057949 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:47.900655 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:47.905898 [debug] [Thread-1 (]: SQL status: OK in 14.858 seconds
+[0m20:56:47.936411 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"
+[0m20:56:47.938200 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"} */
+
+      describe extended staging.stg_ecommerce_customer_churn
+  
+[0m20:56:48.050033 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:48.052614 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:48.053828 [debug] [Thread-2 (]: SQL status: OK in 15.005 seconds
+[0m20:56:48.060273 [debug] [Thread-2 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_marketing_campaign"
+[0m20:56:48.061296 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:48.062721 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_marketing_campaign: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_marketing_campaign"} */
+
+      describe extended staging.stg_marketing_campaign
+  
+[0m20:56:48.310429 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:48.311248 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:48.313178 [debug] [Thread-1 (]: SQL status: OK in 0.374 seconds
+[0m20:56:48.314403 [debug] [Thread-2 (]: SQL status: OK in 0.250 seconds
+[0m20:56:48.341977 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"
+[0m20:56:48.339907 [debug] [Thread-2 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_marketing_campaign"
+[0m20:56:48.343529 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn"} */
+
+    
+        
+          alter table staging.stg_ecommerce_customer_churn change column
+              customer_id
+              comment '';
+        
+      
+  
+[0m20:56:48.344748 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_marketing_campaign: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_marketing_campaign"} */
+
+    
+        
+          alter table staging.stg_marketing_campaign change column
+              customer_id
+              comment '';
+        
+      
+  
+[0m20:56:49.080843 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:49.085340 [debug] [Thread-2 (]: SQL status: OK in 0.739 seconds
+[0m20:56:49.108011 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_marketing_campaign: ROLLBACK
+[0m20:56:49.109651 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m20:56:49.111267 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_marketing_campaign: Close
+[0m20:56:49.112508 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:49.115077 [debug] [Thread-1 (]: SQL status: OK in 0.769 seconds
+[0m20:56:49.125579 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn: ROLLBACK
+[0m20:56:49.127245 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m20:56:49.128680 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn: Close
+[0m20:56:49.135283 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bed94f50>]}
+[0m20:56:49.141513 [info ] [Thread-2 (]: 2 of 13 OK created sql table model staging.stg_marketing_campaign .............. [[32mOK[0m in 16.42s]
+[0m20:56:49.143648 [debug] [Thread-2 (]: Finished running node model.customerdna_client1_lakehouse.stg_marketing_campaign
+[0m20:56:49.144543 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2a6f46b10>]}
+[0m20:56:49.145494 [debug] [Thread-2 (]: Began running node model.customerdna_client1_lakehouse.stg_retailrocket_events
+[0m20:56:49.146778 [info ] [Thread-1 (]: 1 of 13 OK created sql table model staging.stg_ecommerce_customer_churn ........ [[32mOK[0m in 16.43s]
+[0m20:56:49.148504 [info ] [Thread-2 (]: 5 of 13 START sql table model staging.stg_retailrocket_events .................. [RUN]
+[0m20:56:49.150267 [debug] [Thread-1 (]: Finished running node model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn
+[0m20:56:49.151304 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.stg_marketing_campaign, now model.customerdna_client1_lakehouse.stg_retailrocket_events)
+[0m20:56:49.152470 [debug] [Thread-1 (]: Began running node model.customerdna_client1_lakehouse.stg_retailrocket_item_properties
+[0m20:56:49.153510 [debug] [Thread-2 (]: Began compiling node model.customerdna_client1_lakehouse.stg_retailrocket_events
+[0m20:56:49.154469 [info ] [Thread-1 (]: 6 of 13 START sql table model staging.stg_retailrocket_item_properties ......... [RUN]
+[0m20:56:49.160946 [debug] [Thread-2 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.stg_retailrocket_events"
+[0m20:56:49.162032 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.stg_ecommerce_customer_churn, now model.customerdna_client1_lakehouse.stg_retailrocket_item_properties)
+[0m20:56:49.163408 [debug] [Thread-1 (]: Began compiling node model.customerdna_client1_lakehouse.stg_retailrocket_item_properties
+[0m20:56:49.168469 [debug] [Thread-1 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.stg_retailrocket_item_properties"
+[0m20:56:49.172940 [debug] [Thread-2 (]: Began executing node model.customerdna_client1_lakehouse.stg_retailrocket_events
+[0m20:56:49.178717 [debug] [Thread-2 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_retailrocket_events"
+[0m20:56:49.179296 [debug] [Thread-1 (]: Began executing node model.customerdna_client1_lakehouse.stg_retailrocket_item_properties
+[0m20:56:49.180640 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_events: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_retailrocket_events"} */
+drop table if exists staging.stg_retailrocket_events
+[0m20:56:49.185980 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_retailrocket_item_properties"
+[0m20:56:49.187037 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m20:56:49.187862 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_item_properties: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_retailrocket_item_properties"} */
+drop table if exists staging.stg_retailrocket_item_properties
+[0m20:56:49.189136 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:56:49.238363 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:49.239797 [debug] [Thread-2 (]: SQL status: OK in 0.053 seconds
+[0m20:56:49.243019 [debug] [Thread-2 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.stg_retailrocket_events"
+[0m20:56:49.243730 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:49.245625 [debug] [Thread-1 (]: SQL status: OK in 0.056 seconds
+[0m20:56:49.248693 [debug] [Thread-1 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.stg_retailrocket_item_properties"
+[0m20:56:49.252529 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:49.253602 [debug] [Thread-2 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_retailrocket_events"
+[0m20:56:49.254162 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:49.254913 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_events: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_retailrocket_events"} */
+
+  
+    
+        create or replace table staging.stg_retailrocket_events
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Typed staging view for retailrocket events.'
+      
+
+      as
+      select
+    to_timestamp(from_unixtime(cast(
+    coalesce(
+        try_cast(nullif(trim(timestamp), '') as bigint),
+        try_cast(nullif(trim(timestamp), '') as double)
+    ) as bigint
+) / 1000)) as event_timestamp,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(visitorid), '') as bigint),
+        try_cast(nullif(trim(visitorid), '') as double)
+    ) as bigint
+) as visitor_id,
+    trim(event) as event_type,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(itemid), '') as bigint),
+        try_cast(nullif(trim(itemid), '') as double)
+    ) as bigint
+) as item_id,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(transactionid), '') as bigint),
+        try_cast(nullif(trim(transactionid), '') as double)
+    ) as bigint
+) as transaction_id
+from raw_data.events
+  
+[0m20:56:49.256144 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_retailrocket_item_properties"
+[0m20:56:49.258507 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_item_properties: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_retailrocket_item_properties"} */
+
+  
+    
+        create or replace table staging.stg_retailrocket_item_properties
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Typed staging view for retailrocket item properties.'
+      
+
+      as
+      select
+    to_timestamp(from_unixtime(cast(
+    coalesce(
+        try_cast(nullif(trim(timestamp), '') as bigint),
+        try_cast(nullif(trim(timestamp), '') as double)
+    ) as bigint
+) / 1000)) as property_timestamp,
+    cast(
+    coalesce(
+        try_cast(nullif(trim(itemid), '') as bigint),
+        try_cast(nullif(trim(itemid), '') as double)
+    ) as bigint
+) as item_id,
+    trim(property) as property_name,
+    trim(value) as property_value
+from raw_data.item_properties
+  
+[0m20:56:53.053459 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:53.055056 [debug] [Thread-4 (]: SQL status: OK in 20.012 seconds
+[0m20:56:53.061338 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"
+[0m20:56:53.062709 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_category_tree: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"} */
+
+      describe extended staging.stg_retailrocket_category_tree
+  
+[0m20:56:53.170836 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:53.172933 [debug] [Thread-4 (]: SQL status: OK in 0.108 seconds
+[0m20:56:53.180063 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"
+[0m20:56:53.181338 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_category_tree: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.stg_retailrocket_category_tree"} */
+
+    
+        
+          alter table staging.stg_retailrocket_category_tree change column
+              category_id
+              comment '';
+        
+      
+  
+[0m20:56:53.274509 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:53.275864 [debug] [Thread-3 (]: SQL status: OK in 20.222 seconds
+[0m20:56:53.279318 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.stg_online_retail: ROLLBACK
+[0m20:56:53.280755 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m20:56:53.282231 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.stg_online_retail: Close
+[0m20:56:53.299327 [debug] [Thread-3 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2be88e390>]}
+[0m20:56:53.306889 [info ] [Thread-3 (]: 3 of 13 OK created sql table model staging.stg_online_retail ................... [[32mOK[0m in 20.59s]
+[0m20:56:53.308566 [debug] [Thread-3 (]: Finished running node model.customerdna_client1_lakehouse.stg_online_retail
+[0m20:56:53.310395 [debug] [Thread-3 (]: Began running node model.customerdna_client1_lakehouse.int_customer_profile
+[0m20:56:53.315795 [info ] [Thread-3 (]: 7 of 13 START sql table model intermediate.int_customer_profile ................ [RUN]
+[0m20:56:53.317781 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.stg_online_retail, now model.customerdna_client1_lakehouse.int_customer_profile)
+[0m20:56:53.320353 [debug] [Thread-3 (]: Began compiling node model.customerdna_client1_lakehouse.int_customer_profile
+[0m20:56:53.329948 [debug] [Thread-3 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.int_customer_profile"
+[0m20:56:53.337846 [debug] [Thread-3 (]: Began executing node model.customerdna_client1_lakehouse.int_customer_profile
+[0m20:56:53.352056 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.int_customer_profile"
+[0m20:56:53.353347 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_customer_profile: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_customer_profile"} */
+drop table if exists intermediate.int_customer_profile
+[0m20:56:53.354625 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m20:56:53.421459 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:53.423210 [debug] [Thread-3 (]: SQL status: OK in 0.068 seconds
+[0m20:56:53.427313 [debug] [Thread-3 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.int_customer_profile"
+[0m20:56:53.449014 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:53.450507 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.int_customer_profile"
+[0m20:56:53.452090 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_customer_profile: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_customer_profile"} */
+
+  
+    
+        create or replace table intermediate.int_customer_profile
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Cross-source customer profile built from marketing and ecommerce churn datasets.'
+      
+
+      as
+      with marketing as (
+    select * from staging.stg_marketing_campaign
+),
+churn as (
+    select * from staging.stg_ecommerce_customer_churn
+)
+
+select
+    m.customer_id,
+    m.year_birth,
+    m.education,
+    coalesce(c.marital_status, m.marital_status) as marital_status,
+    c.gender,
+    m.income,
+    m.kidhome,
+    m.teenhome,
+    m.customer_since_date,
+    m.recency_days,
+    c.tenure_months,
+    c.city_tier,
+    c.preferred_login_device,
+    c.preferred_payment_mode,
+    c.preferred_order_category,
+    c.hours_spent_on_app,
+    c.registered_device_count,
+    c.satisfaction_score,
+    c.address_count,
+    c.order_count as ecommerce_order_count,
+    c.days_since_last_order,
+    c.order_amount_hike_pct,
+    c.cashback_amount,
+    coalesce(c.complaint_flag, m.complaint_flag) as complaint_flag,
+    c.is_churned,
+    m.last_campaign_response_flag
+from marketing m
+left join churn c
+    on m.customer_id = c.customer_id
+  
+[0m20:56:53.461798 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:53.469802 [debug] [Thread-4 (]: SQL status: OK in 0.287 seconds
+[0m20:56:53.478333 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_category_tree: ROLLBACK
+[0m20:56:53.479628 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m20:56:53.480621 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_category_tree: Close
+[0m20:56:53.496686 [debug] [Thread-4 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2a6fc50d0>]}
+[0m20:56:53.498742 [info ] [Thread-4 (]: 4 of 13 OK created sql table model staging.stg_retailrocket_category_tree ...... [[32mOK[0m in 20.78s]
+[0m20:56:53.500795 [debug] [Thread-4 (]: Finished running node model.customerdna_client1_lakehouse.stg_retailrocket_category_tree
+[0m20:56:53.502566 [debug] [Thread-4 (]: Began running node model.customerdna_client1_lakehouse.analytics_sales_performance
+[0m20:56:53.504099 [info ] [Thread-4 (]: 8 of 13 START sql table model analytics.analytics_sales_performance ............ [RUN]
+[0m20:56:53.506131 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.stg_retailrocket_category_tree, now model.customerdna_client1_lakehouse.analytics_sales_performance)
+[0m20:56:53.507193 [debug] [Thread-4 (]: Began compiling node model.customerdna_client1_lakehouse.analytics_sales_performance
+[0m20:56:53.513223 [debug] [Thread-4 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.analytics_sales_performance"
+[0m20:56:53.528102 [debug] [Thread-4 (]: Began executing node model.customerdna_client1_lakehouse.analytics_sales_performance
+[0m20:56:53.540952 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.analytics_sales_performance"
+[0m20:56:53.544659 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_sales_performance: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.analytics_sales_performance"} */
+drop table if exists analytics.analytics_sales_performance
+[0m20:56:53.546592 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
+[0m20:56:53.672129 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:56:53.676858 [debug] [Thread-4 (]: SQL status: OK in 0.130 seconds
+[0m20:56:53.681146 [debug] [Thread-4 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.analytics_sales_performance"
+[0m20:56:53.689178 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:56:53.691013 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.analytics_sales_performance"
+[0m20:56:53.692829 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_sales_performance: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.analytics_sales_performance"} */
+
+  
+    
+        create or replace table analytics.analytics_sales_performance
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Final analytics mart for monthly country-level sales tracking.'
+      
+
+      as
+      select
+    country,
+    date_trunc('month', invoice_timestamp) as sales_month,
+    count(distinct invoice_no) as invoice_count,
+    count(distinct customer_id) as active_customers,
+    sum(quantity) as total_quantity,
+    round(sum(quantity * unit_price), 2) as gross_revenue,
+    round(avg(unit_price), 2) as average_unit_price
+from staging.stg_online_retail
+where invoice_timestamp is not null
+group by 1, 2
+  
+[0m20:56:54.261549 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:54.263660 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:58.457224 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:56:58.703253 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:04.263592 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:04.264457 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:08.458272 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:08.704392 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:14.266264 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:14.266942 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:18.460707 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:18.706556 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:24.268868 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:24.269587 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:28.464953 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:28.708742 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:29.271696 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:29.272822 [debug] [Thread-1 (]: SQL status: OK in 40.014 seconds
+[0m20:57:29.274827 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_item_properties: ROLLBACK
+[0m20:57:29.275632 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m20:57:29.276363 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_item_properties: Close
+[0m20:57:29.309903 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2be8a4650>]}
+[0m20:57:29.311555 [info ] [Thread-1 (]: 6 of 13 OK created sql table model staging.stg_retailrocket_item_properties .... [[32mOK[0m in 40.15s]
+[0m20:57:29.313072 [debug] [Thread-1 (]: Finished running node model.customerdna_client1_lakehouse.stg_retailrocket_item_properties
+[0m20:57:29.314016 [debug] [Thread-1 (]: Began running node model.customerdna_client1_lakehouse.int_online_retail_customer_sales
+[0m20:57:29.314977 [info ] [Thread-1 (]: 9 of 13 START sql table model intermediate.int_online_retail_customer_sales .... [RUN]
+[0m20:57:29.316291 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.stg_retailrocket_item_properties, now model.customerdna_client1_lakehouse.int_online_retail_customer_sales)
+[0m20:57:29.317196 [debug] [Thread-1 (]: Began compiling node model.customerdna_client1_lakehouse.int_online_retail_customer_sales
+[0m20:57:29.321092 [debug] [Thread-1 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"
+[0m20:57:29.328745 [debug] [Thread-1 (]: Began executing node model.customerdna_client1_lakehouse.int_online_retail_customer_sales
+[0m20:57:29.334068 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"
+[0m20:57:29.334977 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_online_retail_customer_sales: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"} */
+drop table if exists intermediate.int_online_retail_customer_sales
+[0m20:57:29.335832 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:57:29.397772 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:29.399204 [debug] [Thread-1 (]: SQL status: OK in 0.063 seconds
+[0m20:57:29.402988 [debug] [Thread-1 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"
+[0m20:57:29.410135 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:57:29.411859 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"
+[0m20:57:29.412816 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_online_retail_customer_sales: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"} */
+
+  
+    
+        create or replace table intermediate.int_online_retail_customer_sales
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Aggregated retail sales KPIs by customer.'
+      
+
+      as
+      select
+    customer_id,
+    count(distinct invoice_no) as invoice_count,
+    count(distinct stock_code) as distinct_product_count,
+    sum(quantity) as total_quantity,
+    round(sum(quantity * unit_price), 2) as gross_revenue,
+    round(avg(quantity * unit_price), 2) as average_invoice_line_amount,
+    min(invoice_timestamp) as first_order_timestamp,
+    max(invoice_timestamp) as last_order_timestamp,
+    count(distinct country) as countries_served_count
+from staging.stg_online_retail
+where customer_id is not null
+group by customer_id
+  
+[0m20:57:31.531286 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:31.532925 [debug] [Thread-2 (]: SQL status: OK in 42.278 seconds
+[0m20:57:31.536206 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_events: ROLLBACK
+[0m20:57:31.537517 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m20:57:31.538602 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.stg_retailrocket_events: Close
+[0m20:57:31.549776 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2be929290>]}
+[0m20:57:31.551231 [info ] [Thread-2 (]: 5 of 13 OK created sql table model staging.stg_retailrocket_events ............. [[32mOK[0m in 42.40s]
+[0m20:57:31.552373 [debug] [Thread-2 (]: Finished running node model.customerdna_client1_lakehouse.stg_retailrocket_events
+[0m20:57:31.553452 [debug] [Thread-2 (]: Began running node model.customerdna_client1_lakehouse.analytics_retailrocket_engagement
+[0m20:57:31.555725 [info ] [Thread-2 (]: 10 of 13 START sql table model analytics.analytics_retailrocket_engagement ..... [RUN]
+[0m20:57:31.556742 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.stg_retailrocket_events, now model.customerdna_client1_lakehouse.analytics_retailrocket_engagement)
+[0m20:57:31.557994 [debug] [Thread-2 (]: Began compiling node model.customerdna_client1_lakehouse.analytics_retailrocket_engagement
+[0m20:57:31.562645 [debug] [Thread-2 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.analytics_retailrocket_engagement"
+[0m20:57:31.569073 [debug] [Thread-2 (]: Began executing node model.customerdna_client1_lakehouse.analytics_retailrocket_engagement
+[0m20:57:31.575132 [debug] [Thread-2 (]: Using spark connection "model.customerdna_client1_lakehouse.analytics_retailrocket_engagement"
+[0m20:57:31.576163 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.analytics_retailrocket_engagement: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.analytics_retailrocket_engagement"} */
+drop table if exists analytics.analytics_retailrocket_engagement
+[0m20:57:31.576994 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m20:57:31.628053 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:31.630751 [debug] [Thread-2 (]: SQL status: OK in 0.054 seconds
+[0m20:57:31.633988 [debug] [Thread-2 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.analytics_retailrocket_engagement"
+[0m20:57:31.641806 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:57:31.643249 [debug] [Thread-2 (]: Using spark connection "model.customerdna_client1_lakehouse.analytics_retailrocket_engagement"
+[0m20:57:31.649375 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.analytics_retailrocket_engagement: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.analytics_retailrocket_engagement"} */
+
+  
+    
+        create or replace table analytics.analytics_retailrocket_engagement
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Final analytics mart for daily retailrocket behavioral trends.'
+      
+
+      as
+      select
+    date_trunc('day', event_timestamp) as event_day,
+    event_type,
+    count(*) as event_count,
+    count(distinct visitor_id) as active_visitors,
+    count(distinct item_id) as active_items
+from staging.stg_retailrocket_events
+where event_timestamp is not null
+group by 1, 2
+  
+[0m20:57:34.415875 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:36.193868 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:36.195815 [debug] [Thread-3 (]: SQL status: OK in 42.745 seconds
+[0m20:57:36.200196 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.int_customer_profile"
+[0m20:57:36.201515 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_customer_profile: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_customer_profile"} */
+
+      describe extended intermediate.int_customer_profile
+  
+[0m20:57:36.270615 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:36.271898 [debug] [Thread-3 (]: SQL status: OK in 0.069 seconds
+[0m20:57:36.277730 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.int_customer_profile"
+[0m20:57:36.278988 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_customer_profile: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_customer_profile"} */
+
+    
+        
+          alter table intermediate.int_customer_profile change column
+              customer_id
+              comment '';
+        
+      
+  
+[0m20:57:36.366003 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:36.367571 [debug] [Thread-3 (]: SQL status: OK in 0.088 seconds
+[0m20:57:36.372755 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_customer_profile: ROLLBACK
+[0m20:57:36.374148 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m20:57:36.375084 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_customer_profile: Close
+[0m20:57:36.389787 [debug] [Thread-3 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2a6e12290>]}
+[0m20:57:36.391272 [info ] [Thread-3 (]: 7 of 13 OK created sql table model intermediate.int_customer_profile ........... [[32mOK[0m in 43.07s]
+[0m20:57:36.393222 [debug] [Thread-3 (]: Finished running node model.customerdna_client1_lakehouse.int_customer_profile
+[0m20:57:36.394875 [debug] [Thread-3 (]: Began running node model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity
+[0m20:57:36.396993 [info ] [Thread-3 (]: 11 of 13 START sql table model intermediate.int_retailrocket_visitor_activity .. [RUN]
+[0m20:57:36.399090 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.int_customer_profile, now model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity)
+[0m20:57:36.400403 [debug] [Thread-3 (]: Began compiling node model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity
+[0m20:57:36.404701 [debug] [Thread-3 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"
+[0m20:57:36.409454 [debug] [Thread-3 (]: Began executing node model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity
+[0m20:57:36.418138 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"
+[0m20:57:36.419331 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"} */
+drop table if exists intermediate.int_retailrocket_visitor_activity
+[0m20:57:36.420229 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m20:57:36.472485 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:36.473783 [debug] [Thread-3 (]: SQL status: OK in 0.054 seconds
+[0m20:57:36.476505 [debug] [Thread-3 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"
+[0m20:57:36.481487 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:57:36.482397 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"
+[0m20:57:36.483208 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"} */
+
+  
+    
+        create or replace table intermediate.int_retailrocket_visitor_activity
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Retailrocket visitor interaction summary.'
+      
+
+      as
+      select
+    visitor_id,
+    count(*) as total_events,
+    count_if(event_type = 'view') as view_events,
+    count_if(event_type = 'addtocart') as add_to_cart_events,
+    count_if(event_type = 'transaction') as transaction_events,
+    count(distinct item_id) as distinct_items_touched,
+    min(event_timestamp) as first_event_timestamp,
+    max(event_timestamp) as last_event_timestamp
+from staging.stg_retailrocket_events
+group by visitor_id
+  
+[0m20:57:36.658646 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:38.709727 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:41.487443 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:44.420617 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:46.660938 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:48.712083 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:50.990668 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:50.991983 [debug] [Thread-1 (]: SQL status: OK in 21.580 seconds
+[0m20:57:50.997782 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"
+[0m20:57:50.999595 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_online_retail_customer_sales: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"} */
+
+      describe extended intermediate.int_online_retail_customer_sales
+  
+[0m20:57:51.142987 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:51.148625 [debug] [Thread-1 (]: SQL status: OK in 0.147 seconds
+[0m20:57:51.159449 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"
+[0m20:57:51.161515 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_online_retail_customer_sales: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_online_retail_customer_sales"} */
+
+    
+        
+          alter table intermediate.int_online_retail_customer_sales change column
+              customer_id
+              comment '';
+        
+      
+  
+[0m20:57:51.445372 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:51.446736 [debug] [Thread-1 (]: SQL status: OK in 0.280 seconds
+[0m20:57:51.450748 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_online_retail_customer_sales: ROLLBACK
+[0m20:57:51.452135 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m20:57:51.453099 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_online_retail_customer_sales: Close
+[0m20:57:51.465617 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2a6f6aa90>]}
+[0m20:57:51.471903 [info ] [Thread-1 (]: 9 of 13 OK created sql table model intermediate.int_online_retail_customer_sales  [[32mOK[0m in 22.15s]
+[0m20:57:51.473188 [debug] [Thread-1 (]: Finished running node model.customerdna_client1_lakehouse.int_online_retail_customer_sales
+[0m20:57:51.474393 [debug] [Thread-1 (]: Began running node model.customerdna_client1_lakehouse.int_customer_commercial_360
+[0m20:57:51.475578 [info ] [Thread-1 (]: 12 of 13 START sql table model intermediate.int_customer_commercial_360 ........ [RUN]
+[0m20:57:51.476525 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.int_online_retail_customer_sales, now model.customerdna_client1_lakehouse.int_customer_commercial_360)
+[0m20:57:51.477305 [debug] [Thread-1 (]: Began compiling node model.customerdna_client1_lakehouse.int_customer_commercial_360
+[0m20:57:51.481389 [debug] [Thread-1 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.int_customer_commercial_360"
+[0m20:57:51.486598 [debug] [Thread-1 (]: Began executing node model.customerdna_client1_lakehouse.int_customer_commercial_360
+[0m20:57:51.491539 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.int_customer_commercial_360"
+[0m20:57:51.492095 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:51.492825 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_customer_commercial_360: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_customer_commercial_360"} */
+drop table if exists intermediate.int_customer_commercial_360
+[0m20:57:51.493971 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:57:51.546033 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:51.547215 [debug] [Thread-1 (]: SQL status: OK in 0.053 seconds
+[0m20:57:51.549301 [debug] [Thread-1 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.int_customer_commercial_360"
+[0m20:57:51.555360 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:57:51.556311 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.int_customer_commercial_360"
+[0m20:57:51.557279 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_customer_commercial_360: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_customer_commercial_360"} */
+
+  
+    
+        create or replace table intermediate.int_customer_commercial_360
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Business-ready customer commercial profile enriched with retail KPIs.'
+      
+
+      as
+      with profile as (
+    select * from intermediate.int_customer_profile
+),
+marketing as (
+    select * from staging.stg_marketing_campaign
+),
+sales as (
+    select * from intermediate.int_online_retail_customer_sales
+)
+
+select
+    p.customer_id,
+    p.year_birth,
+    p.education,
+    p.marital_status,
+    p.gender,
+    p.income,
+    p.kidhome,
+    p.teenhome,
+    p.customer_since_date,
+    p.recency_days,
+    p.tenure_months,
+    p.city_tier,
+    p.preferred_login_device,
+    p.preferred_payment_mode,
+    p.preferred_order_category,
+    p.hours_spent_on_app,
+    p.registered_device_count,
+    p.satisfaction_score,
+    p.address_count,
+    p.ecommerce_order_count,
+    p.days_since_last_order,
+    p.order_amount_hike_pct,
+    p.cashback_amount,
+    p.complaint_flag,
+    p.is_churned,
+    p.last_campaign_response_flag,
+    coalesce(s.invoice_count, 0) as retail_invoice_count,
+    coalesce(s.distinct_product_count, 0) as retail_distinct_product_count,
+    coalesce(s.total_quantity, 0) as retail_total_quantity,
+    coalesce(s.gross_revenue, 0.0) as retail_gross_revenue,
+    coalesce(s.average_invoice_line_amount, 0.0) as retail_average_invoice_line_amount,
+    s.first_order_timestamp,
+    s.last_order_timestamp,
+    coalesce(s.countries_served_count, 0) as countries_served_count,
+    (
+        coalesce(m.amount_wines, 0.0) +
+        coalesce(m.amount_fruits, 0.0) +
+        coalesce(m.amount_meat, 0.0) +
+        coalesce(m.amount_fish, 0.0) +
+        coalesce(m.amount_sweets, 0.0) +
+        coalesce(m.amount_gold, 0.0)
+    ) as campaign_total_spend,
+    (
+        coalesce(m.web_purchases, 0) +
+        coalesce(m.catalog_purchases, 0) +
+        coalesce(m.store_purchases, 0)
+    ) as total_campaign_purchase_count
+from profile p
+left join marketing m
+    on p.customer_id = m.customer_id
+left join sales s
+    on p.customer_id = s.customer_id
+  
+[0m20:57:53.714502 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:53.715726 [debug] [Thread-4 (]: SQL status: OK in 60.021 seconds
+[0m20:57:53.718673 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_sales_performance: ROLLBACK
+[0m20:57:53.719636 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m20:57:53.720425 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_sales_performance: Close
+[0m20:57:53.733709 [debug] [Thread-4 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2beb88150>]}
+[0m20:57:53.735281 [info ] [Thread-4 (]: 8 of 13 OK created sql table model analytics.analytics_sales_performance ....... [[32mOK[0m in 60.23s]
+[0m20:57:53.736828 [debug] [Thread-4 (]: Finished running node model.customerdna_client1_lakehouse.analytics_sales_performance
+[0m20:57:55.293374 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:55.295091 [debug] [Thread-2 (]: SQL status: OK in 23.640 seconds
+[0m20:57:55.298255 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.analytics_retailrocket_engagement: ROLLBACK
+[0m20:57:55.299417 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m20:57:55.300841 [debug] [Thread-2 (]: On model.customerdna_client1_lakehouse.analytics_retailrocket_engagement: Close
+[0m20:57:55.323113 [debug] [Thread-2 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2bed66410>]}
+[0m20:57:55.325561 [info ] [Thread-2 (]: 10 of 13 OK created sql table model analytics.analytics_retailrocket_engagement  [[32mOK[0m in 23.77s]
+[0m20:57:55.327716 [debug] [Thread-2 (]: Finished running node model.customerdna_client1_lakehouse.analytics_retailrocket_engagement
+[0m20:57:56.561156 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
+[0m20:57:57.839971 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:57.841377 [debug] [Thread-3 (]: SQL status: OK in 21.357 seconds
+[0m20:57:57.848113 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"
+[0m20:57:57.849242 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"} */
+
+      describe extended intermediate.int_retailrocket_visitor_activity
+  
+[0m20:57:57.913680 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:57.915021 [debug] [Thread-3 (]: SQL status: OK in 0.065 seconds
+[0m20:57:57.920021 [debug] [Thread-3 (]: Using spark connection "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"
+[0m20:57:57.921159 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity"} */
+
+    
+        
+          alter table intermediate.int_retailrocket_visitor_activity change column
+              visitor_id
+              comment '';
+        
+      
+  
+[0m20:57:58.623697 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:57:58.625273 [debug] [Thread-3 (]: SQL status: OK in 0.703 seconds
+[0m20:57:58.631116 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity: ROLLBACK
+[0m20:57:58.632504 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m20:57:58.633522 [debug] [Thread-3 (]: On model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity: Close
+[0m20:57:58.652033 [debug] [Thread-3 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2a6e66090>]}
+[0m20:57:58.658369 [info ] [Thread-3 (]: 11 of 13 OK created sql table model intermediate.int_retailrocket_visitor_activity  [[32mOK[0m in 22.25s]
+[0m20:57:58.664433 [debug] [Thread-3 (]: Finished running node model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity
+[0m20:58:01.561682 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:01.563003 [debug] [Thread-1 (]: SQL status: OK in 10.006 seconds
+[0m20:58:01.567075 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.int_customer_commercial_360"
+[0m20:58:01.568235 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_customer_commercial_360: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_customer_commercial_360"} */
+
+      describe extended intermediate.int_customer_commercial_360
+  
+[0m20:58:01.627406 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:01.628533 [debug] [Thread-1 (]: SQL status: OK in 0.059 seconds
+[0m20:58:01.633326 [debug] [Thread-1 (]: Using spark connection "model.customerdna_client1_lakehouse.int_customer_commercial_360"
+[0m20:58:01.634334 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_customer_commercial_360: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.int_customer_commercial_360"} */
+
+    
+        
+          alter table intermediate.int_customer_commercial_360 change column
+              customer_id
+              comment '';
+        
+      
+  
+[0m20:58:01.696552 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:01.697696 [debug] [Thread-1 (]: SQL status: OK in 0.063 seconds
+[0m20:58:01.701384 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_customer_commercial_360: ROLLBACK
+[0m20:58:01.702287 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:01.703037 [debug] [Thread-1 (]: On model.customerdna_client1_lakehouse.int_customer_commercial_360: Close
+[0m20:58:01.722288 [debug] [Thread-1 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2be921710>]}
+[0m20:58:01.723659 [info ] [Thread-1 (]: 12 of 13 OK created sql table model intermediate.int_customer_commercial_360 ... [[32mOK[0m in 10.25s]
+[0m20:58:01.725194 [debug] [Thread-1 (]: Finished running node model.customerdna_client1_lakehouse.int_customer_commercial_360
+[0m20:58:01.726333 [debug] [Thread-4 (]: Began running node model.customerdna_client1_lakehouse.analytics_customer_overview
+[0m20:58:01.727359 [info ] [Thread-4 (]: 13 of 13 START sql table model analytics.analytics_customer_overview ........... [RUN]
+[0m20:58:01.728182 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly model.customerdna_client1_lakehouse.analytics_sales_performance, now model.customerdna_client1_lakehouse.analytics_customer_overview)
+[0m20:58:01.728869 [debug] [Thread-4 (]: Began compiling node model.customerdna_client1_lakehouse.analytics_customer_overview
+[0m20:58:01.732238 [debug] [Thread-4 (]: Writing injected SQL for node "model.customerdna_client1_lakehouse.analytics_customer_overview"
+[0m20:58:01.749250 [debug] [Thread-4 (]: Began executing node model.customerdna_client1_lakehouse.analytics_customer_overview
+[0m20:58:01.754385 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.analytics_customer_overview"
+[0m20:58:01.755253 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_customer_overview: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.analytics_customer_overview"} */
+drop table if exists analytics.analytics_customer_overview
+[0m20:58:01.756018 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
+[0m20:58:01.794395 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:01.795682 [debug] [Thread-4 (]: SQL status: OK in 0.040 seconds
+[0m20:58:01.798222 [debug] [Thread-4 (]: Writing runtime sql for node "model.customerdna_client1_lakehouse.analytics_customer_overview"
+[0m20:58:01.804095 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:01.804985 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.analytics_customer_overview"
+[0m20:58:01.805782 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_customer_overview: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.analytics_customer_overview"} */
+
+  
+    
+        create or replace table analytics.analytics_customer_overview
+      
+      
+    using iceberg
+      
+      
+      
+      
+      
+      comment 'Final analytics mart for customer-level segmentation and commercial monitoring.'
+      
+
+      as
+      select
+    customer_id,
+    year_birth,
+    education,
+    marital_status,
+    gender,
+    income,
+    city_tier,
+    preferred_payment_mode,
+    preferred_order_category,
+    satisfaction_score,
+    complaint_flag,
+    is_churned,
+    last_campaign_response_flag,
+    retail_invoice_count,
+    retail_distinct_product_count,
+    retail_total_quantity,
+    retail_gross_revenue,
+    campaign_total_spend,
+    total_campaign_purchase_count,
+    case
+        when retail_gross_revenue >= 10000 then 'high_value'
+        when retail_gross_revenue >= 2500 then 'medium_value'
+        else 'emerging_value'
+    end as value_segment,
+    case
+        when coalesce(is_churned, false) then 'at_risk'
+        when satisfaction_score >= 4 then 'healthy'
+        else 'watchlist'
+    end as retention_segment
+from intermediate.int_customer_commercial_360
+  
+[0m20:58:02.715731 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:02.717106 [debug] [Thread-4 (]: SQL status: OK in 0.911 seconds
+[0m20:58:02.725100 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.analytics_customer_overview"
+[0m20:58:02.726415 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_customer_overview: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.analytics_customer_overview"} */
+
+      describe extended analytics.analytics_customer_overview
+  
+[0m20:58:02.828229 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:02.829715 [debug] [Thread-4 (]: SQL status: OK in 0.102 seconds
+[0m20:58:02.835926 [debug] [Thread-4 (]: Using spark connection "model.customerdna_client1_lakehouse.analytics_customer_overview"
+[0m20:58:02.837340 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_customer_overview: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "model.customerdna_client1_lakehouse.analytics_customer_overview"} */
+
+    
+        
+          alter table analytics.analytics_customer_overview change column
+              customer_id
+              comment '';
+        
+      
+  
+[0m20:58:02.937290 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:02.942444 [debug] [Thread-4 (]: SQL status: OK in 0.104 seconds
+[0m20:58:02.948031 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_customer_overview: ROLLBACK
+[0m20:58:02.949600 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:02.950992 [debug] [Thread-4 (]: On model.customerdna_client1_lakehouse.analytics_customer_overview: Close
+[0m20:58:02.966257 [debug] [Thread-4 (]: Sending event: {'category': 'dbt', 'action': 'run_model', 'label': 'd09bb934-2707-4ac6-8587-2ab5793d2299', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2a6e498d0>]}
+[0m20:58:02.967743 [info ] [Thread-4 (]: 13 of 13 OK created sql table model analytics.analytics_customer_overview ...... [[32mOK[0m in 1.24s]
+[0m20:58:02.969122 [debug] [Thread-4 (]: Finished running node model.customerdna_client1_lakehouse.analytics_customer_overview
+[0m20:58:02.971403 [debug] [MainThread]: On master: ROLLBACK
+[0m20:58:02.972527 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m20:58:03.015652 [debug] [MainThread]: Spark adapter: NotImplemented: rollback
+[0m20:58:03.020887 [debug] [MainThread]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:03.026414 [debug] [MainThread]: Spark adapter: NotImplemented: commit
+[0m20:58:03.028501 [debug] [MainThread]: On master: ROLLBACK
+[0m20:58:03.032227 [debug] [MainThread]: Spark adapter: NotImplemented: rollback
+[0m20:58:03.033341 [debug] [MainThread]: On master: Close
+[0m20:58:03.056888 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m20:58:03.062059 [debug] [MainThread]: Connection 'model.customerdna_client1_lakehouse.analytics_retailrocket_engagement' was properly closed.
+[0m20:58:03.065208 [debug] [MainThread]: Connection 'model.customerdna_client1_lakehouse.int_retailrocket_visitor_activity' was properly closed.
+[0m20:58:03.066940 [debug] [MainThread]: Connection 'model.customerdna_client1_lakehouse.int_customer_commercial_360' was properly closed.
+[0m20:58:03.068672 [debug] [MainThread]: Connection 'model.customerdna_client1_lakehouse.analytics_customer_overview' was properly closed.
+[0m20:58:03.070782 [info ] [MainThread]: 
+[0m20:58:03.074959 [info ] [MainThread]: Finished running 13 table models in 0 hours 1 minutes and 36.32 seconds (96.32s).
+[0m20:58:03.078279 [debug] [MainThread]: Command end result
+[0m20:58:03.161007 [debug] [MainThread]: Wrote artifact WritableManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/manifest.json
+[0m20:58:03.165824 [debug] [MainThread]: Wrote artifact SemanticManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/semantic_manifest.json
+[0m20:58:03.176581 [debug] [MainThread]: Wrote artifact RunExecutionResult to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/run_results.json
+[0m20:58:03.177479 [info ] [MainThread]: 
+[0m20:58:03.178365 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m20:58:03.179219 [info ] [MainThread]: 
+[0m20:58:03.180737 [info ] [MainThread]: Done. PASS=13 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=13
+[0m20:58:03.183618 [debug] [MainThread]: Resource report: {"command_name": "run", "command_success": true, "command_wall_clock_time": 98.48282, "process_in_blocks": "57976", "process_kernel_time": 2.645211, "process_mem_max_rss": "141336", "process_out_blocks": "1160", "process_user_time": 5.367389}
+[0m20:58:03.184878 [debug] [MainThread]: Command `dbt run` succeeded at 20:58:03.184720 after 98.48 seconds
+[0m20:58:03.185848 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2c3cf93d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2c3e3df90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7cd2c3e3f150>]}
+[0m20:58:03.186728 [debug] [MainThread]: Flushing usage events
+[0m20:58:04.002143 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m20:58:07.940072 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694afc93d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694ae87b10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694b109d10>]}
+
+
+============================== 20:58:07.943670 | 9461064b-8183-421c-8c93-fe0c74f25037 ==============================
+[0m20:58:07.943670 [info ] [MainThread]: Running with dbt=1.11.12
+[0m20:58:07.944583 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'warn_error': 'None', 'static_parser': 'True', 'cache_selected_only': 'False', 'indirect_selection': 'eager', 'introspect': 'True', 'send_anonymous_usage_stats': 'True', 'use_colors': 'True', 'write_json': 'True', 'target_path': 'None', 'partial_parse': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'empty': 'None', 'log_path': '/opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/logs', 'invocation_command': 'dbt test', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'quiet': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'version_check': 'True', 'log_cache_events': 'False', 'profiles_dir': '/opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1'}
+[0m20:58:08.026923 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m20:58:08.028032 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m20:58:08.028796 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m20:58:08.215039 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '9461064b-8183-421c-8c93-fe0c74f25037', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694b1f4910>]}
+[0m20:58:08.282402 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '9461064b-8183-421c-8c93-fe0c74f25037', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694b6c26d0>]}
+[0m20:58:08.283641 [info ] [MainThread]: Registered adapter: spark=1.10.3
+[0m20:58:08.395343 [debug] [MainThread]: checksum: f368f5348cf42803b94ef7fb8257ecf3bf9a9a16dd9c8c51fe5172f2dbeb457f, vars: {}, profile: , target: , version: 1.11.12
+[0m20:58:08.653738 [debug] [MainThread]: Partial parsing enabled: 0 files deleted, 0 files added, 0 files changed.
+[0m20:58:08.654701 [debug] [MainThread]: Nothing changed, skipping partial parsing.
+[0m20:58:08.655372 [debug] [MainThread]: Partial parsing enabled, no changes found, skipping parsing
+[0m20:58:08.703972 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '9461064b-8183-421c-8c93-fe0c74f25037', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694a4ed810>]}
+[0m20:58:08.815199 [debug] [MainThread]: Wrote artifact WritableManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/manifest.json
+[0m20:58:08.820738 [debug] [MainThread]: Wrote artifact SemanticManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/semantic_manifest.json
+[0m20:58:08.846350 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '9461064b-8183-421c-8c93-fe0c74f25037', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694a2ac190>]}
+[0m20:58:08.847542 [info ] [MainThread]: Found 13 models, 15 data tests, 6 sources, 525 macros
+[0m20:58:08.848563 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '9461064b-8183-421c-8c93-fe0c74f25037', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694a349e10>]}
+[0m20:58:08.855026 [info ] [MainThread]: 
+[0m20:58:08.856138 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m20:58:08.856967 [info ] [MainThread]: 
+[0m20:58:08.858102 [debug] [MainThread]: Acquiring new spark connection 'master'
+[0m20:58:08.866558 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_analytics'
+[0m20:58:08.867481 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_staging'
+[0m20:58:08.868460 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_intermediate'
+[0m20:58:08.890012 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:08.894287 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:08.897228 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:08.898133 [debug] [ThreadPool]: Using spark connection "list_None_analytics"
+[0m20:58:08.898935 [debug] [ThreadPool]: Using spark connection "list_None_staging"
+[0m20:58:08.899637 [debug] [ThreadPool]: Using spark connection "list_None_intermediate"
+[0m20:58:08.900519 [debug] [ThreadPool]: On list_None_analytics: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_analytics"} */
+show table extended in analytics like '*'
+  
+[0m20:58:08.901325 [debug] [ThreadPool]: On list_None_staging: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_staging"} */
+show table extended in staging like '*'
+  
+[0m20:58:08.902165 [debug] [ThreadPool]: On list_None_intermediate: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_intermediate"} */
+show table extended in intermediate like '*'
+  
+[0m20:58:08.903089 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:58:08.903851 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:58:08.904528 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m20:58:09.182479 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:58:09.183148 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:58:09.184106 [debug] [ThreadPool]: SQL status: OK in 0.280 seconds
+[0m20:58:09.185137 [debug] [ThreadPool]: SQL status: OK in 0.282 seconds
+[0m20:58:09.192298 [debug] [ThreadPool]: On list_None_intermediate: ROLLBACK
+[0m20:58:09.194676 [debug] [ThreadPool]: On list_None_analytics: ROLLBACK
+[0m20:58:09.195723 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m20:58:09.196899 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m20:58:09.198393 [debug] [ThreadPool]: On list_None_intermediate: Close
+[0m20:58:09.199409 [debug] [ThreadPool]: On list_None_analytics: Close
+[0m20:58:09.235933 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m20:58:09.237139 [debug] [ThreadPool]: SQL status: OK in 0.333 seconds
+[0m20:58:09.241422 [debug] [ThreadPool]: On list_None_staging: ROLLBACK
+[0m20:58:09.242894 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m20:58:09.243823 [debug] [ThreadPool]: On list_None_staging: Close
+[0m20:58:09.259790 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '9461064b-8183-421c-8c93-fe0c74f25037', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694a4efb10>]}
+[0m20:58:09.261103 [debug] [MainThread]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.261981 [debug] [MainThread]: Spark adapter: NotImplemented: commit
+[0m20:58:09.265765 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23
+[0m20:58:09.266390 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c
+[0m20:58:09.266933 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af
+[0m20:58:09.267671 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
+[0m20:58:09.268349 [info ] [Thread-1 (]: 1 of 15 START test not_null_analytics_customer_overview_customer_id ............ [RUN]
+[0m20:58:09.269196 [info ] [Thread-2 (]: 2 of 15 START test not_null_int_customer_commercial_360_customer_id ............ [RUN]
+[0m20:58:09.270380 [info ] [Thread-3 (]: 3 of 15 START test not_null_int_customer_profile_customer_id ................... [RUN]
+[0m20:58:09.271203 [info ] [Thread-4 (]: 4 of 15 START test not_null_int_online_retail_customer_sales_customer_id ....... [RUN]
+[0m20:58:09.272149 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_None_staging, now test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23)
+[0m20:58:09.273054 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly list_None_analytics, now test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c)
+[0m20:58:09.273828 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly list_None_intermediate, now test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af)
+[0m20:58:09.274805 [debug] [Thread-4 (]: Acquiring new spark connection 'test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8'
+[0m20:58:09.275753 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23
+[0m20:58:09.276520 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c
+[0m20:58:09.277276 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af
+[0m20:58:09.278059 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
+[0m20:58:09.292826 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23"
+[0m20:58:09.297357 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c"
+[0m20:58:09.301918 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af"
+[0m20:58:09.306680 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
+[0m20:58:09.311089 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af
+[0m20:58:09.312145 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c
+[0m20:58:09.313097 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23
+[0m20:58:09.325583 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
+[0m20:58:09.331397 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af"
+[0m20:58:09.334308 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c"
+[0m20:58:09.337260 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23"
+[0m20:58:09.341621 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
+[0m20:58:09.349535 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.350400 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.350974 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.351548 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.352125 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af"
+[0m20:58:09.353355 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c"
+[0m20:58:09.354233 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23"
+[0m20:58:09.355009 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
+[0m20:58:09.355889 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select customer_id
+from intermediate.int_customer_profile
+where customer_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:09.356810 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select customer_id
+from intermediate.int_customer_commercial_360
+where customer_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:09.357609 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select customer_id
+from analytics.analytics_customer_overview
+where customer_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:09.358476 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select customer_id
+from intermediate.int_online_retail_customer_sales
+where customer_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:09.359356 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m20:58:09.360117 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m20:58:09.361019 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:58:09.361802 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m20:58:09.682064 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:09.683578 [debug] [Thread-1 (]: SQL status: OK in 0.322 seconds
+[0m20:58:09.684286 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:09.686785 [debug] [Thread-2 (]: SQL status: OK in 0.327 seconds
+[0m20:58:09.702094 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23: ROLLBACK
+[0m20:58:09.704568 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c: ROLLBACK
+[0m20:58:09.705330 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:09.706186 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:09.707216 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:09.708399 [debug] [Thread-3 (]: SQL status: OK in 0.349 seconds
+[0m20:58:09.713208 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23: Close
+[0m20:58:09.714243 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:09.715448 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c: Close
+[0m20:58:09.717909 [debug] [Thread-4 (]: SQL status: OK in 0.356 seconds
+[0m20:58:09.720761 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af: ROLLBACK
+[0m20:58:09.725151 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:09.728124 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: ROLLBACK
+[0m20:58:09.729150 [info ] [Thread-1 (]: 1 of 15 PASS not_null_analytics_customer_overview_customer_id .................. [[32mPASS[0m in 0.46s]
+[0m20:58:09.730142 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af: Close
+[0m20:58:09.731368 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:09.732741 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23
+[0m20:58:09.734124 [info ] [Thread-2 (]: 2 of 15 PASS not_null_int_customer_commercial_360_customer_id .................. [[32mPASS[0m in 0.46s]
+[0m20:58:09.735530 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: Close
+[0m20:58:09.736779 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972
+[0m20:58:09.737966 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c
+[0m20:58:09.739310 [info ] [Thread-1 (]: 5 of 15 START test not_null_int_retailrocket_visitor_activity_visitor_id ....... [RUN]
+[0m20:58:09.740992 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e
+[0m20:58:09.743219 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_analytics_customer_overview_customer_id.8bdc87ee23, now test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972)
+[0m20:58:09.746270 [info ] [Thread-3 (]: 3 of 15 PASS not_null_int_customer_profile_customer_id ......................... [[32mPASS[0m in 0.47s]
+[0m20:58:09.747122 [info ] [Thread-2 (]: 6 of 15 START test not_null_stg_ecommerce_customer_churn_customer_id ........... [RUN]
+[0m20:58:09.749726 [info ] [Thread-4 (]: 4 of 15 PASS not_null_int_online_retail_customer_sales_customer_id ............. [[32mPASS[0m in 0.47s]
+[0m20:58:09.753203 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972
+[0m20:58:09.754852 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af
+[0m20:58:09.755884 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_customer_commercial_360_customer_id.b35257097c, now test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e)
+[0m20:58:09.757295 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
+[0m20:58:09.762797 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972"
+[0m20:58:09.763981 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2
+[0m20:58:09.764921 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e
+[0m20:58:09.765723 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d
+[0m20:58:09.766892 [info ] [Thread-3 (]: 7 of 15 START test not_null_stg_marketing_campaign_customer_id ................. [RUN]
+[0m20:58:09.771548 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e"
+[0m20:58:09.772771 [info ] [Thread-4 (]: 8 of 15 START test not_null_stg_retailrocket_category_tree_category_id ......... [RUN]
+[0m20:58:09.773865 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_customer_profile_customer_id.43eecb28af, now test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2)
+[0m20:58:09.775454 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8, now test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d)
+[0m20:58:09.776087 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972
+[0m20:58:09.776828 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2
+[0m20:58:09.777586 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d
+[0m20:58:09.781513 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972"
+[0m20:58:09.782156 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e
+[0m20:58:09.786564 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2"
+[0m20:58:09.791020 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d"
+[0m20:58:09.794666 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e"
+[0m20:58:09.799097 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.800005 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2
+[0m20:58:09.801326 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972"
+[0m20:58:09.801773 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d
+[0m20:58:09.802343 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.805736 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2"
+[0m20:58:09.806721 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select visitor_id
+from intermediate.int_retailrocket_visitor_activity
+where visitor_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:09.809587 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d"
+[0m20:58:09.810585 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e"
+[0m20:58:09.811934 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:58:09.813238 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select customer_id
+from staging.stg_ecommerce_customer_churn
+where customer_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:09.815468 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m20:58:09.816148 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.816808 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:09.818055 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2"
+[0m20:58:09.819296 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d"
+[0m20:58:09.821027 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select customer_id
+from staging.stg_marketing_campaign
+where customer_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:09.822851 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select category_id
+from staging.stg_retailrocket_category_tree
+where category_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:09.824218 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m20:58:09.827576 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
+[0m20:58:10.111929 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:10.113662 [debug] [Thread-2 (]: SQL status: OK in 0.298 seconds
+[0m20:58:10.122542 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e: ROLLBACK
+[0m20:58:10.125656 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:10.126895 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:10.130814 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e: Close
+[0m20:58:10.134839 [debug] [Thread-1 (]: SQL status: OK in 0.323 seconds
+[0m20:58:10.148539 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972: ROLLBACK
+[0m20:58:10.150514 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:10.152146 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972: Close
+[0m20:58:10.158192 [info ] [Thread-2 (]: 6 of 15 PASS not_null_stg_ecommerce_customer_churn_customer_id ................. [[32mPASS[0m in 0.40s]
+[0m20:58:10.170093 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e
+[0m20:58:10.171514 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665
+[0m20:58:10.173371 [info ] [Thread-2 (]: 9 of 15 START test unique_analytics_customer_overview_customer_id .............. [RUN]
+[0m20:58:10.174433 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_stg_ecommerce_customer_churn_customer_id.34886de52e, now test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665)
+[0m20:58:10.175474 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665
+[0m20:58:10.192642 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665"
+[0m20:58:10.202030 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:10.193781 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:10.203419 [info ] [Thread-1 (]: 5 of 15 PASS not_null_int_retailrocket_visitor_activity_visitor_id ............. [[32mPASS[0m in 0.46s]
+[0m20:58:10.206450 [debug] [Thread-3 (]: SQL status: OK in 0.382 seconds
+[0m20:58:10.208613 [debug] [Thread-4 (]: SQL status: OK in 0.381 seconds
+[0m20:58:10.210111 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972
+[0m20:58:10.215005 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294
+[0m20:58:10.217418 [info ] [Thread-1 (]: 10 of 15 START test unique_int_customer_commercial_360_customer_id ............. [RUN]
+[0m20:58:10.220763 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2: ROLLBACK
+[0m20:58:10.231396 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:10.228365 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_retailrocket_visitor_activity_visitor_id.6d1ee20972, now test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294)
+[0m20:58:10.223819 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d: ROLLBACK
+[0m20:58:10.232213 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665
+[0m20:58:10.235584 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2: Close
+[0m20:58:10.237234 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294
+[0m20:58:10.239607 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:10.252430 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665"
+[0m20:58:10.267989 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294"
+[0m20:58:10.276417 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d: Close
+[0m20:58:10.292994 [info ] [Thread-3 (]: 7 of 15 PASS not_null_stg_marketing_campaign_customer_id ....................... [[32mPASS[0m in 0.52s]
+[0m20:58:10.296536 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2
+[0m20:58:10.297708 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294
+[0m20:58:10.299199 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5
+[0m20:58:10.303973 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294"
+[0m20:58:10.305355 [info ] [Thread-3 (]: 11 of 15 START test unique_int_customer_profile_customer_id .................... [RUN]
+[0m20:58:10.307681 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_stg_marketing_campaign_customer_id.f114aa31b2, now test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5)
+[0m20:58:10.310250 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5
+[0m20:58:10.311441 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:10.313512 [info ] [Thread-4 (]: 8 of 15 PASS not_null_stg_retailrocket_category_tree_category_id ............... [[32mPASS[0m in 0.54s]
+[0m20:58:10.321813 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:10.323672 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5"
+[0m20:58:10.324713 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665"
+[0m20:58:10.326270 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d
+[0m20:58:10.327292 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294"
+[0m20:58:10.328687 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    customer_id as unique_field,
+    count(*) as n_records
+
+from analytics.analytics_customer_overview
+where customer_id is not null
+group by customer_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:10.329767 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
+[0m20:58:10.331183 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    customer_id as unique_field,
+    count(*) as n_records
+
+from intermediate.int_customer_commercial_360
+where customer_id is not null
+group by customer_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:10.334065 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m20:58:10.335483 [info ] [Thread-4 (]: 12 of 15 START test unique_int_online_retail_customer_sales_customer_id ........ [RUN]
+[0m20:58:10.337443 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:58:10.340283 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_stg_retailrocket_category_tree_category_id.7bb1e4c27d, now test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb)
+[0m20:58:10.341352 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5
+[0m20:58:10.345087 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
+[0m20:58:10.355190 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5"
+[0m20:58:10.364114 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
+[0m20:58:10.378796 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:10.380622 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5"
+[0m20:58:10.382272 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    customer_id as unique_field,
+    count(*) as n_records
+
+from intermediate.int_customer_profile
+where customer_id is not null
+group by customer_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:10.383190 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
+[0m20:58:10.384560 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m20:58:10.389749 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
+[0m20:58:10.400011 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:10.402407 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
+[0m20:58:10.405085 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    customer_id as unique_field,
+    count(*) as n_records
+
+from intermediate.int_online_retail_customer_sales
+where customer_id is not null
+group by customer_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:10.407881 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
+[0m20:58:11.664894 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:11.666355 [debug] [Thread-4 (]: SQL status: OK in 1.259 seconds
+[0m20:58:11.674064 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: ROLLBACK
+[0m20:58:11.678168 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:11.679846 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: Close
+[0m20:58:11.684543 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:11.685955 [debug] [Thread-1 (]: SQL status: OK in 1.349 seconds
+[0m20:58:11.693050 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294: ROLLBACK
+[0m20:58:11.694514 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:11.695536 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294: Close
+[0m20:58:11.715759 [info ] [Thread-4 (]: 12 of 15 PASS unique_int_online_retail_customer_sales_customer_id .............. [[32mPASS[0m in 1.38s]
+[0m20:58:11.718423 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
+[0m20:58:11.721191 [info ] [Thread-1 (]: 10 of 15 PASS unique_int_customer_commercial_360_customer_id ................... [[32mPASS[0m in 1.49s]
+[0m20:58:11.723530 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea
+[0m20:58:11.729616 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294
+[0m20:58:11.730842 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:11.736851 [debug] [Thread-2 (]: SQL status: OK in 1.403 seconds
+[0m20:58:11.734289 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2
+[0m20:58:11.732442 [info ] [Thread-4 (]: 13 of 15 START test unique_int_retailrocket_visitor_activity_visitor_id ........ [RUN]
+[0m20:58:11.742676 [info ] [Thread-1 (]: 14 of 15 START test unique_stg_ecommerce_customer_churn_customer_id ............ [RUN]
+[0m20:58:11.749314 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:11.755315 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665: ROLLBACK
+[0m20:58:11.756099 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb, now test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea)
+[0m20:58:11.757972 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.unique_int_customer_commercial_360_customer_id.4ae4f47294, now test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2)
+[0m20:58:11.760125 [debug] [Thread-3 (]: SQL status: OK in 1.375 seconds
+[0m20:58:11.763671 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:11.765483 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea
+[0m20:58:11.767448 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2
+[0m20:58:11.771168 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665: Close
+[0m20:58:11.778106 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea"
+[0m20:58:11.787939 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5: ROLLBACK
+[0m20:58:11.790520 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2"
+[0m20:58:11.794134 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:11.796281 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5: Close
+[0m20:58:11.802493 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea
+[0m20:58:11.806499 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2
+[0m20:58:11.805846 [info ] [Thread-2 (]: 9 of 15 PASS unique_analytics_customer_overview_customer_id .................... [[32mPASS[0m in 1.63s]
+[0m20:58:11.818964 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea"
+[0m20:58:11.820227 [info ] [Thread-3 (]: 11 of 15 PASS unique_int_customer_profile_customer_id .......................... [[32mPASS[0m in 1.51s]
+[0m20:58:11.827806 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2"
+[0m20:58:11.829607 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665
+[0m20:58:11.831423 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5
+[0m20:58:11.834223 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d
+[0m20:58:11.836820 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:11.839314 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:11.840192 [info ] [Thread-2 (]: 15 of 15 START test unique_stg_marketing_campaign_customer_id .................. [RUN]
+[0m20:58:11.841868 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea"
+[0m20:58:11.843170 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2"
+[0m20:58:11.844584 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.unique_analytics_customer_overview_customer_id.ef5ab47665, now test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d)
+[0m20:58:11.847268 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    visitor_id as unique_field,
+    count(*) as n_records
+
+from intermediate.int_retailrocket_visitor_activity
+where visitor_id is not null
+group by visitor_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:11.849018 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    customer_id as unique_field,
+    count(*) as n_records
+
+from staging.stg_ecommerce_customer_churn
+where customer_id is not null
+group by customer_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:11.852572 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d
+[0m20:58:11.854526 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
+[0m20:58:11.856039 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m20:58:11.866634 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d"
+[0m20:58:11.889310 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d
+[0m20:58:11.896222 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d"
+[0m20:58:11.910846 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:11.917300 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d"
+[0m20:58:11.918785 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d: /* {"app": "dbt", "dbt_version": "1.11.12", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+select
+    customer_id as unique_field,
+    count(*) as n_records
+
+from staging.stg_marketing_campaign
+where customer_id is not null
+group by customer_id
+having count(*) > 1
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m20:58:11.920175 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m20:58:14.357386 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:14.358677 [debug] [Thread-4 (]: SQL status: OK in 2.504 seconds
+[0m20:58:14.363438 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea: ROLLBACK
+[0m20:58:14.365738 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:14.367206 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea: Close
+[0m20:58:14.369163 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:14.371035 [debug] [Thread-1 (]: SQL status: OK in 2.515 seconds
+[0m20:58:14.375982 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2: ROLLBACK
+[0m20:58:14.378976 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:14.379925 [info ] [Thread-4 (]: 13 of 15 PASS unique_int_retailrocket_visitor_activity_visitor_id .............. [[32mPASS[0m in 2.62s]
+[0m20:58:14.380896 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2: Close
+[0m20:58:14.382270 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea
+[0m20:58:14.389483 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m20:58:14.390662 [debug] [Thread-2 (]: SQL status: OK in 2.471 seconds
+[0m20:58:14.393342 [info ] [Thread-1 (]: 14 of 15 PASS unique_stg_ecommerce_customer_churn_customer_id .................. [[32mPASS[0m in 2.64s]
+[0m20:58:14.394645 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2
+[0m20:58:14.396141 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d: ROLLBACK
+[0m20:58:14.397319 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m20:58:14.398322 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d: Close
+[0m20:58:14.408826 [info ] [Thread-2 (]: 15 of 15 PASS unique_stg_marketing_campaign_customer_id ........................ [[32mPASS[0m in 2.56s]
+[0m20:58:14.410311 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d
+[0m20:58:14.412745 [debug] [MainThread]: On master: ROLLBACK
+[0m20:58:14.414752 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m20:58:14.436639 [debug] [MainThread]: Spark adapter: NotImplemented: rollback
+[0m20:58:14.438091 [debug] [MainThread]: Spark adapter: NotImplemented: add_begin_query
+[0m20:58:14.438831 [debug] [MainThread]: Spark adapter: NotImplemented: commit
+[0m20:58:14.439508 [debug] [MainThread]: On master: ROLLBACK
+[0m20:58:14.440134 [debug] [MainThread]: Spark adapter: NotImplemented: rollback
+[0m20:58:14.440859 [debug] [MainThread]: On master: Close
+[0m20:58:14.449461 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m20:58:14.450463 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_stg_marketing_campaign_customer_id.abcd66179d' was properly closed.
+[0m20:58:14.451176 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_stg_ecommerce_customer_churn_customer_id.2d37e837b2' was properly closed.
+[0m20:58:14.451802 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_int_customer_profile_customer_id.e7331e83b5' was properly closed.
+[0m20:58:14.452459 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_int_retailrocket_visitor_activity_visitor_id.fc7f347eea' was properly closed.
+[0m20:58:14.453241 [info ] [MainThread]: 
+[0m20:58:14.454118 [info ] [MainThread]: Finished running 15 data tests in 0 hours 0 minutes and 5.60 seconds (5.60s).
+[0m20:58:14.456742 [debug] [MainThread]: Command end result
+[0m20:58:14.501230 [debug] [MainThread]: Wrote artifact WritableManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/manifest.json
+[0m20:58:14.505530 [debug] [MainThread]: Wrote artifact SemanticManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/semantic_manifest.json
+[0m20:58:14.515819 [debug] [MainThread]: Wrote artifact RunExecutionResult to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/run_results.json
+[0m20:58:14.516990 [info ] [MainThread]: 
+[0m20:58:14.518553 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m20:58:14.519968 [info ] [MainThread]: 
+[0m20:58:14.521431 [info ] [MainThread]: Done. PASS=15 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=15
+[0m20:58:14.523282 [debug] [MainThread]: Resource report: {"command_name": "test", "command_success": true, "command_wall_clock_time": 6.661351, "process_in_blocks": "3744", "process_kernel_time": 0.534192, "process_mem_max_rss": "142364", "process_out_blocks": "0", "process_user_time": 2.79853}
+[0m20:58:14.524402 [debug] [MainThread]: Command `dbt test` succeeded at 20:58:14.524203 after 6.66 seconds
+[0m20:58:14.525281 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694afb3ed0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694afb3cd0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78694afb3d90>]}
+[0m20:58:14.526361 [debug] [MainThread]: Flushing usage events
+[0m20:58:15.092850 [debug] [MainThread]: An error was encountered while trying to flush usage events
