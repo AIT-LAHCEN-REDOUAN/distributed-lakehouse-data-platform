@@ -1,0 +1,75 @@
+cluster_name: customerdna-distributed-demo
+deployment_scope: distributed_pc_control_plane
+description: >
+  Distributed demonstration environment for CustomerDNA AI where the local PC hosts
+  orchestration and observability, while VM1, VM2, and VM3 host the distributed data plane.
+
+control_plane:
+  node_name: control_plane_pc
+  host_type: local_workstation
+  responsibilities:
+    - airflow
+    - airflow_postgres
+    - prometheus
+    - grafana
+    - dbt_runtime
+    - great_expectations_runtime
+    - spark_submit_helper
+  preferred_ports:
+    airflow_api: 18080
+    prometheus: 19090
+    grafana: 13001
+
+nodes:
+  - node_name: vm1
+    ip_address: 10.10.252.11
+    hostname: redouan
+    os: Ubuntu 22.04.5 LTS
+    cpu: "QEMU Virtual CPU 2.5+ (2 sockets x 2 cores)"
+    memory_gib: 3.8
+    disk_gb: 26
+    intended_roles:
+      - kafka_broker_1
+      - hdfs_datanode_1
+      - spark_worker_1
+      - trino_worker_1
+      - exporters
+
+  - node_name: vm2
+    ip_address: 10.10.252.12
+    hostname: redouan
+    os: Ubuntu 22.04.5 LTS
+    cpu: "QEMU Virtual CPU 2.5+ (2 sockets x 2 cores)"
+    memory_gib: 3.8
+    disk_gb: 26
+    intended_roles:
+      - kafka_broker_2
+      - hdfs_namenode
+      - hdfs_datanode_2
+      - hive_metastore
+      - hive_metastore_postgres
+      - spark_master
+      - spark_history_server
+      - spark_thrift_server
+      - spark_worker_2
+      - trino_coordinator
+      - exporters
+
+  - node_name: vm3
+    ip_address: 10.10.252.13
+    hostname: redouan
+    os: Ubuntu 22.04.5 LTS
+    cpu: "QEMU Virtual CPU 2.5+ (2 sockets x 2 cores)"
+    memory_gib: 3.8
+    disk_gb: 26
+    intended_roles:
+      - kafka_broker_3
+      - hdfs_datanode_3
+      - spark_worker_3
+      - trino_worker_2
+      - exporters
+
+constraints:
+  - VM specs are fixed by the IT administrator.
+  - The cluster is meant to demonstrate distribution, not production-scale resilience.
+  - Prefer small container footprints and avoid unnecessary duplicate services on each node.
