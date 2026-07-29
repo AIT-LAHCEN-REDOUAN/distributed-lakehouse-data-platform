@@ -1,8 +1,8 @@
 # AdOptimizer Customer Data Platform - Business Rules & Project Specification
 
-> **Global Project Document** | Version 17.2
+> **Global Project Document** | Version 17.4
 > Status: Distributed lakehouse architecture fully validated end to end for Client 1 with Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Airflow, Great Expectations, Prometheus, and Grafana
-> Last Updated: 2026-07-17
+> Last Updated: 2026-07-29
 
 ---
 
@@ -20,6 +20,74 @@ It defines:
 - the expected evolution path of the platform.
 
 This document is the **global architectural truth** of the project.
+
+---
+
+## 1.1 New Engineer Quick Start
+
+This section is a practical starting point for a new engineer (or an external assistant) who needs to understand the project before making any deployment decisions.
+
+### 1.1.1 Where to Start Reading
+
+- Repository structure reference (authoritative tree): `full_project_strcuture.md`
+- Local runbook (validated baseline): `RUNBOOK_local_Acer.md`
+- Local tool ports (validated baseline): `tools_port_local_Acer.txt`
+- PFE framing rules (jury-oriented): `project_requirements/BUSINESS_RULES_PFE_REPORT.md`
+
+### 1.1.2 Current Implemented Scope
+
+- Active scope: Client 1 only
+- Active datasets:
+  - `datasets/client_1/Customer_Personality_Analysis/marketing_campaign.csv`
+  - `datasets/client_1/E-commerce_customer_churn/E-commerce_customer_churn.xlsx`
+  - `datasets/client_1/Retailrocket_recommender_system_dataset/category_tree.csv`
+  - `datasets/client_1/Retailrocket_recommender_system_dataset/events.csv`
+  - `datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part1.csv`
+  - `datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part2.csv`
+  - `datasets/client_1/UCI_Online_Retail_2/online_retail_2.xlsx`
+
+### 1.1.3 What “Done” Means in This Repository
+
+The project is considered implemented locally when all these are true:
+
+- Airflow runs the Client 1 DAG sequence successfully.
+- HDFS bronze zone is initialized and receives dataset-specific landed files.
+- Spark job writes Iceberg raw tables and registers metadata through Hive Metastore.
+- dbt-spark produces staging/intermediate/analytics outputs over the lakehouse.
+- Trino can query Iceberg tables through the lakehouse catalog.
+- Great Expectations produces validation results and HTML Data Docs evidence.
+- Prometheus and Grafana show infrastructure and pipeline-health dashboards.
+
+### 1.1.4 Local Execution Order (Source of Truth)
+
+Recommended operational order (from a clean start):
+
+1. `customerdna_client1_lakehouse_readiness_pipeline` (pre-check)
+2. `customerdna_client1_lakehouse_setup_pipeline`
+3. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+4. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+5. `customerdna_client1_lakehouse_readiness_pipeline` (post-check, optional)
+
+### 1.1.5 Key Evidence Locations (for Validation and Reporting)
+
+- Airflow execution logs: `src/airflow/logs/`
+- dbt execution artifacts: `src/transformation/dbt_spark/client_1/target/`
+- Great Expectations Data Docs (HTML): `src/quality/great_expectations/client_1/gx_project/gx/uncommitted/data_docs/local_site/index.html`
+- Great Expectations validation result store (JSON): `src/quality/great_expectations/client_1/gx_project/gx/uncommitted/validations/`
+- Project monitoring state:
+  - `src/monitoring/state/airflow_pipeline_state.json`
+  - `src/monitoring/state/raw_load_state.json`
+  - `src/monitoring/state/gx_state.json`
+
+### 1.1.6 Deployment Rule for External Assistants
+
+No multi-machine deployment plan should be executed unless it is directly derived from:
+
+- the current repository files (compose files, `.env.example` templates, and configs under `src/`),
+- the validated local runbook (`RUNBOOK_local_Acer.md`),
+- and the VM deployment guides under `src/deployments/VM1`, `src/deployments/VM2`, `src/deployments/VM3`.
+
+If any referenced compose/env/config file is missing or ambiguous, deployment must pause until the mismatch is resolved.
 
 ---
 
@@ -132,12 +200,15 @@ At the current state of the project, this architecture is no longer only a targe
 
 ### 4.1 Current Executable Runtime Sequence
 
-The implemented platform must also be explained through its concrete operational sequence:
+The implemented platform must be explained through its concrete operational sequence.
 
-1. `customerdna_client1_lakehouse_setup_pipeline`
-2. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
-3. `customerdna_client1_dbt_spark_lakehouse_pipeline`
-4. `customerdna_client1_lakehouse_readiness_pipeline`
+Recommended operational order (from a clean start):
+
+1. `customerdna_client1_lakehouse_readiness_pipeline` (pre-check)
+2. `customerdna_client1_lakehouse_setup_pipeline`
+3. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+4. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+5. `customerdna_client1_lakehouse_readiness_pipeline` (post-check, optional)
 
 In practical terms, the executed runtime flow is:
 
@@ -470,17 +541,14 @@ Each dataset pipeline must be verifiable through:
 ## 12. Lakehouse Design Rules
 
 ### 12.1 Core Table Organization
-The platform should organize lakehouse data into business-relevant namespaces and layers, for example:
+The platform should organize lakehouse data into clear layers that separate raw landing from curated analytics.
 
-- `bronze`
-- `silver`
-- `gold`
+Two valid conceptual naming patterns exist:
 
-or, if a domain-first organization is preferred:
+- `bronze` / `silver` / `gold` (generic medallion pattern)
+- `raw_data` / `staging` / `intermediate` / `analytics` (analytics-engineering pattern)
 
-- `client1_bronze`
-- `client1_silver`
-- `client1_gold`
+In the implemented Client 1 scope, the lakehouse is organized to support dbt-spark modeling and uses the second pattern for curated layers (staging/intermediate/analytics), with HDFS as the bronze file landing zone.
 
 ### 12.2 Bronze Rule
 Bronze tables or files preserve ingested source records with minimal interpretation.
@@ -508,10 +576,13 @@ The platform should remain decomposed into clear orchestration phases:
 
 This decomposition is implemented concretely through the following DAGs:
 
-1. `customerdna_client1_lakehouse_setup_pipeline`
-2. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
-3. `customerdna_client1_dbt_spark_lakehouse_pipeline`
-4. `customerdna_client1_lakehouse_readiness_pipeline`
+Recommended operational order (from a clean start):
+
+1. `customerdna_client1_lakehouse_readiness_pipeline` (pre-check)
+2. `customerdna_client1_lakehouse_setup_pipeline`
+3. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+4. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+5. `customerdna_client1_lakehouse_readiness_pipeline` (post-check, optional)
 
 ### 13.2 Orchestration Benefit Rule
 This split is intentional because it improves:
@@ -557,253 +628,39 @@ It exists to prove that the system is:
 
 ## 15. Project Structure Rule
 
-The active project structure must reflect the distributed lakehouse architecture clearly.
+The active project structure must reflect the distributed lakehouse architecture clearly and must remain readable for a new engineer joining the project.
 
-The project structure must remain readable from the top business level down to the operational file level.
+The authoritative, up-to-date repository structure is documented in:
 
-The active structure must be understood as follows:
+- `full_project_strcuture.md` (repository root)
+
+The active structure should be understood at a responsibility level as follows:
 
 ```text
 CustomerDNA AI/
-  Architectural Diagrams/
   datasets/
-    client_1/
-      Customer_Personality_Analysis/
-        marketing_campaign.csv
-      E-commerce_customer_churn/
-        E-commerce_customer_churn.xlsx
-      Retailrocket_recommender_system_dataset/
-        category_tree.csv
-        events.csv
-        item_properties_part1.csv
-        item_properties_part2.csv
-      UCI_Online_Retail_2/
-        online_retail_2.xlsx
-    client_2/
-      database.sqlite
-      Reviews.csv
+    client_1/ (CSV/XLSX sources used for the implemented scope)
   project_presentation/
-    PFE_presentation/
-    PFE_Report/
-      main.tex
-      README.md
-    PFE_resources/
-      Figures/
-      Logos/
-        company_image.png
-        School_image.png
-        University_image.png
+    PFE_Report/ (LaTeX report)
+    PFE_resources/ (figures, logos, and tech logos used in the report)
   project_requirements/
     BUSINESS_RULES.md
     BUSINESS_RULES_PFE_REPORT.md
     initial_project_description.txt
-  Resources_by_azmani/
   src/
-    README.md
-    SECURITY_AND_DATASECOPS_GUIDE.md
-    airflow/
-      .env
-      .env.example
-      docker-compose.yml
-      requirements.txt
-      dags/
-        client_1/
-          __init__.py
-          client_1_dag_common.py
-          client_1_lakehouse_setup_dag.py
-          client_1_kafka_hdfs_spark_raw_dag.py
-          client_1_dbt_spark_transformations_dag.py
-          client_1_lakehouse_readiness_dag.py
-    catalog/
-      hive/
-        .env.example
-        docker-compose.yml
-        README.md
-        config/
-          core-site.xml
-          hdfs-site.xml
-          hive-site.xml
-        metastore/
-          Dockerfile
-        client_1/
-          external_tables/
-          iceberg_catalog/
-          namespaces/
-    lake/
-      hdfs/
-        .env
-        .env.example
-        docker-compose.yml
-        README.md
-        client_1/
-          initialize_client1_bronze_zone.py
-          list_client1_bronze_objects.py
-          reset_client1_bronze.py
-          bronze/
-            ecommerce_customer_churn/
-            marketing_campaign/
-            online_retail/
-            retailrocket_category_tree/
-            retailrocket_events/
-            retailrocket_item_properties/
-          silver/
-          gold/
-          common/
-            hdfs_bronze_config.py
-            hdfs_bronze_utils.py
-    monitoring/
-      README.md
-      exporters/
-        pipeline_metrics_exporter.py
-        pipeline_metrics/
-        hdfs_metrics/
-        spark_metrics/
-      grafana/
-        .env.example
-        docker-compose.yml
-        dashboards/
-          customerdna_infrastructure.dashboard.json
-          customerdna_pipeline_health.dashboard.json
-          customerdna_postgres.dashboard.json
-          README.md
-        provisioning/
-          dashboards/
-            customerdna.yml
-          datasources/
-            prometheus.yml
-      prometheus/
-        .env
-        .env.example
-        docker-compose.yml
-        prometheus.yml
-        README.md
-      shared/
-        pipeline_metrics.py
-      state/
-        airflow_pipeline_state.json
-        gx_state.json
-        raw_load_state.json
-      tools/
-        export_runtime_logs.py
-    processing/
-      spark/
-        .env
-        .env.example
-        docker-compose.yml
-        Dockerfile
-        README.md
-        config/
-          hive-site.xml
-          spark-defaults.conf
-        jobs/
-          client_1/
-            load_hdfs_bronze_to_iceberg.py
-        client_1/
-          bronze_to_silver/
-          silver_to_gold/
-          quality_helpers/
-          schemas/
-          sql/
-          common/
-            spark_raw_loader_submitter.py
-    quality/
-      great_expectations/
-        client_1/
-          bootstrap_gx.py
-          run_gx_validations.py
-          checkpoints/
-          expectations/
-            bronze/
-            silver/
-            gold/
-          data_docs/
-            index.html
-          artifacts/
-    query/
-      trino/
-        .env.example
-        docker-compose.yml
-        README.md
-        etc/
-          config.properties
-          core-site.xml
-          hdfs-site.xml
-          jvm.config
-          node.properties
-          catalog/
-            lakehouse.properties
-        client_1/
-          initialize_lakehouse_namespace.py
-          common/
-            trino_rest.py
-    streaming/
-      kafka/
-        .gitignore
-        docker-compose.yml
-        requirements.txt
-        client_1/
-          reset_client1_kafka.py
-          run_client1_kafka_raw_pipeline.py
-          common/
-            bronze_consumer.py
-            dataset_producer.py
-            kafka_config.py
-            load_event_consumer.py
-            producer_utils.py
-            source_row_iterators.py
-          ecommerce_customer_churn/
-            __init__.py
-            produce.py
-            consume.py
-            load.py
-          marketing_campaign/
-            __init__.py
-            produce.py
-            consume.py
-            load.py
-          online_retail/
-            __init__.py
-            produce.py
-            consume.py
-            load.py
-          retailrocket_category_tree/
-            __init__.py
-            produce.py
-            consume.py
-            load.py
-          retailrocket_events/
-            __init__.py
-            produce.py
-            consume.py
-            load.py
-          retailrocket_item_properties/
-            __init__.py
-            produce.py
-            consume.py
-            load.py
-    transformation/
-      dbt_spark/
-        README.md
-        client_1/
-          .env.example
-          .user.yml
-          dbt_project.yml
-          profiles.yml
-          requirements.txt
-          macros/
-            lakehouse_schema_management.sql
-            safe_casts.sql
-          models/
-            staging/
-            intermediate/
-            analytics/
-          dbt_packages/
-          logs/
-          target/
-  verify_installations/
-  README.md
-  tools_port.txt
+    airflow/ (orchestration + DAGs + local Airflow stack)
+    streaming/kafka/ (Kafka ingestion + producers/consumers)
+    lake/hdfs/ (bronze landing zone helpers and HDFS stack)
+    processing/spark/ (Spark stack + raw loader job into Iceberg)
+    catalog/hive/ (Hive Metastore + catalog configs)
+    query/trino/ (Trino stack + lakehouse catalog)
+    transformation/dbt_spark/ (dbt project: staging/intermediate/analytics)
+    quality/great_expectations/ (GE project + validations + Data Docs)
+    monitoring/ (Prometheus/Grafana + custom exporter + pipeline state)
+    deployments/ (multi-VM deployment guides: VM1/VM2/VM3)
 ```
+
+Generated runtime artifacts exist in the repo during local runs (for example `src/airflow/logs/` and `src/transformation/dbt_spark/client_1/target/`). They are not source-of-truth implementation modules and should not be treated as architectural components.
 
 The project must no longer keep a traditional PostgreSQL business-warehouse layer as the core analytical storage design.
 
@@ -997,3 +854,4 @@ This is the correct scientific and engineering interpretation for the PFE report
 | 17.1 | 2026-07-16 | Updated to reflect the operational 4-DAG runtime, the dbt-spark transformation layer, the current monitoring stack, and the detailed live project structure with important files. |
 | 17.2 | 2026-07-17 | Refined for the final validated state: architecture transition marked as completed, runtime validation status clarified, and the global document aligned with the fully successful local end-to-end lakehouse execution. |
 | 17.3 | 2026-07-18 | Added local-vs-distributed deployment comparison rules, benchmark metrics, and guidance for preserving local runnable behavior while preparing future multi-machine evaluation. |
+| 17.4 | 2026-07-29 | Updated project-structure section to match the current repository (removed legacy references), aligned DAG execution guidance with the pre-check/setup/run/post-check pattern, and clarified Great Expectations Data Docs as report evidence. |
