@@ -37,7 +37,7 @@
     bottom=2.5cm,
     left=3cm,
     right=2.5cm,
-    headheight=15pt
+    headheight=28pt
 ]{geometry}
 
 \usepackage{setspace}
@@ -241,7 +241,7 @@
     \vspace{0.08cm}
 
     \noindent\begin{minipage}{\textwidth}
-    \small
+    \footnotesize
     \setlength{\parindent}{0pt}
     \setlength{\emergencystretch}{2em}
     \textbf{#1 :} #2
@@ -406,8 +406,9 @@ La solution realisee illustre une chaine de traitement complete permettant de co
 
 \keywordblock{Mots-cles}{Big Data, Ingenierie des donnees, Systemes distribues, Data Lakehouse, Apache Kafka, HDFS, Apache Spark, Apache Iceberg, Trino, dbt-Spark, Qualite des donnees, Observabilite.}
 
+\iffalse
 % ============================================================
-% Planned Table of Contents
+% Legacy manually planned table of contents (kept only as a planning record)
 % ============================================================
 \clearpage
 \phantomsection
@@ -480,22 +481,23 @@ La solution realisee illustre une chaine de traitement complete permettant de co
 \tocsubsection{II.4.10}{Prometheus and Grafana for Observability}{41}
 \tocsection{II.5}{Conclusion}{41}
 
-\tocchapter{III}{REQUIREMENTS ANALYSIS AND SYSTEM DESIGN}{42}
-\tocsection{III.1}{Introduction}{43}
-\tocsection{III.2}{Requirements Analysis}{43}
-\tocsubsection{III.2.1}{Functional Requirements}{44}
-\tocsubsection{III.2.2}{Non-Functional Requirements}{46}
-\tocsubsection{III.2.3}{Data Quality and Governance Requirements}{48}
-\tocsubsection{III.2.4}{Observability and Operational Requirements}{49}
-\tocsection{III.3}{Conceptual Design}{50}
-\tocsubsection{III.3.1}{Actors and Use Cases}{50}
-\tocsubsection{III.3.2}{Data Source Analysis}{52}
-\tocsubsection{III.3.3}{Lakehouse Layering Strategy}{54}
-\tocsection{III.4}{Global Architecture}{56}
-\tocsubsection{III.4.1}{End-to-End Data Flow}{57}
-\tocsubsection{III.4.2}{Tool Interaction and Integration}{59}
-\tocsubsection{III.4.3}{Deployment and Distribution View}{61}
-\tocsection{III.5}{Conclusion}{62}
+\tocchapter{III}{REQUIREMENTS ANALYSIS AND SYSTEM DESIGN}{49}
+\tocsection{III.1}{Introduction}{49}
+\tocsection{III.2}{Requirements Analysis}{50}
+\tocsubsection{III.2.1}{Functional Requirements}{50}
+\tocsubsection{III.2.2}{Non-Functional Requirements}{53}
+\tocsubsection{III.2.3}{Data Quality and Governance Requirements}{55}
+\tocsubsection{III.2.4}{Observability and Operational Requirements}{58}
+\tocsubsection{III.2.5}{Requirement Traceability Matrix}{58}
+\tocsection{III.3}{Conceptual Design}{61}
+\tocsubsection{III.3.1}{Actors and Use Cases}{61}
+\tocsubsection{III.3.2}{Data Source Analysis}{63}
+\tocsubsection{III.3.3}{Lakehouse Layering Strategy}{66}
+\tocsection{III.4}{Global Architecture}{68}
+\tocsubsection{III.4.1}{End-to-End Data Flow}{68}
+\tocsubsection{III.4.2}{Tool Interaction and Integration}{71}
+\tocsubsection{III.4.3}{Deployment and Distribution View}{72}
+\tocsection{III.5}{Conclusion}{73}
 
 \tocchapter{IV}{IMPLEMENTATION OF THE DISTRIBUTED LAKEHOUSE PLATFORM}{63}
 \tocsection{IV.1}{Introduction}{64}
@@ -577,6 +579,87 @@ La solution realisee illustre une chaine de traitement complete permettant de co
 \tocsection{A.3}{Docker Services and Ports}{129}
 \tocsection{A.4}{Airflow DAG Execution Order}{130}
 \tocsection{A.5}{Monitoring Dashboard Inventory}{130}
+\endgroup
+\fi
+
+% ============================================================
+% Automatic Clickable Contents and Front-Matter Lists
+% ============================================================
+\frontchapter{TABLE OF CONTENTS}
+\begingroup
+\footnotesize
+\singlespacing
+\setcounter{tocdepth}{2}
+\setlength{\parskip}{0pt}
+\makeatletter
+\@starttoc{toc}
+\makeatother
+\endgroup
+
+\frontchapter{LIST OF FIGURES}
+\begingroup
+\small
+\singlespacing
+\setlength{\parskip}{0pt}
+\makeatletter
+\@starttoc{lof}
+\makeatother
+\endgroup
+
+\frontchapter{LIST OF TABLES}
+\begingroup
+\small
+\singlespacing
+\setlength{\parskip}{0pt}
+\makeatletter
+\@starttoc{lot}
+\makeatother
+\endgroup
+
+\frontchapter{LIST OF ACRONYMS AND ABBREVIATIONS}
+\begingroup
+\footnotesize
+\singlespacing
+\setlength{\tabcolsep}{7pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{0.20\textwidth}X}
+    AI & Artificial Intelligence \\
+    API & Application Programming Interface \\
+    BI & Business Intelligence \\
+    CDP & Customer Data Platform \\
+    CPU & Central Processing Unit \\
+    CSV & Comma-Separated Values \\
+    DAG & Directed Acyclic Graph \\
+    DB & Database \\
+    dbt & Data Build Tool \\
+    ELT & Extract, Load, Transform \\
+    ETL & Extract, Transform, Load \\
+    FR & Functional Requirement \\
+    GX & Great Expectations \\
+    HDFS & Hadoop Distributed File System \\
+    HMS & Hive Metastore \\
+    HTTP & Hypertext Transfer Protocol \\
+    IAM & Identity and Access Management \\
+    ID & Identifier \\
+    JSON & JavaScript Object Notation \\
+    JSONL & JSON Lines \\
+    K8s & Kubernetes \\
+    KPI & Key Performance Indicator \\
+    KRaft & Kafka Raft Metadata Mode \\
+    ML & Machine Learning \\
+    NFR & Non-Functional Requirement \\
+    PFE & Final Year Project (\textit{Projet de Fin d'Etudes}) \\
+    RDBMS & Relational Database Management System \\
+    REST & Representational State Transfer \\
+    SAT & Smart Automation Technologies \\
+    SLA & Service-Level Agreement \\
+    SQL & Structured Query Language \\
+    TSDB & Time-Series Database \\
+    UCI & University of California, Irvine \\
+    UI & User Interface \\
+    URL & Uniform Resource Locator \\
+    YARN & Yet Another Resource Negotiator \\
+\end{tabularx}
 \endgroup
 
 \clearpage
@@ -1209,7 +1292,7 @@ The following diagram maps the concrete building blocks of this project to Kappa
 
 \begin{table}[H]
     \centering
-    \small
+    \footnotesize
     \setlength{\tabcolsep}{6pt}
     \renewcommand{\arraystretch}{1.25}
     \arrayrulecolor{ModernTableRule}
@@ -1899,9 +1982,9 @@ This chapter established the theoretical background required to justify the main
 \section{Introduction}
 After establishing the theoretical foundations in Chapter II, this chapter formalizes the \textbf{requirements} of the AdOptimizer Customer Data Platform and presents the corresponding \textbf{system design}. The objective is to define what the platform must achieve (functional and non-functional expectations), then translate these expectations into a coherent architecture that is realistic for the project scope and execution constraints.
 
-The requirements are written to remain \textbf{jury-safe}: they reflect the needs addressed by the platform without claiming unverified production-grade guarantees. The design choices emphasize reproducibility, clarity of layering, and operational discipline, so that the implementation presented in the next chapter can be evaluated against explicit criteria.
+The requirements are deliberately \textbf{scope-aware and verifiable}: they describe the capabilities demonstrated by the validated local platform without claiming unmeasured production-grade guarantees. The design choices emphasize reproducibility, clear layer boundaries, and operational discipline so that implementation evidence can be evaluated against explicit technical criteria.
 
-To ensure traceability between objectives and implementation, the requirements are expressed in a way that can be verified through concrete evidence in Chapter IV (code, configuration, execution logs, and query results). In practice, this chapter answers two complementary questions:
+To ensure traceability between objectives and implementation, the requirements are expressed in a way that can be verified through implementation evidence in Chapter IV and validation evidence in Chapter VI (code, configuration, DAG history, execution logs, validation artifacts, metrics, and query results). In practice, this chapter answers two complementary questions:
 \begin{itemize}
     \item \textbf{What must the platform deliver?} (requirements perspective)
     \item \textbf{How is the platform organized to deliver it?} (design perspective)
@@ -1920,41 +2003,45 @@ In order to keep the analysis structured, functional requirements are grouped by
     \item \textbf{Quality, orchestration, and operations} (validation, Airflow, monitoring)
 \end{itemize}
 
-\begin{table}[H]
-    \centering
-    \small
-    \setlength{\tabcolsep}{6pt}
-    \renewcommand{\arraystretch}{1.25}
-    \arrayrulecolor{ModernTableRule}
-    \rowcolors{2}{ModernTableStripe}{white}
-    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.13\textwidth}|>{\raggedright\arraybackslash}p{0.55\textwidth}|X|}
+{\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.18}
+\arrayrulecolor{ModernTableRule}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.09\textwidth}|>{\raggedright\arraybackslash}p{0.40\textwidth}|>{\raggedright\arraybackslash}p{0.39\textwidth}|}
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{ID} &
+    \color{white}\textbf{Functional requirement} &
+    \color{white}\textbf{Technical acceptance criterion} \\
+    \hline
+    \endfirsthead
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{ID} &
+    \color{white}\textbf{Functional requirement} &
+    \color{white}\textbf{Technical acceptance criterion} \\
+    \hline
+    \endhead
+        FR-1 & Ingest heterogeneous datasets (batch files and event-like records) into a unified ingestion backbone. & Each active Client~1 source publishes a non-empty record stream to its dataset-specific Kafka topic, with source identity preserved in the ingestion metadata. \\
         \hline
-        \rowcolor{ModernTableHeader}
-        \color{white}\textbf{ID} &
-        \color{white}\textbf{Functional requirement} &
-        \color{white}\textbf{Project motivation} \\
+        FR-2 & Persist an immutable bronze landing zone that preserves ingested history for auditability and reprocessing. & Every consumed dataset produces an immutable HDFS bronze batch with a stable client/dataset path and sufficient metadata to identify its ingestion run. \\
         \hline
-        FR-1 & Ingest heterogeneous datasets (batch files and event-like records) into a unified ingestion backbone. & Avoid source-specific ingestion pipelines and enable a consistent downstream processing interface. \\
+        FR-3 & Construct queryable raw tables from the bronze zone using distributed processing. & Spark creates the six expected Client~1 Iceberg raw tables, and each table is discoverable through Hive Metastore and queryable through Trino. \\
         \hline
-        FR-2 & Persist an immutable bronze landing zone that preserves ingested history for auditability and reprocessing. & Enable traceability, debugging, and reproducible rebuilds when logic evolves. \\
+        FR-4 & Support layered transformations (staging $\rightarrow$ intermediate $\rightarrow$ analytics) with explicit dependencies. & A dbt-spark run materializes the declared staging, intermediate, and analytics models and records the dependency graph and test outcomes. \\
         \hline
-        FR-3 & Construct queryable raw tables from the bronze zone using distributed processing. & Provide a stable tabular representation for SQL access, transformation, and validation. \\
+        FR-5 & Provide an interactive SQL serving layer for exploration and validation queries. & Trino successfully executes catalog, row-count, schema, and representative analytical queries over raw and curated Iceberg tables. \\
         \hline
-        FR-4 & Support layered transformations (staging $\rightarrow$ intermediate $\rightarrow$ analytics) with explicit dependencies. & Separate cleaning from business logic and deliver reusable analytics-ready data products. \\
+        FR-6 & Apply lightweight data quality validation and persist validation artifacts. & Great Expectations checkpoints execute the declared structural and semantic checks and persist machine-readable validation results for each validated layer. \\
         \hline
-        FR-5 & Provide an interactive SQL serving layer for exploration and validation queries. & Enable fast iteration and verification without exporting data to external tools. \\
+        FR-7 & Orchestrate the execution order of pipeline stages with run tracking and retries. & The four Client~1 Airflow DAGs execute in the defined operational sequence, with task states, retries, failures, and timestamps visible in run history. \\
         \hline
-        FR-6 & Apply lightweight data quality validation and persist validation artifacts. & Prevent silent data corruption and provide measurable evidence of dataset usability. \\
+        FR-8 & Expose operational metrics for service readiness and pipeline outcomes. & Prometheus scrapes the configured endpoints and Grafana displays service-readiness and pipeline-run indicators for the validated platform. \\
         \hline
-        FR-7 & Orchestrate the execution order of pipeline stages with run tracking and retries. & Ensure repeatable, auditable pipeline execution and reduce manual operations. \\
-        \hline
-        FR-8 & Expose operational metrics for service readiness and pipeline outcomes. & Improve troubleshooting and provide operational visibility for demonstrations and reporting. \\
-        \hline
-    \end{tabularx}
-    \caption{Functional requirements of the AdOptimizer Customer Data Platform}
-    \label{tab:functional-requirements}
+    \caption{Functional requirements of the AdOptimizer Customer Data Platform}\label{tab:functional-requirements}\\
+\end{longtable}
 \arrayrulecolor{black}
-\end{table}
+}
 
 \subsubsection{Functional requirement breakdown}
 The requirements in Table~\ref{tab:functional-requirements} translate into concrete capabilities that are essential for a customer data platform.
@@ -1972,36 +2059,41 @@ Downstream modeling should not be performed directly on raw files. Building raw 
 Layering is a functional requirement, not a documentation preference. It enforces separation of responsibilities: staging isolates source-specific cleaning, intermediate models host reusable integration logic, and analytics models expose final data products and KPIs. This structure improves maintainability and reduces the risk of inconsistent business logic scattered across scripts.
 
 \paragraph{SQL access for validation and exploration (FR-5)}
-Interactive SQL access is required for two reasons: validating that ingested datasets match expectations (row counts, basic distributions, join keys) and enabling iterative analytics work without exporting data. In a practical PFE context, this also allows the jury to verify results through clear SQL examples.
+Interactive SQL access is required for two reasons: validating that ingested datasets match expectations (row counts, basic distributions, join keys) and enabling iterative analytics work without exporting data. It also provides reproducible SQL evidence for technical review.
 
 \paragraph{Operational data quality (FR-6)}
 Data quality requirements are treated as operational controls. Even lightweight checks provide meaningful guarantees: datasets are non-empty, identifiers meet minimal completeness, and value ranges are reasonable. Persisted artifacts serve as evidence that data quality was evaluated rather than assumed.
 
 \paragraph{Orchestration as an execution contract (FR-7)}
-Pipeline execution must be repeatable and ordered. Orchestration provides explicit run history and task outcomes, which is essential for debugging and for proving that the platform can be executed in a deterministic sequence (readiness $\rightarrow$ ingestion $\rightarrow$ raw build $\rightarrow$ validation $\rightarrow$ transformations).
+Pipeline execution must be repeatable and ordered. Orchestration provides explicit run history and task outcomes, which is essential for debugging and for proving that the platform follows the implemented sequence (setup $\rightarrow$ Kafka/HDFS/Spark raw build $\rightarrow$ dbt transformation $\rightarrow$ readiness validation).
 
 \paragraph{Operational metrics (FR-8)}
-Metrics make the platform demonstrable. For each major run, the platform should expose basic indicators such as service readiness, execution durations, and success ratios. These indicators do not claim strict production SLAs, but they provide measurable evidence of operational control.
+Metrics make platform behavior measurable. For each major run, the platform should expose basic indicators such as service readiness, execution durations, and success ratios. These indicators do not claim strict production SLAs, but they provide evidence of operational control.
 
 \subsection{Non-Functional Requirements}
 Non-functional requirements define quality attributes that influence design decisions such as layering, storage format, orchestration, and operational monitoring.
 
 In a distributed data platform, non-functional requirements are often the main drivers behind architectural choices. For instance, scalability and reproducibility directly motivate separating storage from compute and using snapshot-based tables. Similarly, operational reliability motivates readiness checks and monitoring rather than purely manual execution.
 
-\begin{table}[H]
-    \centering
-    \small
-    \setlength{\tabcolsep}{6pt}
-    \renewcommand{\arraystretch}{1.25}
-    \arrayrulecolor{ModernTableRule}
-    \rowcolors{2}{ModernTableStripe}{white}
-    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.13\textwidth}|>{\raggedright\arraybackslash}p{0.55\textwidth}|X|}
-        \hline
-        \rowcolor{ModernTableHeader}
-        \color{white}\textbf{ID} &
-        \color{white}\textbf{Non-functional requirement} &
-        \color{white}\textbf{Design implication} \\
-        \hline
+{\small
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.18}
+\arrayrulecolor{ModernTableRule}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.09\textwidth}|>{\raggedright\arraybackslash}p{0.40\textwidth}|>{\raggedright\arraybackslash}p{0.39\textwidth}|}
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{ID} &
+    \color{white}\textbf{Non-functional requirement} &
+    \color{white}\textbf{Design implication} \\
+    \hline
+    \endfirsthead
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{ID} &
+    \color{white}\textbf{Non-functional requirement} &
+    \color{white}\textbf{Design implication} \\
+    \hline
+    \endhead
         NFR-1 & Reproducibility of runs and outputs (same inputs $\rightarrow$ same results when logic is unchanged). & Favor immutable bronze storage, versioned tables, and orchestrated execution with stored run history. \\
         \hline
         NFR-2 & Scalability for multi-source growth (data volume, number of datasets, and number of transformations). & Separate storage and compute; use distributed processing and partition-friendly table layouts. \\
@@ -2016,35 +2108,34 @@ In a distributed data platform, non-functional requirements are often the main d
         \hline
         NFR-7 & Security and data protection discipline for datasets and credentials. & Avoid hard-coded secrets, keep configuration externalized, and restrict access to services and data paths. \\
         \hline
-    \end{tabularx}
-    \caption{Non-functional requirements driving the platform design}
-    \label{tab:non-functional-requirements}
+    \caption{Non-functional requirements driving the platform design}\label{tab:non-functional-requirements}\\
+\end{longtable}
 \arrayrulecolor{black}
-\end{table}
+}
 
 \subsubsection{Non-functional requirement interpretation}
 The non-functional requirements in Table~\ref{tab:non-functional-requirements} are interpreted as practical constraints for the project scope.
 
 \paragraph{Reproducibility (NFR-1)}
-Reproducibility is required at two levels: pipeline execution reproducibility (same steps, same order) and dataset reproducibility (stable snapshots that can be queried consistently). This is particularly important for future ML readiness, where training datasets must be traceable and repeatable.
+Reproducibility is required at two levels: pipeline execution reproducibility (same steps, same order) and dataset reproducibility (stable snapshots that can be queried consistently). It is verified by rerunning a frozen bronze input, comparing task order and row-count/quality summaries, and confirming that the rerun does not silently duplicate records. This is particularly important for future ML readiness, where training datasets must be traceable and repeatable.
 
 \paragraph{Scalability (NFR-2)}
-Scalability is treated as the ability to grow along three axes: number of datasets, data volume, and transformation complexity. While the project is validated on limited hardware, the implementation is designed so that performance bottlenecks can be addressed with concrete engineering actions: improving I/O throughput (file format and partitioning), tuning compute parallelism, and reducing expensive shuffles caused by joins and aggregations. In Chapter IV, this is reflected through service configuration, partition-aware processing, and an execution order that allows incremental validation rather than full recomputation on every change.
+Scalability is treated as the ability to grow along three axes: number of datasets, data volume, and transformation complexity. While the project is validated on limited hardware, the implementation exposes concrete scaling controls: Kafka partitions, HDFS block distribution, Spark executor parallelism, Iceberg partition design, and Trino worker concurrency. Validation at this stage checks that these controls are explicit and configurable; quantitative local-versus-multi-machine benchmarking is reserved for Chapter VI.
 
 \paragraph{Reliability (NFR-3)}
-Reliability is implemented as controlled execution: service readiness checks, explicit retries, and run history. The objective is not to claim strict uptime guarantees, but to ensure the platform does not fail silently and that failures are diagnosable.
+Reliability is implemented as controlled execution: service readiness checks, explicit retries, and run history. A practical acceptance test is to make a required dependency unavailable and confirm that the corresponding task fails fast, records the reason, and remains retryable. The objective is not to claim strict uptime guarantees, but to ensure the platform does not fail silently and that failures are diagnosable.
 
 \paragraph{Maintainability (NFR-4)}
-Maintainability is addressed through clear layering, consistent naming conventions, and dependency-aware transformations. In practice, this reduces the cognitive load when adding a new dataset or modifying business logic.
+Maintainability is addressed through clear layering, consistent naming conventions, shared ingestion helpers, and dependency-aware transformations. It is demonstrated when a new dataset can be introduced through localized configuration, producer/consumer mapping, raw-table mapping, and dbt models without rewriting unrelated platform layers.
 
 \paragraph{Portability (NFR-5)}
-Portability is essential in PFE contexts because the platform must be executable on different machines. Containerization and environment variables ensure that configuration remains explicit and not embedded in code.
+Portability requires the platform to be reproducible on a clean Docker-capable host using versioned compose files, images, initialization scripts, and environment variables. Host-specific addresses and credentials must remain external to the source code.
 
 \paragraph{Limited hardware constraints (NFR-6)}
-Local testing constraints influence design decisions: controlled parallelism, incremental validation, and the ability to re-run only affected parts of the pipeline. This also supports iterative development, where datasets and models are refined over multiple runs.
+Local testing constraints influence design decisions: controlled parallelism, incremental validation, and the ability to rerun only affected parts of the pipeline. Local hardware specifications and task durations must be documented so that successful execution can be interpreted against an explicit resource baseline rather than presented as an unqualified performance result.
 
 \paragraph{Security discipline (NFR-7)}
-Security is treated as discipline rather than claiming enterprise security certification: externalized configuration, no hard-coded secrets, and restricted exposure of internal services. This is aligned with common DataSecOps best practices.
+Security is treated as engineering discipline rather than an enterprise certification claim. Acceptance checks include repository review for hard-coded credentials, environment-based secret injection, restricted publication of internal service ports, and explicit treatment of customer identifiers as sensitive fields.
 
 \subsection{Data Quality and Governance Requirements}
 The platform is intended to produce datasets that are not only available, but also \textbf{trustworthy} for analytics and future ML usage. This requires explicit quality and governance expectations:
@@ -2066,6 +2157,43 @@ To keep validation actionable and implementable, quality requirements are expres
 \end{itemize}
 These indicators are not sufficient alone to prove correctness, but they provide a measurable baseline that quickly detects major regressions (empty loads, broken joins, duplicated events, or missing keys).
 
+\subsubsection{Technical governance policies}
+Governance is implemented through explicit engineering policies rather than through informal conventions. Table~\ref{tab:technical-governance-policies} defines the minimum controls applied across Client~1 datasets.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{5pt}
+    \renewcommand{\arraystretch}{1.18}
+    \arrayrulecolor{ModernTableRule}
+    \rowcolors{2}{ModernTableStripe}{white}
+    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.20\textwidth}|>{\raggedright\arraybackslash}p{0.43\textwidth}|>{\raggedright\arraybackslash}X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Control area} &
+        \color{white}\textbf{Technical policy} &
+        \color{white}\textbf{Expected evidence} \\
+        \hline
+        Naming and namespaces & Names identify the client, layer, and dataset consistently across Kafka topics, HDFS paths, Iceberg namespaces, and dbt models. & Topic/path/table inventory and catalog queries. \\
+        \hline
+        Schema evolution & Additive compatible changes are handled explicitly; incompatible type or semantic changes require a controlled model/version update and revalidation. & Schema comparison, migration commit, and validation result. \\
+        \hline
+        Lineage & Every curated model remains traceable through dbt dependencies to an Iceberg raw table, an HDFS bronze batch, and its Kafka ingestion topic. & dbt graph, table metadata, bronze manifest, and run identifier. \\
+        \hline
+        Retention and replay & Bronze data is append-only during normal execution. Reset or replay operations are explicit administrative actions recorded by the orchestration workflow. & HDFS batch history, reset command log, and Airflow run history. \\
+        \hline
+        Ownership & Data engineering owns ingestion/raw contracts; analytics engineering owns curated models; platform operations owns service configuration and monitoring. & Repository ownership by layer and documented runbook responsibilities. \\
+        \hline
+        Access and secrets & Credentials and host-specific configuration are externalized; internal service endpoints are not exposed unless required for controlled access. & Environment configuration and repository secret scan. \\
+        \hline
+        Quality gate & Declared Great Expectations and dbt checks must complete before a dataset is considered reusable by downstream analytical consumers. & Checkpoint artifacts, dbt test results, and DAG task state. \\
+        \hline
+    \end{tabularx}
+    \caption{Technical governance policies for the Client 1 lakehouse}
+    \label{tab:technical-governance-policies}
+\arrayrulecolor{black}
+\end{table}
+
 \subsection{Observability and Operational Requirements}
 Operational requirements ensure the platform remains debuggable and demonstrable:
 \begin{itemize}
@@ -2075,7 +2203,7 @@ Operational requirements ensure the platform remains debuggable and demonstrable
     \item \textbf{Controlled reprocessing:} replay and recomputation must be intentional and auditable, not accidental.
 \end{itemize}
 
-\subsubsection{Operational KPIs for a PFE demonstration}
+\subsubsection{Operational acceptance indicators}
 To make operational behavior visible during validation runs, a minimal set of KPIs is useful:
 \begin{itemize}
     \item \textbf{End-to-end run duration} (per ingestion/load/transform run)
@@ -2084,6 +2212,59 @@ To make operational behavior visible during validation runs, a minimal set of KP
     \item \textbf{Validation outcome metrics} (number of checks passed/failed, unexpected counts)
 \end{itemize}
 These metrics provide an objective layer of evidence that the pipeline is operational and repeatable.
+
+\subsection{Requirement Traceability Matrix}
+The traceability matrix connects each requirement to a concrete design mechanism, implementation artifact, and verification method. It prevents the architecture from remaining purely conceptual and provides a direct evaluation path for Chapters IV and VI.
+
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.08\textwidth}|>{\raggedright\arraybackslash}p{0.24\textwidth}|>{\raggedright\arraybackslash}p{0.29\textwidth}|>{\raggedright\arraybackslash}p{0.27\textwidth}|}
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{ID} &
+    \color{white}\textbf{Design mechanism} &
+    \color{white}\textbf{Implementation artifact} &
+    \color{white}\textbf{Verification evidence} \\
+    \hline
+    \endfirsthead
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{ID} &
+    \color{white}\textbf{Design mechanism} &
+    \color{white}\textbf{Implementation artifact} &
+    \color{white}\textbf{Verification evidence} \\
+    \hline
+    \endhead
+    FR-1 & Dataset-specific producers over a common Kafka ingestion contract. & Client~1 Kafka producer modules and dataset topics. & Produced-record counts, topic inspection, and producer logs. \\
+    \hline
+    FR-2 & Immutable client/dataset bronze paths in HDFS. & Kafka consumers, bronze initialization, and JSONL batch files. & HDFS listing, batch metadata, and replay comparison. \\
+    \hline
+    FR-3 & Spark standardization into cataloged Iceberg tables. & \path{load_hdfs_bronze_to_iceberg.py}, Hive namespaces, and six raw tables. & Spark logs, catalog listing, Trino row counts, and schemas. \\
+    \hline
+    FR-4 & Dependency-aware staging, intermediate, and analytics layers. & Client~1 dbt-spark project, models, macros, and tests. & dbt run/test output and generated dependency graph. \\
+    \hline
+    FR-5 & Trino Iceberg connector with Hive Metastore discovery. & \texttt{lakehouse.properties} and namespace initialization. & Catalog/schema discovery and representative SQL queries. \\
+    \hline
+    FR-6 & Layer-specific validation checkpoints and persisted artifacts. & Great Expectations suites, checkpoints, bootstrap, and validation runner. & Validation JSON, unexpected counts, and task outcome. \\
+    \hline
+    FR-7 & Explicit four-DAG operational execution chain. & Setup, ingestion/raw, dbt transformation, and readiness DAGs. & Airflow graph, ordered run history, retries, and timestamps. \\
+    \hline
+    FR-8 & Pull-based metrics and dashboard visualization. & Exporters, Prometheus configuration, Grafana dashboards, and state files. & Scrape-target status, dashboard panels, and run metrics. \\
+    \hline
+    NFR-1 & Immutable inputs, snapshot-aware tables, and idempotent job boundaries. & Bronze history, Iceberg snapshots, dbt models, and DAG runs. & Repeat-run row counts, snapshot comparison, and duplicate checks. \\
+    \hline
+    NFR-2 & Configurable distributed storage, processing, and query parallelism. & Kafka partitions, HDFS services, Spark executors, and Trino workers. & Configuration review and local/distributed benchmark results. \\
+    \hline
+    NFR-3 & Readiness checks, retries, and recorded failure states. & Readiness DAG, health probes, and Airflow task policies. & Controlled dependency-failure test and retry history. \\
+    \hline
+    NFR-4 & Responsibility-based repository layers and reusable transformation graph. & Streaming, lake, processing, transformation, quality, and monitoring folders. & Change-impact review and dataset-onboarding procedure. \\
+    \hline
+    NFR-5 & Containerized services with externalized environment configuration. & Docker Compose files, Dockerfiles, initialization scripts, and environment variables. & Clean-host deployment and service-readiness results. \\
+    \hline
+    NFR-6 & Controlled parallelism and incremental execution under documented limits. & Spark/Kafka resource settings and stage-specific DAGs. & Local hardware profile, task durations, and resource dashboards. \\
+    \hline
+    NFR-7 & Externalized credentials and restricted service exposure. & Environment configuration, Docker networks, and port mappings. & Secret scan, configuration review, and access-path inventory. \\
+    \hline
+    \caption{Requirement-to-implementation traceability matrix}\label{tab:requirements-traceability}\\
+\end{longtable}
 
 \section{Conceptual Design}
 \subsection{Actors and Use Cases}
@@ -2123,6 +2304,37 @@ From an end-to-end perspective, these actors collaborate through a shared lifecy
     \label{fig:actors-usecases}
 \end{figure}
 
+\subsubsection{Technical responsibility and evidence mapping}
+The actors are separated by technical responsibility so that every operation has an identifiable owner and produces verifiable evidence.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{5pt}
+    \renewcommand{\arraystretch}{1.22}
+    \arrayrulecolor{ModernTableRule}
+    \rowcolors{2}{ModernTableStripe}{white}
+    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.20\textwidth}|>{\raggedright\arraybackslash}p{0.39\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Actor} &
+        \color{white}\textbf{Technical responsibility} &
+        \color{white}\textbf{Primary evidence} \\
+        \hline
+        Data Engineer & Maintain source contracts, Kafka publication, HDFS bronze landing, Spark mappings, and Iceberg raw builds. & Topic/message counts, bronze files, Spark logs, raw-table counts, and Iceberg snapshots. \\
+        \hline
+        Analytics Engineer & Implement dbt staging, intermediate, and analytics models with tests and documented dependencies. & dbt manifest, run results, test results, and materialized tables. \\
+        \hline
+        Data Analyst & Query approved raw and curated tables without modifying ingestion or storage state. & Versioned SQL queries, result samples, and KPI verification outputs. \\
+        \hline
+        Platform/DevOps Engineer & Operate containerized services, Airflow, readiness checks, metrics collection, and controlled recovery. & Service health, DAG history, retry logs, Prometheus targets, and Grafana dashboards. \\
+        \hline
+    \end{tabularx}
+    \caption{Technical responsibility and evidence mapping}
+    \label{tab:actor-responsibility-evidence}
+\arrayrulecolor{black}
+\end{table}
+
 \subsection{Data Source Analysis}
 The project validates the platform using public customer-related datasets that represent different formats and business signals. The objective is not to claim production representativeness, but to ensure that the platform supports \textbf{multi-source integration} with realistic cleaning and modeling needs.
 
@@ -2135,34 +2347,80 @@ From a design perspective, sources differ across several dimensions that directl
 \end{itemize}
 This analysis is important because it justifies why the platform must separate ingestion, raw standardization, and curated modeling rather than directly building analytics tables from raw files.
 
-\begin{table}[H]
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.20\textwidth}|>{\raggedright\arraybackslash}p{0.23\textwidth}|}
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{Dataset and source} &
+    \color{white}\textbf{Grain and source keys} &
+    \color{white}\textbf{Raw lakehouse target} &
+    \color{white}\textbf{Main technical risks and controls} \\
+    \hline
+    \endfirsthead
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{Dataset and source} &
+    \color{white}\textbf{Grain and source keys} &
+    \color{white}\textbf{Raw lakehouse target} &
+    \color{white}\textbf{Main technical risks and controls} \\
+    \hline
+    \endhead
+    Customer Personality Analysis; \path{marketing_campaign.csv} & One customer marketing profile; source key \texttt{ID}. & \path{raw_data.marketing_campaign} & Missing income, date parsing, categorical domains, and profile-level uniqueness. \\
+    \hline
+    E-commerce Customer Churn; Excel workbook & One source customer/account observation; source customer identifier and churn label. & \path{raw_data.ecommerce_customer_churn} & Mixed Excel types, null attributes, duplicate customers, and binary-label domain checks. \\
+    \hline
+    RetailRocket category tree; \path{category_tree.csv} & One category-parent relationship; \texttt{categoryid}, \texttt{parentid}. & \path{raw_data.retailrocket_category_tree} & Missing parents, hierarchy cycles, orphan categories, and identifier casting. \\
+    \hline
+    RetailRocket events; \path{events.csv} & One visitor-item interaction; \texttt{timestamp}, \texttt{visitorid}, \texttt{itemid}, event type. & \path{raw_data.retailrocket_events} & High event volume, duplicate events, timestamp normalization, and controlled event domains. \\
+    \hline
+    RetailRocket item properties; two source partitions & One item-property observation; \texttt{timestamp}, \texttt{itemid}, \texttt{property}. & \path{raw_data.retailrocket_item_properties} & Multi-file union, evolving property names, repeated observations, and value typing. \\
+    \hline
+    UCI Online Retail II; Excel workbook & One invoice line; invoice, stock code, customer identifier, and invoice date. & \path{raw_data.online_retail} & Cancellations, negative quantities, missing customer IDs, duplicate lines, and monetary-type normalization. \\
+    \hline
+    \caption{Technical analysis of the active Client 1 source datasets}\label{tab:data-source-analysis}\\
+\end{longtable}
+
+Each dataset is assigned a stable source slug that is reused in the Kafka topic, HDFS bronze path, Spark mapping, and Iceberg raw-table name. This source contract preserves dataset identity across the pipeline and enables dataset-specific replay without rebuilding unrelated sources.
+
+\subsubsection{Conceptual data model and identity boundary}
+The case-study datasets describe related business concepts but do not provide a guaranteed universal customer identifier across all sources. The conceptual model therefore preserves \textbf{source-scoped identities} and introduces integration relationships only where keys or explicit transformation rules support them.
+
+\begin{figure}[H]
     \centering
-    \small
-    \setlength{\tabcolsep}{6pt}
-    \renewcommand{\arraystretch}{1.25}
-    \arrayrulecolor{ModernTableRule}
-    \rowcolors{2}{ModernTableStripe}{white}
-    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.28\textwidth}|>{\raggedright\arraybackslash}p{0.18\textwidth}|>{\raggedright\arraybackslash}p{0.18\textwidth}|X|}
-        \hline
-        \rowcolor{ModernTableHeader}
-        \color{white}\textbf{Dataset category} &
-        \color{white}\textbf{Typical format} &
-        \color{white}\textbf{Main entity} &
-        \color{white}\textbf{Reason for inclusion} \\
-        \hline
-        Customer and marketing attributes & CSV/Excel & Customer profile & Supports segmentation-style features and profile consistency checks. \\
-        \hline
-        E-commerce behavior and churn signals & CSV & Customer/session & Introduces behavioral patterns and prediction-ready signals. \\
-        \hline
-        Event-level clickstream / interaction logs & CSV/JSON-like records & Event + item interaction & Validates event ingestion patterns and aggregation logic. \\
-        \hline
-        Transactional sales records & CSV & Order/transaction & Validates joins, revenue metrics, and business KPI modeling. \\
-        \hline
-    \end{tabularx}
-    \caption{High-level data source analysis for the case study validation}
-    \label{tab:data-source-analysis}
-\arrayrulecolor{black}
-\end{table}
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=10mm and 7mm]
+        \node (customer) [workflow/step, fill=WorkflowBlue!10, text width=4.0cm, minimum height=2.0cm]
+            {\textbf{Customer identity}\\[1mm]\small source-scoped customer or visitor key};
+        \node (profile) [workflow/step, fill=WorkflowTeal!10, text width=4.0cm, minimum height=2.0cm, left=7mm of customer]
+            {\textbf{Marketing profile}\\[1mm]\small demographics and campaign signals};
+        \node (event) [workflow/step, fill=WorkflowOrange!10, text width=4.0cm, minimum height=2.0cm, right=7mm of customer]
+            {\textbf{Behavior event}\\[1mm]\small visitor, item, event type, and time};
+
+        \node (churn) [workflow/step, fill=WorkflowTeal!6, text width=4.0cm, minimum height=2.0cm, below=10mm of profile]
+            {\textbf{Churn observation}\\[1mm]\small behavioral attributes and churn label};
+        \node (transaction) [workflow/step, fill=WorkflowOrange!6, text width=4.0cm, minimum height=2.0cm, below=10mm of customer]
+            {\textbf{Invoice line}\\[1mm]\small invoice, item, quantity, and value};
+        \node (item) [workflow/step, fill=WorkflowPurple!10, text width=4.0cm, minimum height=2.0cm, below=10mm of event]
+            {\textbf{Item / product}\\[1mm]\small source item identifier or stock code};
+        \node (category) [workflow/step, fill=WorkflowPurple!6, text width=4.0cm, minimum height=2.0cm, below=10mm of item]
+            {\textbf{Category hierarchy}\\[1mm]\small category and parent-category keys};
+
+        \draw[workflow/arrow] (profile) -- node[workflow/label, above] {describes} (customer);
+        \draw[workflow/arrow] (churn) -- node[workflow/label, left] {labels} (profile);
+        \draw[workflow/arrow] (transaction) -- node[workflow/label, left] {references} (customer);
+        \draw[workflow/arrow] (transaction) -- node[workflow/label, below] {contains} (item);
+        \draw[workflow/arrow] (event) -- node[workflow/label, right] {targets} (item);
+        \draw[workflow/dasharrow] (event.north) to[out=90,in=90,looseness=1.55]
+            node[workflow/label, above] {visitor mapping when available} (customer.north);
+        \draw[workflow/arrow] (item) -- node[workflow/label, right] {classified by} (category);
+
+        \coordinate (boundarycenter) at ($(customer |- category.south)+(0,-17mm)$);
+        \node (boundary) [workflow/step, fill=white, text width=13.4cm, minimum height=1.65cm] at (boundarycenter)
+            {\textbf{Identity boundary}\\[1mm]\small Cross-source customer unification requires an explicit mapping or surrogate-key rule. Unrelated source identifiers are not assumed to represent the same person.};
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Conceptual entities and source-identity boundaries for Client 1}
+    \label{fig:conceptual-data-model}
+\end{figure}
 
 \subsection{Lakehouse Layering Strategy}
 To prevent a ``data swamp'' effect and ensure clarity of responsibilities, the platform follows a layered lakehouse organization:
@@ -2208,6 +2466,7 @@ This strategy ensures that reprocessing remains possible: bronze preserves histo
 \arrayrulecolor{black}
 \end{table}
 
+\clearpage
 \section{Global Architecture}
 \subsection{End-to-End Data Flow}
 The end-to-end flow follows a clear sequence: sources are ingested and persisted as immutable bronze data, then transformed into raw lakehouse tables, then refined into curated analytical datasets, and finally exposed through a SQL layer. Orchestration ensures the correct order and records run history.
@@ -2215,43 +2474,54 @@ The end-to-end flow follows a clear sequence: sources are ingested and persisted
 \begin{figure}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth,center}
-    \begin{tikzpicture}[node distance=11mm and 10mm]
-        \node (sources) [workflow/step, fill=WorkflowBlue!10, text width=4.8cm, minimum height=2.0cm] {\textbf{Data sources}\\\small batch files\\\small event records};
-        \node (kafka) [workflow/step, fill=WorkflowTeal!10, text width=4.8cm, minimum height=2.0cm, right=10mm of sources] {\textbf{Kafka ingestion}\\\small topics + offsets\\\small replayable log};
-        \node (bronze) [workflow/step, fill=WorkflowTeal!6, text width=4.8cm, minimum height=2.0cm, right=10mm of kafka] {\textbf{HDFS bronze}\\\small immutable batches\\\small audit + replay};
+    \begin{tikzpicture}[node distance=9mm and 6mm]
+        \node (sources) [workflow/step, fill=WorkflowBlue!10, text width=3.75cm, minimum height=1.85cm]
+            {\textbf{Data sources}\\[1mm]\small batch files and event records};
+        \node (kafka) [workflow/step, fill=WorkflowTeal!10, text width=3.75cm, minimum height=1.85cm, right=6mm of sources]
+            {\textbf{Kafka ingestion}\\[1mm]\small topics, offsets, replayable log};
+        \node (bronze) [workflow/step, fill=WorkflowTeal!6, text width=3.75cm, minimum height=1.85cm, right=6mm of kafka]
+            {\textbf{HDFS bronze}\\[1mm]\small immutable batches, audit, replay};
 
-        \node (spark) [workflow/step, fill=WorkflowOrange!10, text width=4.8cm, minimum height=2.0cm, below=14mm of kafka] {\textbf{Spark compute}\\\small parsing + standardization};
-        \node (iceberg) [workflow/step, fill=WorkflowPurple!10, text width=4.8cm, minimum height=2.0cm, right=10mm of spark] {\textbf{Iceberg tables}\\\small raw $\rightarrow$ curated\\\small snapshots};
-        \node (meta) [workflow/step, fill=white, text width=4.8cm, minimum height=2.0cm, right=10mm of iceberg] {\textbf{Hive Metastore}\\\small shared catalog};
+        \node (spark) [workflow/step, fill=WorkflowOrange!10, text width=3.75cm, minimum height=1.85cm, below=10mm of kafka]
+            {\textbf{Spark compute}\\[1mm]\small parsing and standardization};
+        \node (iceberg) [workflow/step, fill=WorkflowPurple!10, text width=3.75cm, minimum height=1.85cm, below=10mm of spark]
+            {\textbf{Iceberg tables}\\[1mm]\small raw and curated snapshots};
+        \node (gx) [workflow/step, fill=WorkflowBlue!6, text width=3.75cm, minimum height=1.85cm, left=6mm of iceberg]
+            {\textbf{Quality checks}\\[1mm]\small Great Expectations artifacts};
+        \node (meta) [workflow/step, fill=white, text width=3.75cm, minimum height=1.85cm, right=6mm of iceberg]
+            {\textbf{Hive Metastore}\\[1mm]\small shared catalog metadata};
 
-        \node (dbt) [workflow/step, fill=WorkflowOrange!6, text width=4.8cm, minimum height=2.0cm, below=14mm of iceberg] {\textbf{dbt-Spark}\\\small layered models + tests};
-        \node (trino) [workflow/step, fill=WorkflowPurple!6, text width=4.8cm, minimum height=2.0cm, right=10mm of dbt] {\textbf{Trino SQL}\\\small exploration + serving};
-        \node (gx) [workflow/step, fill=WorkflowBlue!6, text width=4.8cm, minimum height=2.0cm, left=10mm of dbt] {\textbf{Quality checks}\\\small Great Expectations\\\small artifacts};
+        \node (dbt) [workflow/step, fill=WorkflowOrange!6, text width=3.75cm, minimum height=1.85cm, below=10mm of iceberg]
+            {\textbf{dbt-Spark}\\[1mm]\small layered models and tests};
+        \node (trino) [workflow/step, fill=WorkflowPurple!6, text width=3.75cm, minimum height=1.85cm, right=6mm of dbt]
+            {\textbf{Trino SQL}\\[1mm]\small exploration and serving};
 
-        \node (airflow) [workflow/step, fill=WorkflowTeal!10, text width=7.5cm, minimum height=1.7cm, below=16mm of $(gx)!0.5!(trino)$] {\textbf{Airflow orchestration}\\\small execution order + run history};
-        \node (obs) [workflow/step, fill=WorkflowPurple!10, text width=7.5cm, minimum height=1.7cm, right=10mm of airflow] {\textbf{Observability}\\\small Prometheus + Grafana};
+        \node (airflow) [workflow/step, fill=WorkflowTeal!10, text width=8.1cm, minimum height=1.65cm, below=11mm of dbt]
+            {\textbf{Airflow orchestration plane}\\[1mm]\small controls setup, ingestion/raw build, dbt transformation, readiness, retries, and run history};
+        \node (obs) [workflow/step, fill=WorkflowPurple!10, text width=8.1cm, minimum height=1.65cm, below=9mm of airflow]
+            {\textbf{Observability plane}\\[1mm]\small service and pipeline exporters $\rightarrow$ Prometheus $\rightarrow$ Grafana};
 
         \draw[workflow/arrow] (sources) -- (kafka);
         \draw[workflow/arrow] (kafka) -- (bronze);
-        \draw[workflow/arrow] (bronze) -- (meta);
         \draw[workflow/arrow] (bronze) -- (spark);
         \draw[workflow/arrow] (spark) -- (iceberg);
-        \draw[workflow/arrow] (meta) -- (iceberg);
         \draw[workflow/arrow] (iceberg) -- (dbt);
         \draw[workflow/arrow] (dbt) -- (trino);
         \draw[workflow/arrow] (iceberg) -- (trino);
         \draw[workflow/arrow] (iceberg) -- (gx);
-        \draw[workflow/arrow] (gx) -- (airflow);
-        \draw[workflow/arrow] (dbt) -- (airflow);
-        \draw[workflow/arrow] (airflow) -- (obs);
+        \draw[workflow/dasharrow, <->] (iceberg) -- node[workflow/label, above] {metadata} (meta);
+        \draw[workflow/dasharrow, <->] (trino) -- node[workflow/label, right] {catalog lookup} (meta);
+
+        \draw[workflow/dasharrow, draw=WorkflowOrange!85] (airflow) -- node[workflow/label, right] {orchestrates} (dbt);
+        \draw[workflow/dasharrow, draw=WorkflowPurple!85] (airflow) -- node[workflow/label, right] {run metrics} (obs);
     \end{tikzpicture}
     \end{adjustbox}
-    \caption{Target end-to-end architecture of the AdOptimizer Customer Data Platform}
+    \caption{Validated logical architecture of the AdOptimizer Customer Data Platform}
     \label{fig:global-architecture}
 \end{figure}
 
 \subsubsection{Comprehensive architecture explanation}
-Figure~\ref{fig:global-architecture} represents the target blueprint of the platform and clarifies how each technology maps to a specific responsibility.
+Figure~\ref{fig:global-architecture} represents the logical architecture validated by the local implementation and clarifies how each technology maps to a specific responsibility. Solid arrows represent data movement and gray dashed arrows represent catalog interaction. The orange plane summarizes Airflow control over the four-DAG lifecycle, while the purple plane summarizes service and pipeline metric collection.
 
 \paragraph{Data sources}
 Sources represent heterogeneous exports and event-like datasets. At this level, the platform does not assume consistent schemas, identifiers, or formats. The goal is to absorb this heterogeneity without breaking downstream logic.
@@ -2280,6 +2550,38 @@ Trino provides the consumption interface for exploration, validation queries, an
 \paragraph{Airflow orchestration and observability}
 Airflow coordinates execution and records run history, while monitoring dashboards expose readiness and run outcomes. Together they transform a set of services into an executable and observable pipeline.
 
+\subsubsection{Executable four-DAG orchestration sequence}
+The implemented workflow is divided into four DAGs rather than one monolithic graph. This isolates infrastructure preparation, data movement, transformation, and operational validation, while preserving an explicit execution order.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.12}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{0.98\textwidth}{|>{\centering\arraybackslash}p{0.06\textwidth}|>{\raggedright\arraybackslash}p{0.37\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{No.} &
+        \color{white}\textbf{DAG identifier} &
+        \color{white}\textbf{Technical responsibility and exit condition} \\
+        \hline
+        1 & \path{customerdna_client1_lakehouse_setup_pipeline} & Prepare required services, namespaces, topics, storage locations, and catalog prerequisites. The stage succeeds only when dependency readiness checks pass. \\
+        \hline
+        2 & \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline} & Publish all active Client 1 sources to Kafka, materialize immutable HDFS bronze batches, and execute Spark raw-table loading. The stage verifies batch and raw-table outputs. \\
+        \hline
+        3 & \path{customerdna_client1_dbt_spark_lakehouse_pipeline} & Execute dbt-Spark staging, intermediate, and analytics models and their configured tests. The stage succeeds only when model execution and required tests complete. \\
+        \hline
+        4 & \path{customerdna_client1_lakehouse_readiness_pipeline} & Verify service accessibility, catalog visibility, query paths, quality artifacts, and operational metrics. This stage provides the final readiness status for the completed run. \\
+        \hline
+    \end{tabularx}
+    \caption{Implemented Airflow execution sequence for Client 1}
+    \label{tab:four-dag-sequence}
+\arrayrulecolor{black}
+\end{table}
+
+The four DAGs form one controlled lifecycle: \textbf{setup $\rightarrow$ ingestion/raw build $\rightarrow$ transformation $\rightarrow$ readiness}. A failed stage blocks the corresponding downstream acceptance decision; reruns are recorded instead of being hidden by manual execution.
+
 \subsection{Tool Interaction and Integration}
 The design relies on a small number of integration contracts:
 \begin{itemize}
@@ -2301,7 +2603,7 @@ Two operational principles reduce the risk of inconsistent results across runs:
 These principles are particularly relevant when the platform is extended later to support continuous ingestion and more frequent refresh cycles.
 
 \subsection{Deployment and Distribution View}
-Although the project is validated in a local environment, the design anticipates distribution into logical roles. This view is a conceptual preparation for the multi-machine strategy detailed later in Chapter VII.
+The current validated baseline runs locally with containerized services. The same service contracts can later be distributed into logical machine roles; this future distribution must not be presented as already validated. The view below separates the roles that would be assigned to different hosts while retaining the local deployment as the benchmark baseline.
 
 This view clarifies that the platform is not a single monolithic service. It is a set of cooperating components that can be distributed by responsibility:
 \begin{itemize}
@@ -2314,25 +2616,342 @@ Even in local deployment, thinking in terms of roles improves clarity and prepar
 \begin{figure}[H]
     \centering
     \begin{adjustbox}{max width=\textwidth,center}
-    \begin{tikzpicture}[node distance=12mm and 16mm]
-        \node (node1) [workflow/step, fill=WorkflowBlue!10, text width=5.2cm, minimum height=2.2cm] {\textbf{Coordination + orchestration}\\\small Kafka controllers\\\small Airflow + API};
-        \node (node2) [workflow/step, fill=WorkflowTeal!10, text width=5.2cm, minimum height=2.2cm, right=12mm of node1] {\textbf{Storage + catalog}\\\small HDFS\\\small Hive Metastore + DB};
-        \node (node3) [workflow/step, fill=WorkflowOrange!10, text width=5.2cm, minimum height=2.2cm, right=12mm of node2] {\textbf{Processing + query}\\\small Spark\\\small Trino + dbt};
+    \begin{tikzpicture}[node distance=12mm and 7mm]
+        \node (node1) [workflow/step, fill=WorkflowBlue!10, text width=4.05cm, minimum height=3.05cm]
+            {\textbf{Coordination + orchestration}\\[1mm]\small Kafka brokers and KRaft controllers\\[0.5mm]\small Airflow scheduler, API server, and triggerer};
+        \node (node2) [workflow/step, fill=WorkflowTeal!10, text width=4.05cm, minimum height=3.05cm, right=7mm of node1]
+            {\textbf{Storage + catalog}\\[1mm]\small HDFS NameNode and DataNodes\\[0.5mm]\small Hive Metastore and metadata database};
+        \node (node3) [workflow/step, fill=WorkflowOrange!10, text width=4.05cm, minimum height=3.05cm, right=7mm of node2]
+            {\textbf{Processing + query}\\[1mm]\small Spark master and workers\\[0.5mm]\small Trino coordinator/workers and dbt runner};
 
-        \node (net) [workflow/step, fill=white, text width=16.6cm, minimum height=1.6cm, below=14mm of $(node1)!0.5!(node3)$] {\textbf{Network integration}\\\small service discovery, credentials, ports, and monitoring endpoints};
+        \node (net) [workflow/step, fill=white, text width=13.3cm, minimum height=1.8cm, below=17mm of node2]
+            {\textbf{Integration plane}\\[1mm]\small service discovery, credentials, ports, persistent volumes, and authenticated endpoints};
+        \node (monitor) [workflow/step, fill=WorkflowPurple!10, text width=13.3cm, minimum height=1.8cm, below=10mm of net]
+            {\textbf{Observability plane}\\[1mm]\small exporters $\rightarrow$ Prometheus time series $\rightarrow$ Grafana dashboards};
 
         \draw[workflow/arrow] (node1) -- (node2);
         \draw[workflow/arrow] (node2) -- (node3);
         \draw[workflow/arrow] (node1) -- (net);
         \draw[workflow/arrow] (node2) -- (net);
         \draw[workflow/arrow] (node3) -- (net);
+        \draw[workflow/dasharrow] (net) -- (monitor);
     \end{tikzpicture}
     \end{adjustbox}
-    \caption{Conceptual deployment and distribution view (preparation for Chapter VII)}
+    \caption{Validated local service roles and future distribution boundaries}
     \label{fig:deployment-view}
 \end{figure}
 
+\clearpage
+\subsubsection{Local baseline and future distributed evaluation}
+The local deployment is the validated reference configuration. A future distributed deployment should be evaluated with the same inputs and logical workflow so that any performance difference can be attributed to distribution rather than to changed processing logic.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{5pt}
+    \renewcommand{\arraystretch}{1.13}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{0.98\textwidth}{|>{\raggedright\arraybackslash}p{0.25\textwidth}|>{\raggedright\arraybackslash}p{0.28\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Metric} &
+        \color{white}\textbf{Measurement source} &
+        \color{white}\textbf{Comparison purpose} \\
+        \hline
+        Kafka publication and consumption duration & Producer/consumer logs and Airflow task duration & Identify ingestion throughput and coordination overhead. \\
+        \hline
+        HDFS bronze landing duration and bytes & HDFS file metadata and task logs & Measure durable landing throughput for identical batches. \\
+        \hline
+        Spark raw-build duration and row count & Spark event/job logs and raw-table verification & Compare compute parallelism while confirming equivalent outputs. \\
+        \hline
+        dbt model and test duration & dbt run artifacts and Airflow task duration & Measure transformation cost without changing the model graph. \\
+        \hline
+        Great Expectations validation duration & Checkpoint results and validation artifacts & Compare quality-control overhead and identical expectation outcomes. \\
+        \hline
+        Trino query latency & Repeated versioned SQL queries & Evaluate interactive query behavior on the same table snapshots. \\
+        \hline
+        CPU, memory, failures, and retries & Prometheus, Grafana, container statistics, and Airflow history & Relate elapsed time to resource usage and operational stability. \\
+        \hline
+    \end{tabularx}
+    \caption{Evaluation design for local and future distributed deployments}
+    \label{tab:deployment-evaluation-design}
+\arrayrulecolor{black}
+\end{table}
+
+For a fair comparison, both environments must use identical sources, Kafka records, DAG order, Spark/dbt logic, quality checks, and Trino queries. Hardware, service versions, partition and worker settings, network conditions, warm-up policy, and repetition count must be documented. Chapter~VI reports measured results; this chapter defines only the evaluation protocol.
+
 \section{Conclusion}
-This chapter defined the requirements that guide the platform and translated them into a coherent system design: a layered lakehouse with replayable ingestion, reproducible raw table construction, governed transformations, and operational orchestration and monitoring. The next chapter presents the concrete implementation of these design choices in the project repository, including environment preparation, service deployment, pipeline execution, and integration details.
+This chapter converted the business rules into measurable requirements, traceability, governance policies, source analysis, and lakehouse contracts. It documented the validated architecture, four-DAG workflow, local baseline, and future distributed evaluation protocol. Chapter~IV details their implementation.
+
+% ============================================================
+% Chapter IV - Implementation of the Distributed Lakehouse
+% ============================================================
+\chapter{IMPLEMENTATION OF THE DISTRIBUTED LAKEHOUSE PLATFORM}
+
+\section{Introduction}
+This chapter presents the implementation of the AdOptimizer Customer Data Platform without repeating the architectural analysis developed in Chapters~II and~III. The platform uses one versioned codebase and the same data contracts in two execution contexts: a validated local environment and a three-machine deployed environment. The local execution provides the current functional evidence, while the deployed configuration establishes the distributed topology whose measured evaluation is presented separately in Chapter~VI.
+
+\section{Global Platform Implementation}
+
+\subsection{Codebase and Containerization}
+The implementation is organized by technical responsibility. Separate project directories contain the Kafka producers and consumers, HDFS initialization logic, Spark jobs, Hive and Trino configuration, dbt-Spark models, Great Expectations assets, Airflow DAGs, and Prometheus/Grafana configuration. Docker Compose files package these services and provide reproducible networks, environment variables, health checks, and persistent volumes.
+
+The same source code and container definitions are used in both environments. Environment-specific files define host addresses, exposed ports, storage locations, credentials, worker counts, and memory limits. This separation prevents processing logic from changing when the platform moves from the workstation to the three-machine deployment.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \setlength{\tabcolsep}{3.5pt}
+    \renewcommand{\arraystretch}{1.06}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.20\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Implementation area} & \color{white}\textbf{Main components} & \color{white}\textbf{Implemented responsibility} \\
+        \hline
+        Ingestion and bronze & Kafka producers/consumers and HDFS & Partitioned transport, completion markers, replay control, and immutable bronze landing. \\
+        \hline
+        Processing and tables & Spark, Iceberg, and Hive Metastore & Source parsing, typed raw construction, snapshot-based tables, namespaces, and shared metadata. \\
+        \hline
+        Transformation and query & dbt-Spark and Trino & Versioned staging/intermediate/analytics models and SQL access to the lakehouse. \\
+        \hline
+        Quality and orchestration & Great Expectations and Airflow & Stored quality evidence, dependency control, retries, execution history, and readiness checks. \\
+        \hline
+        Observability & Prometheus, Grafana, cAdvisor, and exporters & Pipeline state, infrastructure usage, catalog activity, and quality indicators. \\
+        \hline
+    \end{tabularx}
+    \caption{Shared implementation responsibilities in both execution environments}
+    \label{tab:implementation-shared-responsibilities}
+    \arrayrulecolor{black}
+\end{table}
+
+\subsection{Data Pipeline Implementation}
+The executable flow preserves a stable Client~1 source identifier from Kafka through HDFS, Spark, Iceberg, and the curated models. Each official source is published to its Kafka topic, landed under its HDFS bronze directory, and processed by a dataset-aware Spark application. Spark commits the structured raw tables to Iceberg through Hive Metastore. dbt-Spark then creates the staging, intermediate, and analytics layers, and Trino exposes the resulting tables through SQL.
+
+Replay is controlled through Kafka offsets, dataset completion markers, and explicit reset operations. Bronze data remains separate from the Iceberg warehouse: bronze preserves landed history, whereas Iceberg represents managed table state. This boundary supports reproducibility and prevents a transformation rerun from silently rewriting the original source evidence.
+
+\subsection{Quality and Orchestration}
+Great Expectations is implemented as an explicit Airflow quality step. The project stores the versioned suite \path{raw_lakehouse_metrics_suite.json}, produces validation results for each execution, and builds an HTML Data Docs site under the Great Expectations project. The relevant evidence therefore consists of three complementary artifacts: the expectation contract, the machine-readable validation result, and the human-readable Data Docs output. dbt tests provide a second control over the transformed models.
+
+The platform contains four Client~1 DAG definitions, but the recommended clean-start execution contains a readiness pre-check and an optional post-check. The resulting operational order is shown in Table~\ref{tab:implementation-airflow-sequence}.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \setlength{\tabcolsep}{3.5pt}
+    \renewcommand{\arraystretch}{1.12}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}p{0.07\textwidth}|>{\raggedright\arraybackslash}p{0.40\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Step} & \color{white}\textbf{Airflow DAG} & \color{white}\textbf{Implementation purpose} \\
+        \hline
+        1 & \path{customerdna_client1_lakehouse_readiness_pipeline} & Pre-check HDFS, Hive Metastore, Spark, Spark Thrift, and Trino availability. \\
+        \hline
+        2 & \path{customerdna_client1_lakehouse_setup_pipeline} & Initialize HDFS bronze paths and Iceberg/Hive namespaces. \\
+        \hline
+        3 & \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline} & Publish and consume sources, land bronze data, build Iceberg raw tables, execute Great Expectations, and generate Data Docs. \\
+        \hline
+        4 & \path{customerdna_client1_dbt_spark_lakehouse_pipeline} & Run and test dbt-Spark models, then verify Trino access. \\
+        \hline
+        5 & Readiness DAG repeated when required & Optional post-check confirming that the service chain remains available after processing. \\
+        \hline
+    \end{tabularx}
+    \caption{Implemented Airflow definitions and recommended execution sequence}
+    \label{tab:implementation-airflow-sequence}
+    \arrayrulecolor{black}
+\end{table}
+
+This sequence creates visible failure boundaries. A failed quality checkpoint blocks downstream acceptance, while Airflow retains task state and rerun history instead of replacing failed evidence with an undocumented manual execution.
+
+\subsection{Monitoring}
+Prometheus collects container, pipeline, and catalog-database metrics through cAdvisor, the project pipeline exporter, and the PostgreSQL exporter. Grafana presents pipeline status, task duration, data volume, Great Expectations status, dbt freshness, host resources, and Hive Metastore database activity. Monitoring configuration is shared between environments; only scrape endpoints and host labels change.
+
+\section{Local Environment Configuration}
+
+\subsection{Workstation and Service Configuration}
+The local environment runs the complete platform on one workstation. Docker networks preserve the same service-to-service contracts used by the deployed version, but storage, processing, query, orchestration, and monitoring all share the host resources summarized in Table~\ref{tab:implementation-local-configuration}.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{5pt}
+    \renewcommand{\arraystretch}{1.13}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{0.96\textwidth}{|>{\raggedright\arraybackslash}p{0.30\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Local configuration item} & \color{white}\textbf{Configured or captured value} \\
+        \hline
+        Workstation capacity & 16 logical CPU cores and approximately 15.30~GiB RAM \\
+        \hline
+        Docker usage at capture time & 10.07~GB of 14.94~GB RAM; 12.35\% CPU \\
+        \hline
+        HDFS topology & One NameNode and one DataNode \\
+        \hline
+        Spark topology & One master, one worker, history server, and Spark Thrift server \\
+        \hline
+        Spark worker allocation & 4 cores and 4~GiB RAM \\
+        \hline
+        Trino topology & One local coordinator/worker service \\
+        \hline
+        Kafka source configuration & Six source topics, three partitions per topic, replication factor one \\
+        \hline
+        Monitoring targets & cAdvisor, pipeline exporter, PostgreSQL exporter, and Prometheus \\
+        \hline
+    \end{tabularx}
+    \caption{Local workstation and service configuration}
+    \label{tab:implementation-local-configuration}
+    \arrayrulecolor{black}
+\end{table}
+
+The replication factor of one and the single local worker validate integration but do not provide machine-level fault tolerance or distributed performance. These constraints are explicit properties of the local baseline rather than defects hidden from the comparison.
+
+\subsection{Local Functional Results}
+The local run processed six heterogeneous source streams containing 24,108,913 records. The largest stream, RetailRocket item properties, contained 20,275,902 records; the remaining streams preserved their own topics, bronze paths, and raw-table identities. Table~\ref{tab:implementation-local-functional-results} consolidates the principal functional evidence without presenting point-in-time observations as production benchmarks.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.12}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.23\textwidth}|>{\raggedright\arraybackslash}p{0.25\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Validation area} & \color{white}\textbf{Local result} & \color{white}\textbf{Evidence supported} \\
+        \hline
+        Kafka and HDFS & 24,108,913 records; six completion markers; six bronze source boundaries & Complete source transport and isolated bronze landing. \\
+        \hline
+        Spark and Iceberg & Six dataset applications reached \texttt{FINISHED}; raw tables registered in Iceberg & Successful bronze-to-lakehouse construction. \\
+        \hline
+        dbt-Spark & 13 models completed with \texttt{PASS=13}, \texttt{ERROR=0}; 15 tests declared & Successful curated-layer materialization and model testing. \\
+        \hline
+        Great Expectations & Checkpoint succeeded; stored validation artifacts and HTML Data Docs generated & Executable, reviewable, and versioned raw-quality evidence. \\
+        \hline
+        Trino & Iceberg catalog, namespaces, and curated tables resolved through SQL & Functional analytical access. \\
+        \hline
+        Airflow & Four DAG definitions recorded successful local executions & End-to-end dependency and task-state control. \\
+        \hline
+        Prometheus/Grafana & Four configured scrape targets were \texttt{UP}; pipeline and infrastructure panels populated & Operational visibility for the configured local scope. \\
+        \hline
+    \end{tabularx}
+    \caption{Consolidated functional evidence from the local implementation}
+    \label{tab:implementation-local-functional-results}
+    \arrayrulecolor{black}
+\end{table}
+
+The local results establish correctness and reproducibility on the workstation. Execution durations, query latency, resource consumption, and reliability comparisons require repeated measurements and therefore remain part of Chapter~VI.
+
+\section{Three-Machine Distributed Configuration}
+
+\subsection{Machine Specifications}
+The same platform code is deployed on three Ubuntu virtual machines connected through fixed private addresses. Their current infrastructure characteristics are summarized in Table~\ref{tab:implementation-three-machine-specifications}.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.10}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.18\textwidth}|X|X|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Specification} & \color{white}\textbf{10.10.252.11} & \color{white}\textbf{10.10.252.12} & \color{white}\textbf{10.10.252.13} \\
+        \hline
+        Hostname & \texttt{redouan} & \texttt{redouan} & \texttt{redouan} \\
+        \hline
+        Operating system & Ubuntu 22.04.5 LTS & Ubuntu 22.04.5 LTS & Ubuntu 22.04.5 LTS \\
+        \hline
+        Kernel & 5.15.0-119-generic & 5.15.0-119-generic & 5.15.0-119-generic \\
+        \hline
+        CPU & QEMU Virtual CPU 2.5+; 2 sockets $\times$ 2 cores & QEMU Virtual CPU 2.5+; 2 sockets $\times$ 2 cores & QEMU Virtual CPU 2.5+; 2 sockets $\times$ 2 cores \\
+        \hline
+        RAM total / used & 3.8~GiB / 196~MiB & 3.8~GiB / 176~MiB & 3.8~GiB / 185~MiB \\
+        \hline
+        Disk total / used & 26~GB / 7.0~GB (29\%) & 26~GB / 7.6~GB (32\%) & 26~GB / 7.0~GB (29\%) \\
+        \hline
+        GPU & Basic VGA; no dedicated GPU & Basic VGA; no dedicated GPU & Basic VGA; no dedicated GPU \\
+        \hline
+    \end{tabularx}
+    \caption{Infrastructure configuration of the three deployed machines}
+    \label{tab:implementation-three-machine-specifications}
+    \arrayrulecolor{black}
+\end{table}
+
+The three machines provide twelve virtual CPU cores, 11.4~GiB of aggregate RAM, and 78~GB of aggregate disk capacity. These totals are physically separated across hosts and cannot be treated as one shared memory pool. The identical hostname is also unsuitable as a long-term service-discovery identifier; the fixed IP addresses currently disambiguate the machines, while unique hostnames should be assigned for clearer logs and cluster administration.
+
+\subsection{Service Distribution}
+The deployment separates responsibilities while retaining the common pipeline contracts. Table~\ref{tab:implementation-distributed-placement} describes the primary role assigned to each host. Cluster services may communicate with workers or storage processes on the other machines, but each host has a dominant responsibility to simplify operation under the available memory limits.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.12}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}p{0.17\textwidth}|>{\raggedright\arraybackslash}p{0.25\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Machine} & \color{white}\textbf{Primary role} & \color{white}\textbf{Principal deployed responsibilities} \\
+        \hline
+        \texttt{10.10.252.11} & Coordination and ingestion & Kafka coordination/broker services, Airflow control services, execution entry points, and cluster-level configuration. \\
+        \hline
+        \texttt{10.10.252.12} & Storage and catalog & HDFS storage services, Iceberg warehouse persistence, Hive Metastore, and its PostgreSQL metadata database. \\
+        \hline
+        \texttt{10.10.252.13} & Processing, query, and observability & Spark processing services, Spark Thrift, Trino, dbt/Great Expectations execution, Prometheus, Grafana, and exporters. \\
+        \hline
+    \end{tabularx}
+    \caption{Primary service placement in the three-machine deployment}
+    \label{tab:implementation-distributed-placement}
+    \arrayrulecolor{black}
+\end{table}
+
+This role-based distribution moves network, storage, and process boundaries outside a single Docker host. Consequently, service addresses use the three private IPs instead of local container-only names where cross-machine communication is required. Persistent data directories remain host-mounted so that Kafka state, HDFS data, Iceberg files, catalog metadata, Airflow metadata, and monitoring history survive container recreation.
+
+\subsection{Distributed Resource Configuration}
+Each machine has only 3.8~GiB of RAM; therefore container limits, Java heap sizes, Spark executor memory, Trino memory, and monitoring retention must be conservative. The deployment prioritizes functional distribution over high concurrency: Spark parallelism, Kafka buffering, Trino worker memory, and Airflow task concurrency are bounded to prevent one service from exhausting its host. No processing stage depends on a GPU, which is consistent with the Data Engineering scope of the platform.
+
+The deployed code preserves the same topics, bronze paths, Iceberg namespaces, dbt models, expectation suite, Data Docs generation, DAG definitions, and SQL checks used locally. Chapter~VI will report the measured behavior after executing the controlled validation protocol on this topology.
+
+\section{Environment Consistency}
+The two environments differ in topology and resource allocation, not in business logic. Table~\ref{tab:implementation-environment-consistency} defines the consistency boundary required for a fair comparison.
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.12}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.22\textwidth}|>{\raggedright\arraybackslash}p{0.28\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Comparison dimension} & \color{white}\textbf{Local environment} & \color{white}\textbf{Three-machine environment} \\
+        \hline
+        Code and contracts & Common codebase, identifiers, schemas, and table names & Same codebase and contracts \\
+        \hline
+        Data and workflow & Same six sources and Airflow execution sequence & Same sources and sequence \\
+        \hline
+        Transformation and quality & Same dbt models/tests and Great Expectations suite & Same models, tests, validations, and Data Docs \\
+        \hline
+        Storage and processing topology & Single-host HDFS, Spark, and Trino services & Services separated across three networked machines \\
+        \hline
+        Resources & 16 logical cores and 15.30~GiB RAM on one workstation & 12 virtual cores and 11.4~GiB RAM across three hosts \\
+        \hline
+        Evidence in this chapter & Completed functional baseline & Deployed configuration \\
+        \hline
+        Measured comparison & Local observations retained as baseline & Repeated results reported in Chapter~VI \\
+        \hline
+    \end{tabularx}
+    \caption{Consistency boundary between local and three-machine execution}
+    \label{tab:implementation-environment-consistency}
+    \arrayrulecolor{black}
+\end{table}
+
+This boundary attributes measured differences to topology and resources rather than changed processing rules. Run identifiers, Airflow durations, Great Expectations results, Trino queries, and monitoring metrics provide the comparable evidence.
+
+\section{Conclusion}
+This chapter presented the shared implementation and its local and three-machine configurations. The workstation provides the functional baseline, including stored Great Expectations results and Data Docs, while the deployed environment separates responsibilities across three Ubuntu machines. Chapter~VI reports the comparative measurements.
 
 \end{document}
+                                            
