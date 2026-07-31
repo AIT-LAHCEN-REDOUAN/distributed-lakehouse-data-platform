@@ -5,6 +5,8 @@ $ErrorActionPreference = "Stop"
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $runtimeLogs = Join-Path $scriptDir "runtime/airflow/logs"
+$runtimeDir = Join-Path $scriptDir "runtime"
+$runtimeComposeEnv = Join-Path $runtimeDir "compose.generated.env"
 $envFile = Join-Path $scriptDir ".env"
 $composeFile = Join-Path $scriptDir "docker-compose.yml"
 
@@ -76,6 +78,81 @@ function Get-ExistingPublishedPort {
     }
 
     return $null
+}
+
+function Invoke-Compose {
+    param(
+        [Parameter(Mandatory = $true)][string[]]$Arguments
+    )
+
+    & docker compose --env-file $envFile --env-file $runtimeComposeEnv @Arguments
+    if ($LASTEXITCODE -ne 0) {
+        throw "docker compose $($Arguments -join ' ') failed with exit code $LASTEXITCODE"
+    }
+}
+
+function Set-RuntimeComposeEnv {
+    param(
+        [Parameter(Mandatory = $true)][int]$AirflowPort,
+        [Parameter(Mandatory = $true)][int]$PrometheusPort,
+        [Parameter(Mandatory = $true)][int]$GrafanaPort,
+        [Parameter(Mandatory = $true)][int]$KafkaUiPort
+    )
+
+    @(
+        "CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT=$AirflowPort"
+        "CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT=$PrometheusPort"
+        "CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT=$GrafanaPort"
+        "CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT=$KafkaUiPort"
+        "AIRFLOW__API__BASE_URL=http://localhost:$AirflowPort"
+    ) | Set-Content -Path $runtimeComposeEnv -Encoding ascii
+}
+
+function Wait-ForContainerHealth {
+    param(
+        [Parameter(Mandatory = $true)][string]$ContainerName,
+        [Parameter(Mandatory = $true)][int]$TimeoutSeconds,
+        [Parameter(Mandatory = $true)][string]$Label
+    )
+
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+
+    while ((Get-Date) -lt $deadline) {
+        $inspectJson = docker inspect $ContainerName 2>$null
+        if (-not $inspectJson) {
+            Start-Sleep -Seconds 2
+            continue
+        }
+
+        $inspect = $inspectJson | ConvertFrom-Json
+        $state = $inspect[0].State
+
+        if (-not $state.Running) {
+            docker logs --tail 200 $ContainerName
+            throw "$Label is not running."
+        }
+
+        if ($state.Health) {
+            $healthStatus = $state.Health.Status
+            if ($healthStatus -eq "healthy") {
+                Write-Host "[OK] $Label is healthy"
+                return
+            }
+            if ($healthStatus -eq "unhealthy") {
+                docker logs --tail 200 $ContainerName
+                throw "$Label became unhealthy."
+            }
+        }
+        else {
+            Write-Host "[OK] $Label is running"
+            return
+        }
+
+        Start-Sleep -Seconds 5
+    }
+
+    docker logs --tail 200 $ContainerName
+    throw "$Label did not become healthy within $TimeoutSeconds seconds."
 }
 
 Write-Host "============================================================"
@@ -159,16 +236,48 @@ $env:CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT = "$resolvedKafkaUiPort"
 $env:AIRFLOW__API__BASE_URL = "http://localhost:$resolvedAirflowPort"
 
 New-Item -ItemType Directory -Force -Path $runtimeLogs | Out-Null
-New-Item -ItemType Directory -Force -Path (Join-Path $scriptDir "runtime/spark/.ivy2") | Out-Null
+New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
+New-Item -ItemType Directory -Force -Path (Join-Path $runtimeDir "spark/.ivy2") | Out-Null
+New-Item -ItemType Directory -Force -Path (Join-Path $runtimeDir "monitoring/state") | Out-Null
+Set-RuntimeComposeEnv -AirflowPort $resolvedAirflowPort -PrometheusPort $resolvedPrometheusPort -GrafanaPort $resolvedGrafanaPort -KafkaUiPort $resolvedKafkaUiPort
 
-Write-Host "[1/3] Building and starting control-plane services"
-docker compose --env-file $envFile up -d --build
+Write-Host "[1/5] Building and starting base services"
+Invoke-Compose -Arguments @(
+    "up", "-d", "--build",
+    "spark-submit-client",
+    "airflow-postgres",
+    "postgres-exporter",
+    "pipeline-metrics-exporter",
+    "prometheus",
+    "kafka-ui",
+    "grafana"
+)
 
-Write-Host "[2/3] Listing running services"
-docker compose --env-file $envFile ps
+Write-Host "[2/5] Waiting for Airflow PostgreSQL"
+Wait-ForContainerHealth -ContainerName "control_plane_airflow_postgres" -TimeoutSeconds 90 -Label "Airflow PostgreSQL"
 
-Write-Host "[3/3] Access points"
+Write-Host "[3/5] Running airflow-init"
+Invoke-Compose -Arguments @(
+    "up",
+    "--build",
+    "--abort-on-container-exit",
+    "--exit-code-from", "airflow-init",
+    "airflow-init"
+)
+
+Write-Host "[4/5] Starting Airflow API server and waiting for health"
+Invoke-Compose -Arguments @("up", "-d", "airflow-api-server")
+Wait-ForContainerHealth -ContainerName "control_plane_airflow_api_server" -TimeoutSeconds 180 -Label "Airflow API server"
+
+Write-Host "[5/5] Starting remaining Airflow services"
+Invoke-Compose -Arguments @("up", "-d", "airflow-scheduler", "airflow-dag-processor", "airflow-triggerer")
+
+Write-Host "[6/7] Listing running services"
+Invoke-Compose -Arguments @("ps")
+
+Write-Host "[7/7] Access points"
 Write-Host "Airflow   : http://localhost:$resolvedAirflowPort"
 Write-Host "Prometheus: http://localhost:$resolvedPrometheusPort"
 Write-Host "Grafana   : http://localhost:$resolvedGrafanaPort"
 Write-Host "Kafka UI  : http://localhost:$resolvedKafkaUiPort"
+Write-Host "Compose env override: $runtimeComposeEnv"

@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import json
+import socket
+import time
 from dataclasses import dataclass
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlparse, urlunparse
 
 import requests
 
@@ -17,6 +20,7 @@ from hdfs_bronze_config import (
 
 
 REQUEST_TIMEOUT_SECONDS = 120
+DATANODE_ALIAS_CACHE_TTL_SECONDS = 60
 
 
 @dataclass(frozen=True)
@@ -37,6 +41,8 @@ class HdfsBronzeClient:
         self.web_endpoint = base
         self.namenode_uri = namenode_uri
         self.webhdfs_user = webhdfs_user.strip() or "hdfs"
+        self._datanode_alias_cache: dict[str, str] = {}
+        self._datanode_alias_cache_expires_at = 0.0
 
     @staticmethod
     def normalize_path(hdfs_path: str) -> str:
@@ -46,6 +52,106 @@ class HdfsBronzeClient:
     def _build_url(self, hdfs_path: str) -> str:
         normalized = self.normalize_path(hdfs_path)
         return f"{self.web_endpoint}/webhdfs/v1{quote(normalized, safe='/')}"
+
+    @staticmethod
+    def _can_resolve_host(hostname: str) -> bool:
+        try:
+            socket.getaddrinfo(hostname, None)
+            return True
+        except socket.gaierror:
+            return False
+
+    @staticmethod
+    def _extract_host(value: str | None) -> str:
+        if not value:
+            return ""
+        return value.rsplit(":", 1)[0].strip().lower()
+
+    @staticmethod
+    def _extract_ip_like_host(*values: str | None) -> str:
+        for value in values:
+            host = HdfsBronzeClient._extract_host(value)
+            if host and any(character.isdigit() for character in host):
+                return host
+        return ""
+
+    def _load_datanode_alias_map(self) -> dict[str, str]:
+        now = time.time()
+        if self._datanode_alias_cache and now < self._datanode_alias_cache_expires_at:
+            return self._datanode_alias_cache
+
+        alias_map: dict[str, str] = {}
+        response = requests.get(
+            f"{self.web_endpoint}/jmx",
+            params={"qry": "Hadoop:service=NameNode,name=NameNodeInfo"},
+            timeout=REQUEST_TIMEOUT_SECONDS,
+        )
+        try:
+            response.raise_for_status()
+            payload = response.json()
+            beans = payload.get("beans", [])
+            if not beans:
+                self._datanode_alias_cache = {}
+                self._datanode_alias_cache_expires_at = now + DATANODE_ALIAS_CACHE_TTL_SECONDS
+                return {}
+
+            raw_live_nodes = beans[0].get("LiveNodes", "{}")
+            live_nodes = json.loads(raw_live_nodes) if isinstance(raw_live_nodes, str) else {}
+
+            for node_name, node_payload in live_nodes.items():
+                if not isinstance(node_payload, dict):
+                    continue
+
+                node_host = self._extract_host(str(node_name))
+                info_addr = str(node_payload.get("infoAddr", ""))
+                xfer_addr = str(node_payload.get("xferaddr", ""))
+                mapped_host = self._extract_ip_like_host(info_addr, xfer_addr)
+
+                if not mapped_host:
+                    continue
+
+                if node_host and not self._can_resolve_host(node_host):
+                    alias_map[node_host] = mapped_host
+
+                info_host = self._extract_host(info_addr)
+                if info_host and not self._can_resolve_host(info_host):
+                    alias_map[info_host] = mapped_host
+
+                xfer_host = self._extract_host(xfer_addr)
+                if xfer_host and not self._can_resolve_host(xfer_host):
+                    alias_map[xfer_host] = mapped_host
+        finally:
+            response.close()
+
+        self._datanode_alias_cache = alias_map
+        self._datanode_alias_cache_expires_at = now + DATANODE_ALIAS_CACHE_TTL_SECONDS
+        return alias_map
+
+    def _rewrite_redirect_location(self, location: str) -> str:
+        parsed = urlparse(location)
+        redirect_host = (parsed.hostname or "").strip().lower()
+        if not redirect_host or self._can_resolve_host(redirect_host):
+            return location
+
+        alias_map = self._load_datanode_alias_map()
+        resolved_host = alias_map.get(redirect_host)
+        if not resolved_host:
+            return location
+
+        rewritten_netloc = resolved_host
+        if parsed.port is not None:
+            rewritten_netloc = f"{resolved_host}:{parsed.port}"
+
+        return urlunparse(
+            (
+                parsed.scheme,
+                rewritten_netloc,
+                parsed.path,
+                parsed.params,
+                parsed.query,
+                parsed.fragment,
+            )
+        )
 
     def _request(self, method: str, hdfs_path: str, *, params: dict[str, object], stream: bool = False):
         request_params = dict(params)
@@ -77,9 +183,10 @@ class HdfsBronzeClient:
             if not location:
                 raise RuntimeError(f"Missing WebHDFS redirect location for path: {hdfs_path}")
 
+            rewritten_location = self._rewrite_redirect_location(location)
             redirected = requests.request(
                 method,
-                location,
+                rewritten_location,
                 data=data,
                 timeout=REQUEST_TIMEOUT_SECONDS,
                 allow_redirects=False,

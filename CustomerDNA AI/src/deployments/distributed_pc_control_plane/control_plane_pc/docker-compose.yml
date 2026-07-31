@@ -41,10 +41,12 @@ x-airflow-common: &airflow-common
     CUSTOMERDNA_SPARK_IVY_HOME: ${CUSTOMERDNA_SPARK_IVY_HOME:-/opt/spark/work-dir/.ivy2}
     CUSTOMERDNA_SPARK_THRIFT_HOST: ${CUSTOMERDNA_SPARK_THRIFT_HOST}
     CUSTOMERDNA_SPARK_THRIFT_PORT: ${CUSTOMERDNA_SPARK_THRIFT_PORT:-10000}
+    CUSTOMERDNA_MONITORING_STATE_DIR: ${CUSTOMERDNA_MONITORING_STATE_DIR:-/opt/customerdna/runtime/monitoring/state}
     _PIP_ADDITIONAL_REQUIREMENTS: -r /requirements.txt
   volumes:
     - ../../../airflow/dags:/opt/airflow/dags
     - ./runtime/airflow/logs:/opt/airflow/logs
+    - ./runtime/monitoring:/opt/customerdna/runtime/monitoring
     - ../../../airflow/plugins:/opt/airflow/plugins
     - ../../../airflow/config:/opt/airflow/config
     - ${CUSTOMERDNA_PROJECT_ROOT_MOUNT:-../../../..}:${CUSTOMERDNA_PROJECT_ROOT_IN_CONTAINER:-/opt/airflow/CustomerDNA_AI}
@@ -98,6 +100,7 @@ services:
   airflow-postgres:
     image: postgres:16
     container_name: control_plane_airflow_postgres
+    hostname: airflow-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${AIRFLOW_POSTGRES_USER:-airflow}
@@ -114,6 +117,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      default:
+        aliases:
+          - airflow-postgres
+          - control-plane-airflow-postgres
 
   airflow-init:
     <<: *airflow-common
@@ -198,12 +206,15 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      CUSTOMERDNA_MONITORING_STATE_DIR: ${CUSTOMERDNA_MONITORING_STATE_DIR:-/opt/customerdna/runtime/monitoring/state}
     working_dir: ${CUSTOMERDNA_MONITORING_ROOT_IN_CONTAINER:-/monitoring}
     command: python ${CUSTOMERDNA_MONITORING_EXPORTER_SCRIPT:-/monitoring/exporters/pipeline_metrics_exporter.py}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ../../../monitoring:${CUSTOMERDNA_MONITORING_ROOT_IN_CONTAINER:-/monitoring}:rw
+      - ../../../monitoring:${CUSTOMERDNA_MONITORING_ROOT_IN_CONTAINER:-/monitoring}:ro
+      - ./runtime/monitoring:/opt/customerdna/runtime/monitoring
 
   prometheus:
     image: prom/prometheus:latest

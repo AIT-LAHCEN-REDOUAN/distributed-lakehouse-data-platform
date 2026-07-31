@@ -38,6 +38,7 @@ services:
       HDFS_CONF_dfs_replication: ${CUSTOMERDNA_HDFS_REPLICATION}
       HDFS_CONF_dfs_permissions_enabled: "false"
       HDFS_CONF_dfs_webhdfs_enabled: "true"
+      HDFS_CONF_dfs_namenode_datanode_registration_ip___hostname___check: "false"
     volumes:
       - ./runtime/hdfs/namenode:/hadoop/dfs/name
 
@@ -128,6 +129,9 @@ services:
     container_name: spark-master
     hostname: spark-master
     network_mode: host
+    extra_hosts:
+      - "namenode:${VM2_HOST_IP}"
+      - "hive-metastore:${VM2_HOST_IP}"
     restart: unless-stopped
     environment:
       HOME: /opt/spark/work-dir
@@ -156,6 +160,9 @@ services:
     container_name: spark-worker-2
     hostname: spark-worker-2
     network_mode: host
+    extra_hosts:
+      - "namenode:${VM2_HOST_IP}"
+      - "hive-metastore:${VM2_HOST_IP}"
     restart: unless-stopped
     depends_on:
       - spark-master
@@ -188,6 +195,8 @@ services:
     hostname: spark-history-server
     network_mode: host
     extra_hosts:
+      - "namenode:${VM2_HOST_IP}"
+      - "hive-metastore:${VM2_HOST_IP}"
       - "spark-history-server:${VM2_HOST_IP}"
     restart: unless-stopped
     depends_on:
@@ -215,6 +224,8 @@ services:
     hostname: spark-thrift-server
     network_mode: host
     extra_hosts:
+      - "namenode:${VM2_HOST_IP}"
+      - "hive-metastore:${VM2_HOST_IP}"
       - "spark-thrift-server:${VM2_HOST_IP}"
     restart: unless-stopped
     depends_on:

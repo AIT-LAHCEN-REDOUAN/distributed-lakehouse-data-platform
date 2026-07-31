@@ -12,7 +12,7 @@ from typing import Any, Callable
 
 
 MONITORING_ROOT = Path(__file__).resolve().parents[1]
-STATE_DIR = MONITORING_ROOT / "state"
+STATE_DIR = Path(os.getenv("CUSTOMERDNA_MONITORING_STATE_DIR", MONITORING_ROOT / "state")).resolve()
 
 AIRFLOW_STATE_PATH = STATE_DIR / "airflow_pipeline_state.json"
 RAW_LOAD_STATE_PATH = STATE_DIR / "raw_load_state.json"

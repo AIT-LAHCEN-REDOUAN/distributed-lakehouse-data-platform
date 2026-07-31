@@ -10,6 +10,7 @@ from client_1.client_1_dag_common import (
     DEFAULT_ARGS,
     initialize_bronze_zone,
     initialize_lakehouse_namespace,
+    validate_hive_metastore_service,
     validate_trino_query_service,
 )
 
@@ -32,10 +33,14 @@ with DAG(
         task_id="initialize_client1_iceberg_namespaces",
         python_callable=initialize_lakehouse_namespace,
     )
+    validate_hive_metastore = PythonOperator(
+        task_id="validate_hive_metastore_service",
+        python_callable=validate_hive_metastore_service,
+    )
     validate_trino = PythonOperator(
         task_id="validate_trino_query_service",
         python_callable=validate_trino_query_service,
     )
     end = EmptyOperator(task_id="end")
 
-    start >> initialize_bronze >> initialize_namespace >> validate_trino >> end
+    start >> initialize_bronze >> validate_hive_metastore >> initialize_namespace >> validate_trino >> end

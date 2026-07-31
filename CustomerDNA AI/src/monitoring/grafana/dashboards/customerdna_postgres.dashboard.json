@@ -98,7 +98,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "max(pg_up{job=\"postgres_exporter\"})",
+          "expr": "max(pg_up{job=\"postgres_exporter_vm2_metastore\"})",
           "instant": true,
           "legendFormat": "Hive metastore PostgreSQL availability",
           "range": false,
@@ -171,7 +171,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "max(pg_database_size_bytes{datname=\"metastore_db\"})",
+          "expr": "max(pg_database_size_bytes{job=\"postgres_exporter_vm2_metastore\",datname=\"metastore_db\"})",
           "instant": true,
           "legendFormat": "metastore_db size",
           "range": false,
@@ -244,7 +244,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(pg_stat_database_numbackends{datname=\"metastore_db\"})",
+          "expr": "sum(pg_stat_database_numbackends{job=\"postgres_exporter_vm2_metastore\",datname=\"metastore_db\"})",
           "instant": true,
           "legendFormat": "metastore_db connections",
           "range": false,
@@ -332,7 +332,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(pg_stat_database_xact_commit{datname=\"metastore_db\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_xact_commit{job=\"postgres_exporter_vm2_metastore\",datname=\"metastore_db\"}[5m]))",
           "legendFormat": "Commit rate",
           "range": true,
           "refId": "A"
@@ -419,7 +419,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(pg_stat_database_xact_rollback{datname=\"metastore_db\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_xact_rollback{job=\"postgres_exporter_vm2_metastore\",datname=\"metastore_db\"}[5m]))",
           "legendFormat": "Rollback rate",
           "range": true,
           "refId": "A"
@@ -506,7 +506,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(rate(pg_stat_database_tup_returned{datname=\"metastore_db\"}[5m]))",
+          "expr": "sum(rate(pg_stat_database_tup_returned{job=\"postgres_exporter_vm2_metastore\",datname=\"metastore_db\"}[5m]))",
           "legendFormat": "Rows returned rate",
           "range": true,
           "refId": "A"

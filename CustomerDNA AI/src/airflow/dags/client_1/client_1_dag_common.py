@@ -296,6 +296,30 @@ def initialize_lakehouse_namespace() -> None:
     )
 
 
+def reset_kafka_topics() -> None:
+    run_command(
+        _python_command(CLIENT_KAFKA_DIR / "reset_client1_kafka.py"),
+        cwd=CLIENT_KAFKA_DIR,
+        label="Reset Client 1 Kafka topics and local Kafka artifacts",
+    )
+
+
+def reset_hdfs_bronze_zone() -> None:
+    run_command(
+        _python_command(HDFS_ROOT / "client_1" / "reset_client1_bronze.py"),
+        cwd=HDFS_ROOT / "client_1",
+        label="Reset Client 1 HDFS bronze area",
+    )
+
+
+def reset_lakehouse_namespaces() -> None:
+    run_command(
+        _python_command(TRINO_ROOT / "client_1" / "reset_lakehouse_namespaces.py"),
+        cwd=TRINO_ROOT / "client_1",
+        label="Reset Client 1 Iceberg lakehouse schemas through Trino",
+    )
+
+
 def run_kafka_hdfs_spark_raw_pipeline() -> None:
     run_command(
         _python_command(CLIENT_KAFKA_DIR / "run_client1_kafka_raw_pipeline.py"),

@@ -86,7 +86,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "count(up{job=~\"prometheus|postgres_exporter|cadvisor|pipeline_metrics_exporter\"} == 1)",
+          "expr": "count(up{job=~\"prometheus|postgres_exporter_vm2_metastore|pipeline_metrics_exporter|cadvisor_vm1|cadvisor_vm2|cadvisor_vm3\"} == 1)",
           "instant": true,
           "legendFormat": "Healthy targets",
           "range": false,
@@ -156,7 +156,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "max(machine_cpu_cores)",
+          "expr": "sum(max by (instance) (machine_cpu_cores{job=~\"cadvisor_vm1|cadvisor_vm2|cadvisor_vm3\"}))",
           "instant": true,
           "legendFormat": "CPU cores",
           "range": false,
@@ -227,7 +227,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "max(machine_memory_bytes)",
+          "expr": "sum(max by (instance) (machine_memory_bytes{job=~\"cadvisor_vm1|cadvisor_vm2|cadvisor_vm3\"}))",
           "instant": true,
           "legendFormat": "Memory capacity",
           "range": false,
@@ -316,7 +316,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "up{job=~\"prometheus|postgres_exporter|cadvisor|pipeline_metrics_exporter\"}",
+          "expr": "up{job=~\"prometheus|postgres_exporter_vm2_metastore|pipeline_metrics_exporter|cadvisor_vm1|cadvisor_vm2|cadvisor_vm3\"}",
           "legendFormat": "{{job}}",
           "range": true,
           "refId": "A"
@@ -404,7 +404,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "rate(process_cpu_seconds_total{job=~\"prometheus|postgres_exporter|cadvisor\"}[5m])",
+          "expr": "rate(process_cpu_seconds_total{job=~\"prometheus|postgres_exporter_vm2_metastore\"}[5m])",
           "legendFormat": "{{job}}",
           "range": true,
           "refId": "A"
@@ -493,7 +493,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "process_resident_memory_bytes{job=~\"prometheus|postgres_exporter|cadvisor\"}",
+          "expr": "process_resident_memory_bytes{job=~\"prometheus|postgres_exporter_vm2_metastore\"}",
           "legendFormat": "{{job}}",
           "range": true,
           "refId": "A"
