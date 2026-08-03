@@ -39,7 +39,8 @@ These conventions apply only to the new isolated deployment tree:
 ## Runtime Separation
 
 - Airflow, dbt, GX, Prometheus, and Grafana remain on the local PC.
-- Spark execution remains remote even when submission starts from the local `spark-submit-client`.
+- Spark execution and Spark driver submission run on VM2.
+- Airflow on the local PC triggers raw Spark loads remotely over SSH into the VM2 `spark-submit-client`.
 - AI or ML workloads are downstream and out of this deployment scope.
 
 ## Validation Order

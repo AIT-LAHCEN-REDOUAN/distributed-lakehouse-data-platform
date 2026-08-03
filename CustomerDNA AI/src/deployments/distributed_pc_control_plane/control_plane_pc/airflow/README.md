@@ -13,4 +13,4 @@ Airflow runs on the local PC as the orchestration layer for the distributed clus
 - Airflow containers stay local.
 - DAG code is mounted from the real repository.
 - DAG tasks target Kafka, HDFS, Hive, Spark, and Trino on the VMs by IP.
-- The local `spark-submit-client` container preserves the current `docker exec` Spark submission pattern.
+- Raw Spark submission is forwarded from local Airflow to `VM2` over SSH, then executed inside the remote `spark-submit-client` container on `VM2`.

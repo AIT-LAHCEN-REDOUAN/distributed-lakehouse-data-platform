@@ -2,14 +2,13 @@
 
 This folder is the isolated control-plane deployment for the distributed demonstration architecture:
 
-- local PC: Airflow, Airflow PostgreSQL, Prometheus, Grafana, dbt runtime, Great Expectations runtime, Spark submit helper
+- local PC: Airflow, Airflow PostgreSQL, Prometheus, Grafana, dbt runtime, Great Expectations runtime
 - VM1, VM2, VM3: distributed Kafka, HDFS, Spark, Hive, Trino, exporters
 
 ## What Runs Here
 
 - Airflow API server, scheduler, dag processor, triggerer
 - Airflow metadata PostgreSQL
-- Spark submit helper container
 - Kafka UI for supervising the distributed brokers
 - pipeline metrics exporter
 - Prometheus
@@ -25,9 +24,10 @@ This folder is the isolated control-plane deployment for the distributed demonst
 ## First Use
 
 1. Review [`.env`](D:/github/Master_PFE_Project/CustomerDNA%20AI/src/deployments/distributed_pc_control_plane/control_plane_pc/.env) and confirm VM IPs.
-2. Run [control_plane_preflight_checks.ps1](D:/github/Master_PFE_Project/CustomerDNA%20AI/src/deployments/distributed_pc_control_plane/control_plane_pc/control_plane_preflight_checks.ps1).
-3. Start the stack with [start_control_plane_pc.ps1](D:/github/Master_PFE_Project/CustomerDNA%20AI/src/deployments/distributed_pc_control_plane/control_plane_pc/start_control_plane_pc.ps1).
-4. If a port is busy, the startup script writes the resolved ports to `runtime/compose.generated.env`. Use the script again for retries so the same ports are reused.
+2. Place the SSH private key for VM2 remote Spark submission under `ssh/id_ed25519` and authorize the matching public key on VM2.
+3. Run [control_plane_preflight_checks.ps1](D:/github/Master_PFE_Project/CustomerDNA%20AI/src/deployments/distributed_pc_control_plane/control_plane_pc/control_plane_preflight_checks.ps1).
+4. Start the stack with [start_control_plane_pc.ps1](D:/github/Master_PFE_Project/CustomerDNA%20AI/src/deployments/distributed_pc_control_plane/control_plane_pc/start_control_plane_pc.ps1).
+5. If a port is busy, the startup script writes the resolved ports to `runtime/compose.generated.env`. Use the script again for retries so the same ports are reused.
 
 ## Access Points
 
@@ -39,6 +39,7 @@ This folder is the isolated control-plane deployment for the distributed demonst
 ## Notes
 
 - This stack expects the distributed data-plane services on the VMs to be started first, especially Kafka, HDFS, Hive Metastore, Spark, and Trino.
-- `spark-submit-client` stays local on purpose. Airflow submits Spark jobs through it, but the actual execution target remains the remote Spark master on VM2.
+- Airflow stays local, but raw Spark submission is executed remotely on VM2 over SSH inside the VM2 `spark-submit-client` container.
+- `CUSTOMERDNA_SPARK_DRIVER_HOST` is now pinned to `VM2`, so Spark executors no longer depend on the changing workstation IP.
 - Monitoring state for the distributed demo is isolated under `runtime/monitoring/state` so it does not reuse the local single-machine run history.
-- Airflow startup is intentionally staged: PostgreSQL and the helper container start first, then `airflow-init`, then the API server, and only after that the scheduler, dag processor, and triggerer.
+- Airflow startup is intentionally staged: PostgreSQL starts first, then `airflow-init`, then the API server, and only after that the scheduler, dag processor, and triggerer.

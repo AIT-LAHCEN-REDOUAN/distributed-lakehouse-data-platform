@@ -1,4 +1,4 @@
-"""Submit Client 1 Spark Iceberg-load jobs through the spark-master container."""
+"""Submit Client 1 Spark Iceberg-load jobs through a local or remote submit container."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import time
 from dataclasses import dataclass
 from urllib.parse import urlparse, urlunparse
 
@@ -16,6 +17,11 @@ try:
     import docker  # type: ignore
 except Exception:  # pragma: no cover - optional local dependency
     docker = None
+
+try:
+    import paramiko  # type: ignore
+except Exception:  # pragma: no cover - optional local dependency
+    paramiko = None
 
 
 ROWS_LOADED_PATTERN = re.compile(r"Rows loaded:\s*([0-9,]+)")
@@ -34,6 +40,20 @@ SPARK_IVY_HOME = os.getenv("CUSTOMERDNA_SPARK_IVY_HOME", "/opt/spark/work-dir/.i
 SPARK_HOME_DIR = os.getenv("CUSTOMERDNA_SPARK_HOME_DIR", "/opt/spark/work-dir")
 ICEBERG_CATALOG_NAME = os.getenv("CUSTOMERDNA_ICEBERG_CATALOG_NAME", "customerdna")
 ICEBERG_RAW_NAMESPACE = os.getenv("CUSTOMERDNA_ICEBERG_RAW_NAMESPACE", "raw_data")
+SPARK_DRIVER_HOST = os.getenv("CUSTOMERDNA_SPARK_DRIVER_HOST", "").strip()
+SPARK_DRIVER_BIND_ADDRESS = os.getenv("CUSTOMERDNA_SPARK_DRIVER_BIND_ADDRESS", "").strip()
+SPARK_DRIVER_PORT = os.getenv("CUSTOMERDNA_SPARK_DRIVER_PORT", "").strip()
+SPARK_BLOCKMANAGER_PORT = os.getenv("CUSTOMERDNA_SPARK_BLOCKMANAGER_PORT", "").strip()
+SPARK_EXECUTOR_MEMORY = os.getenv("CUSTOMERDNA_SPARK_EXECUTOR_MEMORY", "").strip()
+SPARK_EXECUTOR_CORES = os.getenv("CUSTOMERDNA_SPARK_EXECUTOR_CORES", "").strip()
+SPARK_CORES_MAX = os.getenv("CUSTOMERDNA_SPARK_CORES_MAX", "").strip()
+SPARK_REMOTE_SSH_HOST = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_HOST", "").strip()
+SPARK_REMOTE_SSH_PORT = int(os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_PORT", "22").strip() or "22")
+SPARK_REMOTE_SSH_USER = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_USER", "").strip()
+SPARK_REMOTE_SSH_KEY_PATH = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_KEY_PATH", "").strip()
+SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS = int(
+    os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS", "20").strip() or "20"
+)
 
 
 @dataclass(frozen=True)
@@ -42,6 +62,16 @@ class SparkRawLoadResult:
     bronze_files_read: int
     duration_seconds: float
     stdout: str
+
+
+def _should_use_remote_ssh() -> bool:
+    return any(
+        (
+            SPARK_REMOTE_SSH_HOST,
+            SPARK_REMOTE_SSH_USER,
+            SPARK_REMOTE_SSH_KEY_PATH,
+        )
+    )
 
 
 def _build_spark_submit_command(
@@ -67,30 +97,52 @@ def _build_spark_submit_command(
             )
         )
 
-    return [
+    command = [
         SPARK_BIN,
         "--master",
         SPARK_MASTER_URL,
         "--conf",
         "spark.eventLog.enabled=false",
-        SPARK_JOB_PATH,
-        "--dataset-key",
-        dataset_key,
-        "--target-table",
-        target_table,
-        "--iceberg-catalog",
-        ICEBERG_CATALOG_NAME,
-        "--iceberg-namespace",
-        ICEBERG_RAW_NAMESPACE,
-        "--bronze-prefix",
-        bronze_prefix,
-        "--hdfs-namenode-uri",
-        container_safe_hdfs_uri,
-        "--expected-rows",
-        str(expected_rows or 0),
-        "--expected-file-count",
-        str(expected_file_count or 0),
     ]
+
+    if SPARK_DRIVER_HOST:
+        command.extend(["--conf", f"spark.driver.host={SPARK_DRIVER_HOST}"])
+    if SPARK_DRIVER_BIND_ADDRESS:
+        command.extend(["--conf", f"spark.driver.bindAddress={SPARK_DRIVER_BIND_ADDRESS}"])
+    if SPARK_DRIVER_PORT:
+        command.extend(["--conf", f"spark.driver.port={SPARK_DRIVER_PORT}"])
+    if SPARK_BLOCKMANAGER_PORT:
+        command.extend(["--conf", f"spark.blockManager.port={SPARK_BLOCKMANAGER_PORT}"])
+    if SPARK_EXECUTOR_MEMORY:
+        command.extend(["--conf", f"spark.executor.memory={SPARK_EXECUTOR_MEMORY}"])
+    if SPARK_EXECUTOR_CORES:
+        command.extend(["--conf", f"spark.executor.cores={SPARK_EXECUTOR_CORES}"])
+    if SPARK_CORES_MAX:
+        command.extend(["--conf", f"spark.cores.max={SPARK_CORES_MAX}"])
+
+    command.extend(
+        [
+            SPARK_JOB_PATH,
+            "--dataset-key",
+            dataset_key,
+            "--target-table",
+            target_table,
+            "--iceberg-catalog",
+            ICEBERG_CATALOG_NAME,
+            "--iceberg-namespace",
+            ICEBERG_RAW_NAMESPACE,
+            "--bronze-prefix",
+            bronze_prefix,
+            "--hdfs-namenode-uri",
+            container_safe_hdfs_uri,
+            "--expected-rows",
+            str(expected_rows or 0),
+            "--expected-file-count",
+            str(expected_file_count or 0),
+        ]
+    )
+
+    return command
 
 
 def _parse_result(stdout: str) -> SparkRawLoadResult:
@@ -150,6 +202,95 @@ def _run_with_docker_cli(command: list[str]) -> str:
     return completed.stdout
 
 
+def _validate_remote_ssh_configuration() -> None:
+    missing = []
+    if not SPARK_REMOTE_SSH_HOST:
+        missing.append("CUSTOMERDNA_SPARK_REMOTE_SSH_HOST")
+    if not SPARK_REMOTE_SSH_USER:
+        missing.append("CUSTOMERDNA_SPARK_REMOTE_SSH_USER")
+    if not SPARK_REMOTE_SSH_KEY_PATH:
+        missing.append("CUSTOMERDNA_SPARK_REMOTE_SSH_KEY_PATH")
+
+    if missing:
+        raise RuntimeError(
+            "Remote Spark execution is enabled, but required SSH settings are missing: "
+            + ", ".join(missing)
+        )
+
+    if paramiko is None:
+        raise RuntimeError(
+            "Remote Spark execution requires the 'paramiko' package inside the Airflow runtime."
+        )
+
+    if not os.path.exists(SPARK_REMOTE_SSH_KEY_PATH):
+        raise RuntimeError(
+            "Remote Spark SSH key file does not exist inside the Airflow container: "
+            f"{SPARK_REMOTE_SSH_KEY_PATH}"
+        )
+
+
+def _run_with_remote_ssh(command: list[str]) -> str:
+    _validate_remote_ssh_configuration()
+
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    remote_command = shlex.join(
+        ["docker", "exec", SPARK_SUBMIT_CONTAINER, *command]
+    )
+
+    try:
+        client.connect(
+            hostname=SPARK_REMOTE_SSH_HOST,
+            port=SPARK_REMOTE_SSH_PORT,
+            username=SPARK_REMOTE_SSH_USER,
+            key_filename=SPARK_REMOTE_SSH_KEY_PATH,
+            look_for_keys=False,
+            allow_agent=False,
+            timeout=SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS,
+            banner_timeout=SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS,
+            auth_timeout=SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS,
+        )
+
+        _, stdout, stderr = client.exec_command(remote_command)
+        channel = stdout.channel
+        stdout_chunks: list[str] = []
+        stderr_chunks: list[str] = []
+
+        while True:
+            while channel.recv_ready():
+                chunk = channel.recv(4096).decode("utf-8", errors="replace")
+                print(chunk, end="" if chunk.endswith("\n") else "\n")
+                stdout_chunks.append(chunk)
+
+            while channel.recv_stderr_ready():
+                chunk = channel.recv_stderr(4096).decode("utf-8", errors="replace")
+                print(chunk, end="" if chunk.endswith("\n") else "\n", file=sys.stderr)
+                stderr_chunks.append(chunk)
+
+            if channel.exit_status_ready():
+                if not channel.recv_ready() and not channel.recv_stderr_ready():
+                    break
+
+            time.sleep(0.2)
+
+        exit_code = channel.recv_exit_status()
+        stdout_text = "".join(stdout_chunks)
+        stderr_text = "".join(stderr_chunks)
+
+        if exit_code != 0:
+            raise RuntimeError(
+                "Remote Spark submit failed on "
+                f"{SPARK_REMOTE_SSH_USER}@{SPARK_REMOTE_SSH_HOST}:{SPARK_REMOTE_SSH_PORT} "
+                f"inside container '{SPARK_SUBMIT_CONTAINER}' with exit code {exit_code}.\n"
+                f"stderr:\n{stderr_text}"
+            )
+
+        return stdout_text
+    finally:
+        client.close()
+
+
 def submit_hdfs_bronze_to_iceberg_spark_job(
     *,
     dataset_key: str,
@@ -178,12 +319,17 @@ def submit_hdfs_bronze_to_iceberg_spark_job(
             f"SPARK_SUBMIT_OPTS='-Divy.home={SPARK_IVY_HOME} -Divy.cache.dir={SPARK_IVY_HOME}/cache'; "
             f"{shlex.join(base_command)}"
         ),
-    ]
+    ] 
 
     print(f"[SPARK] Submission container: {SPARK_SUBMIT_CONTAINER}")
     print(f"[SPARK] Submit command: {' '.join(base_command)}")
-
-    if docker is not None:
+    if _should_use_remote_ssh():
+        print(
+            "[SPARK] Remote execution: "
+            f"{SPARK_REMOTE_SSH_USER}@{SPARK_REMOTE_SSH_HOST}:{SPARK_REMOTE_SSH_PORT}"
+        )
+        stdout = _run_with_remote_ssh(command)
+    elif docker is not None:
         stdout = _run_with_docker_sdk(command)
     else:
         stdout = _run_with_docker_cli(command)

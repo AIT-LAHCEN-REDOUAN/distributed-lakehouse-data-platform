@@ -1,5 +1,5 @@
 CustomerDNA Distributed Deployment Access Points
-Date verified: Thursday, July 30, 2026
+Date verified: Sunday, August 2, 2026
 
 ============================================================
 CONTROL PLANE PC
@@ -13,6 +13,7 @@ Accessible in browser
 
 Not browser-first / service endpoints
 - Generated compose port override: D:\github\Master_PFE_Project\CustomerDNA AI\src\deployments\distributed_pc_control_plane\control_plane_pc\runtime\compose.generated.env
+- Remote Spark submission SSH target: 10.10.252.12:22
 
 ============================================================
 VM1
@@ -44,6 +45,7 @@ Not browser-first / service endpoints
 - Hive Metastore: 10.10.252.12:9083
 - Hive Metastore PostgreSQL: 10.10.252.12:5435
 - Spark Master: spark://10.10.252.12:7077
+- Spark submit helper container: spark-submit-client on VM2
 - Spark Thrift: 10.10.252.12:10000
 
 ============================================================

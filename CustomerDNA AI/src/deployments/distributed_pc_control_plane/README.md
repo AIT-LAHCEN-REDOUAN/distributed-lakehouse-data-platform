@@ -34,6 +34,7 @@ This deployment tree is isolated from the original local deployment and from the
 - Hive Metastore
 - Hive Metastore PostgreSQL
 - Spark master
+- Spark submit helper
 - Spark History Server
 - Spark Thrift Server
 - Spark worker `2`

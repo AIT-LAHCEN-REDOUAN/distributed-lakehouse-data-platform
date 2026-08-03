@@ -39,6 +39,18 @@ x-airflow-common: &airflow-common
     CUSTOMERDNA_SPARK_JOB_PATH: ${CUSTOMERDNA_SPARK_JOB_PATH:-/opt/spark/jobs/client_1/load_hdfs_bronze_to_iceberg.py}
     CUSTOMERDNA_SPARK_HOME_DIR: ${CUSTOMERDNA_SPARK_HOME_DIR:-/opt/spark/work-dir}
     CUSTOMERDNA_SPARK_IVY_HOME: ${CUSTOMERDNA_SPARK_IVY_HOME:-/opt/spark/work-dir/.ivy2}
+    CUSTOMERDNA_SPARK_DRIVER_HOST: ${CUSTOMERDNA_SPARK_DRIVER_HOST}
+    CUSTOMERDNA_SPARK_DRIVER_BIND_ADDRESS: ${CUSTOMERDNA_SPARK_DRIVER_BIND_ADDRESS:-0.0.0.0}
+    CUSTOMERDNA_SPARK_DRIVER_PORT: ${CUSTOMERDNA_SPARK_DRIVER_PORT:-35001}
+    CUSTOMERDNA_SPARK_BLOCKMANAGER_PORT: ${CUSTOMERDNA_SPARK_BLOCKMANAGER_PORT:-35002}
+    CUSTOMERDNA_SPARK_EXECUTOR_MEMORY: ${CUSTOMERDNA_SPARK_EXECUTOR_MEMORY:-512m}
+    CUSTOMERDNA_SPARK_EXECUTOR_CORES: ${CUSTOMERDNA_SPARK_EXECUTOR_CORES:-1}
+    CUSTOMERDNA_SPARK_CORES_MAX: ${CUSTOMERDNA_SPARK_CORES_MAX:-1}
+    CUSTOMERDNA_SPARK_REMOTE_SSH_HOST: ${CUSTOMERDNA_SPARK_REMOTE_SSH_HOST}
+    CUSTOMERDNA_SPARK_REMOTE_SSH_PORT: ${CUSTOMERDNA_SPARK_REMOTE_SSH_PORT:-22}
+    CUSTOMERDNA_SPARK_REMOTE_SSH_USER: ${CUSTOMERDNA_SPARK_REMOTE_SSH_USER}
+    CUSTOMERDNA_SPARK_REMOTE_SSH_KEY_PATH: ${CUSTOMERDNA_SPARK_REMOTE_SSH_KEY_PATH:-/opt/customerdna/.ssh/id_ed25519}
+    CUSTOMERDNA_SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS: ${CUSTOMERDNA_SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS:-20}
     CUSTOMERDNA_SPARK_THRIFT_HOST: ${CUSTOMERDNA_SPARK_THRIFT_HOST}
     CUSTOMERDNA_SPARK_THRIFT_PORT: ${CUSTOMERDNA_SPARK_THRIFT_PORT:-10000}
     CUSTOMERDNA_MONITORING_STATE_DIR: ${CUSTOMERDNA_MONITORING_STATE_DIR:-/opt/customerdna/runtime/monitoring/state}
@@ -51,7 +63,7 @@ x-airflow-common: &airflow-common
     - ../../../airflow/config:/opt/airflow/config
     - ${CUSTOMERDNA_PROJECT_ROOT_MOUNT:-../../../..}:${CUSTOMERDNA_PROJECT_ROOT_IN_CONTAINER:-/opt/airflow/CustomerDNA_AI}
     - ../../../airflow/requirements.txt:/requirements.txt
-    - /var/run/docker.sock:/var/run/docker.sock
+    - ./ssh:/opt/customerdna/.ssh:ro
   user: "${AIRFLOW_UID:-50000}:0"
   extra_hosts:
     - "host.docker.internal:host-gateway"
@@ -59,44 +71,8 @@ x-airflow-common: &airflow-common
   depends_on:
     airflow-postgres:
       condition: service_healthy
-    spark-submit-client:
-      condition: service_started
 
 services:
-  spark-submit-client:
-    build:
-      context: ../../../processing/spark
-      dockerfile: Dockerfile
-      args:
-        SPARK_BASE_IMAGE: ${CUSTOMERDNA_SPARK_BASE_IMAGE:-spark:4.1.2-python3}
-        ICEBERG_VERSION: ${CUSTOMERDNA_SPARK_ICEBERG_VERSION:-1.11.0}
-        POSTGRES_JDBC_VERSION: ${CUSTOMERDNA_SPARK_POSTGRES_JDBC_VERSION:-42.7.4}
-    image: ${CUSTOMERDNA_SPARK_SUBMIT_CLIENT_IMAGE:-customerdna-spark:4.1.2-iceberg-control-plane}
-    container_name: spark-submit-client
-    hostname: spark-submit-client
-    restart: unless-stopped
-    environment:
-      HOME: ${CUSTOMERDNA_SPARK_HOME_DIR:-/opt/spark/work-dir}
-      IVY_HOME: ${CUSTOMERDNA_SPARK_IVY_HOME:-/opt/spark/work-dir/.ivy2}
-      SPARK_CONF_DIR: /opt/spark/custom-conf
-      SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Divy.home=${CUSTOMERDNA_SPARK_IVY_HOME:-/opt/spark/work-dir/.ivy2} -Divy.cache.dir=${CUSTOMERDNA_SPARK_IVY_HOME:-/opt/spark/work-dir/.ivy2}/cache
-      CUSTOMERDNA_HIVE_METASTORE_URI: ${CUSTOMERDNA_HIVE_METASTORE_URI}
-      CUSTOMERDNA_ICEBERG_WAREHOUSE_URI: ${CUSTOMERDNA_ICEBERG_WAREHOUSE_URI}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - ../../../processing/spark/jobs:${CUSTOMERDNA_SPARK_JOBS_ROOT_IN_CONTAINER:-/opt/spark/jobs}
-      - ../../../processing/spark/config:/opt/spark/custom-conf:ro
-      - ./runtime/spark/.ivy2:${CUSTOMERDNA_SPARK_IVY_HOME:-/opt/spark/work-dir/.ivy2}
-    command:
-      - /bin/sh
-      - -lc
-      - >
-        mkdir -p ${CUSTOMERDNA_SPARK_IVY_HOME:-/opt/spark/work-dir/.ivy2}/cache
-        ${CUSTOMERDNA_SPARK_IVY_HOME:-/opt/spark/work-dir/.ivy2}/jars
-        && while true; do sleep 3600; done
-
   airflow-postgres:
     image: postgres:16
     container_name: control_plane_airflow_postgres

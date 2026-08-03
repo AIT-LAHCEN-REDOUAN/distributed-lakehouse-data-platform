@@ -54,6 +54,13 @@ else {
     Write-Host "[WARN] git missing"
 }
 
+if (Get-Command ssh -ErrorAction SilentlyContinue) {
+    Write-Host "[OK] ssh"
+}
+else {
+    Write-Host "[WARN] ssh missing"
+}
+
 Write-Host ""
 Write-Host "[Required paths]"
 $requiredPaths = @(
@@ -61,7 +68,8 @@ $requiredPaths = @(
     (Join-Path $repoRoot "src/processing/spark"),
     (Join-Path $repoRoot "src/monitoring"),
     (Join-Path $repoRoot "src/transformation/dbt_spark/client_1"),
-    (Join-Path $repoRoot "src/quality/great_expectations/client_1")
+    (Join-Path $repoRoot "src/quality/great_expectations/client_1"),
+    (Join-Path $scriptDir "ssh")
 )
 
 foreach ($path in $requiredPaths) {
@@ -81,6 +89,7 @@ Test-TcpEndpoint -HostName "10.10.252.13" -Port 9092 -Label "Kafka broker on VM3
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 9000 -Label "HDFS NameNode RPC on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 9870 -Label "HDFS NameNode web on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 9083 -Label "Hive Metastore on VM2"
+Test-TcpEndpoint -HostName "10.10.252.12" -Port 22 -Label "SSH on VM2 for remote Spark submission"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 7077 -Label "Spark master on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 10000 -Label "Spark Thrift on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 8088 -Label "Trino coordinator on VM2"

@@ -24,12 +24,14 @@ ports:
   spark:
     master_port: 7077
     master_webui_port: 8086
+    submit_ssh_port: 22
     worker_webui_port_default: 8087
     history_webui_port: 18080
     thrift_port: 10000
     thrift_webui_port: 4040
     notes:
       - Spark master stays on VM2.
+      - Spark submit helper also stays on VM2 and is reached from the control plane over SSH.
       - Workers run on VM1, VM2, and VM3.
       - If worker UI ports collide on a single host, node-specific overrides are required.
 

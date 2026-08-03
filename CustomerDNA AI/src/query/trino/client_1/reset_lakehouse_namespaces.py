@@ -22,6 +22,15 @@ RESET_SCHEMAS = [
     TRINO_SCHEMA,
 ]
 
+TRINO_SCHEMA_DROP_WARNING_MARKERS = (
+    "java.lang.nullpointerexception",
+)
+
+TRINO_TABLE_DROP_WARNING_MARKERS = (
+    "table '",
+    "not found",
+)
+
 
 def _schema_exists(schema_name: str) -> bool:
     schemas_result = execute_trino_statement(f"SHOW SCHEMAS FROM {TRINO_CATALOG}")
@@ -35,6 +44,40 @@ def _list_tables(schema_name: str) -> list[str]:
 
     tables_result = execute_trino_statement(f"SHOW TABLES FROM {TRINO_CATALOG}.{schema_name}")
     return [row[0] for row in tables_result["rows"]]
+
+
+def _drop_schema_if_possible(schema_name: str) -> None:
+    qualified_schema = f"{TRINO_CATALOG}.{schema_name}"
+    try:
+        execute_trino_statement(f"DROP SCHEMA IF EXISTS {qualified_schema}")
+        print(f"[SUCCESS] Dropped schema: {qualified_schema}")
+    except RuntimeError as exc:
+        message = str(exc).strip()
+        normalized = message.lower()
+        if any(marker in normalized for marker in TRINO_SCHEMA_DROP_WARNING_MARKERS):
+            print(
+                f"[WARN] Trino could not drop empty schema {qualified_schema} due to a connector-side "
+                f"error ({message}). Continuing because the schema contents were already cleared."
+            )
+            return
+        raise
+
+
+def _drop_table_if_possible(schema_name: str, table_name: str) -> None:
+    qualified_table = f'{TRINO_CATALOG}.{schema_name}."{table_name}"'
+    try:
+        execute_trino_statement(f"DROP TABLE IF EXISTS {qualified_table}")
+        print(f"[SUCCESS] Dropped table: {qualified_table}")
+    except RuntimeError as exc:
+        message = str(exc).strip()
+        normalized = message.lower()
+        if all(marker in normalized for marker in TRINO_TABLE_DROP_WARNING_MARKERS):
+            print(
+                f"[WARN] Trino reported table already absent while dropping {qualified_table} "
+                f"({message}). Continuing because the table was already removed."
+            )
+            return
+        raise
 
 
 def main() -> int:
@@ -55,25 +98,24 @@ def main() -> int:
         tables = _list_tables(schema_name)
         if tables:
             for table_name in tables:
-                qualified_table = f'{TRINO_CATALOG}.{schema_name}."{table_name}"'
-                execute_trino_statement(f"DROP TABLE IF EXISTS {qualified_table}")
-                print(f"[SUCCESS] Dropped table: {qualified_table}")
+                _drop_table_if_possible(schema_name, table_name)
         else:
             print(f"[INFO] No managed tables found in schema: {TRINO_CATALOG}.{schema_name}")
 
-        execute_trino_statement(f"DROP SCHEMA IF EXISTS {TRINO_CATALOG}.{schema_name}")
-        print(f"[SUCCESS] Dropped schema: {TRINO_CATALOG}.{schema_name}")
+        _drop_schema_if_possible(schema_name)
 
-    remaining_schemas = execute_trino_statement(f"SHOW SCHEMAS FROM {TRINO_CATALOG}")
-    visible_schema_names = {row[0] for row in remaining_schemas["rows"]}
-    still_present = [schema_name for schema_name in RESET_SCHEMAS if schema_name in visible_schema_names]
-    if still_present:
+    non_empty_schemas: list[str] = []
+    for schema_name in RESET_SCHEMAS:
+        if _list_tables(schema_name):
+            non_empty_schemas.append(schema_name)
+
+    if non_empty_schemas:
         raise RuntimeError(
-            "The following schemas are still visible after reset: "
-            + ", ".join(f"{TRINO_CATALOG}.{schema_name}" for schema_name in still_present)
+            "The following schemas still contain tables after reset: "
+            + ", ".join(f"{TRINO_CATALOG}.{schema_name}" for schema_name in non_empty_schemas)
         )
 
-    print("[SUCCESS] Client 1 lakehouse schemas were removed successfully.")
+    print("[SUCCESS] Client 1 lakehouse schemas were cleared successfully.")
     print("=" * 80)
     return 0
 

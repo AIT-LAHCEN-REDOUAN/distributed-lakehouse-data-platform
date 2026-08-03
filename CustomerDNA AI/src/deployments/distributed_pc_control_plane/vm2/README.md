@@ -14,6 +14,7 @@ It hosts:
 - Hive Metastore PostgreSQL
 - Hive Metastore
 - Spark master
+- Spark submit helper
 - Spark worker `2`
 - Spark History Server
 - Spark Thrift Server
@@ -26,6 +27,7 @@ VM2 is the anchor node for:
 
 - HDFS namespace
 - Hive catalog metadata
+- Spark driver and submission entrypoint
 - Spark master coordination
 - Trino coordination
 
@@ -53,6 +55,7 @@ On older VM CPUs, newer Trino images can fail immediately with `CPU does not sup
 - Hive Metastore PostgreSQL: `10.10.252.12:5435`
 - Spark master: `spark://10.10.252.12:7077`
 - Spark master UI: `http://10.10.252.12:8086`
+- Spark submit helper: `ssh redouan@10.10.252.12` then `docker exec spark-submit-client ...`
 - Spark Thrift: `10.10.252.12:10000`
 - Spark History UI: `http://10.10.252.12:18080`
 - Trino coordinator: `http://10.10.252.12:8088`

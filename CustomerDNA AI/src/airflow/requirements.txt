@@ -8,4 +8,5 @@ kafka-python==2.1.5
 requests==2.32.3
 great_expectations==1.18.2
 docker==7.1.0
+paramiko==3.5.1
 dbt-spark[PyHive]==1.10.3

@@ -9,7 +9,6 @@ service_placement:
       - airflow_triggerer
       - airflow_init
       - airflow_postgres
-      - spark_submit_client
       - pipeline_metrics_exporter
       - postgres_exporter
       - prometheus
@@ -31,6 +30,7 @@ service_placement:
       - hive_metastore_postgres
       - hive_metastore
       - spark_master
+      - spark_submit_client
       - spark_worker_2
       - spark_history_server
       - spark_thrift_server
@@ -56,13 +56,14 @@ primary_endpoints:
   hive_metastore_postgres: 10.10.252.12:5435
   spark_master: spark://10.10.252.12:7077
   spark_master_ui: http://10.10.252.12:8086
+  spark_submit_ssh: 10.10.252.12:22
   spark_thrift: 10.10.252.12:10000
   trino_coordinator: http://10.10.252.12:8088
 
 execution_model:
   ingestion: kafka_cluster_on_vm1_vm2_vm3
   distributed_storage: hdfs_namenode_on_vm2_with_datanodes_on_vm1_vm2_vm3
-  distributed_processing: spark_master_on_vm2_with_workers_on_vm1_vm2_vm3
+  distributed_processing: spark_master_and_driver_submission_on_vm2_with_workers_on_vm1_vm2_vm3
   distributed_querying: trino_coordinator_on_vm2_with_workers_on_vm1_vm3
   orchestration: airflow_on_local_pc
   transformation_runtime: dbt_on_local_pc_via_remote_spark_thrift

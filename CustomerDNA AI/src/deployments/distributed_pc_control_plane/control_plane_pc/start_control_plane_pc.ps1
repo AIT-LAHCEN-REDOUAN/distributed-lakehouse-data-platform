@@ -237,14 +237,12 @@ $env:AIRFLOW__API__BASE_URL = "http://localhost:$resolvedAirflowPort"
 
 New-Item -ItemType Directory -Force -Path $runtimeLogs | Out-Null
 New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
-New-Item -ItemType Directory -Force -Path (Join-Path $runtimeDir "spark/.ivy2") | Out-Null
 New-Item -ItemType Directory -Force -Path (Join-Path $runtimeDir "monitoring/state") | Out-Null
 Set-RuntimeComposeEnv -AirflowPort $resolvedAirflowPort -PrometheusPort $resolvedPrometheusPort -GrafanaPort $resolvedGrafanaPort -KafkaUiPort $resolvedKafkaUiPort
 
 Write-Host "[1/5] Building and starting base services"
 Invoke-Compose -Arguments @(
     "up", "-d", "--build",
-    "spark-submit-client",
     "airflow-postgres",
     "postgres-exporter",
     "pipeline-metrics-exporter",

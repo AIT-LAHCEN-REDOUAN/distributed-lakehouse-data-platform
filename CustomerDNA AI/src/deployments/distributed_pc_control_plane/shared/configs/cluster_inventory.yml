@@ -14,7 +14,7 @@ control_plane:
     - grafana
     - dbt_runtime
     - great_expectations_runtime
-    - spark_submit_helper
+    - remote_spark_orchestration
   preferred_ports:
     airflow_api: 18080
     prometheus: 19090
@@ -49,6 +49,7 @@ nodes:
       - hive_metastore
       - hive_metastore_postgres
       - spark_master
+      - spark_submit_helper
       - spark_history_server
       - spark_thrift_server
       - spark_worker_2
