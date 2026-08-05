@@ -1,0 +1,193 @@
+\clearpage
+\chapter{IMPLEMENTATION AND DISTRIBUTED DEPLOYMENT}
+
+\section{Introduction}
+This chapter presents the implemented form of CustomerDNA AI. It focuses on repository responsibilities, concrete services, execution scripts, node specifications, network endpoints, and operational procedures. The deployed system is a distributed demonstration and validation environment, not a production high-availability cluster.
+
+\section{Deployment Environment}
+
+\subsection{Local Control-Plane Environment}
+The local PC runs the Airflow stack and its PostgreSQL database, Prometheus, Grafana, Kafka UI, the pipeline metrics exporter, the Hive Metastore PostgreSQL exporter, dbt, GX, and SSH-based remote Spark orchestration. Its workstation hardware is reported separately from the VM aggregate because it belongs to the control plane rather than the distributed compute capacity.
+
+\subsection{Virtual-Machine Specifications}
+All three VMs use Ubuntu 22.04.5 LTS, kernel 5.15.0-119-generic, and QEMU Virtual CPU 2.5+. Each VM exposes two sockets with two cores per socket, 3.8~GiB RAM, 26~GB disk, and no dedicated GPU.
+
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.08}
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|p{0.20\textwidth}|X|X|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Specification} & \color{white}\textbf{VM1} & \color{white}\textbf{VM2} & \color{white}\textbf{VM3} \\
+        \hline
+        IP address & \texttt{10.10.252.11} & \texttt{10.10.252.12} & \texttt{10.10.252.13} \\
+        \hline
+        Hostname & \texttt{redouan} & \texttt{redouan} & \texttt{redouan} \\
+        \hline
+        CPU & 4 virtual cores & 4 virtual cores & 4 virtual cores \\
+        \hline
+        RAM total & 3.8~GiB & 3.8~GiB & 3.8~GiB \\
+        \hline
+        RAM used at baseline capture & 196~MiB & 176~MiB & 185~MiB \\
+        \hline
+        Disk total & 26~GB & 26~GB & 26~GB \\
+        \hline
+        Disk used at baseline capture & 7.0~GB (29\%) & 7.6~GB (32\%) & 7.0~GB (29\%) \\
+        \hline
+        GPU & Basic VGA only & Basic VGA only & Basic VGA only \\
+        \hline
+    \end{tabularx}
+    \caption{Three-VM infrastructure configuration and baseline utilization snapshot}
+    \label{tab:implementation-vm-specifications}
+    \arrayrulecolor{black}
+\end{table}
+
+The VM data plane therefore provides 12 virtual CPU cores, 11.4~GiB aggregate RAM, and 78~GB aggregate disk. These totals describe provisioned capacity; a service remains constrained by its own host and by container-level limits. The utilization values are the deployment snapshot supplied on August~4, 2026, not permanent capacity values.
+
+\subsection{Resource-Constrained Sizing}
+The cluster uses conservative JVM heaps, executor footprints, retained logs, and service duplication because each node has less than 4~GiB RAM. Coordination-heavy services are intentionally concentrated on VM2, while the local PC absorbs orchestration and monitoring. Disk cleanup is operationally important because Docker layers, HDFS blocks, Spark history, and runtime volumes share 26~GB per VM.
+
+\section{Repository and Deployment Organization}
+The implementation repository follows platform responsibilities: datasets, streaming, lake storage, processing, catalog, query, transformation, quality, orchestration, monitoring, and deployment. The distributed deployment is isolated under \path{src/deployments/distributed_pc_control_plane/}.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|p{0.34\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Deployment path} & \color{white}\textbf{Responsibility} \\
+        \hline
+        \path{shared/} & Cluster inventory, service placement, port map, deployment contract, environment templates, and cross-node preflight scripts \\
+        \hline
+        \path{control_plane_pc/} & Local Compose stack, runtime port resolution, monitoring, Airflow, quality, transformation, and SSH material \\
+        \hline
+        \path{vm1/} & Portable worker-node bundle and lifecycle scripts \\
+        \hline
+        \path{vm2/} & Portable leader-node bundle, shared services, and remote Spark submit helper \\
+        \hline
+        \path{vm3/} & Portable worker-node bundle and lifecycle scripts \\
+        \hline
+    \end{tabularx}
+    \caption{Distributed deployment folder responsibilities}
+    \label{tab:implementation-deployment-folders}
+    \arrayrulecolor{black}
+\end{table}
+
+Each VM bundle contains environment templates, a Compose definition, fresh-machine preparation, preflight checks, startup, reset, and bundle-management utilities. This makes a node independently packageable, uploadable, and diagnosable.
+
+\section{Data-Plane Implementation}
+
+\subsection{Kafka Cluster}
+Kafka brokers run on VM1, VM2, and VM3 at port 9092. Each active dataset is produced into its own topic family. Producer and bronze-consumer utilities share common configuration while retaining source-specific parsing logic. The three-broker placement provides cluster-level ingestion evidence and decouples source iteration from downstream persistence.
+
+\subsection{HDFS Cluster}
+VM2 hosts the NameNode, exposed through RPC port 9000 and the web interface on port 9870. DataNodes run on all three VMs. Dataset-specific bronze paths preserve source identity and allow raw objects to be listed, reset, and replayed independently.
+
+\subsection{Spark Cluster}
+VM2 hosts the Spark master, worker 2, history server, Thrift server, and submit helper. VM1 and VM3 host workers 1 and 3. Airflow connects to VM2 through SSH and invokes the remote submit helper; the master then schedules executors across registered workers. dbt connects from the control plane to Spark Thrift on VM2.
+
+\subsection{Hive Metastore and Iceberg}
+Hive Metastore and its PostgreSQL database run on VM2. Spark writes raw and curated Iceberg tables to HDFS and registers their metadata through the shared catalog. This metadata authority enables Spark and Trino to discover identical namespaces and table states.
+
+\subsection{Trino Cluster}
+VM2 hosts the Trino coordinator, while VM1 and VM3 host Trino workers 1 and 2 respectively. The coordinator exposes the analytical interface on port 8088. This naming is used consistently: the final deployment contains one coordinator and two Trino workers, not three Trino workers.
+
+\section{Pipeline Implementation}
+
+\subsection{Source Ingestion and Bronze Landing}
+The ingestion package contains reusable producer, consumer, offset, and source-row utilities plus dataset-specific modules for Bank Marketing, Online Shoppers Purchasing Intention, and Online Retail~II. Consumers land raw objects in HDFS bronze rather than passing transient messages directly to transformation jobs.
+
+\subsection{Spark Raw Loading}
+The principal Spark job reads the source-specific bronze layout, applies explicit parsing and schema logic, and writes raw Iceberg tables. A controlled submission helper isolates the Airflow task from cluster-specific command construction.
+
+\subsection{dbt-Spark Models}
+The transformation graph contains:
+\begin{itemize}
+    \item three staging models for source standardization;
+    \item four intermediate models for marketing contacts, shopper sessions, customer sales, and a Customer~360 feature-store style output;
+    \item three analytics models for Customer~360 overview, conversion performance, and sales performance.
+\end{itemize}
+
+\subsection{Great Expectations Evidence}
+GX executes one raw-lakehouse validation definition for each active source. It produces retained validation JSON and HTML Data Docs. The runtime is located on the control plane and validates the remote lakehouse endpoints; it is not presented as a separate data-processing engine.
+
+\section{Airflow Orchestration}
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\RaggedRight\arraybackslash}p{0.06\textwidth}|>{\RaggedRight\arraybackslash}p{0.43\textwidth}|>{\RaggedRight\arraybackslash}X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{No.} & \color{white}\textbf{DAG identifier} & \color{white}\textbf{Operational responsibility} \\
+        \hline
+        1 & \path{customerdna_client1_environment_reset_pipeline} & Reset controlled Kafka, bronze, namespace, quality, and runtime state \\
+        \hline
+        2 & \path{customerdna_client1_lakehouse_setup_pipeline} & Initialize HDFS bronze paths and lakehouse namespaces \\
+        \hline
+        3 & \path{customerdna_client1_lakehouse_readiness_pipeline} & Validate the distributed dependency chain \\
+        \hline
+        4 & \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline} & Ingest sources, land bronze objects, create raw tables, run GX, and generate Data Docs \\
+        \hline
+        5 & \path{customerdna_client1_dbt_spark_lakehouse_pipeline} & Build and test curated models and verify analytical access \\
+        \hline
+    \end{tabularx}
+    \caption{Implemented five-DAG clean-start sequence}
+    \label{tab:implementation-five-dag-sequence}
+    \arrayrulecolor{black}
+\end{table}
+
+Airflow runs locally but controls remote data-plane actions. This is centralized orchestration over distributed execution, not local execution disguised as a cluster.
+
+\section{Deployment Execution}
+
+\subsection{Node Preparation and Preflight Checks}
+Each VM provides a preparation script and a node-specific preflight check. The checks validate local prerequisites, required ports, and critical peer reachability before Compose services are started. Shared cluster checks provide an additional cross-node view.
+
+\subsection{Distributed Startup Order}
+VM2 starts first because workers depend on its NameNode, metastore, Spark master, Thrift service, and Trino coordinator. VM1 and VM3 start next and register their distributed services. The control plane starts last after remote endpoints are reachable.
+
+\subsection{Network Access Points}
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|p{0.23\textwidth}|p{0.30\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Service} & \color{white}\textbf{Primary endpoint} & \color{white}\textbf{Purpose} \\
+        \hline
+        Kafka & \texttt{10.10.252.11--13:9092} & Three broker bootstrap endpoints \\
+        \hline
+        HDFS & \texttt{10.10.252.12:9000} & NameNode RPC \\
+        \hline
+        Hive Metastore & \texttt{10.10.252.12:9083} & Shared catalog service \\
+        \hline
+        Spark master & \texttt{spark://10.10.252.12:7077} & Cluster scheduling \\
+        \hline
+        Spark Thrift & \texttt{10.10.252.12:10000} & dbt-Spark SQL connection \\
+        \hline
+        Trino & \texttt{10.10.252.12:8088} & Distributed SQL coordinator \\
+        \hline
+        SSH target & \texttt{10.10.252.12:22} & Remote Spark submission \\
+        \hline
+    \end{tabularx}
+    \caption{Principal data-plane access points}
+    \label{tab:implementation-primary-endpoints}
+    \arrayrulecolor{black}
+\end{table}
+Local control-plane ports are resolved at startup when preferred values are occupied, and the generated values are written to \path{control_plane_pc/runtime/compose.generated.env}. This prevents documentation from treating a preferred local port as an immutable endpoint.
+
+\section{Monitoring Implementation}
+cAdvisor runs on each VM. Prometheus on the control plane scrapes node/container metrics, pipeline metrics, its own state, and the metastore PostgreSQL exporter. Grafana provisions infrastructure, pipeline-health, and PostgreSQL dashboards. Airflow history and retained quality artifacts complement metrics with run-level evidence.
+
+\section{Baseline Deployment Security}
+Remote execution uses explicit SSH material stored in the control-plane deployment folder. Environment files scope configuration and credentials, and service placement limits where interfaces are exposed. Secret contents are excluded from the report. These measures support controlled demonstration and maintenance but do not constitute production IAM, zero-trust networking, or disaster-recovery hardening.
+
+\section{Conclusion}
+The implementation realizes a local control plane and a genuinely distributed three-VM data plane under fixed resource constraints. Chapter~VII evaluates functional correctness, quality evidence, distributed membership, observability, and performance without repeating the deployment description.

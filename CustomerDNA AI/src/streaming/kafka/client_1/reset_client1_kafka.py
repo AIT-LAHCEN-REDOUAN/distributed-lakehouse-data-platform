@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import shutil
 import sys
 import time
@@ -24,8 +25,9 @@ from kafka_config import (  # noqa: E402
 )
 
 
-TOPIC_PARTITIONS = 3
-TOPIC_REPLICATION_FACTOR = 1
+TOPIC_PARTITIONS = max(1, int(os.getenv("CUSTOMERDNA_KAFKA_DEFAULT_PARTITIONS", "3")))
+TOPIC_REPLICATION_FACTOR = max(1, int(os.getenv("CUSTOMERDNA_KAFKA_REPLICATION_FACTOR", "1")))
+TOPIC_MIN_INSYNC_REPLICAS = max(1, int(os.getenv("CUSTOMERDNA_KAFKA_MIN_INSYNC_REPLICAS", "1")))
 
 
 def build_admin_client() -> KafkaAdminClient:
@@ -78,6 +80,9 @@ def create_topics(admin_client: KafkaAdminClient, topics: list[str]) -> None:
             name=topic,
             num_partitions=TOPIC_PARTITIONS,
             replication_factor=TOPIC_REPLICATION_FACTOR,
+            topic_configs={
+                "min.insync.replicas": str(min(TOPIC_MIN_INSYNC_REPLICAS, TOPIC_REPLICATION_FACTOR))
+            },
         )
         for topic in topics
     ]

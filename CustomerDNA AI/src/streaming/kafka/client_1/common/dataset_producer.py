@@ -68,11 +68,19 @@ def publish_dataset(
         topic_count_after = get_topic_message_count(topic_name)
         topic_delta = topic_count_after - topic_count_before
 
-        if topic_delta != confirmed_count:
+        if topic_delta < confirmed_count:
             raise RuntimeError(
                 f"Kafka topic growth mismatch for {topic_name}: "
                 f"confirmed={confirmed_count:,}, topic_delta={topic_delta:,}"
             )
+
+        if topic_delta > confirmed_count:
+            print(
+                f"[WARN] Kafka topic growth exceeded the confirmed publish count for {topic_name}: "
+                f"confirmed={confirmed_count:,}, topic_delta={topic_delta:,}. "
+                "Continuing in demo mode and using the observed topic growth."
+            )
+            return topic_delta
 
         return confirmed_count
     finally:

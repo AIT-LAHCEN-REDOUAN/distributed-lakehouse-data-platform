@@ -25,12 +25,12 @@ artifacts/*
 src/airflow/logs/
 
 # dbt runtime artifacts
-src/ELT/client_1/dbt/logs/
-src/ELT/client_1/dbt/target/
-src/ELT/client_1/dbt/dbt_packages/
+src/transformation/dbt_spark/client_1/logs/
+src/transformation/dbt_spark/client_1/target/
+src/transformation/dbt_spark/client_1/dbt_packages/
 
 # Great Expectations local runtime artifacts
-src/ELT/client_1/great_expectations/gx/uncommitted/
+src/quality/great_expectations/client_1/gx_project/gx/uncommitted/
 
 # Kafka runtime artifacts
 src/streaming/kafka/logs/
@@ -45,6 +45,10 @@ src/monitoring/state/*.json
 # HDFS / Spark local runtime clutter
 src/lake/hdfs/logs/
 src/processing/spark/logs/
+
+# Deployment bundle/runtime artifacts
+src/deployments/distributed_pc_control_plane/**/runtime/
+src/deployments/distributed_pc_control_plane/**/dist/
 
 # ELT EDA generated output
 src/ELT/client_1/EDA/**/output/

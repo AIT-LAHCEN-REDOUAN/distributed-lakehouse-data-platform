@@ -1,0 +1,136 @@
+\clearpage
+\chapter{TECHNOLOGY WATCH AND STACK SELECTION}
+
+\section{Introduction}
+This chapter evaluates implementation technologies after the requirements have been defined. Its purpose is selection, not product documentation. Detailed configuration and deployment are reserved for Chapter~VI.
+
+\section{Evaluation Criteria}
+Candidate technologies were considered according to five criteria:
+\begin{itemize}
+    \item suitability for the required platform responsibility;
+    \item support for genuine multi-node execution;
+    \item interoperability with the surrounding lakehouse components;
+    \item operational feasibility on three memory-constrained VMs;
+    \item maintainability, documentation, and open-source ecosystem maturity.
+\end{itemize}
+
+\section{Comparative Technology Study}
+
+\subsection{Ingestion Technologies}
+\begin{table}[htbp]
+    \centering
+    \small
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|p{0.18\textwidth}|X|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Option} & \color{white}\textbf{Strengths} & \color{white}\textbf{Limitations for this project} \\
+        \hline
+        Apache Kafka & Durable log, partitions, consumer offsets, replay, and multi-broker operation & Requires broker coordination and careful topic sizing \\
+        \hline
+        RabbitMQ & Straightforward message routing and task-queue semantics & Less aligned with replayable event-log ingestion \\
+        \hline
+        Direct file loading & Minimal infrastructure and simple batch execution & Tight source coupling and weak transport-level replay evidence \\
+        \hline
+    \end{tabularx}
+    \caption{Comparison of ingestion approaches}
+    \label{tab:tech-ingestion-comparison}
+    \arrayrulecolor{black}
+\end{table}
+Kafka was selected because topic-based replay and a three-broker topology directly satisfy the ingestion and distribution requirements.
+
+\subsection{Distributed Storage and Processing Technologies}
+\begin{table}[htbp]
+    \centering
+    \small
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|p{0.18\textwidth}|p{0.21\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Responsibility} & \color{white}\textbf{Selected option} & \color{white}\textbf{Selection rationale} \\
+        \hline
+        Bronze storage & Hadoop HDFS & Native multi-DataNode block distribution, replayable persistence, and visible distributed-storage evidence \\
+        \hline
+        Processing & Apache Spark & Mature distributed execution, structured APIs, Iceberg support, SQL services, and controllable worker resources \\
+        \hline
+    \end{tabularx}
+    \caption{Selection of the distributed storage and processing engines}
+    \label{tab:tech-storage-processing-selection}
+    \arrayrulecolor{black}
+\end{table}
+Object storage and cloud-managed processing were not selected because the evaluation environment is an on-premises three-VM demonstration. Single-node dataframe processing would reduce operational complexity but would not prove distributed execution.
+
+\subsection{Lakehouse Formats and Catalog Technologies}
+\begin{table}[htbp]
+    \centering
+    \footnotesize
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\RaggedRight\arraybackslash}p{0.16\textwidth}|>{\RaggedRight\arraybackslash}p{0.24\textwidth}|>{\RaggedRight\arraybackslash}p{0.24\textwidth}|>{\RaggedRight\arraybackslash}X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Format} & \color{white}\textbf{Typical strength} & \color{white}\textbf{Consideration} & \color{white}\textbf{Project decision} \\
+        \hline
+        Apache Iceberg & Engine interoperability and snapshot-oriented table metadata & Requires compatible catalog and engine configuration & Selected for shared Spark and Trino access \\
+        \hline
+        Delta Lake & Strong Spark-centered ecosystem and transaction log & Cross-engine behavior depends on integration choices & Not selected for the final stack \\
+        \hline
+        Apache Hudi & Incremental ingestion and record-level update patterns & Additional operational concepts beyond the present workload & Not selected for the final stack \\
+        \hline
+    \end{tabularx}
+    \caption{Lakehouse table-format comparison}
+    \label{tab:tech-table-format-comparison}
+    \arrayrulecolor{black}
+\end{table}
+Hive Metastore was selected as the shared metadata authority because both Spark and Trino require consistent discovery of the Iceberg namespaces and tables.
+
+\subsection{Distributed Query Technologies}
+Trino was selected as the interactive SQL layer because its coordinator-worker model demonstrates distributed querying while remaining separate from the Spark transformation runtime. Query access can therefore be validated independently through standard SQL clients. Spark SQL remains essential for transformation execution but is not used as the sole analytical serving interface.
+
+\subsection{Transformation and Data-Quality Technologies}
+dbt-Spark provides a versioned SQL dependency graph, reusable macros, tests, and clear staging, intermediate, and analytics layers. Great Expectations complements dbt by applying expectation-driven validation to raw lakehouse datasets and producing retained JSON and HTML evidence. The two tools have different responsibilities: dbt governs transformation logic, while GX provides explicit raw-data quality contracts.
+
+\subsection{Orchestration Technologies}
+Apache Airflow was selected because DAG dependencies, task history, retries, and reruns make the operational sequence visible and auditable. Lightweight schedulers could run scripts, but they would provide less explicit dependency and failure evidence for the jury.
+
+\subsection{Monitoring Technologies}
+Prometheus and Grafana were selected to separate metric collection from visualization. Prometheus scrapes control-plane, pipeline, PostgreSQL, and per-node container metrics, while Grafana presents provisioned dashboards. Logs remain useful for detailed diagnosis but are not sufficient as the only observability mechanism.
+
+\section{Selected Technology Stack}
+\begin{table}[htbp]
+    \centering
+    \small
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\RaggedRight\arraybackslash}p{0.23\textwidth}|>{\RaggedRight\arraybackslash}p{0.29\textwidth}|>{\RaggedRight\arraybackslash}X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Technology} & \color{white}\textbf{Responsibility} & \color{white}\textbf{Principal justification} \\
+        \hline
+        Kafka & Distributed ingestion & Replayable partitioned transport across three brokers \\
+        \hline
+        HDFS & Bronze persistence & Distributed raw storage across three DataNodes \\
+        \hline
+        Spark & Processing & Multi-worker loading and SQL transformation execution \\
+        \hline
+        Iceberg + Hive Metastore & Tables and catalog & Governed shared table state across engines \\
+        \hline
+        Trino & Analytical querying & Independent distributed SQL coordinator-worker layer \\
+        \hline
+        dbt-Spark & Curated modeling & Versioned and tested transformation graph \\
+        \hline
+        Great Expectations & Data-quality evidence & Executable expectations, JSON results, and Data Docs \\
+        \hline
+        Airflow & Orchestration & Ordered, rerunnable, and auditable workflow execution \\
+        \hline
+        Prometheus + Grafana & Observability & Central metrics collection and dashboard evidence \\
+        \hline
+    \end{tabularx}
+    \caption{Final selected technology stack}
+    \label{tab:tech-final-stack}
+    \arrayrulecolor{black}
+\end{table}
+
+\section{Compatibility with Deployment Constraints}
+The selected technologies can expose real cluster behavior while allowing conservative resource settings. Coordination-heavy services are concentrated on VM2, worker capacity is extended through VM1 and VM3, and operational services remain on the local control plane. This arrangement does not claim production high availability; it is designed to demonstrate correct distribution, reproducibility, and observability within fixed infrastructure.
+
+\section{Conclusion}
+The final stack satisfies the requirements without making Technology Watch a second implementation chapter. Chapter~V now uses these selected components to define the logical architecture, and Chapter~VI documents their concrete deployment.

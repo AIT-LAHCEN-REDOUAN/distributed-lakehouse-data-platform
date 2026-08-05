@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import time
 from collections.abc import Callable, Iterable
 
@@ -11,6 +12,17 @@ from kafka.admin import NewTopic
 from kafka.errors import TopicAlreadyExistsError
 
 from kafka_config import KAFKA_BOOTSTRAP_SERVERS
+
+
+DEFAULT_TOPIC_PARTITIONS = max(1, int(os.getenv("CUSTOMERDNA_KAFKA_DEFAULT_PARTITIONS", "3")))
+DEFAULT_TOPIC_REPLICATION_FACTOR = max(
+    1,
+    int(os.getenv("CUSTOMERDNA_KAFKA_REPLICATION_FACTOR", "1")),
+)
+DEFAULT_TOPIC_MIN_INSYNC_REPLICAS = max(
+    1,
+    int(os.getenv("CUSTOMERDNA_KAFKA_MIN_INSYNC_REPLICAS", "1")),
+)
 
 
 def build_reliable_producer() -> KafkaProducer:
@@ -32,8 +44,8 @@ def build_reliable_producer() -> KafkaProducer:
 def ensure_topic_exists(
     topic_name: str,
     *,
-    num_partitions: int = 3,
-    replication_factor: int = 1,
+    num_partitions: int = DEFAULT_TOPIC_PARTITIONS,
+    replication_factor: int = DEFAULT_TOPIC_REPLICATION_FACTOR,
 ) -> None:
     """Create a Kafka topic if it does not already exist."""
     admin_client = KafkaAdminClient(
@@ -48,6 +60,11 @@ def ensure_topic_exists(
                     name=topic_name,
                     num_partitions=num_partitions,
                     replication_factor=replication_factor,
+                    topic_configs={
+                        "min.insync.replicas": str(
+                            min(DEFAULT_TOPIC_MIN_INSYNC_REPLICAS, replication_factor)
+                        )
+                    },
                 )
             ],
             validate_only=False,

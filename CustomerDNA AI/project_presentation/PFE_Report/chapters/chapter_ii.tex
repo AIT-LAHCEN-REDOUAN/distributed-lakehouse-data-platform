@@ -1,0 +1,194 @@
+\clearpage
+\chapter{STATE OF THE ART AND THEORETICAL BACKGROUND}
+
+\section{Introduction}
+This chapter establishes the technology-neutral foundations required to understand a distributed customer-data lakehouse. It explains the limits of vertical scaling, the principal consistency and availability trade-offs of distributed systems, the transition from storage models to processing models, and the architectural patterns that emerged in response. Product selection is intentionally excluded and treated separately in Chapter~IV.
+
+\section{Foundations of Distributed Data Systems}
+
+\subsection{From Vertical to Horizontal Scaling}
+Vertical scaling increases the capacity of one machine by adding processors, memory, or storage. It is operationally simple, but it eventually encounters hardware, cost, and failure-domain limits. Horizontal scaling distributes data and computation across multiple machines. Its advantages include incremental capacity and parallel execution, but these benefits introduce coordination, partitioning, replication, network, and partial-failure concerns.
+
+For a data platform, horizontal scaling is not simply the presence of several machines. The workload must be divided meaningfully: data is partitioned, copies are coordinated, and processing is scheduled where resources are available. This distinction is important because a multi-node deployment that still executes all critical work on one node does not provide genuine distributed behavior.
+
+\subsection{The CAP Theorem and Consistency Trade-offs}
+The CAP theorem states that when a network partition occurs, a distributed system cannot simultaneously guarantee perfect consistency and complete availability. A platform must decide whether operations should wait to preserve a single authoritative view or continue with the possibility of temporarily divergent observations.
+
+CAP is therefore a failure-time trade-off rather than a rule requiring systems to choose only two properties permanently. Modern platforms often combine different consistency levels according to responsibility. Metadata operations may require stronger coordination, while metrics collection or event transport may tolerate temporary delay. The appropriate model depends on the cost of stale reads, rejected writes, and recovery complexity.
+
+\subsection{Data Partitioning and Replication}
+Partitioning divides a dataset or workload into smaller units that can be stored or processed independently. Common strategies include range, hash, key-based, and time-based partitioning. A suitable partitioning key improves parallelism and data locality, whereas an unsuitable key can produce skew, small files, or overloaded nodes.
+
+Replication maintains additional copies of data or state to improve durability and recovery. Increasing the replication factor can reduce data-loss risk, but it also consumes storage and network bandwidth. Partitioning primarily distributes load; replication primarily protects availability and durability. Distributed platforms normally require both mechanisms.
+
+\subsection{The Five Vs of Big Data}
+Big Data is commonly characterized through volume, velocity, variety, veracity, and value. Volume concerns the amount of data; velocity concerns arrival and processing speed; variety describes heterogeneous formats and semantics; veracity concerns reliability and uncertainty; and value represents the useful outcomes produced from the data.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=8mm]
+        \node[workflow/step,fill=WorkflowBlue!18,text width=2.3cm] (value) {\textbf{Value}\\useful outcomes};
+        \node[workflow/mini,fill=WorkflowTeal!17,text width=2.1cm,above left=of value] (volume) {\textbf{Volume}\\scale};
+        \node[workflow/mini,fill=WorkflowOrange!17,text width=2.1cm,above right=of value] (velocity) {\textbf{Velocity}\\speed};
+        \node[workflow/mini,fill=WorkflowPurple!14,text width=2.1cm,below left=of value] (variety) {\textbf{Variety}\\formats};
+        \node[workflow/mini,fill=WorkflowBlue!12,text width=2.1cm,below right=of value] (veracity) {\textbf{Veracity}\\trust};
+        \draw[workflow/arrow] (volume) -- (value);
+        \draw[workflow/arrow] (velocity) -- (value);
+        \draw[workflow/arrow] (variety) -- (value);
+        \draw[workflow/arrow] (veracity) -- (value);
+    \end{tikzpicture}
+    \caption{The five dimensions commonly associated with Big Data}
+    \label{fig:theory-five-vs}
+\end{figure}
+
+These dimensions are interdependent. Increasing ingestion velocity without quality controls may reduce veracity, while retaining large volumes without an analytical purpose may not create value. A defensible architecture must therefore address operational scale and analytical trust together.
+
+\section{From Storage to Processing: Foundational Trade-offs}
+
+\subsection{Schema-on-Write versus Schema-on-Read}
+Schema-on-write validates and structures data before it enters a governed analytical store. It supports stable semantics and predictable querying but can slow the onboarding of changing sources. Schema-on-read preserves data more flexibly and applies interpretation when it is consumed. It accelerates landing and replay but transfers complexity to downstream processing.
+
+A layered lakehouse combines both approaches. The bronze layer retains source fidelity and supports replay, while later layers apply explicit schemas, types, and business rules. Flexibility is preserved without making analytical consumers interpret raw files repeatedly.
+
+\subsection{Separation of Storage and Compute}
+Traditional systems often couple storage and processing capacity within the same platform. Separating them allows storage to persist independently while multiple processing or query engines access the same governed data. This improves interoperability and permits each resource dimension to evolve independently.
+
+The separation also creates responsibilities around metadata authority, file compatibility, and concurrent access. A shared catalog and a table format are therefore required to ensure that independent engines interpret the same table state consistently.
+
+\subsection{ACID versus BASE Consistency Models}
+ACID emphasizes atomicity, consistency, isolation, and durability. It is appropriate when partial updates or contradictory table states would damage analytical trust. BASE emphasizes basic availability, soft state, and eventual consistency. It is often suitable for highly distributed services where temporary divergence is acceptable.
+
+The two models are not mutually exclusive across an entire platform. Event transport, monitoring, metadata, and analytical tables may each apply different guarantees. Lakehouse table formats introduce transaction-like behavior over distributed files so that scalable storage can expose dependable table states.
+
+\subsection{Batch versus Stream Processing Semantics}
+Batch processing handles bounded collections of records and is well suited to repeatable recomputation, historical transformation, and controlled validation. Stream processing handles unbounded event flows and emphasizes continuous state, event time, and low latency.
+
+Many practical platforms use hybrid semantics. Events may enter through a streaming transport and be persisted as replayable raw data, while deterministic batch jobs build governed analytical tables. The choice must be driven by latency requirements and operational complexity rather than by the assumption that streaming is always superior.
+
+\section{Big Data Architectures as Responses to These Trade-offs}
+
+\subsection{Traditional Data Warehouse Architecture}
+A traditional data warehouse stores curated, structured data optimized for reporting and business intelligence. Its schema-on-write discipline provides strong governance and predictable performance, but rigid modeling and proprietary scaling can make heterogeneous source onboarding expensive.
+
+\subsection{Data Lake Architecture}
+A data lake stores large volumes of structured, semi-structured, and unstructured data in economical storage. It supports schema-on-read and preserves raw source history. Without metadata, quality contracts, and lifecycle discipline, however, a lake may become difficult to navigate and trust.
+
+\subsection{Data Lakehouse Architecture}
+A lakehouse combines the openness and scalability of a data lake with table management, metadata, quality, and analytical semantics associated with warehouses. It separates physical files from governed table state and allows several engines to share the same data foundation.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=\textwidth,center}
+    \begin{tikzpicture}[node distance=8mm]
+        \node[workflow/step,fill=WorkflowBlue!15,text width=3.5cm,minimum height=1.8cm] (warehouse) {\textbf{Data warehouse}\\structured, governed, schema-on-write};
+        \node[workflow/step,fill=WorkflowTeal!16,text width=3.5cm,minimum height=1.8cm,right=of warehouse] (lake) {\textbf{Data lake}\\flexible, scalable, schema-on-read};
+        \node[workflow/step,fill=WorkflowPurple!14,text width=3.8cm,minimum height=1.8cm,right=of lake] (lakehouse) {\textbf{Data lakehouse}\\open storage with governed table semantics};
+
+        \draw[workflow/arrow] (warehouse.east) -- (lake.west);
+        \draw[workflow/arrow] (lake.east) -- (lakehouse.west);
+
+        \node[workflow/step,fill=white,text width=12.2cm,minimum height=1.15cm,below=10mm of lake] (tradeoff)
+            {\textbf{Architectural objective:} combine warehouse governance with lake flexibility on a shared, scalable data foundation.};
+        \draw[workflow/dasharrow] (lakehouse.south) |- (tradeoff.east);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Conceptual progression from warehouse and lake architectures to the lakehouse}
+    \label{fig:theory-warehouse-lake-lakehouse}
+\end{figure}
+
+\subsection{Lambda Architecture}
+Lambda architecture combines a batch layer for complete recomputation with a speed layer for low-latency results and a serving layer that exposes their outputs. It provides both historical correctness and fast updates, but duplicate processing paths increase maintenance and reconciliation complexity.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=0.96\textwidth,center}
+    \begin{tikzpicture}[node distance=10mm and 18mm]
+        \node[workflow/step,fill=WorkflowBlue!12,text width=3.8cm] (source) {\textbf{Data sources}\\events and historical data};
+        \node[workflow/step,fill=WorkflowOrange!13,text width=4.3cm,below left=12mm and 20mm of source] (batch) {\textbf{Batch layer}\\complete and accurate recomputation};
+        \node[workflow/step,fill=WorkflowTeal!14,text width=4.3cm,below right=12mm and 20mm of source] (speed) {\textbf{Speed layer}\\low-latency incremental processing};
+        \node[workflow/step,fill=WorkflowPurple!14,text width=5.0cm,below=22mm of source] (serving) {\textbf{Serving layer}\\combined batch and speed views};
+        \node[workflow/step,fill=white,text width=3.8cm,below=9mm of serving] (consumers) {\textbf{Consumers}\\queries, dashboards, applications};
+
+        \draw[workflow/arrow] (source.south) |- (batch.north);
+        \draw[workflow/arrow] (source.south) |- (speed.north);
+        \draw[workflow/arrow] (batch.south) |- (serving.west);
+        \draw[workflow/arrow] (speed.south) |- (serving.east);
+        \draw[workflow/arrow] (serving.south) -- (consumers.north);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Lambda architecture with separate batch and speed processing paths}
+    \label{fig:theory-lambda-architecture}
+\end{figure}
+
+\subsection{Kappa Architecture}
+Kappa architecture uses an event log as the principal source of truth and processes current and historical data through a unified streaming path. Reprocessing occurs by replaying events. This reduces duplicated logic but requires mature stream-state management and careful handling of late or corrected data.
+
+\begin{figure}[H]
+    \centering
+    \begin{adjustbox}{max width=0.88\textwidth,max totalheight=0.64\textheight,center}
+    \begin{tikzpicture}[node distance=8mm]
+        \node[workflow/step,fill=WorkflowBlue!12,text width=7.8cm,minimum height=1.25cm] (source) {\textbf{Data sources}\\events, files, and operational changes};
+        \node[workflow/step,fill=WorkflowTeal!14,text width=7.8cm,minimum height=1.25cm,below=of source] (log) {\textbf{Durable event log}\\retained events, partitions, and offsets};
+        \node[workflow/step,fill=WorkflowOrange!13,text width=7.8cm,minimum height=1.25cm,below=of log] (processing) {\textbf{Single processing path}\\continuous processing and replay-based recomputation};
+        \node[workflow/step,fill=WorkflowPurple!14,text width=7.8cm,minimum height=1.25cm,below=of processing] (serving) {\textbf{Serving state}\\lakehouse tables and materialized views};
+        \node[workflow/step,fill=white,text width=7.8cm,minimum height=1.25cm,below=of serving] (consumers) {\textbf{Analytics consumers}\\SQL queries, dashboards, and downstream applications};
+
+        \draw[workflow/arrow] (source.south) -- node[workflow/label,right] {publish} (log.north);
+        \draw[workflow/arrow] (log.south) -- node[workflow/label,right] {process} (processing.north);
+        \draw[workflow/arrow] (processing.south) -- node[workflow/label,right] {materialize} (serving.north);
+        \draw[workflow/arrow] (serving.south) -- node[workflow/label,right] {serve} (consumers.north);
+        \draw[workflow/dasharrow] (processing.east) to[out=25,in=-25,looseness=1.55]
+            node[workflow/label,right=2mm] {replay / reprocess} (log.east);
+    \end{tikzpicture}
+    \end{adjustbox}
+    \caption{Kappa architecture with one replayable event-processing path}
+    \label{fig:theory-kappa-architecture}
+\end{figure}
+
+\subsection{Comparison Between Lambda and Kappa}
+\begin{table}[htbp]
+    \centering
+    \small
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\RaggedRight\arraybackslash}p{0.23\textwidth}|>{\RaggedRight\arraybackslash}X|>{\RaggedRight\arraybackslash}X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Dimension} & \color{white}\textbf{Lambda} & \color{white}\textbf{Kappa} \\
+        \hline
+        Processing paths & Separate batch and speed paths & Unified event-processing path \\
+        \hline
+        Reprocessing & Rebuild from historical batch data & Replay from the event log \\
+        \hline
+        Main advantage & Historical completeness with low-latency supplementation & Reduced duplication of processing logic \\
+        \hline
+        Main limitation & Operational and code complexity & Dependence on durable replay and stream-state discipline \\
+        \hline
+        Appropriate context & Mixed historical and immediate serving needs & Event-centered systems with mature streaming operations \\
+        \hline
+    \end{tabularx}
+    \caption{Conceptual comparison of Lambda and Kappa architectures}
+    \label{tab:theory-lambda-kappa}
+    \arrayrulecolor{black}
+\end{table}
+
+\section{Data Governance, Quality, and Observability Foundations}
+
+\subsection{Metadata, Lineage, and Cataloging Theory}
+Metadata describes datasets, schemas, ownership, locations, and operational properties. A catalog makes this information discoverable, while lineage records how outputs depend on sources and transformations. Together they reduce ambiguity and support reproducibility, impact analysis, and controlled evolution.
+
+\subsection{Data Quality Dimensions}
+Data quality is multidimensional. Common dimensions include completeness, validity, uniqueness, consistency, accuracy, and timeliness. A quality rule must identify its dataset, expected condition, evaluation moment, and operational consequence. Quality therefore becomes an executable contract rather than an informal observation.
+
+\subsection{Observability Principles in Distributed Systems}
+Distributed observability combines logs, metrics, traces or dependency histories, and explicit health signals. Infrastructure metrics show resource and service behavior, while pipeline metrics show whether data stages and quality gates succeeded. Correlating both levels is essential because an application failure may originate from resource exhaustion, network reachability, or invalid data.
+
+\section{Related Work and Academic Positioning}
+
+\subsection{Recent Research on Distributed Lakehouse Platforms}
+Recent lakehouse work generally focuses on open table formats, transactional metadata over object or distributed storage, engine interoperability, schema evolution, and reliable analytical access. Comparative studies show that no table format or engine is universally optimal; suitability depends on write patterns, metadata scale, operational maturity, and ecosystem compatibility.
+
+\subsection{Positioning of This Work}
+CustomerDNA AI is positioned as an applied Data Engineering contribution. It does not propose a new distributed algorithm or claim enterprise-scale identity resolution. Its contribution is the integration and deployment of ingestion, replayable storage, distributed processing, lakehouse tables, governed transformations, quality evidence, orchestration, and observability as a trustworthy foundation for Customer~360 analysis and future AI products.
+
+\section{Conclusion}
+This chapter established the theoretical principles that guide the project without selecting specific products. Chapter~III translates the project objectives and infrastructure constraints into verifiable requirements. Chapter~IV then evaluates the technologies capable of satisfying them.

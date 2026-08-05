@@ -1,0 +1,124 @@
+\clearpage
+\chapter{REQUIREMENTS ANALYSIS}
+
+\section{Introduction}
+This chapter converts the CustomerDNA AI objectives into requirements that can be verified through source code, configuration, workflow history, validation artifacts, query results, and monitoring metrics. Requirements are limited to the implemented PFE scope: a distributed, observable, quality-aware customer-data platform. Advanced machine-learning products remain downstream consumers.
+
+\section{Stakeholders and System Actors}
+The platform supports four principal actor profiles:
+\begin{itemize}
+    \item the \textbf{data engineer}, who onboards sources and maintains ingestion and processing logic;
+    \item the \textbf{analytics engineer}, who develops governed transformations and tests;
+    \item the \textbf{data analyst}, who queries curated outputs and evaluates business indicators;
+    \item the \textbf{platform administrator}, who deploys, supervises, resets, and troubleshoots the distributed services.
+\end{itemize}
+Future AI and ML applications consume curated outputs but are not operational actors within the implemented pipeline.
+
+\section{Functional Requirements}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{0.12\textwidth}|>{\raggedright\arraybackslash}p{0.56\textwidth}|>{\raggedright\arraybackslash}p{0.22\textwidth}|}
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{ID} & \color{white}\textbf{Requirement} & \color{white}\textbf{Acceptance evidence} \\
+    \hline
+    \endfirsthead
+    \hline
+    \rowcolor{ModernTableHeader}
+    \color{white}\textbf{ID} & \color{white}\textbf{Requirement} & \color{white}\textbf{Acceptance evidence} \\
+    \hline
+    \endhead
+    FR-1 & Ingest the three active Client~1 sources through dataset-specific Kafka topic families. & Broker/topic inventory and producer results. \\
+    \hline
+    FR-2 & Persist source-faithful, replayable objects in an isolated HDFS bronze layout. & HDFS object inventory and row reconciliation. \\
+    \hline
+    FR-3 & Parse bronze data with distributed Spark processing and construct raw Iceberg tables. & Spark application history and raw tables. \\
+    \hline
+    FR-4 & Register shared namespaces and tables through a common metadata authority. & Hive Metastore and catalog queries. \\
+    \hline
+    FR-5 & Expose raw and curated lakehouse tables through distributed SQL access. & Successful Trino queries. \\
+    \hline
+    FR-6 & Build versioned staging, intermediate, feature-oriented, and analytics models. & dbt graph, run results, and tests. \\
+    \hline
+    FR-7 & Execute expectation-based raw quality validation and retain auditable evidence. & GX result JSON and HTML Data Docs. \\
+    \hline
+    FR-8 & Orchestrate reset, setup, readiness, raw loading, and transformation through five DAGs. & Airflow DAG and task history. \\
+    \hline
+    FR-9 & Expose infrastructure, catalog-database, and pipeline-state metrics. & Prometheus targets and Grafana dashboards. \\
+    \hline
+    FR-10 & Support controlled reset and repeatable clean-start execution. & Reset scripts and repeated workflow execution. \\
+    \hline
+    \caption{Functional requirements of CustomerDNA AI}
+    \label{tab:refactor-functional-requirements}
+\end{longtable}
+
+\section{Non-Functional Requirements}
+
+\subsection{Scalability and Distribution}
+The platform must demonstrate meaningful distribution across ingestion, storage, processing, and querying. Scaling controls must remain explicit through topic partitions, HDFS replication and block placement, Spark worker and executor settings, and query-worker concurrency.
+
+\subsection{Reliability and Reproducibility}
+Stages must expose deterministic ordering, readiness checks, recorded failure states, and rerunnable boundaries. The same source contracts and transformation logic must be usable in both the local correctness baseline and the final distributed topology.
+
+\subsection{Maintainability and Modularity}
+Repository folders, deployment bundles, configuration files, and orchestration helpers must follow clear responsibilities. A node or pipeline layer should be inspectable and redeployable without hidden dependencies distributed across unrelated folders.
+
+\subsection{Performance and Resource Efficiency}
+The implementation must operate within fixed lightweight VM limits. Service duplication, executor memory, logging, and retained runtime state must be controlled to avoid exhausting memory or disk. Performance claims must be reported together with hardware and topology context.
+
+\subsection{Interoperability}
+Processing and query engines must share table metadata and storage semantics. Interfaces based on SQL, files, REST, metrics, and explicit configuration should reduce proprietary coupling and allow independent validation.
+
+\subsection{Baseline Security}
+Secrets must remain outside report evidence and source excerpts. Remote submission must use controlled SSH credentials, service exposure must follow the documented port map, and the control plane must remain separated from data-plane execution. These requirements represent baseline deployment controls rather than enterprise security certification.
+
+\section{Data Quality and Governance Requirements}
+Each active source must preserve its identity from ingestion through raw tables. Schemas, namespaces, model dependencies, and validation definitions must be explicit. Quality results must be machine-readable and accompanied by human-readable evidence. A failed quality gate must remain visible and must prevent an unqualified downstream acceptance decision.
+
+The governed transformation scope consists of three staging models, four intermediate models, and three analytics models. The platform may be described as a Customer~360 analytical foundation, but not as production-grade cross-channel identity resolution.
+
+\section{Deployment and Operational Requirements}
+
+\subsection{Local Control Plane}
+Airflow, Prometheus, Grafana, Kafka UI, the pipeline metrics exporter, the PostgreSQL exporter, dbt runtime, GX runtime, and remote Spark orchestration must remain available from the local workstation.
+
+\subsection{Distributed Data Plane}
+The three VMs must collectively host a three-broker Kafka cluster, an HDFS NameNode with three DataNodes, a Spark master with three workers, a shared Hive Metastore, and a Trino coordinator with two remote workers.
+
+\subsection{Fixed Infrastructure Constraints}
+Each VM provides four virtual CPU cores, 3.8~GiB RAM, and 26~GB disk. The deployment must therefore prioritize lightweight settings, bounded logs, explicit cleanup, and minimal unnecessary service replication.
+
+\subsection{Startup and Readiness}
+The recommended infrastructure order is VM2, VM1, VM3, and finally the control plane. After startup, the clean pipeline order is reset, setup, readiness, raw lakehouse construction, and dbt transformation.
+
+\subsection{Observability}
+Infrastructure and pipeline states must be visible centrally. At minimum, monitoring must cover the three VM container environments, pipeline outcomes, readiness, freshness, and Hive Metastore PostgreSQL activity.
+
+\section{Requirement Traceability Matrix}
+\begin{table}[htbp]
+    \centering
+    \small
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{0.17\textwidth}|>{\raggedright\arraybackslash}p{0.30\textwidth}|X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Requirement group} & \color{white}\textbf{Design response} & \color{white}\textbf{Verification location} \\
+        \hline
+        Ingestion and replay & Kafka topic families and HDFS bronze contracts & Chapter~VII ingestion and reconciliation evidence \\
+        \hline
+        Distributed execution & Three-node Kafka/HDFS/Spark and coordinator-worker Trino topology & Chapter~VII cluster membership evidence \\
+        \hline
+        Governance & Iceberg, shared catalog, dbt layers, and explicit model contracts & Catalog queries, dbt artifacts, and analytical outputs \\
+        \hline
+        Quality & GX validation definitions, dbt tests, and blocking task states & Validation JSON, Data Docs, and Airflow history \\
+        \hline
+        Operations & Five-DAG order, node bundles, resets, and preflight checks & Deployment scripts and repeated execution \\
+        \hline
+        Observability & Central Prometheus/Grafana with node and pipeline exporters & Monitoring target and dashboard validation \\
+        \hline
+    \end{tabularx}
+    \caption{Traceability from requirements to verification evidence}
+    \label{tab:refactor-requirement-traceability}
+    \arrayrulecolor{black}
+\end{table}
+
+\section{Conclusion}
+The requirements define what the platform must demonstrate before any technology is justified. Chapter~IV evaluates the candidate technologies against these requirements, while Chapter~V translates the selected stack into the system design.

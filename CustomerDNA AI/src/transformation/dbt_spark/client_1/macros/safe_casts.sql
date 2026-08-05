@@ -49,3 +49,11 @@ case
     else null
 end
 {%- endmacro %}
+
+{% macro as_yes_no_boolean(column_name) -%}
+case
+    when lower(trim({{ column_name }})) = 'yes' then true
+    when lower(trim({{ column_name }})) = 'no' then false
+    else null
+end
+{%- endmacro %}

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import re
 import subprocess
 import sys
@@ -61,8 +62,21 @@ def build_dataset_steps() -> list[DatasetPipelineStep]:
     return steps
 
 
-def run_python(script_path: Path, *, label: str) -> StreamedCommandResult:
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Run the Client 1 Kafka -> HDFS bronze -> Spark -> Iceberg raw pipeline."
+    )
+    parser.add_argument(
+        "--resume-from-dataset",
+        help="Resume from one dataset key and skip the global reset steps.",
+    )
+    return parser.parse_args()
+
+
+def run_python(script_path: Path, *, label: str, extra_args: list[str] | None = None) -> StreamedCommandResult:
     command = [sys.executable, str(script_path)]
+    if extra_args:
+        command.extend(extra_args)
     print("-" * 80)
     print(f"[TASK] {label}")
     print(f"[SCRIPT] {' '.join(command)}")
@@ -114,26 +128,60 @@ def parse_bronze_files(stdout: str) -> int:
 
 
 def main() -> int:
+    args = parse_args()
     dataset_steps = build_dataset_steps()
     started_at = datetime.now(timezone.utc)
     start_counter = time.perf_counter()
     table_summaries: list[dict[str, object]] = []
     failed_datasets: list[str] = []
+    skipped_datasets = 0
+    resume_from_dataset = (args.resume_from_dataset or "").strip()
+
+    if resume_from_dataset:
+        dataset_keys = [step.dataset_key for step in dataset_steps]
+        if resume_from_dataset not in dataset_keys:
+            raise RuntimeError(
+                "Unsupported resume dataset key: "
+                f"{resume_from_dataset}. Expected one of: {', '.join(dataset_keys)}"
+            )
+        resume_index = dataset_keys.index(resume_from_dataset)
+        skipped_datasets = resume_index
+        dataset_steps = dataset_steps[resume_index:]
 
     print("=" * 80)
     print("CUSTOMERDNA AI - CLIENT 1 KAFKA HDFS SPARK LAKEHOUSE PIPELINE")
     print("=" * 80)
-    print("Mode: source -> Kafka -> HDFS bronze -> Spark -> Iceberg raw")
-    print("Flow: reset Kafka -> reset bronze -> produce -> consume to bronze -> build Iceberg raw tables")
+    if resume_from_dataset:
+        print("Mode: resume from failed dataset -> Kafka -> HDFS bronze -> Spark -> Iceberg raw")
+        print(
+            "Flow: targeted reset for the resume dataset -> produce -> consume to bronze "
+            "-> build Iceberg raw tables"
+        )
+        print(f"Resume dataset: {resume_from_dataset}")
+        print(f"Skipped datasets from the original order: {skipped_datasets}")
+    else:
+        print("Mode: source -> Kafka -> HDFS bronze -> Spark -> Iceberg raw")
+        print("Flow: reset Kafka -> reset bronze -> produce -> consume to bronze -> build Iceberg raw tables")
     print("Dataset order: small datasets first, largest datasets last")
     print("=" * 80)
 
-    reset_result = run_python(CLIENT_ROOT / "reset_client1_kafka.py", label="Reset Client 1 Kafka topics and local Kafka artifacts")
-    echo_output(reset_result)
+    if resume_from_dataset:
+        targeted_reset_result = run_python(
+            CLIENT_ROOT / "reset_single_dataset_state.py",
+            label=f"Reset dataset state for '{resume_from_dataset}' before resume",
+            extra_args=["--dataset-key", resume_from_dataset],
+        )
+        echo_output(targeted_reset_result)
+    else:
+        reset_result = run_python(
+            CLIENT_ROOT / "reset_client1_kafka.py",
+            label="Reset Client 1 Kafka topics and local Kafka artifacts",
+        )
+        echo_output(reset_result)
 
-    bronze_reset_script = PROJECT_SRC_ROOT / "lake" / "hdfs" / "client_1" / "reset_client1_bronze.py"
-    bronze_reset_result = run_python(bronze_reset_script, label="Reset Client 1 HDFS bronze area")
-    echo_output(bronze_reset_result)
+        bronze_reset_script = PROJECT_SRC_ROOT / "lake" / "hdfs" / "client_1" / "reset_client1_bronze.py"
+        bronze_reset_result = run_python(bronze_reset_script, label="Reset Client 1 HDFS bronze area")
+        echo_output(bronze_reset_result)
 
     for step in dataset_steps:
         try:
@@ -205,7 +253,7 @@ def main() -> int:
         "duration_seconds": total_duration,
         "successful_files": successful_tables,
         "failed_files": len(failed_datasets),
-        "skipped_files": 0,
+        "skipped_files": skipped_datasets,
         "refreshed_files": successful_tables,
         "incremental_files": 0,
         "total_rows_inserted": total_rows_loaded,
@@ -222,6 +270,8 @@ def main() -> int:
         print("[ERROR] Client 1 Kafka HDFS Spark lakehouse pipeline failed.")
         print(f"Failed datasets: {', '.join(failed_datasets)}")
     print(f"Datasets processed successfully: {successful_tables}/{len(dataset_steps)}")
+    if skipped_datasets:
+        print(f"Datasets skipped due to resume mode: {skipped_datasets}")
     print(f"Bronze files read this run: {total_bronze_files:,}")
     print(f"Rows loaded into Iceberg raw tables this run: {total_rows_loaded:,}")
     print(f"Duration (seconds): {total_duration}")

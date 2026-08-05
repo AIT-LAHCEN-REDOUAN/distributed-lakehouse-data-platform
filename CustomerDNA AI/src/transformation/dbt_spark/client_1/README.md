@@ -2,10 +2,13 @@
 
 This project materializes the structured lakehouse layers that sit on top of the Iceberg raw zone:
 
-- `raw_data`: Kafka + HDFS + Spark generated raw Iceberg tables
+- `raw_data`: Kafka + HDFS + Spark generated raw Iceberg tables for:
+  - `bank_marketing`
+  - `online_shoppers_intention`
+  - `online_retail_2`
 - `staging`: standardized, typed views
-- `intermediate`: reusable business-ready tables
-- `analytics`: final reporting marts
+- `intermediate`: reusable feature-engineering and business-ready tables
+- `analytics`: final reporting marts and Customer 360 views
 
 ## Local Installation
 

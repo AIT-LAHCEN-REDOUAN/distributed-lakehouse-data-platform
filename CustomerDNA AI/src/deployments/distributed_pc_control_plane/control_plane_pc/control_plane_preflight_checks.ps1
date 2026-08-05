@@ -81,6 +81,15 @@ foreach ($path in $requiredPaths) {
     }
 }
 
+$sshKeyPath = Join-Path $scriptDir "ssh/id_ed25519"
+if (Test-Path $sshKeyPath) {
+    Write-Host "[OK] Remote Spark SSH key present: $sshKeyPath"
+}
+else {
+    Write-Host "[WARN] Missing remote Spark SSH key: $sshKeyPath"
+    Write-Host "       Remote Spark submission from Airflow to VM2 will fail until this key is added."
+}
+
 Write-Host ""
 Write-Host "[Remote dependencies]"
 Test-TcpEndpoint -HostName "10.10.252.11" -Port 9092 -Label "Kafka broker on VM1"

@@ -1,24 +1,18 @@
 version: 2
 
 models:
-  - name: stg_marketing_campaign
-    description: Typed staging view for the customer personality and campaign dataset.
+  - name: stg_bank_marketing
+    description: Typed staging model for outbound bank marketing contacts and conversion outcomes.
     columns:
-      - name: customer_id
-        tests: [not_null, unique]
-  - name: stg_ecommerce_customer_churn
-    description: Typed staging view for the ecommerce churn dataset.
-    columns:
-      - name: customer_id
-        tests: [not_null, unique]
-  - name: stg_online_retail
-    description: Typed staging view for online retail transactions.
-  - name: stg_retailrocket_category_tree
-    description: Typed staging view for retailrocket category hierarchy.
-    columns:
-      - name: category_id
+      - name: bank_record_id
         tests: [not_null]
-  - name: stg_retailrocket_events
-    description: Typed staging view for retailrocket events.
-  - name: stg_retailrocket_item_properties
-    description: Typed staging view for retailrocket item properties.
+  - name: stg_online_shoppers_intention
+    description: Typed staging model for digital browsing sessions and purchase intent.
+    columns:
+      - name: shopper_session_id
+        tests: [not_null]
+  - name: stg_online_retail_2
+    description: Typed staging model for retail transactions from Online Retail II.
+    columns:
+      - name: invoice_no
+        tests: [not_null]

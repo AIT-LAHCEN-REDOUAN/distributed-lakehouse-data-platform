@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
-from kafka import KafkaConsumer
+from kafka import KafkaConsumer, TopicPartition
 
 from kafka_config import BRONZE_READY_TOPICS, KAFKA_BOOTSTRAP_SERVERS, TOPICS, get_dataset_config
 from producer_utils import build_reliable_producer, ensure_topic_exists, get_topic_message_count
@@ -27,19 +28,37 @@ from hdfs_bronze_utils import (  # noqa: E402
 from hdfs_bronze_config import HDFS_NAMENODE_URI, HDFS_WEB_ENDPOINT  # noqa: E402
 
 
-def build_consumer(*, topic_name: str, consumer_group: str, consumer_timeout_ms: int) -> KafkaConsumer:
-    """Return a Kafka consumer configured for durable bronze ingestion."""
+def build_consumer(*, consumer_timeout_ms: int) -> KafkaConsumer:
+    """Return a Kafka consumer configured for batch-style bronze ingestion."""
     return KafkaConsumer(
-        topic_name,
         bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
         auto_offset_reset="earliest",
         enable_auto_commit=False,
-        group_id=consumer_group,
         value_deserializer=lambda value: json.loads(value.decode("utf-8")),
         key_deserializer=lambda value: value.decode("utf-8") if value else None,
         consumer_timeout_ms=consumer_timeout_ms,
         max_poll_records=5000,
     )
+
+
+def resolve_topic_partitions(consumer: KafkaConsumer, topic_name: str) -> list[TopicPartition]:
+    """Return all partitions for the topic after waiting briefly for Kafka metadata."""
+    for _ in range(10):
+        partition_ids = consumer.partitions_for_topic(topic_name)
+        if partition_ids:
+            return [TopicPartition(topic_name, partition_id) for partition_id in sorted(partition_ids)]
+        time.sleep(1)
+
+    raise RuntimeError(f"Unable to fetch partitions for topic '{topic_name}'.")
+
+
+def all_partitions_consumed(
+    consumer: KafkaConsumer,
+    partitions: list[TopicPartition],
+    end_offsets: dict[TopicPartition, int],
+) -> bool:
+    """Return True when the consumer has reached the snapshot end offset for every partition."""
+    return all(consumer.position(partition) >= end_offsets[partition] for partition in partitions)
 
 
 def flush_batch_to_hdfs(
@@ -131,12 +150,19 @@ def run_bronze_consumer(dataset_key: str) -> None:
     dataset_config = get_dataset_config(dataset_key)
     topic_name = TOPICS[dataset_key]
     target_table = str(dataset_config["target_table"])
-    expected_rows = get_topic_message_count(topic_name)
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    consumer_group = f"customerdna-client1-{dataset_key}-bronze-{run_id.lower()}"
     consumer_timeout_ms = int(dataset_config["bronze_consumer_timeout_ms"])
     bronze_flush_rows = int(dataset_config["bronze_flush_rows"])
     progress_interval = int(dataset_config["bronze_progress_interval"])
+
+    client = build_hdfs_client()
+    ensure_bronze_root_exists(client)
+    consumer = build_consumer(consumer_timeout_ms=consumer_timeout_ms)
+    partitions = resolve_topic_partitions(consumer, topic_name)
+    consumer.assign(partitions)
+    consumer.seek_to_beginning(*partitions)
+    end_offsets = consumer.end_offsets(partitions)
+    expected_rows = sum(end_offsets.values())
 
     print("=" * 80)
     print("CUSTOMERDNA AI - KAFKA TO HDFS BRONZE")
@@ -145,42 +171,43 @@ def run_bronze_consumer(dataset_key: str) -> None:
     print(f"Topic: {topic_name}")
     print(f"Bronze prefix: {bronze_dataset_prefix(dataset_key)}")
     print(f"WebHDFS endpoint: {HDFS_WEB_ENDPOINT}")
+    print(f"Topic partitions: {len(partitions)}")
     print(f"Expected topic rows: {expected_rows:,}")
-
-    client = build_hdfs_client()
-    ensure_bronze_root_exists(client)
-    consumer = build_consumer(
-        topic_name=topic_name,
-        consumer_group=consumer_group,
-        consumer_timeout_ms=consumer_timeout_ms,
-    )
 
     total_consumed = 0
     uploaded_objects = 0
     buffered_records: list[dict[str, object]] = []
 
     try:
-        for message in consumer:
-            buffered_records.append(message.value)
+        while True:
+            polled_records = consumer.poll(timeout_ms=1000, max_records=5000)
 
-            if len(buffered_records) >= bronze_flush_rows:
-                uploaded_objects += 1
-                object_key = flush_batch_to_hdfs(
-                    client=client,
-                    dataset_key=dataset_key,
-                    run_id=run_id,
-                    batch_index=uploaded_objects,
-                    records=buffered_records,
-                )
-                total_consumed += len(buffered_records)
-                consumer.commit()
-                print(
-                    f"[INFO] Uploaded bronze batch {uploaded_objects:,} "
-                    f"({len(buffered_records):,} rows) -> {object_key}"
-                )
-                if total_consumed % progress_interval == 0:
-                    print(f"[INFO] Confirmed {total_consumed:,} rows consumed into bronze")
-                buffered_records = []
+            if not polled_records:
+                if all_partitions_consumed(consumer, partitions, end_offsets):
+                    break
+                continue
+
+            for messages in polled_records.values():
+                for message in messages:
+                    buffered_records.append(message.value)
+
+                    if len(buffered_records) >= bronze_flush_rows:
+                        uploaded_objects += 1
+                        object_key = flush_batch_to_hdfs(
+                            client=client,
+                            dataset_key=dataset_key,
+                            run_id=run_id,
+                            batch_index=uploaded_objects,
+                            records=buffered_records,
+                        )
+                        total_consumed += len(buffered_records)
+                        print(
+                            f"[INFO] Uploaded bronze batch {uploaded_objects:,} "
+                            f"({len(buffered_records):,} rows) -> {object_key}"
+                        )
+                        if total_consumed % progress_interval == 0:
+                            print(f"[INFO] Confirmed {total_consumed:,} rows consumed into bronze")
+                        buffered_records = []
 
         if buffered_records:
             uploaded_objects += 1
@@ -192,7 +219,6 @@ def run_bronze_consumer(dataset_key: str) -> None:
                 records=buffered_records,
             )
             total_consumed += len(buffered_records)
-            consumer.commit()
             print(
                 f"[INFO] Uploaded bronze batch {uploaded_objects:,} "
                 f"({len(buffered_records):,} rows) -> {object_key}"

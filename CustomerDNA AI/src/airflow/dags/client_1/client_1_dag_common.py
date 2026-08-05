@@ -83,7 +83,7 @@ from shared.pipeline_metrics import record_task_run  # noqa: E402
 DEFAULT_ARGS = {
     "owner": "customerdna",
     "depends_on_past": False,
-    "retries": 1,
+    "retries": 0,
     "retry_delay": timedelta(minutes=2),
 }
 
@@ -320,9 +320,18 @@ def reset_lakehouse_namespaces() -> None:
     )
 
 
-def run_kafka_hdfs_spark_raw_pipeline() -> None:
+def run_kafka_hdfs_spark_raw_pipeline(**context) -> None:
+    command = _python_command(CLIENT_KAFKA_DIR / "run_client1_kafka_raw_pipeline.py")
+    dag_run = context.get("dag_run")
+    dag_run_conf = getattr(dag_run, "conf", {}) or {}
+    resume_from_dataset = str(dag_run_conf.get("resume_from_dataset", "")).strip()
+
+    if resume_from_dataset:
+        print(f"[INFO] Resume mode requested through DAG run config: {resume_from_dataset}")
+        command += ["--resume-from-dataset", resume_from_dataset]
+
     run_command(
-        _python_command(CLIENT_KAFKA_DIR / "run_client1_kafka_raw_pipeline.py"),
+        command,
         cwd=CLIENT_KAFKA_DIR,
         label="Run Client 1 Kafka -> HDFS bronze -> Spark -> Iceberg raw pipeline",
     )

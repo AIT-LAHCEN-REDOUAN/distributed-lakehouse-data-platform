@@ -1,0 +1,160 @@
+\clearpage
+\chapter{CASE STUDY, VALIDATION, AND PERFORMANCE EVALUATION}
+
+\section{Introduction}
+This chapter evaluates the implemented platform through the active three-source case study. It distinguishes functional correctness, proof of distribution, data quality, observability, and performance. Configuration facts are not repeated; the evaluation refers to the environment documented in Chapter~VI.
+
+\section{Evaluation Methodology}
+
+\subsection{Evaluation Environments}
+The local environment is retained as a correctness baseline for source contracts, schemas, model logic, and expected outputs. The final evaluation environment is the local control plane connected to the three-VM data plane. The same datasets, Spark loader, dbt models, GX definitions, DAG order, and Trino queries must be used in both contexts so that observed differences are attributable to topology and resources.
+
+\subsection{Acceptance Dimensions}
+\begin{table}[htbp]
+    \centering
+    \small
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\RaggedRight\arraybackslash}p{0.24\textwidth}|>{\RaggedRight\arraybackslash}X|>{\RaggedRight\arraybackslash}X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Dimension} & \color{white}\textbf{Acceptance question} & \color{white}\textbf{Evidence} \\
+        \hline
+        Functional correctness & Do all stages produce the intended tables and artifacts? & DAG history, table inventory, and query results \\
+        \hline
+        Distribution & Are core responsibilities executed across distinct nodes? & Cluster membership and worker interfaces \\
+        \hline
+        Data quality & Are source and transformation contracts satisfied? & Reconciliation, GX results, Data Docs, and dbt tests \\
+        \hline
+        Observability & Can service and pipeline states be inspected centrally? & Prometheus targets, Grafana panels, and Airflow history \\
+        \hline
+        Performance & What elapsed time and resource cost accompany each stage? & Run timestamps and CPU, memory, disk, and network metrics \\
+        \hline
+    \end{tabularx}
+    \caption{Evaluation dimensions and evidence sources}
+    \label{tab:evaluation-dimensions}
+    \arrayrulecolor{black}
+\end{table}
+
+\subsection{Measurement Discipline}
+Performance runs must record the dataset version, cluster state, service configuration, worker membership, start and end timestamps, retries, cache or warm-up policy, and resource metrics. A single dashboard screenshot is not sufficient for a performance claim. Numerical values must be exported with their run identifiers and should not be inferred from panel colour.
+
+\section{Multi-Source Customer Data Case Study}
+
+\subsection{Bank Marketing Dataset}
+Bank Marketing contributes customer and campaign characteristics, contact history, response outcome, and macro-economic context. Its analytical role is conversion and campaign-response interpretation.
+
+\subsection{Online Shoppers Purchasing Intention Dataset}
+Online Shoppers Purchasing Intention contributes session-level engagement, navigation behavior, visit context, and purchase-intention outcome. Its analytical role is digital intent and conversion analysis.
+
+\subsection{Online Retail II Dataset}
+Online Retail~II contributes invoice-level and product-level transactions, quantities, prices, countries, and customer identifiers where available. Its analytical role is sales, activity, repeat purchase, and value-oriented analysis.
+
+\subsection{Complementarity for Customer 360}
+The three sources represent different customer perspectives rather than one resolved enterprise identity graph. The case study therefore evaluates whether the platform can govern heterogeneous campaign, intent, and transaction domains and produce a Customer~360-ready feature foundation without making an unsupported identity-resolution claim.
+
+\section{Cluster Readiness Validation}
+The deployed data plane is accepted only when:
+\begin{itemize}
+    \item all three Kafka brokers are reachable;
+    \item the HDFS NameNode reports DataNodes from VM1, VM2, and VM3;
+    \item the Spark master reports workers from all three VMs;
+    \item Hive Metastore and its PostgreSQL database are reachable;
+    \item Spark Thrift accepts the dbt connection;
+    \item Trino reports its coordinator and the two workers on VM1 and VM3;
+    \item cAdvisor is reachable on every VM;
+    \item Airflow, Prometheus, Grafana, and Kafka UI are reachable on the control plane.
+\end{itemize}
+The readiness DAG operationalizes the most important dependencies before data processing begins.
+
+\section{End-to-End Pipeline Validation}
+
+\subsection{Five-DAG Execution}
+A clean validation run follows the documented order from environment reset to dbt transformations. Each DAG must finish successfully before its downstream acceptance condition is claimed. Airflow task history is retained so that retries and earlier failures remain auditable.
+
+\subsection{Ingestion and Bronze Reconciliation}
+For each source, the evaluation compares the records read by the producer, the records transported through Kafka, and the records represented in the bronze landing output. Differences must be explained by an explicit parsing, rejection, or deduplication rule rather than hidden by downstream aggregation.
+
+\subsection{Raw Iceberg Validation}
+Raw table construction is verified through Spark application completion, catalog visibility, Trino row counts, expected schemas, and source-specific GX validation. The table state must be queryable only after the corresponding Spark write and catalog registration succeed.
+
+\subsection{Transformation Validation}
+dbt execution verifies the three staging, four intermediate, and three analytics models. dbt tests validate declared transformation contracts, while Trino queries independently confirm that curated tables are visible through the analytical layer.
+
+\section{Data-Quality Evidence}
+The quality layer produces one validation result set per source and generates HTML Data Docs. Evaluation distinguishes:
+\begin{itemize}
+    \item \textbf{raw-source quality}, evaluated by GX against the raw lakehouse tables;
+    \item \textbf{transformation quality}, evaluated by dbt tests and model contracts;
+    \item \textbf{pipeline acceptance}, evaluated through Airflow task outcomes and retained artifacts.
+\end{itemize}
+This separation prevents the report from treating a green dashboard panel as a substitute for the actual validation result.
+
+\section{Customer 360 Analytical Outputs}
+The curated outputs provide campaign-contact information, shopper-session signals, customer-level sales features, a Customer~360 feature-store style table, and analytical views for overview, conversion, and sales performance. These outputs demonstrate analytical readiness. They do not represent a production customer master or prove that unrelated source identities refer to the same physical individual.
+
+\section{Performance Evaluation}
+
+\subsection{Stage-Level Measurements}
+The evaluation records durations for ingestion, bronze landing, Spark raw loading, GX validation, dbt model execution, dbt testing, and analytical queries. Reporting stage-level measurements is more informative than one total runtime because bottlenecks may originate from different resources.
+
+\subsection{Resource Measurements}
+CPU, memory, and disk consumption are interpreted per node. Aggregate cluster capacity must not be presented as memory available to one container. Network transfer is relevant for Kafka replication, HDFS blocks, Spark task communication, and Trino data exchange.
+
+\subsection{Local and Distributed Comparison}
+The local baseline may be faster for small data because it avoids network and coordination overhead. The distributed environment is evaluated primarily for correct separation, parallel capacity, fault visibility, and scalability controls. Distribution must not be claimed as an automatic speed improvement for every workload.
+
+\subsection{Reporting Boundary}
+Only measured values associated with a documented run should appear as benchmark results. Where a measurement has not yet been exported, the report describes the method and acceptance criterion rather than inventing a number.
+
+\section{Proof of Distribution}
+\begin{table}[htbp]
+    \centering
+    \small
+    \arrayrulecolor{ModernTableRule}
+    \begin{tabularx}{\textwidth}{|>{\RaggedRight\arraybackslash}p{0.22\textwidth}|>{\RaggedRight\arraybackslash}p{0.32\textwidth}|>{\RaggedRight\arraybackslash}X|}
+        \hline
+        \rowcolor{ModernTableHeader}
+        \color{white}\textbf{Subsystem} & \color{white}\textbf{Distributed property} & \color{white}\textbf{Strongest evidence} \\
+        \hline
+        Kafka & Brokers on VM1, VM2, and VM3 & Kafka UI broker and topic-partition inventory \\
+        \hline
+        HDFS & NameNode on VM2 and DataNodes on all VMs & HDFS live-node and block-distribution interfaces \\
+        \hline
+        Spark & Master on VM2 and workers on all VMs & Spark master worker registration and application history \\
+        \hline
+        Trino & Coordinator on VM2 and workers on VM1 and VM3 & Trino node inventory and distributed query stages \\
+        \hline
+        Orchestration & Local Airflow controlling remote services & Task logs and SSH-based remote Spark submission \\
+        \hline
+    \end{tabularx}
+    \caption{Evidence required to demonstrate meaningful distribution}
+    \label{tab:evaluation-distributed-proof}
+    \arrayrulecolor{black}
+\end{table}
+
+\section{Observability Validation}
+The infrastructure dashboard is validated against the three cAdvisor targets and the known node inventory. The pipeline-health dashboard is validated against Airflow and exporter state. The PostgreSQL dashboard is validated against the Hive Metastore database. Historical and current freshness series must be labelled by dataset or run so that an old stale value cannot be confused with the current state.
+
+\section{Discussion and Limitations}
+The deployment demonstrates real distribution but remains constrained by fixed 3.8~GiB VM memory, 26~GB disks, and a local control-plane dependency. VM2 concentrates several leader services and is consequently an important failure and resource domain. The environment does not claim production high availability, disaster recovery, Kubernetes orchestration, zero-trust security, or massive-volume benchmarking.
+
+These limitations do not invalidate the PFE contribution. They define its correct scope: an explainable and reproducible distributed lakehouse demonstration that integrates data transport, storage, compute, querying, governance, quality, orchestration, and observability.
+
+\section{Future AI and Machine Learning Readiness}
+The analytics and feature-oriented tables can support future segmentation, churn-risk proxies, customer-value analysis, conversion modeling, persona generation, and personalized recommendations. Model training, serving, feature serving, and production MLOps remain future work and must not be presented as implemented results.
+
+\section{Conclusion}
+The evaluation framework verifies the platform through functional evidence, retained quality artifacts, meaningful cluster membership, observability, and measurement discipline. CustomerDNA AI therefore ends at the level of a deployed and governed distributed data platform that prepares trustworthy data for Customer~360 analysis and future AdOptimizer AI products.
+
+\clearpage
+\chapter*{GENERAL CONCLUSION AND PERSPECTIVES}
+\addcontentsline{toc}{chapter}{GENERAL CONCLUSION AND PERSPECTIVES}
+\markboth{GENERAL CONCLUSION AND PERSPECTIVES}{}
+
+This PFE designed and implemented CustomerDNA AI as the customer-data engineering foundation of the broader AdOptimizer project. The platform integrates three heterogeneous customer-oriented datasets through a reproducible chain covering Kafka ingestion, HDFS bronze persistence, Spark processing, Iceberg tables, Hive Metastore cataloging, Trino access, dbt-Spark transformations, Great Expectations validation, Airflow orchestration, and Prometheus/Grafana observability.
+
+The principal contribution is not a finished machine-learning application. It is the deployed data platform required to make future intelligent products trustworthy. A local control plane supervises a three-VM data plane in which ingestion, storage, processing, and querying are distributed across explicit cluster roles. Node-specific bundles, preflight checks, reset procedures, retained validation artifacts, and centralized monitoring make the system explainable and reproducible.
+
+The project demonstrates that a serious distributed architecture can be implemented under constrained infrastructure when service placement and responsibilities are explicit. Its limitations include small fixed VMs, concentrated leader services on VM2, local control-plane dependence, and the absence of production high availability and enterprise security hardening.
+
+Future work can extend the platform with larger and continuously updated sources, stronger identity resolution, automated feature serving, model training and serving, churn and value prediction, segmentation, recommendation workflows, production MLOps, and stronger security and recovery mechanisms. These extensions should consume the governed lakehouse outputs rather than bypassing the quality and orchestration foundations established by this work.

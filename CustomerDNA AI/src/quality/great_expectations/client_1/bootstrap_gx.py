@@ -109,6 +109,18 @@ def _ensure_validation_definitions(context: gx.DataContext) -> None:
     asset = _ensure_pandas_asset(context)
     batch_definition = asset.get_batch_definition(BATCH_DEFINITION_NAME)
     suite = context.suites.get(SUITE_NAME)
+    validation_definitions_dir = GX_PROJECT_ROOT / "gx" / "validation_definitions"
+    validation_definitions_dir.mkdir(parents=True, exist_ok=True)
+
+    expected_definition_names = {
+        f"{CHECKPOINT_NAME}__{dataset_key}"
+        for dataset_key in DATASET_ORDER
+    }
+
+    for definition_path in validation_definitions_dir.glob(f"{CHECKPOINT_NAME}__*.json"):
+        definition_name = definition_path.stem
+        if definition_name not in expected_definition_names:
+            definition_path.unlink(missing_ok=True)
 
     for dataset_key in DATASET_ORDER:
         definition_name = f"{CHECKPOINT_NAME}__{dataset_key}"

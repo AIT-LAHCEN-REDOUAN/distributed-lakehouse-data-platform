@@ -1,23 +1,23 @@
 version: 2
 
 models:
-  - name: int_customer_profile
-    description: Cross-source customer profile built from marketing and ecommerce churn datasets.
+  - name: int_bank_marketing_contacts
+    description: Enriched outbound contact records with stable conversion and risk-oriented features.
     columns:
-      - name: customer_id
-        tests: [not_null, unique]
+      - name: bank_record_id
+        tests: [not_null]
+  - name: int_online_shopper_sessions
+    description: Session-level engagement features for digital intent analysis.
+    columns:
+      - name: shopper_session_id
+        tests: [not_null]
   - name: int_online_retail_customer_sales
-    description: Aggregated retail sales KPIs by customer.
+    description: Customer-level retail sales, recency, and monetary metrics.
     columns:
       - name: customer_id
         tests: [not_null, unique]
-  - name: int_retailrocket_visitor_activity
-    description: Retailrocket visitor interaction summary.
+  - name: int_customer_360_feature_store
+    description: Harmonized feature-store style entity table spanning campaign, web, and sales domains without unsafe row-level joins.
     columns:
-      - name: visitor_id
-        tests: [not_null, unique]
-  - name: int_customer_commercial_360
-    description: Business-ready customer commercial profile enriched with retail KPIs.
-    columns:
-      - name: customer_id
+      - name: unified_entity_id
         tests: [not_null, unique]

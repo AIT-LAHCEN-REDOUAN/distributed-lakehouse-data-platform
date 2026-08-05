@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 
@@ -29,6 +28,8 @@ SOURCE_DATASETS_ROOT = customerdna_root() / "datasets" / "client_1"
 
 def get_kafka_bootstrap_servers() -> list[str]:
     """Return Kafka bootstrap servers from environment or sensible defaults."""
+    import os
+
     configured_value = os.getenv("CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS", "").strip()
 
     if configured_value:
@@ -40,119 +41,56 @@ def get_kafka_bootstrap_servers() -> list[str]:
 KAFKA_BOOTSTRAP_SERVERS = get_kafka_bootstrap_servers()
 
 DATASET_ORDER = [
-    "retailrocket_category_tree",
-    "marketing_campaign",
-    "ecommerce_customer_churn",
-    "online_retail",
-    "retailrocket_events",
-    "retailrocket_item_properties",
+    "bank_marketing",
+    "online_shoppers_intention",
+    "online_retail_2",
 ]
 
 DATASET_PIPELINE_CONFIGS = {
-    "marketing_campaign": {
-        "topic_name": "client1.marketing_campaign",
-        "bronze_ready_topic_name": "client1.marketing_campaign.bronze_ready",
-        "target_table": "marketing_campaign",
-        "key_field_priority": ["ID"],
-        "produce_progress_interval": 500,
+    "bank_marketing": {
+        "topic_name": "client1.bank_marketing",
+        "bronze_ready_topic_name": "client1.bank_marketing.bronze_ready",
+        "target_table": "bank_marketing",
+        "key_field_priority": ["age", "job", "month", "campaign", "duration"],
+        "produce_progress_interval": 5000,
         "bronze_flush_rows": 5000,
-        "bronze_progress_interval": 500,
+        "bronze_progress_interval": 5000,
         "bronze_consumer_timeout_ms": 30000,
         "load_event_consumer_timeout_ms": 30000,
         "load_copy_batch_size": 5000,
-        "load_progress_interval": 1000,
+        "load_progress_interval": 5000,
         "source_paths": [
-            SOURCE_DATASETS_ROOT / "Customer_Personality_Analysis" / "marketing_campaign.csv",
+            SOURCE_DATASETS_ROOT / "bank_marketing" / "bank-additional-full.csv",
         ],
-        "source_label": "marketing_campaign.csv",
+        "source_label": "bank-additional-full.csv",
         "source_type": "csv",
-        "delimiter": "\t",
+        "delimiter": ";",
         "encoding": "utf-8",
     },
-    "ecommerce_customer_churn": {
-        "topic_name": "client1.ecommerce_customer_churn",
-        "bronze_ready_topic_name": "client1.ecommerce_customer_churn.bronze_ready",
-        "target_table": "e_commerce_customer_churn",
-        "key_field_priority": ["CustomerID", "customerid"],
-        "produce_progress_interval": 500,
+    "online_shoppers_intention": {
+        "topic_name": "client1.online_shoppers_intention",
+        "bronze_ready_topic_name": "client1.online_shoppers_intention.bronze_ready",
+        "target_table": "online_shoppers_intention",
+        "key_field_priority": ["Month", "VisitorType", "TrafficType", "Region", "ProductRelated"],
+        "produce_progress_interval": 5000,
         "bronze_flush_rows": 5000,
-        "bronze_progress_interval": 1000,
+        "bronze_progress_interval": 5000,
         "bronze_consumer_timeout_ms": 30000,
         "load_event_consumer_timeout_ms": 30000,
         "load_copy_batch_size": 5000,
-        "load_progress_interval": 2000,
+        "load_progress_interval": 5000,
         "source_paths": [
-            SOURCE_DATASETS_ROOT / "E-commerce_customer_churn" / "E-commerce_customer_churn.xlsx",
+            SOURCE_DATASETS_ROOT / "online_shoppers_intention" / "online_shoppers_intention.csv",
         ],
-        "source_label": "E-commerce_customer_churn.xlsx",
-        "source_type": "excel",
-        "sheet_name": "E Comm",
-    },
-    "retailrocket_category_tree": {
-        "topic_name": "client1.retailrocket_category_tree",
-        "bronze_ready_topic_name": "client1.retailrocket_category_tree.bronze_ready",
-        "target_table": "category_tree",
-        "key_field_priority": ["categoryid"],
-        "produce_progress_interval": 500,
-        "bronze_flush_rows": 5000,
-        "bronze_progress_interval": 500,
-        "bronze_consumer_timeout_ms": 30000,
-        "load_event_consumer_timeout_ms": 30000,
-        "load_copy_batch_size": 5000,
-        "load_progress_interval": 1000,
-        "source_paths": [
-            SOURCE_DATASETS_ROOT / "Retailrocket_recommender_system_dataset" / "category_tree.csv",
-        ],
-        "source_label": "category_tree.csv",
+        "source_label": "online_shoppers_intention.csv",
         "source_type": "csv",
         "delimiter": ",",
         "encoding": "utf-8",
     },
-    "retailrocket_events": {
-        "topic_name": "client1.retailrocket_events",
-        "bronze_ready_topic_name": "client1.retailrocket_events.bronze_ready",
-        "target_table": "events",
-        "key_field_priority": ["visitorid", "itemid", "timestamp"],
-        "produce_progress_interval": 100000,
-        "bronze_flush_rows": 50000,
-        "bronze_progress_interval": 100000,
-        "bronze_consumer_timeout_ms": 45000,
-        "load_event_consumer_timeout_ms": 45000,
-        "load_copy_batch_size": 20000,
-        "load_progress_interval": 100000,
-        "source_paths": [
-            SOURCE_DATASETS_ROOT / "Retailrocket_recommender_system_dataset" / "events.csv",
-        ],
-        "source_label": "events.csv",
-        "source_type": "csv",
-        "delimiter": ",",
-        "encoding": "utf-8",
-    },
-    "retailrocket_item_properties": {
-        "topic_name": "client1.retailrocket_item_properties",
-        "bronze_ready_topic_name": "client1.retailrocket_item_properties.bronze_ready",
-        "target_table": "item_properties",
-        "key_field_priority": ["itemid", "property", "timestamp"],
-        "produce_progress_interval": 500000,
-        "bronze_flush_rows": 50000,
-        "bronze_progress_interval": 500000,
-        "bronze_consumer_timeout_ms": 60000,
-        "load_event_consumer_timeout_ms": 60000,
-        "load_copy_batch_size": 20000,
-        "load_progress_interval": 500000,
-        "source_paths": [
-            SOURCE_DATASETS_ROOT / "Retailrocket_recommender_system_dataset" / "item_properties_part1.csv",
-            SOURCE_DATASETS_ROOT / "Retailrocket_recommender_system_dataset" / "item_properties_part2.csv",
-        ],
-        "source_label": "item_properties_part1.csv + item_properties_part2.csv",
-        "source_type": "csv_multi",
-        "delimiter": ",",
-        "encoding": "utf-8",
-    },
-    "online_retail": {
-        "topic_name": "client1.online_retail",
-        "bronze_ready_topic_name": "client1.online_retail.bronze_ready",
-        "target_table": "online_retail",
+    "online_retail_2": {
+        "topic_name": "client1.online_retail_2",
+        "bronze_ready_topic_name": "client1.online_retail_2.bronze_ready",
+        "target_table": "online_retail_2",
         "key_field_priority": ["Invoice", "Customer ID", "StockCode"],
         "produce_progress_interval": 100000,
         "bronze_flush_rows": 20000,

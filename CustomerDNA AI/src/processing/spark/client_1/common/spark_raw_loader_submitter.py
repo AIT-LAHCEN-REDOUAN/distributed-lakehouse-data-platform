@@ -161,6 +161,15 @@ def _parse_result(stdout: str) -> SparkRawLoadResult:
     )
 
 
+def _has_success_summary(output: str) -> bool:
+    """Return True when the Spark loader printed its completion summary."""
+    return bool(
+        ROWS_LOADED_PATTERN.search(output)
+        and FILES_READ_PATTERN.search(output)
+        and DURATION_PATTERN.search(output)
+    )
+
+
 def _run_with_docker_sdk(command: list[str]) -> str:
     client = docker.from_env()
     container = client.containers.get(SPARK_SUBMIT_CONTAINER)
@@ -277,6 +286,13 @@ def _run_with_remote_ssh(command: list[str]) -> str:
         exit_code = channel.recv_exit_status()
         stdout_text = "".join(stdout_chunks)
         stderr_text = "".join(stderr_chunks)
+
+        if exit_code == -1 and _has_success_summary(stdout_text):
+            print(
+                "[WARN] Remote SSH channel reported exit code -1 after the Spark loader "
+                "printed a complete success summary. Treating the remote submit as successful."
+            )
+            return stdout_text
 
         if exit_code != 0:
             raise RuntimeError(

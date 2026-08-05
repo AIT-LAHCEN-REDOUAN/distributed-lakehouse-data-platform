@@ -173,6 +173,15 @@ if (-not (Test-Path $envFile)) {
     throw "Missing required env file: $envFile"
 }
 
+$sshKeyPath = Join-Path $scriptDir "ssh/id_ed25519"
+if (Test-Path $sshKeyPath) {
+    Write-Host "[OK] Remote Spark SSH key found: $sshKeyPath"
+}
+else {
+    Write-Host "[WARN] Remote Spark SSH key missing: $sshKeyPath"
+    Write-Host "       Airflow, Grafana, Prometheus, and Kafka UI can start, but raw Spark DAG submission to VM2 will fail until the key is added."
+}
+
 $envValues = Get-EnvMap -Path $envFile
 $preferredAirflowPort = "18080"
 if ($envValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT") -and $envValues["CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT"]) {
@@ -265,7 +274,7 @@ Invoke-Compose -Arguments @(
 
 Write-Host "[4/5] Starting Airflow API server and waiting for health"
 Invoke-Compose -Arguments @("up", "-d", "airflow-api-server")
-Wait-ForContainerHealth -ContainerName "control_plane_airflow_api_server" -TimeoutSeconds 180 -Label "Airflow API server"
+Wait-ForContainerHealth -ContainerName "control_plane_airflow_api_server" -TimeoutSeconds 420 -Label "Airflow API server"
 
 Write-Host "[5/5] Starting remaining Airflow services"
 Invoke-Compose -Arguments @("up", "-d", "airflow-scheduler", "airflow-dag-processor", "airflow-triggerer")

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import csv
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterator
 from pathlib import Path
 
 import pandas as pd
@@ -13,7 +13,7 @@ from kafka_config import SOURCE_DATASET_CONFIGS
 
 def get_source_label(dataset_key: str) -> str:
     """Return a human-readable source label for the dataset."""
-    return SOURCE_DATASET_CONFIGS[dataset_key]["source_label"]
+    return str(SOURCE_DATASET_CONFIGS[dataset_key]["source_label"])
 
 
 def get_source_paths(dataset_key: str) -> list[Path]:
@@ -37,30 +37,13 @@ def get_source_columns(dataset_key: str) -> list[str]:
     """Read the source header contract without scanning the full dataset."""
     source_paths = ensure_source_paths_exist(dataset_key)
 
-    if dataset_key == "marketing_campaign":
-        return _get_csv_columns(source_paths[0], delimiter="\t")
-    if dataset_key == "ecommerce_customer_churn":
-        dataframe = pd.read_excel(
-            source_paths[0],
-            sheet_name="E Comm",
-            engine="openpyxl",
-            nrows=0,
-        )
-        return [str(column_name) for column_name in dataframe.columns]
-    if dataset_key == "retailrocket_category_tree":
+    if dataset_key == "bank_marketing":
+        return _get_csv_columns(source_paths[0], delimiter=";")
+    if dataset_key == "online_shoppers_intention":
         return _get_csv_columns(source_paths[0], delimiter=",")
-    if dataset_key == "retailrocket_events":
-        return _get_csv_columns(source_paths[0], delimiter=",")
-    if dataset_key == "retailrocket_item_properties":
+    if dataset_key == "online_retail_2":
         combined_columns: list[str] = []
-        for source_path in source_paths:
-            for column_name in _get_csv_columns(source_path, delimiter=","):
-                if column_name not in combined_columns:
-                    combined_columns.append(column_name)
-        return combined_columns
-    if dataset_key == "online_retail":
-        combined_columns: list[str] = []
-        for sheet_name in SOURCE_DATASET_CONFIGS["online_retail"]["sheet_names"]:
+        for sheet_name in SOURCE_DATASET_CONFIGS["online_retail_2"]["sheet_names"]:
             dataframe = pd.read_excel(
                 source_paths[0],
                 sheet_name=sheet_name,
@@ -80,17 +63,11 @@ def iter_source_rows(dataset_key: str) -> Iterator[dict[str, str | None]]:
     """Stream normalized rows from the configured raw source dataset."""
     source_paths = ensure_source_paths_exist(dataset_key)
 
-    if dataset_key == "marketing_campaign":
-        yield from _iter_marketing_campaign_rows(source_paths[0])
-    elif dataset_key == "ecommerce_customer_churn":
-        yield from _iter_ecommerce_churn_rows(source_paths[0])
-    elif dataset_key == "retailrocket_category_tree":
+    if dataset_key == "bank_marketing":
+        yield from _iter_csv_rows(source_paths[0], delimiter=";")
+    elif dataset_key == "online_shoppers_intention":
         yield from _iter_csv_rows(source_paths[0], delimiter=",")
-    elif dataset_key == "retailrocket_events":
-        yield from _iter_retailrocket_events_rows(source_paths[0])
-    elif dataset_key == "retailrocket_item_properties":
-        yield from _iter_retailrocket_item_properties_rows(source_paths)
-    elif dataset_key == "online_retail":
+    elif dataset_key == "online_retail_2":
         yield from _iter_online_retail_rows(source_paths[0])
     else:
         raise KeyError(f"Unsupported dataset key: {dataset_key}")
@@ -139,56 +116,8 @@ def _get_csv_columns(source_path: Path, *, delimiter: str) -> list[str]:
         return list(reader.fieldnames or [])
 
 
-def _iter_marketing_campaign_rows(source_path: Path) -> Iterator[dict[str, str | None]]:
-    with source_path.open("r", encoding="utf-8", newline="") as csv_file:
-        reader = csv.DictReader(csv_file, delimiter="\t")
-
-        for row in reader:
-            normalized_row = {
-                key: _normalize_value(value)
-                for key, value in row.items()
-            }
-
-            dt_customer = normalized_row.get("Dt_Customer")
-            if dt_customer:
-                parsed_date = pd.to_datetime(dt_customer, format="%d-%m-%Y", errors="coerce")
-                normalized_row["Dt_Customer"] = (
-                    parsed_date.strftime("%Y-%m-%d")
-                    if not pd.isna(parsed_date)
-                    else None
-                )
-
-            yield normalized_row
-
-
-def _iter_ecommerce_churn_rows(source_path: Path) -> Iterator[dict[str, str | None]]:
-    dataframe = pd.read_excel(
-        source_path,
-        sheet_name="E Comm",
-        engine="openpyxl",
-    )
-
-    columns = list(dataframe.columns)
-    for row_values in dataframe.itertuples(index=False, name=None):
-        yield {
-            column_name: _normalize_value(row_value)
-            for column_name, row_value in zip(columns, row_values)
-        }
-
-
-def _iter_retailrocket_events_rows(source_path: Path) -> Iterator[dict[str, str | None]]:
-    for row in _iter_csv_rows(source_path, delimiter=","):
-        row["transactionid"] = _normalize_value(row.get("transactionid"))
-        yield row
-
-
-def _iter_retailrocket_item_properties_rows(source_paths: Iterable[Path]) -> Iterator[dict[str, str | None]]:
-    for source_path in source_paths:
-        yield from _iter_csv_rows(source_path, delimiter=",")
-
-
 def _iter_online_retail_rows(source_path: Path) -> Iterator[dict[str, str | None]]:
-    sheet_names = SOURCE_DATASET_CONFIGS["online_retail"]["sheet_names"]
+    sheet_names = SOURCE_DATASET_CONFIGS["online_retail_2"]["sheet_names"]
 
     for sheet_name in sheet_names:
         dataframe = pd.read_excel(
