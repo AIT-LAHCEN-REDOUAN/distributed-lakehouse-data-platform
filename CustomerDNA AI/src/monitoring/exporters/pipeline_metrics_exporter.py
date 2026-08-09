@@ -6,6 +6,7 @@ import os
 import socket
 import sys
 import time
+from base64 import b64encode
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -41,9 +42,13 @@ def _normalized_http_url(value: str) -> str:
     return normalized
 
 
-def _http_probe_status(value: str) -> int:
+def _http_probe_status(value: str, *, username: str = "", password: str = "") -> int:
     try:
-        request = Request(_normalized_http_url(value), headers={"User-Agent": "customerdna-monitoring-exporter"})
+        headers = {"User-Agent": "customerdna-monitoring-exporter"}
+        if username and password:
+            token = b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
+            headers["Authorization"] = f"Basic {token}"
+        request = Request(_normalized_http_url(value), headers=headers)
         with urlopen(request, timeout=DEFAULT_HTTP_TIMEOUT_SECONDS) as response:  # noqa: S310
             return 1 if 200 <= response.status < 500 else 0
     except (URLError, TimeoutError, ValueError, OSError):
@@ -198,6 +203,8 @@ def _build_reconciled_pipeline_metrics(airflow_state: dict[str, Any]) -> list[di
 
 def build_metrics_payload() -> str:
     lines: list[str] = []
+    trino_monitoring_user = os.getenv("CUSTOMERDNA_MONITORING_TRINO_USER", "")
+    trino_monitoring_password = os.getenv("CUSTOMERDNA_MONITORING_TRINO_PASSWORD", "")
 
     service_targets = (
         {
@@ -243,7 +250,11 @@ def build_metrics_payload() -> str:
             "service_name": "trino_query_service",
             "check_type": "http",
             "target": _normalized_http_url(os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088")) + "/v1/info",
-            "value": _http_probe_status(os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088") + "/v1/info"),
+            "value": _http_probe_status(
+                os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088") + "/v1/info",
+                username=trino_monitoring_user,
+                password=trino_monitoring_password,
+            ),
         },
     )
 

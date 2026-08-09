@@ -326,6 +326,18 @@ services:
       - ./trino/etc:/etc/trino:ro
       - ./runtime/trino/data:/var/trino/data
 
+  trino-gateway:
+    image: nginx:1.27-alpine
+    container_name: trino-gateway
+    hostname: trino-gateway
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - trino-coordinator
+    volumes:
+      - ./trino/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./trino/auth/.htpasswd:/etc/nginx/.htpasswd:ro
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     container_name: vm2_cadvisor

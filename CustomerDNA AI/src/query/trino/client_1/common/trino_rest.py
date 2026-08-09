@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import time
+from requests.auth import HTTPBasicAuth
 from typing import Any
 
 import requests
@@ -11,6 +12,7 @@ import requests
 
 TRINO_URL = os.getenv("CUSTOMERDNA_TRINO_URL", "http://localhost:8088").rstrip("/")
 TRINO_USER = os.getenv("CUSTOMERDNA_TRINO_USER", "customerdna")
+TRINO_PASSWORD = os.getenv("CUSTOMERDNA_TRINO_PASSWORD", "")
 TRINO_CATALOG = os.getenv("CUSTOMERDNA_TRINO_CATALOG", "lakehouse")
 TRINO_SCHEMA = os.getenv("CUSTOMERDNA_TRINO_SCHEMA", "raw_data")
 TRINO_STATEMENT_MAX_ATTEMPTS = int(os.getenv("CUSTOMERDNA_TRINO_STATEMENT_MAX_ATTEMPTS", "3"))
@@ -43,11 +45,13 @@ def execute_trino_statement(
 ) -> dict[str, Any]:
     base_url = (trino_url or TRINO_URL).rstrip("/")
     statement_url = f"{base_url}/v1/statement"
+    resolved_user = user or TRINO_USER
     headers = {
-        "X-Trino-User": user or TRINO_USER,
+        "X-Trino-User": resolved_user,
         "X-Trino-Catalog": catalog or TRINO_CATALOG,
         "X-Trino-Schema": schema or TRINO_SCHEMA,
     }
+    auth = HTTPBasicAuth(resolved_user, TRINO_PASSWORD) if TRINO_PASSWORD else None
 
     last_error: Exception | None = None
     for attempt in range(1, TRINO_STATEMENT_MAX_ATTEMPTS + 1):
@@ -56,6 +60,7 @@ def execute_trino_statement(
                 statement_url,
                 data=sql_text.encode("utf-8"),
                 headers=headers,
+                auth=auth,
                 timeout=timeout_seconds,
             )
             response.raise_for_status()
@@ -66,7 +71,7 @@ def execute_trino_statement(
             final_payload = payload
 
             while next_uri:
-                poll_response = requests.get(next_uri, timeout=timeout_seconds)
+                poll_response = requests.get(next_uri, auth=auth, timeout=timeout_seconds)
                 poll_response.raise_for_status()
                 final_payload = poll_response.json()
                 rows.extend(final_payload.get("data", []))

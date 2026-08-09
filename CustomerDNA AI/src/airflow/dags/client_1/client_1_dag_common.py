@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Callable
 
 import requests
+from requests.auth import HTTPBasicAuth
 from dotenv import load_dotenv
 
 
@@ -462,7 +463,14 @@ def validate_spark_thrift_service() -> None:
 def validate_trino_query_service() -> None:
     def _callback() -> None:
         env = build_runtime_env()
-        response = requests.get(f"{env['CUSTOMERDNA_TRINO_URL'].rstrip('/')}/v1/info", timeout=15)
+        trino_user = env.get("CUSTOMERDNA_AIRFLOW_TRINO_USER") or env.get("CUSTOMERDNA_TRINO_USER", "airflow")
+        trino_password = env.get("CUSTOMERDNA_AIRFLOW_TRINO_PASSWORD") or env.get("CUSTOMERDNA_TRINO_PASSWORD", "")
+        auth = HTTPBasicAuth(trino_user, trino_password) if trino_password else None
+        response = requests.get(
+            f"{env['CUSTOMERDNA_TRINO_URL'].rstrip('/')}/v1/info",
+            auth=auth,
+            timeout=15,
+        )
         response.raise_for_status()
         print(f"[SUCCESS] Trino query service responded with HTTP {response.status_code}")
 

@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_DB: ${HIVE_METASTORE_DB:-metastore_db}
       POSTGRES_USER: ${HIVE_METASTORE_USER:-hive}
-      POSTGRES_PASSWORD: ${HIVE_METASTORE_PASSWORD:-hive_password}
+      POSTGRES_PASSWORD: ${HIVE_METASTORE_PASSWORD:-change_me}
       POSTGRES_INITDB_ARGS: --auth-host=md5 --auth-local=md5
     ports:
       - "${HIVE_METASTORE_POSTGRES_PORT:-5435}:5432"
@@ -49,7 +49,7 @@ services:
         -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver
         -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://hive-metastore-db:5432/${HIVE_METASTORE_DB:-metastore_db}
         -Djavax.jdo.option.ConnectionUserName=${HIVE_METASTORE_USER:-hive}
-        -Djavax.jdo.option.ConnectionPassword=${HIVE_METASTORE_PASSWORD:-hive_password}
+        -Djavax.jdo.option.ConnectionPassword=${HIVE_METASTORE_PASSWORD:-change_me}
     ports:
       - "${HIVE_METASTORE_PORT:-9083}:9083"
     restart: on-failure

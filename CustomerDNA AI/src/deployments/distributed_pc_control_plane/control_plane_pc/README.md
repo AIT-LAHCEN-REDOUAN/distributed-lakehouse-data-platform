@@ -28,6 +28,7 @@ This folder is the isolated control-plane deployment for the distributed demonst
 3. Run [control_plane_preflight_checks.ps1](D:/github/Master_PFE_Project/CustomerDNA%20AI/src/deployments/distributed_pc_control_plane/control_plane_pc/control_plane_preflight_checks.ps1).
 4. Start the stack with [start_control_plane_pc.ps1](D:/github/Master_PFE_Project/CustomerDNA%20AI/src/deployments/distributed_pc_control_plane/control_plane_pc/start_control_plane_pc.ps1).
 5. If a port is busy, the startup script writes the resolved ports to `runtime/compose.generated.env`. Use the script again for retries so the same ports are reused.
+6. Use [backup_control_plane_state.ps1](D:/github/Master_PFE_Project/CustomerDNA%20AI/src/deployments/distributed_pc_control_plane/control_plane_pc/backup_control_plane_state.ps1) whenever you want a quick metadata and config backup snapshot.
 
 ## Access Points
 
@@ -35,6 +36,7 @@ This folder is the isolated control-plane deployment for the distributed demonst
 - Kafka UI: `http://localhost:18085`
 - Prometheus: `http://localhost:19090`
 - Grafana: `http://localhost:13001`
+- Credential reference files: `src/Credential Access/`
 
 ## Notes
 
@@ -43,3 +45,4 @@ This folder is the isolated control-plane deployment for the distributed demonst
 - `CUSTOMERDNA_SPARK_DRIVER_HOST` is now pinned to `VM2`, so Spark executors no longer depend on the changing workstation IP.
 - Monitoring state for the distributed demo is isolated under `runtime/monitoring/state` so it does not reuse the local single-machine run history.
 - Airflow startup is intentionally staged: PostgreSQL starts first, then `airflow-init`, then the API server, and only after that the scheduler, dag processor, and triggerer.
+- Trino access now goes through the secured VM2 gateway on `http://10.10.252.12:8088`, while the coordinator itself listens internally on port `8089`.
