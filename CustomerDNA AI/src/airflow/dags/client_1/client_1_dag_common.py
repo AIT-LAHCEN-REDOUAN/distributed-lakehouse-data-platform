@@ -394,11 +394,21 @@ def _build_trino_tls_verify_setting(env: dict[str, str]) -> bool | str:
 
 def validate_hdfs_bronze_service() -> None:
     def _callback() -> None:
-        env = build_runtime_env()
-        endpoint = _build_http_url(env["CUSTOMERDNA_HDFS_WEB_ENDPOINT"])
-        response = requests.get(endpoint, timeout=15)
-        response.raise_for_status()
-        print(f"[SUCCESS] HDFS NameNode web interface responded with HTTP {response.status_code}")
+        common_dir = HDFS_ROOT / "client_1" / "common"
+        if str(common_dir) not in sys.path:
+            sys.path.insert(0, str(common_dir))
+
+        from hdfs_bronze_config import HDFS_BRONZE_ROOT, describe_hdfs_access  # type: ignore
+        from hdfs_bronze_utils import build_hdfs_client, ensure_bronze_root_exists  # type: ignore
+
+        client = build_hdfs_client()
+        print(f"[INFO] HDFS access mode: {describe_hdfs_access()}")
+        ensure_bronze_root_exists(client)
+
+        if not client.path_exists(HDFS_BRONZE_ROOT):
+            raise RuntimeError(f"HDFS bronze root is not reachable: {HDFS_BRONZE_ROOT}")
+
+        print(f"[SUCCESS] HDFS bronze root is reachable through {describe_hdfs_access()}")
 
     run_monitored_callable(
         label="Validate Client 1 HDFS bronze service",

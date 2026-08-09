@@ -24,6 +24,7 @@ echo "[Local tools]"
 command -v git >/dev/null 2>&1 && echo "[OK] git" || echo "[WARN] git missing"
 command -v docker >/dev/null 2>&1 && echo "[OK] docker" || echo "[WARN] docker missing"
 docker compose version >/dev/null 2>&1 && echo "[OK] docker compose" || echo "[WARN] docker compose missing"
+command -v kadmin >/dev/null 2>&1 && echo "[OK] kadmin" || echo "[WARN] kadmin missing"
 
 echo
 echo "[Bundle files]"
@@ -54,11 +55,13 @@ check_tcp 10.10.252.11 22 "VM1 SSH"
 check_tcp 10.10.252.13 22 "VM3 SSH"
 check_tcp 10.10.252.11 9093 "Kafka controller peer on VM1"
 check_tcp 10.10.252.13 9093 "Kafka controller peer on VM3"
+check_tcp 10.10.252.12 88 "Kerberos KDC on VM2"
+check_tcp 10.10.252.12 749 "Kerberos admin server on VM2"
 check_tcp 10.10.252.12 8443 "Trino TLS gateway on VM2"
 
 echo
 echo "[Local host ports before startup]"
-for port in 9092 9093 29092 9000 9870 9864 5435 9083 7077 8086 8087 18080 10000 4040 8088 8081; do
+for port in 88 749 9092 9093 29092 9000 9870 9864 5435 9083 7077 8086 8087 18080 10000 4040 8088 8081; do
   if ss -ltn "( sport = :${port} )" | grep -q ":${port}"; then
     echo "[WARN] Port ${port} already in use on this VM"
   else

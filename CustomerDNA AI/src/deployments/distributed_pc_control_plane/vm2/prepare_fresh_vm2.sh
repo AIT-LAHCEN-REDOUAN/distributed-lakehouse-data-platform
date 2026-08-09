@@ -21,7 +21,7 @@ echo "============================================================"
 
 echo "[1/7] Updating APT metadata and installing base packages"
 apt-get update
-apt-get install -y ca-certificates curl gnupg lsb-release git ufw cryptsetup
+apt-get install -y ca-certificates curl gnupg lsb-release git ufw cryptsetup krb5-user
 
 echo "[2/7] Removing conflicting container packages if present"
 for pkg in docker.io docker-compose docker-compose-v2 docker-doc docker-buildx podman-docker containerd runc; do
@@ -63,6 +63,9 @@ if [[ "${ENABLE_UFW}" == "true" ]]; then
   ufw allow 9092/tcp
   ufw allow 9093/tcp
   ufw allow 29092/tcp
+  ufw allow 88/tcp
+  ufw allow 88/udp
+  ufw allow 749/tcp
   ufw allow 9000/tcp
   ufw allow 9870/tcp
   ufw allow 9864/tcp

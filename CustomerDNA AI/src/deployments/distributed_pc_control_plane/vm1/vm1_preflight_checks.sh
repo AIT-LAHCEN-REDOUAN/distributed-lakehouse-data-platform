@@ -24,6 +24,7 @@ echo "[Local tools]"
 command -v git >/dev/null 2>&1 && echo "[OK] git" || echo "[WARN] git missing"
 command -v docker >/dev/null 2>&1 && echo "[OK] docker" || echo "[WARN] docker missing"
 docker compose version >/dev/null 2>&1 && echo "[OK] docker compose" || echo "[WARN] docker compose missing"
+command -v kadmin >/dev/null 2>&1 && echo "[OK] kadmin" || echo "[WARN] kadmin missing"
 
 echo
 echo "[Bundle files]"
@@ -52,6 +53,8 @@ echo
 echo "[Peer endpoints]"
 check_tcp 10.10.252.12 22 "VM2 SSH"
 check_tcp 10.10.252.13 22 "VM3 SSH"
+check_tcp 10.10.252.12 88 "Kerberos KDC on VM2"
+check_tcp 10.10.252.12 749 "Kerberos admin server on VM2"
 check_tcp 10.10.252.12 9093 "Kafka controller peer on VM2"
 check_tcp 10.10.252.13 9093 "Kafka controller peer on VM3"
 check_tcp 10.10.252.12 9000 "HDFS NameNode RPC on VM2"

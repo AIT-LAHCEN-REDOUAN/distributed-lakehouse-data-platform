@@ -49,7 +49,10 @@ if [[ "${CUSTOMERDNA_SECURE_STORAGE_ENABLED:-true}" == "true" ]]; then
     "${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-${SCRIPT_DIR}/runtime/trino/data}" \
     "${CUSTOMERDNA_RUNTIME_TRINO_CADDY_DATA_DIR:-${SCRIPT_DIR}/runtime/trino/caddy/data}" \
     "${CUSTOMERDNA_RUNTIME_TRINO_CADDY_CONFIG_DIR:-${SCRIPT_DIR}/runtime/trino/caddy/config}" \
-    "${CUSTOMERDNA_RUNTIME_TRINO_AUDIT_LOG_DIR:-${SCRIPT_DIR}/runtime/trino/audit_logs}" || true
+    "${CUSTOMERDNA_RUNTIME_TRINO_AUDIT_LOG_DIR:-${SCRIPT_DIR}/runtime/trino/audit_logs}" \
+    "${CUSTOMERDNA_RUNTIME_KERBEROS_KDC_DB_DIR:-${SCRIPT_DIR}/runtime/kerberos/kdc_db}" \
+    "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}" \
+    "${CUSTOMERDNA_RUNTIME_HDFS_ADMIN_STAGING_DIR:-${SCRIPT_DIR}/runtime/hdfs/admin_staging}" || true
 else
   rm -rf "${SCRIPT_DIR}/runtime"
   mkdir -p "${SCRIPT_DIR}/runtime"

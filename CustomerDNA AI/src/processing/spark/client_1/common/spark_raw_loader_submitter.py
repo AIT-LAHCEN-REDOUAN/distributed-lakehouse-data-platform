@@ -47,6 +47,8 @@ SPARK_BLOCKMANAGER_PORT = os.getenv("CUSTOMERDNA_SPARK_BLOCKMANAGER_PORT", "").s
 SPARK_EXECUTOR_MEMORY = os.getenv("CUSTOMERDNA_SPARK_EXECUTOR_MEMORY", "").strip()
 SPARK_EXECUTOR_CORES = os.getenv("CUSTOMERDNA_SPARK_EXECUTOR_CORES", "").strip()
 SPARK_CORES_MAX = os.getenv("CUSTOMERDNA_SPARK_CORES_MAX", "").strip()
+SPARK_KERBEROS_PRINCIPAL = os.getenv("CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL", "").strip()
+SPARK_KERBEROS_KEYTAB = os.getenv("CUSTOMERDNA_SPARK_KERBEROS_KEYTAB", "").strip()
 SPARK_REMOTE_SSH_HOST = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_HOST", "").strip()
 SPARK_REMOTE_SSH_PORT = int(os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_PORT", "22").strip() or "22")
 SPARK_REMOTE_SSH_USER = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_USER", "").strip()
@@ -119,6 +121,13 @@ def _build_spark_submit_command(
         command.extend(["--conf", f"spark.executor.cores={SPARK_EXECUTOR_CORES}"])
     if SPARK_CORES_MAX:
         command.extend(["--conf", f"spark.cores.max={SPARK_CORES_MAX}"])
+    if SPARK_KERBEROS_PRINCIPAL and SPARK_KERBEROS_KEYTAB:
+        command.extend(["--principal", SPARK_KERBEROS_PRINCIPAL, "--keytab", SPARK_KERBEROS_KEYTAB])
+    elif SPARK_KERBEROS_PRINCIPAL or SPARK_KERBEROS_KEYTAB:
+        raise RuntimeError(
+            "Spark Kerberos submission requires both CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL "
+            "and CUSTOMERDNA_SPARK_KERBEROS_KEYTAB."
+        )
 
     command.extend(
         [

@@ -37,15 +37,27 @@ services:
     restart: unless-stopped
     environment:
       CORE_CONF_fs_defaultFS: ${CUSTOMERDNA_HDFS_NAMENODE_URI}
+      CORE_CONF_hadoop_security_authentication: kerberos
+      CORE_CONF_hadoop_security_authorization: "true"
+      CORE_CONF_hadoop_rpc_protection: ${CUSTOMERDNA_HDFS_RPC_PROTECTION}
       HDFS_CONF_dfs_replication: ${CUSTOMERDNA_HDFS_REPLICATION}
       HDFS_CONF_dfs_permissions_enabled: "false"
       HDFS_CONF_dfs_webhdfs_enabled: "true"
-      HDFS_CONF_dfs_datanode_hostname: ${VM3_HOST_IP}
+      HDFS_CONF_dfs_block_access_token_enable: "true"
+      HDFS_CONF_dfs_datanode_kerberos_principal: dn/datanode-3@${CUSTOMERDNA_KRB5_REALM}
+      HDFS_CONF_dfs_datanode_keytab_file: /etc/security/keytabs/dn.service.keytab
+      HDFS_CONF_dfs_data_transfer_protection: ${CUSTOMERDNA_HDFS_DATA_TRANSFER_PROTECTION}
+      HDFS_CONF_dfs_encrypt_data_transfer: ${CUSTOMERDNA_HDFS_WIRE_ENCRYPTION}
+      HDFS_CONF_dfs_datanode_hostname: datanode-3
       HDFS_CONF_dfs_datanode_use_datanode_hostname: "true"
       HDFS_CONF_dfs_client_use_datanode_hostname: "true"
-      SERVICE_PRECONDITION: ${VM2_HOST_IP}:9870
+      KRB5_CONFIG: /etc/krb5.conf
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      SERVICE_PRECONDITION: namenode:9870
     volumes:
       - ${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-./runtime/hdfs/datanode}:/hadoop/dfs/data
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/datanode-3:/etc/security/keytabs:ro
 
   spark-worker-3:
     build:
@@ -68,9 +80,12 @@ services:
     environment:
       HOME: /opt/spark/work-dir
       IVY_HOME: /opt/spark/work-dir/.ivy2
+      KRB5_CONFIG: /etc/krb5.conf
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
       SPARK_LOCAL_IP: ${VM3_HOST_IP}
       SPARK_PUBLIC_DNS: ${VM3_HOST_IP}
     command:
@@ -87,6 +102,8 @@ services:
       - ${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-./runtime/spark/events}:/tmp/spark-events
       - ${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-./runtime/spark/ivy2}:/opt/spark/work-dir/.ivy2
       - ./spark/config:/opt/spark/custom-conf:ro
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/spark:/etc/security/keytabs:ro
 
   trino-worker-2:
     image: trinodb/trino:${TRINO_VERSION}
@@ -94,9 +111,17 @@ services:
     hostname: trino-worker-2
     network_mode: host
     restart: unless-stopped
+    extra_hosts:
+      - "namenode:${VM2_HOST_IP}"
+      - "hive-metastore:${VM2_HOST_IP}"
+      - "datanode-1:${VM1_HOST_IP}"
+      - "datanode-2:${VM2_HOST_IP}"
+      - "datanode-3:${VM3_HOST_IP}"
     volumes:
       - ./trino/etc:/etc/trino:ro
       - ${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-./runtime/trino/data}:/var/trino/data
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/trino:/etc/security/keytabs:ro
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1

@@ -12,7 +12,12 @@ COMMON_DIR = CURRENT_DIR / "common"
 if str(COMMON_DIR) not in sys.path:
     sys.path.insert(0, str(COMMON_DIR))
 
-from hdfs_bronze_config import HDFS_BRONZE_ROOT, HDFS_WEB_ENDPOINT, HDFS_WEBHDFS_USER  # noqa: E402
+from hdfs_bronze_config import (  # noqa: E402
+    HDFS_BRONZE_ROOT,
+    HDFS_WEB_ENDPOINT,
+    HDFS_WEBHDFS_USER,
+    describe_hdfs_access,
+)
 from hdfs_bronze_utils import build_hdfs_client, ensure_bronze_root_exists  # noqa: E402
 
 
@@ -20,6 +25,7 @@ def main() -> int:
     print("=" * 80)
     print("CUSTOMERDNA AI - HDFS BRONZE ZONE INITIALIZATION")
     print("=" * 80)
+    print(f"HDFS access mode: {describe_hdfs_access()}")
     print(f"WebHDFS endpoint: {HDFS_WEB_ENDPOINT}")
     print(f"WebHDFS user: {HDFS_WEBHDFS_USER}")
     print(f"Bronze root: {HDFS_BRONZE_ROOT}")

@@ -48,3 +48,30 @@ HDFS_BRONZE_ROOT = _normalize_bronze_root(
     os.getenv("CUSTOMERDNA_HDFS_BRONZE_ROOT", "/bronze/client_1")
 )
 HDFS_WEBHDFS_USER = os.getenv("CUSTOMERDNA_HDFS_WEBHDFS_USER", "hdfs").strip() or "hdfs"
+HDFS_ACCESS_MODE = os.getenv("CUSTOMERDNA_HDFS_ACCESS_MODE", "webhdfs").strip().lower() or "webhdfs"
+HDFS_REMOTE_SSH_HOST = os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_HOST", "").strip()
+HDFS_REMOTE_SSH_PORT = int(os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_PORT", "22").strip() or "22")
+HDFS_REMOTE_SSH_USER = os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_USER", "").strip()
+HDFS_REMOTE_SSH_KEY_PATH = os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_KEY_PATH", "").strip()
+HDFS_REMOTE_CONTAINER_NAME = os.getenv("CUSTOMERDNA_HDFS_REMOTE_CONTAINER_NAME", "hdfs-admin-client").strip() or "hdfs-admin-client"
+HDFS_REMOTE_KRB5_CONFIG_PATH = os.getenv("CUSTOMERDNA_HDFS_REMOTE_KRB5_CONFIG_PATH", "/etc/krb5.conf").strip() or "/etc/krb5.conf"
+HDFS_REMOTE_KINIT_PRINCIPAL = os.getenv("CUSTOMERDNA_HDFS_REMOTE_KINIT_PRINCIPAL", "").strip()
+HDFS_REMOTE_KINIT_KEYTAB_PATH = os.getenv("CUSTOMERDNA_HDFS_REMOTE_KINIT_KEYTAB_PATH", "").strip()
+HDFS_REMOTE_STAGING_HOST_DIR = os.getenv(
+    "CUSTOMERDNA_HDFS_REMOTE_STAGING_HOST_DIR",
+    "/tmp/customerdna_hdfs_admin_staging",
+).strip() or "/tmp/customerdna_hdfs_admin_staging"
+HDFS_REMOTE_STAGING_CONTAINER_DIR = os.getenv(
+    "CUSTOMERDNA_HDFS_REMOTE_STAGING_CONTAINER_DIR",
+    HDFS_REMOTE_STAGING_HOST_DIR,
+).strip() or HDFS_REMOTE_STAGING_HOST_DIR
+
+
+def describe_hdfs_access() -> str:
+    if HDFS_ACCESS_MODE == "ssh_cli":
+        return (
+            f"SSH CLI via {HDFS_REMOTE_SSH_USER}@{HDFS_REMOTE_SSH_HOST}:{HDFS_REMOTE_SSH_PORT} "
+            f"-> container {HDFS_REMOTE_CONTAINER_NAME}"
+        )
+
+    return f"WebHDFS via {HDFS_WEB_ENDPOINT} as {HDFS_WEBHDFS_USER}"

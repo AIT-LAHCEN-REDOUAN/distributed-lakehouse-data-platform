@@ -21,7 +21,7 @@ echo "============================================================"
 
 echo "[1/7] Updating APT metadata and installing base packages"
 apt-get update
-apt-get install -y ca-certificates curl gnupg lsb-release git ufw cryptsetup
+apt-get install -y ca-certificates curl gnupg lsb-release git ufw cryptsetup krb5-user
 
 echo "[2/7] Removing conflicting container packages if present"
 for pkg in docker.io docker-compose docker-compose-v2 docker-doc docker-buildx podman-docker containerd runc; do

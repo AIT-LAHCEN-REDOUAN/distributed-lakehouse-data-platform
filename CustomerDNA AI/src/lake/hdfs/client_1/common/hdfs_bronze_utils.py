@@ -3,17 +3,37 @@
 from __future__ import annotations
 
 import json
+import os
+import re
+import shlex
 import socket
 import time
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import quote, urlparse, urlunparse
 
 import requests
 
+try:
+    import paramiko  # type: ignore
+except Exception:  # pragma: no cover - optional dependency for secure deployment mode
+    paramiko = None
+
 from hdfs_bronze_config import (
+    HDFS_ACCESS_MODE,
     HDFS_BRONZE_ROOT,
     HDFS_NAMENODE_URI,
+    HDFS_REMOTE_CONTAINER_NAME,
+    HDFS_REMOTE_KINIT_KEYTAB_PATH,
+    HDFS_REMOTE_KINIT_PRINCIPAL,
+    HDFS_REMOTE_KRB5_CONFIG_PATH,
+    HDFS_REMOTE_SSH_HOST,
+    HDFS_REMOTE_SSH_KEY_PATH,
+    HDFS_REMOTE_SSH_PORT,
+    HDFS_REMOTE_SSH_USER,
+    HDFS_REMOTE_STAGING_CONTAINER_DIR,
+    HDFS_REMOTE_STAGING_HOST_DIR,
     HDFS_WEB_ENDPOINT,
     HDFS_WEBHDFS_USER,
 )
@@ -21,6 +41,17 @@ from hdfs_bronze_config import (
 
 REQUEST_TIMEOUT_SECONDS = 120
 DATANODE_ALIAS_CACHE_TTL_SECONDS = 60
+SSH_CONNECT_TIMEOUT_SECONDS = 20
+HDFS_LS_LINE_PATTERN = re.compile(
+    r"^(?P<permissions>[dl-][rwx-]{9})\s+"
+    r"(?P<replication>\d+|-)\s+"
+    r"(?P<owner>\S+)\s+"
+    r"(?P<group>\S+)\s+"
+    r"(?P<length>\d+)\s+"
+    r"(?P<date>\d{4}-\d{2}-\d{2})\s+"
+    r"(?P<time>\d{2}:\d{2})\s+"
+    r"(?P<path>.+)$"
+)
 
 
 @dataclass(frozen=True)
@@ -289,7 +320,257 @@ class HdfsBronzeClient:
         return response
 
 
+class RemoteSshHdfsBronzeClient:
+    """HDFS client that executes authenticated CLI operations on a remote VM over SSH."""
+
+    def __init__(
+        self,
+        *,
+        ssh_host: str,
+        ssh_port: int,
+        ssh_user: str,
+        ssh_key_path: str,
+        container_name: str,
+        krb5_config_path: str,
+        kinit_principal: str,
+        kinit_keytab_path: str,
+        staging_host_dir: str,
+        staging_container_dir: str,
+    ) -> None:
+        self.ssh_host = ssh_host.strip()
+        self.ssh_port = int(ssh_port)
+        self.ssh_user = ssh_user.strip()
+        self.ssh_key_path = ssh_key_path.strip()
+        self.container_name = container_name.strip()
+        self.krb5_config_path = krb5_config_path.strip() or "/etc/krb5.conf"
+        self.kinit_principal = kinit_principal.strip()
+        self.kinit_keytab_path = kinit_keytab_path.strip()
+        self.staging_host_dir = staging_host_dir.strip().rstrip("/") or "/tmp/customerdna_hdfs_admin_staging"
+        self.staging_container_dir = (
+            staging_container_dir.strip().rstrip("/") or self.staging_host_dir
+        )
+
+        missing_fields = []
+        if not self.ssh_host:
+            missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_SSH_HOST")
+        if not self.ssh_user:
+            missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_SSH_USER")
+        if not self.ssh_key_path:
+            missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_SSH_KEY_PATH")
+        if not self.kinit_principal:
+            missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_KINIT_PRINCIPAL")
+        if not self.kinit_keytab_path:
+            missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_KINIT_KEYTAB_PATH")
+        if missing_fields:
+            raise RuntimeError(
+                "Secure HDFS SSH mode is missing required settings: "
+                + ", ".join(missing_fields)
+            )
+
+        if paramiko is None:
+            raise RuntimeError(
+                "Secure HDFS SSH mode requires the 'paramiko' package in the current Python runtime."
+            )
+
+    @staticmethod
+    def normalize_path(hdfs_path: str) -> str:
+        cleaned = "/" + str(hdfs_path).strip().strip("/")
+        return cleaned.rstrip("/") or "/"
+
+    def _connect(self):
+        assert paramiko is not None  # pragma: no cover - guarded in __init__
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(
+            hostname=self.ssh_host,
+            port=self.ssh_port,
+            username=self.ssh_user,
+            key_filename=self.ssh_key_path,
+            look_for_keys=False,
+            allow_agent=False,
+            timeout=SSH_CONNECT_TIMEOUT_SECONDS,
+            banner_timeout=SSH_CONNECT_TIMEOUT_SECONDS,
+            auth_timeout=SSH_CONNECT_TIMEOUT_SECONDS,
+        )
+        return client
+
+    def _build_container_command(self, shell_body: str) -> str:
+        inner_command = (
+            "set -euo pipefail; "
+            f"export KRB5_CONFIG={shlex.quote(self.krb5_config_path)}; "
+            "kdestroy >/dev/null 2>&1 || true; "
+            f"kinit -kt {shlex.quote(self.kinit_keytab_path)} {shlex.quote(self.kinit_principal)} >/dev/null; "
+            f"{shell_body}"
+        )
+        return (
+            f"docker exec {shlex.quote(self.container_name)} "
+            f"/bin/bash -lc {shlex.quote(inner_command)}"
+        )
+
+    def _run_remote_host_command(
+        self,
+        command: str,
+        *,
+        allow_exit_codes: set[int] | None = None,
+    ) -> tuple[int, str, str]:
+        allow_exit_codes = allow_exit_codes or {0}
+        client = self._connect()
+        try:
+            _, stdout, stderr = client.exec_command(command)
+            exit_code = stdout.channel.recv_exit_status()
+            stdout_text = stdout.read().decode("utf-8", errors="replace")
+            stderr_text = stderr.read().decode("utf-8", errors="replace")
+        finally:
+            client.close()
+
+        if exit_code not in allow_exit_codes:
+            raise RuntimeError(
+                f"Remote HDFS command failed on {self.ssh_user}@{self.ssh_host}:{self.ssh_port} "
+                f"with exit code {exit_code}.\nCommand: {command}\n"
+                f"stdout:\n{stdout_text}\n"
+                f"stderr:\n{stderr_text}"
+            )
+
+        return exit_code, stdout_text, stderr_text
+
+    def _run_hdfs_command(
+        self,
+        shell_body: str,
+        *,
+        allow_exit_codes: set[int] | None = None,
+    ) -> tuple[int, str, str]:
+        return self._run_remote_host_command(
+            self._build_container_command(shell_body),
+            allow_exit_codes=allow_exit_codes,
+        )
+
+    def path_exists(self, hdfs_path: str) -> bool:
+        normalized = self.normalize_path(hdfs_path)
+        exit_code, _, _ = self._run_hdfs_command(
+            f"hdfs dfs -test -e {shlex.quote(normalized)}",
+            allow_exit_codes={0, 1},
+        )
+        return exit_code == 0
+
+    def ensure_directory(self, hdfs_path: str) -> None:
+        normalized = self.normalize_path(hdfs_path)
+        self._run_hdfs_command(f"hdfs dfs -mkdir -p {shlex.quote(normalized)}")
+
+    def delete_path(self, hdfs_path: str, *, recursive: bool = True) -> bool:
+        normalized = self.normalize_path(hdfs_path)
+        if not self.path_exists(normalized):
+            return False
+
+        recursive_flag = "-r " if recursive else ""
+        self._run_hdfs_command(f"hdfs dfs -rm {recursive_flag}-f {shlex.quote(normalized)}")
+        return True
+
+    def upload_file(self, hdfs_path: str, local_path: Path, *, overwrite: bool = True) -> None:
+        normalized = self.normalize_path(hdfs_path)
+        remote_host_temp = f"{self.staging_host_dir}/{uuid.uuid4().hex}_{local_path.name}"
+        remote_container_temp = f"{self.staging_container_dir}/{Path(remote_host_temp).name}"
+        remote_parent = str(Path(normalized).parent).replace("\\", "/")
+
+        client = self._connect()
+        try:
+            mkdir_command = f"mkdir -p {shlex.quote(self.staging_host_dir)}"
+            _, stdout, stderr = client.exec_command(mkdir_command)
+            if stdout.channel.recv_exit_status() != 0:
+                raise RuntimeError(stderr.read().decode("utf-8", errors="replace"))
+
+            sftp = client.open_sftp()
+            try:
+                sftp.put(str(local_path), remote_host_temp)
+            finally:
+                sftp.close()
+
+            put_flags = "-f " if overwrite else ""
+            remote_command = self._build_container_command(
+                f"hdfs dfs -mkdir -p {shlex.quote(remote_parent)} && "
+                f"hdfs dfs -put {put_flags}{shlex.quote(remote_container_temp)} {shlex.quote(normalized)} && "
+                f"rm -f {shlex.quote(remote_container_temp)}"
+            )
+            _, stdout, stderr = client.exec_command(remote_command)
+            exit_code = stdout.channel.recv_exit_status()
+            if exit_code != 0:
+                raise RuntimeError(
+                    "Remote HDFS upload failed.\n"
+                    f"stdout:\n{stdout.read().decode('utf-8', errors='replace')}\n"
+                    f"stderr:\n{stderr.read().decode('utf-8', errors='replace')}"
+                )
+        finally:
+            try:
+                cleanup_command = f"rm -f {shlex.quote(remote_host_temp)}"
+                _, stdout, _ = client.exec_command(cleanup_command)
+                stdout.channel.recv_exit_status()
+            except Exception:
+                pass
+            client.close()
+
+    def list_status(self, hdfs_path: str, *, recursive: bool = False) -> list[dict[str, object]]:
+        normalized = self.normalize_path(hdfs_path)
+        if not self.path_exists(normalized):
+            return []
+
+        recursive_flag = "-R " if recursive else ""
+        _, stdout_text, _ = self._run_hdfs_command(
+            f"hdfs dfs -ls {recursive_flag}{shlex.quote(normalized)}",
+        )
+        entries: list[dict[str, object]] = []
+        for raw_line in stdout_text.splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("Found "):
+                continue
+            match = HDFS_LS_LINE_PATTERN.match(line)
+            if not match:
+                continue
+            path_value = str(match.group("path")).strip()
+            permissions = str(match.group("permissions"))
+            entries.append(
+                {
+                    "type": "DIRECTORY" if permissions.startswith("d") else "FILE",
+                    "path": path_value,
+                    "pathSuffix": Path(path_value).name,
+                    "length": int(match.group("length")),
+                }
+            )
+        return entries
+
+    def list_files(self, hdfs_path: str, *, recursive: bool = False) -> list[HdfsFileInfo]:
+        normalized_path = self.normalize_path(hdfs_path)
+        collected: list[HdfsFileInfo] = []
+
+        for entry in self.list_status(normalized_path, recursive=recursive):
+            if str(entry.get("type", "")) != "FILE":
+                continue
+            collected.append(
+                HdfsFileInfo(
+                    object_name=str(entry.get("path", "")),
+                    path_suffix=str(entry.get("pathSuffix", "")),
+                    length=int(entry.get("length", 0)),
+                )
+            )
+
+        return collected
+
+    def open_file_stream(self, hdfs_path: str):  # pragma: no cover - not used in the deployed pipeline
+        raise NotImplementedError("SSH-backed HDFS access does not implement streamed file reads.")
+
+
 def build_hdfs_client() -> HdfsBronzeClient:
+    if HDFS_ACCESS_MODE == "ssh_cli":
+        return RemoteSshHdfsBronzeClient(
+            ssh_host=HDFS_REMOTE_SSH_HOST,
+            ssh_port=HDFS_REMOTE_SSH_PORT,
+            ssh_user=HDFS_REMOTE_SSH_USER,
+            ssh_key_path=HDFS_REMOTE_SSH_KEY_PATH,
+            container_name=HDFS_REMOTE_CONTAINER_NAME,
+            krb5_config_path=HDFS_REMOTE_KRB5_CONFIG_PATH,
+            kinit_principal=HDFS_REMOTE_KINIT_PRINCIPAL,
+            kinit_keytab_path=HDFS_REMOTE_KINIT_KEYTAB_PATH,
+            staging_host_dir=HDFS_REMOTE_STAGING_HOST_DIR,
+            staging_container_dir=HDFS_REMOTE_STAGING_CONTAINER_DIR,
+        )
     return HdfsBronzeClient(HDFS_WEB_ENDPOINT, HDFS_NAMENODE_URI, HDFS_WEBHDFS_USER)
 
 
