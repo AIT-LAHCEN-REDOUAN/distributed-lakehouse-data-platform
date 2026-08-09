@@ -22,7 +22,7 @@ services:
       KAFKA_NUM_PARTITIONS: ${CUSTOMERDNA_KAFKA_DEFAULT_PARTITIONS}
       KAFKA_LOG_DIRS: /var/lib/kafka/data
     volumes:
-      - ./runtime/kafka/data:/var/lib/kafka/data
+      - ${CUSTOMERDNA_RUNTIME_KAFKA_DATA_DIR:-./runtime/kafka/data}:/var/lib/kafka/data
 
   datanode-3:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
@@ -45,7 +45,7 @@ services:
       HDFS_CONF_dfs_client_use_datanode_hostname: "true"
       SERVICE_PRECONDITION: ${VM2_HOST_IP}:9870
     volumes:
-      - ./runtime/hdfs/datanode:/hadoop/dfs/data
+      - ${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-./runtime/hdfs/datanode}:/hadoop/dfs/data
 
   spark-worker-3:
     build:
@@ -84,8 +84,8 @@ services:
       - --memory
       - ${SPARK_WORKER_MEMORY}
     volumes:
-      - ./runtime/spark/events:/tmp/spark-events
-      - ./runtime/spark/ivy2:/opt/spark/work-dir/.ivy2
+      - ${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-./runtime/spark/events}:/tmp/spark-events
+      - ${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-./runtime/spark/ivy2}:/opt/spark/work-dir/.ivy2
       - ./spark/config:/opt/spark/custom-conf:ro
 
   trino-worker-2:
@@ -96,7 +96,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./trino/etc:/etc/trino:ro
-      - ./runtime/trino/data:/var/trino/data
+      - ${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-./runtime/trino/data}:/var/trino/data
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1

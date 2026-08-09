@@ -377,6 +377,21 @@ def _build_http_url(endpoint: str) -> str:
     return normalized
 
 
+def _build_trino_tls_verify_setting(env: dict[str, str]) -> bool | str:
+    verify_tls = env.get("CUSTOMERDNA_TRINO_VERIFY_TLS", "false").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+    if not verify_tls:
+        return False
+    ca_cert_path = env.get("CUSTOMERDNA_TRINO_CA_CERT_PATH", "").strip()
+    if ca_cert_path:
+        return ca_cert_path
+    return True
+
+
 def validate_hdfs_bronze_service() -> None:
     def _callback() -> None:
         env = build_runtime_env()
@@ -470,6 +485,7 @@ def validate_trino_query_service() -> None:
             f"{env['CUSTOMERDNA_TRINO_URL'].rstrip('/')}/v1/info",
             auth=auth,
             timeout=15,
+            verify=_build_trino_tls_verify_setting(env),
         )
         response.raise_for_status()
         print(f"[SUCCESS] Trino query service responded with HTTP {response.status_code}")

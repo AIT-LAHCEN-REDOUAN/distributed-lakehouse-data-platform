@@ -69,7 +69,8 @@ $requiredPaths = @(
     (Join-Path $repoRoot "src/monitoring"),
     (Join-Path $repoRoot "src/transformation/dbt_spark/client_1"),
     (Join-Path $repoRoot "src/quality/great_expectations/client_1"),
-    (Join-Path $scriptDir "ssh")
+    (Join-Path $scriptDir "ssh"),
+    (Join-Path $scriptDir "tls_gateway")
 )
 
 foreach ($path in $requiredPaths) {
@@ -101,7 +102,8 @@ Test-TcpEndpoint -HostName "10.10.252.12" -Port 9083 -Label "Hive Metastore on V
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 22 -Label "SSH on VM2 for remote Spark submission"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 7077 -Label "Spark master on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 10000 -Label "Spark Thrift on VM2"
-Test-TcpEndpoint -HostName "10.10.252.12" -Port 8088 -Label "Trino coordinator on VM2"
+Test-TcpEndpoint -HostName "10.10.252.12" -Port 8088 -Label "Trino HTTP gateway on VM2"
+Test-TcpEndpoint -HostName "10.10.252.12" -Port 8443 -Label "Trino HTTPS gateway on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 5435 -Label "Hive Metastore PostgreSQL on VM2"
 Test-TcpEndpoint -HostName "10.10.252.11" -Port 8081 -Label "cAdvisor on VM1"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 8081 -Label "cAdvisor on VM2"

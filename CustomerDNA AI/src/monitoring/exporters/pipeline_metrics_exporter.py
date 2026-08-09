@@ -4,6 +4,7 @@ import json
 import math
 import os
 import socket
+import ssl
 import sys
 import time
 from base64 import b64encode
@@ -42,14 +43,28 @@ def _normalized_http_url(value: str) -> str:
     return normalized
 
 
-def _http_probe_status(value: str, *, username: str = "", password: str = "") -> int:
+def _http_probe_status(
+    value: str,
+    *,
+    username: str = "",
+    password: str = "",
+    verify_tls: bool = True,
+    ca_cert_path: str = "",
+) -> int:
     try:
         headers = {"User-Agent": "customerdna-monitoring-exporter"}
         if username and password:
             token = b64encode(f"{username}:{password}".encode("utf-8")).decode("ascii")
             headers["Authorization"] = f"Basic {token}"
-        request = Request(_normalized_http_url(value), headers=headers)
-        with urlopen(request, timeout=DEFAULT_HTTP_TIMEOUT_SECONDS) as response:  # noqa: S310
+        url = _normalized_http_url(value)
+        request = Request(url, headers=headers)
+        ssl_context = None
+        if url.startswith("https://"):
+            if verify_tls:
+                ssl_context = ssl.create_default_context(cafile=ca_cert_path or None)
+            else:
+                ssl_context = ssl._create_unverified_context()
+        with urlopen(request, timeout=DEFAULT_HTTP_TIMEOUT_SECONDS, context=ssl_context) as response:  # noqa: S310
             return 1 if 200 <= response.status < 500 else 0
     except (URLError, TimeoutError, ValueError, OSError):
         return 0
@@ -205,6 +220,11 @@ def build_metrics_payload() -> str:
     lines: list[str] = []
     trino_monitoring_user = os.getenv("CUSTOMERDNA_MONITORING_TRINO_USER", "")
     trino_monitoring_password = os.getenv("CUSTOMERDNA_MONITORING_TRINO_PASSWORD", "")
+    trino_monitoring_verify_tls = os.getenv(
+        "CUSTOMERDNA_MONITORING_TRINO_VERIFY_TLS",
+        "false",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+    trino_monitoring_ca_cert_path = os.getenv("CUSTOMERDNA_MONITORING_TRINO_CA_CERT_PATH", "").strip()
 
     service_targets = (
         {
@@ -254,6 +274,8 @@ def build_metrics_payload() -> str:
                 os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088") + "/v1/info",
                 username=trino_monitoring_user,
                 password=trino_monitoring_password,
+                verify_tls=trino_monitoring_verify_tls,
+                ca_cert_path=trino_monitoring_ca_cert_path,
             ),
         },
     )

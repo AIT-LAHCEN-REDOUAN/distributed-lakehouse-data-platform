@@ -31,6 +31,22 @@ echo "[Bundle files]"
 [[ -f "${SCRIPT_DIR}/.env" ]] && echo "[OK] .env" || echo "[WARN] .env missing"
 [[ -f "${SCRIPT_DIR}/prepare_fresh_vm1.sh" ]] && echo "[OK] prepare_fresh_vm1.sh" || echo "[WARN] prepare_fresh_vm1.sh missing"
 [[ -f "${SCRIPT_DIR}/start_vm1_stack.sh" ]] && echo "[OK] start_vm1_stack.sh" || echo "[WARN] start_vm1_stack.sh missing"
+[[ -f "${SCRIPT_DIR}/setup_encrypted_storage_vm1.sh" ]] && echo "[OK] setup_encrypted_storage_vm1.sh" || echo "[WARN] setup_encrypted_storage_vm1.sh missing"
+
+set -a
+source "${SCRIPT_DIR}/.env"
+set +a
+
+echo
+echo "[Encrypted runtime storage]"
+command -v cryptsetup >/dev/null 2>&1 && echo "[OK] cryptsetup" || echo "[WARN] cryptsetup missing"
+if [[ "${CUSTOMERDNA_SECURE_STORAGE_ENABLED:-true}" == "true" ]]; then
+  if mountpoint -q "${CUSTOMERDNA_SECURE_STORAGE_ROOT:-/mnt/customerdna_secure}"; then
+    echo "[OK] Secure storage mounted at ${CUSTOMERDNA_SECURE_STORAGE_ROOT:-/mnt/customerdna_secure}"
+  else
+    echo "[WARN] Secure storage not mounted at ${CUSTOMERDNA_SECURE_STORAGE_ROOT:-/mnt/customerdna_secure}"
+  fi
+fi
 
 echo
 echo "[Peer endpoints]"

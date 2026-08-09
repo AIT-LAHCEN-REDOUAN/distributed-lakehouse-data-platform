@@ -31,6 +31,22 @@ echo "[Bundle files]"
 [[ -f "${SCRIPT_DIR}/.env" ]] && echo "[OK] .env" || echo "[WARN] .env missing"
 [[ -f "${SCRIPT_DIR}/prepare_fresh_vm2.sh" ]] && echo "[OK] prepare_fresh_vm2.sh" || echo "[WARN] prepare_fresh_vm2.sh missing"
 [[ -f "${SCRIPT_DIR}/start_vm2_stack.sh" ]] && echo "[OK] start_vm2_stack.sh" || echo "[WARN] start_vm2_stack.sh missing"
+[[ -f "${SCRIPT_DIR}/setup_encrypted_storage_vm2.sh" ]] && echo "[OK] setup_encrypted_storage_vm2.sh" || echo "[WARN] setup_encrypted_storage_vm2.sh missing"
+
+set -a
+source "${SCRIPT_DIR}/.env"
+set +a
+
+echo
+echo "[Encrypted runtime storage]"
+command -v cryptsetup >/dev/null 2>&1 && echo "[OK] cryptsetup" || echo "[WARN] cryptsetup missing"
+if [[ "${CUSTOMERDNA_SECURE_STORAGE_ENABLED:-true}" == "true" ]]; then
+  if mountpoint -q "${CUSTOMERDNA_SECURE_STORAGE_ROOT:-/mnt/customerdna_secure}"; then
+    echo "[OK] Secure storage mounted at ${CUSTOMERDNA_SECURE_STORAGE_ROOT:-/mnt/customerdna_secure}"
+  else
+    echo "[WARN] Secure storage not mounted at ${CUSTOMERDNA_SECURE_STORAGE_ROOT:-/mnt/customerdna_secure}"
+  fi
+fi
 
 echo
 echo "[Peer endpoints]"
@@ -38,6 +54,7 @@ check_tcp 10.10.252.11 22 "VM1 SSH"
 check_tcp 10.10.252.13 22 "VM3 SSH"
 check_tcp 10.10.252.11 9093 "Kafka controller peer on VM1"
 check_tcp 10.10.252.13 9093 "Kafka controller peer on VM3"
+check_tcp 10.10.252.12 8443 "Trino TLS gateway on VM2"
 
 echo
 echo "[Local host ports before startup]"

@@ -29,12 +29,25 @@ if [[ ! -f "${SCRIPT_DIR}/.env" ]]; then
   exit 1
 fi
 
+set -a
+source "${SCRIPT_DIR}/.env"
+set +a
+
 echo "[1/5] Stopping and removing VM1 compose services"
 docker compose --env-file "${SCRIPT_DIR}/.env" down --remove-orphans --volumes || true
 
 echo "[2/5] Removing VM1 runtime data"
-rm -rf "${SCRIPT_DIR}/runtime"
-mkdir -p "${SCRIPT_DIR}/runtime"
+if [[ "${CUSTOMERDNA_SECURE_STORAGE_ENABLED:-true}" == "true" ]]; then
+  sudo rm -rf \
+    "${CUSTOMERDNA_RUNTIME_KAFKA_DATA_DIR:-${SCRIPT_DIR}/runtime/kafka/data}" \
+    "${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-${SCRIPT_DIR}/runtime/hdfs/datanode}" \
+    "${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-${SCRIPT_DIR}/runtime/spark/events}" \
+    "${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-${SCRIPT_DIR}/runtime/spark/ivy2}" \
+    "${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-${SCRIPT_DIR}/runtime/trino/data}" || true
+else
+  rm -rf "${SCRIPT_DIR}/runtime"
+  mkdir -p "${SCRIPT_DIR}/runtime"
+fi
 
 echo "[3/5] Pruning Docker resources"
 docker system prune -a -f --volumes || true

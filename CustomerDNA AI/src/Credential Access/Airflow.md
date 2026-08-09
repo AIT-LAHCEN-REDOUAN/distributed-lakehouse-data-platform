@@ -1,6 +1,6 @@
 # Airflow
 
-- URL: `http://localhost:18080`
+- URL: `https://localhost:18080`
 - Username: `admin`
 - Password: `CustomerDNA_Airflow_Admin_2026!`
 - Role: `Admin`
@@ -15,3 +15,8 @@ Purpose:
 - Trigger and monitor DAGs
 - Review task logs
 - Validate end-to-end orchestration
+
+Notes:
+
+- The local TLS gateway uses an internal demo certificate authority, so the browser may show a certificate warning on first access.
+- If the startup script remaps the port because `18080` is busy, read the active value from `control_plane_pc/runtime/compose.generated.env`.

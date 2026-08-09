@@ -30,6 +30,7 @@ Kafka controller quorum also expects VM2 to already be online.
 2. [vm3_preflight_checks.sh](</D:/github/Master_PFE_Project/CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm3/vm3_preflight_checks.sh>)
 3. [start_vm3_stack.sh](</D:/github/Master_PFE_Project/CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm3/start_vm3_stack.sh>)
 4. [reset_vm3_state.sh](</D:/github/Master_PFE_Project/CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm3/reset_vm3_state.sh>) for full wipe-and-redeploy tests
+5. [setup_encrypted_storage_vm3.sh](</D:/github/Master_PFE_Project/CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm3/setup_encrypted_storage_vm3.sh>) before stack startup when LUKS-backed runtime storage is enabled
 
 ## Access Points On VM3
 
@@ -38,3 +39,7 @@ Kafka controller quorum also expects VM2 to already be online.
 - Spark worker UI: `http://10.10.252.13:8087`
 - Trino worker HTTP: `http://10.10.252.13:8080`
 - cAdvisor: `http://10.10.252.13:8081`
+
+## Security Note
+
+The VM3 runtime service data can be mounted on a LUKS-encrypted filesystem under `/mnt/customerdna_secure`. When enabled, Kafka, HDFS DataNode data, Spark event data, Spark Ivy cache, and Trino runtime data use the encrypted mount instead of the plain local runtime folder.

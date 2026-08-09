@@ -104,7 +104,7 @@ function Set-RuntimeComposeEnv {
         "CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT=$PrometheusPort"
         "CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT=$GrafanaPort"
         "CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT=$KafkaUiPort"
-        "AIRFLOW__API__BASE_URL=http://localhost:$AirflowPort"
+        "AIRFLOW__API__BASE_URL=https://localhost:$AirflowPort"
     ) | Set-Content -Path $runtimeComposeEnv -Encoding ascii
 }
 
@@ -183,21 +183,37 @@ else {
 }
 
 $envValues = Get-EnvMap -Path $envFile
+$runtimeValues = @{}
+if (Test-Path $runtimeComposeEnv) {
+    $runtimeValues = Get-EnvMap -Path $runtimeComposeEnv
+}
 $preferredAirflowPort = "18080"
 if ($envValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT") -and $envValues["CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT"]) {
     $preferredAirflowPort = $envValues["CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT"]
+}
+if ($runtimeValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT") -and $runtimeValues["CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT"]) {
+    $preferredAirflowPort = $runtimeValues["CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT"]
 }
 $preferredPrometheusPort = "19090"
 if ($envValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT") -and $envValues["CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT"]) {
     $preferredPrometheusPort = $envValues["CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT"]
 }
+if ($runtimeValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT") -and $runtimeValues["CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT"]) {
+    $preferredPrometheusPort = $runtimeValues["CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT"]
+}
 $preferredGrafanaPort = "13001"
 if ($envValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT") -and $envValues["CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT"]) {
     $preferredGrafanaPort = $envValues["CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT"]
 }
+if ($runtimeValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT") -and $runtimeValues["CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT"]) {
+    $preferredGrafanaPort = $runtimeValues["CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT"]
+}
 $preferredKafkaUiPort = "18085"
 if ($envValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT") -and $envValues["CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT"]) {
     $preferredKafkaUiPort = $envValues["CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT"]
+}
+if ($runtimeValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT") -and $runtimeValues["CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT"]) {
+    $preferredKafkaUiPort = $runtimeValues["CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT"]
 }
 
 $preferredAirflowPort = [int]$preferredAirflowPort
@@ -205,22 +221,22 @@ $preferredPrometheusPort = [int]$preferredPrometheusPort
 $preferredGrafanaPort = [int]$preferredGrafanaPort
 $preferredKafkaUiPort = [int]$preferredKafkaUiPort
 
-$resolvedAirflowPort = Get-ExistingPublishedPort -ContainerName "control_plane_airflow_api_server" -ContainerPort 8080
+$resolvedAirflowPort = Get-ExistingPublishedPort -ContainerName "control_plane_tls_gateway" -ContainerPort $preferredAirflowPort
 if (-not $resolvedAirflowPort) {
     $resolvedAirflowPort = Resolve-FreePort -PreferredPort $preferredAirflowPort
 }
 
-$resolvedPrometheusPort = Get-ExistingPublishedPort -ContainerName "control_plane_prometheus" -ContainerPort 9090
+$resolvedPrometheusPort = Get-ExistingPublishedPort -ContainerName "control_plane_tls_gateway" -ContainerPort $preferredPrometheusPort
 if (-not $resolvedPrometheusPort) {
     $resolvedPrometheusPort = Resolve-FreePort -PreferredPort $preferredPrometheusPort
 }
 
-$resolvedGrafanaPort = Get-ExistingPublishedPort -ContainerName "control_plane_grafana" -ContainerPort 3000
+$resolvedGrafanaPort = Get-ExistingPublishedPort -ContainerName "control_plane_tls_gateway" -ContainerPort $preferredGrafanaPort
 if (-not $resolvedGrafanaPort) {
     $resolvedGrafanaPort = Resolve-FreePort -PreferredPort $preferredGrafanaPort
 }
 
-$resolvedKafkaUiPort = Get-ExistingPublishedPort -ContainerName "control_plane_kafka_ui" -ContainerPort 8080
+$resolvedKafkaUiPort = Get-ExistingPublishedPort -ContainerName "control_plane_tls_gateway" -ContainerPort $preferredKafkaUiPort
 if (-not $resolvedKafkaUiPort) {
     $resolvedKafkaUiPort = Resolve-FreePort -PreferredPort $preferredKafkaUiPort
 }
@@ -242,7 +258,7 @@ $env:CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT = "$resolvedAirflowPort"
 $env:CUSTOMERDNA_CONTROL_PLANE_PROMETHEUS_PORT = "$resolvedPrometheusPort"
 $env:CUSTOMERDNA_CONTROL_PLANE_GRAFANA_PORT = "$resolvedGrafanaPort"
 $env:CUSTOMERDNA_CONTROL_PLANE_KAFKA_UI_PORT = "$resolvedKafkaUiPort"
-$env:AIRFLOW__API__BASE_URL = "http://localhost:$resolvedAirflowPort"
+$env:AIRFLOW__API__BASE_URL = "https://localhost:$resolvedAirflowPort"
 
 New-Item -ItemType Directory -Force -Path $runtimeLogs | Out-Null
 New-Item -ItemType Directory -Force -Path $runtimeDir | Out-Null
@@ -279,12 +295,16 @@ Wait-ForContainerHealth -ContainerName "control_plane_airflow_api_server" -Timeo
 Write-Host "[5/5] Starting remaining Airflow services"
 Invoke-Compose -Arguments @("up", "-d", "airflow-scheduler", "airflow-dag-processor", "airflow-triggerer")
 
-Write-Host "[6/7] Listing running services"
+Write-Host "[6/7] Starting TLS gateway"
+Invoke-Compose -Arguments @("up", "-d", "tls-gateway")
+
+Write-Host "[7/8] Listing running services"
 Invoke-Compose -Arguments @("ps")
 
-Write-Host "[7/7] Access points"
-Write-Host "Airflow   : http://localhost:$resolvedAirflowPort"
-Write-Host "Prometheus: http://localhost:$resolvedPrometheusPort"
-Write-Host "Grafana   : http://localhost:$resolvedGrafanaPort"
-Write-Host "Kafka UI  : http://localhost:$resolvedKafkaUiPort"
+Write-Host "[8/8] Access points"
+Write-Host "Airflow   : https://localhost:$resolvedAirflowPort"
+Write-Host "Prometheus: https://localhost:$resolvedPrometheusPort"
+Write-Host "Grafana   : https://localhost:$resolvedGrafanaPort"
+Write-Host "Kafka UI  : https://localhost:$resolvedKafkaUiPort"
 Write-Host "Compose env override: $runtimeComposeEnv"
+Write-Host "Note: Because the TLS gateway uses an internal demo CA, your browser may show a certificate warning on first access."

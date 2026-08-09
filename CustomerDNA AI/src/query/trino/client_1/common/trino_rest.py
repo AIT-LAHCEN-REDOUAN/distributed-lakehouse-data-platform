@@ -13,12 +13,27 @@ import requests
 TRINO_URL = os.getenv("CUSTOMERDNA_TRINO_URL", "http://localhost:8088").rstrip("/")
 TRINO_USER = os.getenv("CUSTOMERDNA_TRINO_USER", "customerdna")
 TRINO_PASSWORD = os.getenv("CUSTOMERDNA_TRINO_PASSWORD", "")
+TRINO_VERIFY_TLS = os.getenv("CUSTOMERDNA_TRINO_VERIFY_TLS", "false").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+TRINO_CA_CERT_PATH = os.getenv("CUSTOMERDNA_TRINO_CA_CERT_PATH", "").strip()
 TRINO_CATALOG = os.getenv("CUSTOMERDNA_TRINO_CATALOG", "lakehouse")
 TRINO_SCHEMA = os.getenv("CUSTOMERDNA_TRINO_SCHEMA", "raw_data")
 TRINO_STATEMENT_MAX_ATTEMPTS = int(os.getenv("CUSTOMERDNA_TRINO_STATEMENT_MAX_ATTEMPTS", "3"))
 TRINO_STATEMENT_RETRY_DELAY_SECONDS = float(
     os.getenv("CUSTOMERDNA_TRINO_STATEMENT_RETRY_DELAY_SECONDS", "5")
 )
+
+
+def _build_tls_verify_setting() -> bool | str:
+    if not TRINO_VERIFY_TLS:
+        return False
+    if TRINO_CA_CERT_PATH:
+        return TRINO_CA_CERT_PATH
+    return True
 
 
 def _is_retryable_trino_error(message: str) -> bool:
@@ -52,6 +67,7 @@ def execute_trino_statement(
         "X-Trino-Schema": schema or TRINO_SCHEMA,
     }
     auth = HTTPBasicAuth(resolved_user, TRINO_PASSWORD) if TRINO_PASSWORD else None
+    verify = _build_tls_verify_setting()
 
     last_error: Exception | None = None
     for attempt in range(1, TRINO_STATEMENT_MAX_ATTEMPTS + 1):
@@ -62,6 +78,7 @@ def execute_trino_statement(
                 headers=headers,
                 auth=auth,
                 timeout=timeout_seconds,
+                verify=verify,
             )
             response.raise_for_status()
             payload = response.json()
@@ -71,7 +88,7 @@ def execute_trino_statement(
             final_payload = payload
 
             while next_uri:
-                poll_response = requests.get(next_uri, auth=auth, timeout=timeout_seconds)
+                poll_response = requests.get(next_uri, auth=auth, timeout=timeout_seconds, verify=verify)
                 poll_response.raise_for_status()
                 final_payload = poll_response.json()
                 rows.extend(final_payload.get("data", []))

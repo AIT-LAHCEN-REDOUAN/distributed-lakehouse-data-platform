@@ -40,6 +40,7 @@ VM1 and VM3 depend on these services to join the distributed cluster cleanly.
 3. [start_vm2_stack.sh](</D:/github/Master_PFE_Project/CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm2/start_vm2_stack.sh>)
 4. [reset_vm2_state.sh](</D:/github/Master_PFE_Project/CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm2/reset_vm2_state.sh>) for full wipe-and-redeploy tests
 5. [backup_vm2_state.sh](</D:/github/Master_PFE_Project/CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm2/backup_vm2_state.sh>) for a metadata/config backup snapshot
+6. [setup_encrypted_storage_vm2.sh](</D:/github/Master_PFE_Project/CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm2/setup_encrypted_storage_vm2.sh>) before stack startup when LUKS-backed runtime storage is enabled
 
 ## Important Note
 
@@ -59,10 +60,15 @@ On older VM CPUs, newer Trino images can fail immediately with `CPU does not sup
 - Spark submit helper: `ssh redouan@10.10.252.12` then `docker exec spark-submit-client ...`
 - Spark Thrift: `10.10.252.12:10000`
 - Spark History UI: `http://10.10.252.12:18080`
-- Trino secured gateway: `http://10.10.252.12:8088`
+- Trino secured gateway (HTTP): `http://10.10.252.12:8088`
+- Trino secured gateway (HTTPS): `https://10.10.252.12:8443`
 - Trino coordinator internal port: `10.10.252.12:8089`
 - cAdvisor: `http://10.10.252.12:8081`
 
 ## Security Note
 
 The external Trino access path now goes through a secured gateway layer on port `8088`. The coordinator itself is shifted to internal port `8089`, and worker discovery is aligned to the internal port.
+
+The VM2 runtime service data can also be mounted on a LUKS-encrypted filesystem under `/mnt/customerdna_secure`. When enabled, Kafka, HDFS, Hive Metastore PostgreSQL, Spark event data, Spark Ivy cache, Spark logs, and Trino runtime data use the encrypted mount instead of the plain local runtime folder.
+
+Trino gateway access logs are also persisted under the encrypted runtime path at `/mnt/customerdna_secure/trino/audit_logs` when encrypted storage is enabled.

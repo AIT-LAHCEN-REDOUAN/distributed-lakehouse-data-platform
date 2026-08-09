@@ -1,9 +1,12 @@
 select
-    unified_entity_id,
+    {{ tokenize_identifier('unified_entity_id') }} as unified_entity_token,
     entity_source,
     entity_grain,
-    entity_key,
-    known_customer_id,
+    {{ tokenize_identifier('entity_key') }} as entity_key_token,
+    case
+        when known_customer_id is not null then {{ tokenize_identifier('known_customer_id') }}
+        else null
+    end as known_customer_token,
     age,
     geography,
     acquisition_channel,

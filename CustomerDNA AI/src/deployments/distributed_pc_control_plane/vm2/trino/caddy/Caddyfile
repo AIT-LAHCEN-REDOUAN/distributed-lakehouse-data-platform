@@ -1,0 +1,28 @@
+{
+    auto_https disable_redirects
+}
+
+http://{$VM2_HOST_IP}:8088, http://localhost:8088 {
+    basic_auth {
+        customerdna_service $2a$14$6f4CC9gaWzrpcpYZu4Eee.EuaiwozZRlRrddpI9N.xfjgULPIi22S
+        customerdna_analyst $2a$14$8/R8Dlq02byxRIR0qgtJDuzEI5/ERWryUG2CjSJeirx.ZP0taoIoC
+    }
+    log {
+        output file /var/log/caddy/trino-http-access.json
+        format json
+    }
+    reverse_proxy 127.0.0.1:8089
+}
+
+https://{$VM2_HOST_IP}:{$CUSTOMERDNA_TRINO_TLS_PORT}, https://localhost:{$CUSTOMERDNA_TRINO_TLS_PORT} {
+    tls internal
+    basic_auth {
+        customerdna_service $2a$14$6f4CC9gaWzrpcpYZu4Eee.EuaiwozZRlRrddpI9N.xfjgULPIi22S
+        customerdna_analyst $2a$14$8/R8Dlq02byxRIR0qgtJDuzEI5/ERWryUG2CjSJeirx.ZP0taoIoC
+    }
+    log {
+        output file /var/log/caddy/trino-https-access.json
+        format json
+    }
+    reverse_proxy 127.0.0.1:8089
+}

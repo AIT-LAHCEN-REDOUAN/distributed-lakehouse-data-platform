@@ -1,19 +1,20 @@
 CustomerDNA Distributed Deployment Access Points
-Date verified: Sunday, August 2, 2026
+Date verified: Sunday, August 9, 2026
 
 ============================================================
 CONTROL PLANE PC
 ============================================================
 
 Accessible in browser
-- Airflow: http://localhost:18081
-- Kafka UI: http://localhost:18085
-- Prometheus: http://localhost:19090
-- Grafana: http://localhost:13001
+- Airflow: https://localhost:18080
+- Kafka UI: https://localhost:18085
+- Prometheus: https://localhost:19090
+- Grafana: https://localhost:13001
 
 Not browser-first / service endpoints
 - Generated compose port override: D:\github\Master_PFE_Project\CustomerDNA AI\src\deployments\distributed_pc_control_plane\control_plane_pc\runtime\compose.generated.env
 - Remote Spark submission SSH target: 10.10.252.12:22
+- Note: the browser may show a warning because the local TLS gateway uses an internal demo certificate authority
 
 ============================================================
 VM1
@@ -36,7 +37,8 @@ Accessible in browser
 - HDFS NameNode web: http://10.10.252.12:9870
 - Spark Master UI: http://10.10.252.12:8086
 - Spark History UI: http://10.10.252.12:18080
-- Trino Coordinator UI: http://10.10.252.12:8088/ui/
+- Trino Coordinator UI (HTTP): http://10.10.252.12:8088/ui/
+- Trino Coordinator UI (HTTPS): https://10.10.252.12:8443/ui/
 - cAdvisor: http://10.10.252.12:8081
 
 Not browser-first / service endpoints
@@ -67,5 +69,6 @@ NOTES
 
 - Trino worker endpoints on VM1 and VM3 are technical HTTP endpoints, not user UIs.
 - Kafka broker ports are service endpoints, not web pages.
-- The main Trino UI is only on VM2 at http://10.10.252.12:8088/ui/
-- Airflow may use `http://localhost:18080` or `http://localhost:18081` depending on local port availability. Check `control_plane_pc\runtime\compose.generated.env` for the active value.
+- The main Trino UI is only on VM2 through the gateway on `http://10.10.252.12:8088/ui/` or `https://10.10.252.12:8443/ui/`.
+- The control plane local entry ports can be remapped if a port is already busy. Check `control_plane_pc\runtime\compose.generated.env` for the active values.
+- VM1, VM2, and VM3 runtime service data can be mounted on LUKS-encrypted storage under `/mnt/customerdna_secure` when `setup_encrypted_storage_vmX.sh` is used.

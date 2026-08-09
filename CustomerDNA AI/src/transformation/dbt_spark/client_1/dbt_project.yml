@@ -13,6 +13,9 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+vars:
+  pii_token_salt: "{{ env_var('CUSTOMERDNA_PII_TOKEN_SALT', 'CustomerDNA_PII_Token_Salt_2026!') }}"
+
 models:
   customerdna_client1_lakehouse:
     +file_format: iceberg

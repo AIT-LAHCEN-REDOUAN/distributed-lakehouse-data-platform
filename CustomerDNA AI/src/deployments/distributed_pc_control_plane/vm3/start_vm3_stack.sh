@@ -29,15 +29,31 @@ if [[ ! -f "${SCRIPT_DIR}/.env" ]]; then
   exit 1
 fi
 
-mkdir -p \
-  "${SCRIPT_DIR}/runtime/kafka/data" \
-  "${SCRIPT_DIR}/runtime/hdfs/datanode" \
-  "${SCRIPT_DIR}/runtime/spark/events" \
-  "${SCRIPT_DIR}/runtime/spark/ivy2/cache" \
-  "${SCRIPT_DIR}/runtime/spark/ivy2/jars" \
-  "${SCRIPT_DIR}/runtime/trino/data"
+set -a
+source "${SCRIPT_DIR}/.env"
+set +a
 
-chmod -R 777 "${SCRIPT_DIR}/runtime"
+if [[ "${CUSTOMERDNA_SECURE_STORAGE_ENABLED:-true}" == "true" ]] && ! mountpoint -q "${CUSTOMERDNA_SECURE_STORAGE_ROOT:-/mnt/customerdna_secure}"; then
+  echo "[ERROR] Encrypted storage is enabled but not mounted at ${CUSTOMERDNA_SECURE_STORAGE_ROOT:-/mnt/customerdna_secure}"
+  echo "        Run: sudo bash ${SCRIPT_DIR}/setup_encrypted_storage_vm3.sh"
+  exit 1
+fi
+
+mkdir -p \
+  "${CUSTOMERDNA_RUNTIME_KAFKA_DATA_DIR:-${SCRIPT_DIR}/runtime/kafka/data}" \
+  "${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-${SCRIPT_DIR}/runtime/hdfs/datanode}" \
+  "${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-${SCRIPT_DIR}/runtime/spark/events}" \
+  "${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-${SCRIPT_DIR}/runtime/spark/ivy2}" \
+  "${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-${SCRIPT_DIR}/runtime/spark/ivy2}/cache" \
+  "${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-${SCRIPT_DIR}/runtime/spark/ivy2}/jars" \
+  "${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-${SCRIPT_DIR}/runtime/trino/data}"
+
+chmod -R 777 \
+  "${CUSTOMERDNA_RUNTIME_KAFKA_DATA_DIR:-${SCRIPT_DIR}/runtime/kafka/data}" \
+  "${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-${SCRIPT_DIR}/runtime/hdfs/datanode}" \
+  "${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-${SCRIPT_DIR}/runtime/spark/events}" \
+  "${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-${SCRIPT_DIR}/runtime/spark/ivy2}" \
+  "${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-${SCRIPT_DIR}/runtime/trino/data}"
 
 echo "[1/4] Building shared Spark image"
 docker compose --env-file "${SCRIPT_DIR}/.env" build spark-worker-3
