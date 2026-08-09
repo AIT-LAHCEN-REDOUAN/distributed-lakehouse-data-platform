@@ -23,6 +23,32 @@ require_command() {
   fi
 }
 
+ensure_runtime_directory_access() {
+  local target_dir="$1"
+
+  if ! mkdir -p "${target_dir}" >/dev/null 2>&1; then
+    sudo mkdir -p "${target_dir}"
+  fi
+
+  if chmod -R 777 "${target_dir}" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if sudo chmod -R 777 "${target_dir}" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if [[ -w "${target_dir}" ]]; then
+    echo "[WARN] Could not change permissions for ${target_dir}, but it is writable. Continuing."
+    return 0
+  fi
+
+  echo "[ERROR] ${target_dir} is not writable for deployment startup."
+  echo "        Verify the encrypted storage mount ownership or run:"
+  echo "        sudo chmod -R 777 ${target_dir}"
+  exit 1
+}
+
 wait_for_tcp() {
   local host="$1"
   local port="$2"
@@ -146,7 +172,7 @@ fi
 
 KRB5_CONFIG_FILE="${SCRIPT_DIR}/kerberos/krb5.conf"
 
-mkdir -p \
+for runtime_dir in \
   "${CUSTOMERDNA_RUNTIME_KAFKA_DATA_DIR:-${SCRIPT_DIR}/runtime/kafka/data}" \
   "${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-${SCRIPT_DIR}/runtime/hdfs/datanode}" \
   "${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-${SCRIPT_DIR}/runtime/spark/events}" \
@@ -156,14 +182,9 @@ mkdir -p \
   "${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-${SCRIPT_DIR}/runtime/trino/data}" \
   "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/datanode-1" \
   "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/spark" \
-  "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/trino"
-
-chmod -R 777 \
-  "${CUSTOMERDNA_RUNTIME_KAFKA_DATA_DIR:-${SCRIPT_DIR}/runtime/kafka/data}" \
-  "${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-${SCRIPT_DIR}/runtime/hdfs/datanode}" \
-  "${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-${SCRIPT_DIR}/runtime/spark/events}" \
-  "${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-${SCRIPT_DIR}/runtime/spark/ivy2}" \
-  "${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-${SCRIPT_DIR}/runtime/trino/data}"
+  "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/trino"; do
+  ensure_runtime_directory_access "${runtime_dir}"
+done
 
 if [[ "${CUSTOMERDNA_HADOOP_SECURE_MODE:-false}" == "true" ]]; then
   echo "[1/5] Waiting for Kerberos services on VM2"
