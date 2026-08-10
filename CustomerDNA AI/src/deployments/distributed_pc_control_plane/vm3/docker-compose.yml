@@ -74,6 +74,8 @@ services:
       - ./hdfs/tls:/etc/hadoop/tls:ro
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro
       - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/datanode-3:/etc/security/keytabs:ro
+    healthcheck:
+      disable: true
 
   spark-worker-3:
     build:

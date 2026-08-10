@@ -91,6 +91,8 @@ services:
       - ./hdfs/tls:/etc/hadoop/tls:ro
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro
       - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/namenode:/etc/security/keytabs:ro
+    healthcheck:
+      disable: true
 
   datanode-2:
     image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
@@ -145,6 +147,8 @@ services:
       - ./hdfs/tls:/etc/hadoop/tls:ro
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro
       - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/datanode-2:/etc/security/keytabs:ro
+    healthcheck:
+      disable: true
 
   hdfs-admin-client:
     build:
@@ -485,6 +489,8 @@ services:
       - ${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-./runtime/trino/data}:/var/trino/data
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro
       - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/trino:/etc/security/keytabs:ro
+    healthcheck:
+      disable: true
 
   trino-gateway:
     image: caddy:2-alpine

@@ -140,15 +140,31 @@ write_keytab_entries() {
   shift
   local temp_keytab
   local principal
+  local ktadd_output
 
   temp_keytab="$(mktemp)"
   rm -f "${temp_keytab}"
 
   for principal in "$@"; do
-    KRB5_CONFIG="${KRB5_CONFIG_FILE}" \
-      kadmin -p "${CUSTOMERDNA_KRB5_ADMIN_PRINCIPAL}" -w "${CUSTOMERDNA_KRB5_ADMIN_PASSWORD}" \
-      -q "ktadd -k ${temp_keytab} -norandkey ${principal}" >/dev/null
+    ktadd_output="$(
+      KRB5_CONFIG="${KRB5_CONFIG_FILE}" \
+        kadmin -p "${CUSTOMERDNA_KRB5_ADMIN_PRINCIPAL}" -w "${CUSTOMERDNA_KRB5_ADMIN_PASSWORD}" \
+        -q "ktadd -k ${temp_keytab} -norandkey ${principal}" 2>&1 || true
+    )"
+
+    if echo "${ktadd_output}" | grep -E "Operation requires|Permission denied|not authorized|Cannot" >/dev/null 2>&1; then
+      echo "[ERROR] Failed to extract keytab entry for ${principal}"
+      echo "${ktadd_output}"
+      rm -f "${temp_keytab}"
+      exit 1
+    fi
   done
+
+  if [[ ! -s "${temp_keytab}" ]]; then
+    echo "[ERROR] Keytab export produced no output for ${target_path}"
+    rm -f "${temp_keytab}"
+    exit 1
+  fi
 
   sudo mkdir -p "$(dirname "${target_path}")"
   sudo install -m 0644 "${temp_keytab}" "${target_path}"
