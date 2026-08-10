@@ -242,6 +242,7 @@ if [[ "${CUSTOMERDNA_HADOOP_SECURE_MODE:-false}" == "true" ]]; then
     "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/datanode-3/dn.service.keytab" \
     "dn/datanode-3@${CUSTOMERDNA_KRB5_REALM}" \
     "HTTP/datanode-3@${CUSTOMERDNA_KRB5_REALM}" \
+    "HTTP/datanode-3.customerdna.local@${CUSTOMERDNA_KRB5_REALM}" \
     "host/datanode-3@${CUSTOMERDNA_KRB5_REALM}"
   provision_principal_keytab \
     "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/spark/spark.service.keytab" \
