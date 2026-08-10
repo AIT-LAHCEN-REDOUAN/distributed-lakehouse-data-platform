@@ -58,13 +58,13 @@ check_tcp 10.10.252.12 749 "Kerberos admin server on VM2"
 check_tcp 10.10.252.11 9093 "Kafka controller peer on VM1"
 check_tcp 10.10.252.12 9093 "Kafka controller peer on VM2"
 check_tcp 10.10.252.12 9000 "HDFS NameNode RPC on VM2"
-check_tcp 10.10.252.12 9870 "HDFS NameNode web on VM2"
+check_tcp 10.10.252.12 9871 "HDFS NameNode web on VM2"
 check_tcp 10.10.252.12 7077 "Spark master on VM2"
 check_tcp 10.10.252.12 8088 "Trino coordinator on VM2"
 
 echo
 echo "[Local host ports before startup]"
-for port in 9092 9093 29092 9864 8087 8080 8081; do
+for port in 9092 9093 29092 9865 8087 8080 8081; do
   if ss -ltn "( sport = :${port} )" | grep -q ":${port}"; then
     echo "[WARN] Port ${port} already in use on this VM"
   else

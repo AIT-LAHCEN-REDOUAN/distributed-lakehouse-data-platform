@@ -63,7 +63,7 @@ if [[ "${ENABLE_UFW}" == "true" ]]; then
   ufw allow 9092/tcp
   ufw allow 9093/tcp
   ufw allow 29092/tcp
-  ufw allow 9864/tcp
+  ufw allow 9865/tcp
   ufw allow 8087/tcp
   ufw allow 8080/tcp
   ufw allow 8081/tcp

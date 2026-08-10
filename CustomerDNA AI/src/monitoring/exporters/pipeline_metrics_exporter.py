@@ -225,6 +225,11 @@ def build_metrics_payload() -> str:
         "false",
     ).strip().lower() in {"1", "true", "yes", "on"}
     trino_monitoring_ca_cert_path = os.getenv("CUSTOMERDNA_MONITORING_TRINO_CA_CERT_PATH", "").strip()
+    hdfs_monitoring_verify_tls = os.getenv(
+        "CUSTOMERDNA_MONITORING_HDFS_VERIFY_TLS",
+        "false",
+    ).strip().lower() in {"1", "true", "yes", "on"}
+    hdfs_monitoring_ca_cert_path = os.getenv("CUSTOMERDNA_MONITORING_HDFS_CA_CERT_PATH", "").strip()
 
     service_targets = (
         {
@@ -240,7 +245,11 @@ def build_metrics_payload() -> str:
             "service_name": "hdfs_namenode_web",
             "check_type": "http",
             "target": _normalized_http_url(os.getenv("CUSTOMERDNA_MONITORING_HDFS_WEB_ENDPOINT", "host.docker.internal:9870")),
-            "value": _http_probe_status(os.getenv("CUSTOMERDNA_MONITORING_HDFS_WEB_ENDPOINT", "host.docker.internal:9870")),
+            "value": _http_probe_status(
+                os.getenv("CUSTOMERDNA_MONITORING_HDFS_WEB_ENDPOINT", "host.docker.internal:9870"),
+                verify_tls=hdfs_monitoring_verify_tls,
+                ca_cert_path=hdfs_monitoring_ca_cert_path,
+            ),
         },
         {
             "service_name": "hive_metastore",

@@ -38,7 +38,7 @@ Test-TcpEndpoint -HostName $Vm2Ip -Port 9092 -ServiceLabel "Kafka broker on VM2"
 Test-TcpEndpoint -HostName $Vm3Ip -Port 9092 -ServiceLabel "Kafka broker on VM3"
 
 Test-TcpEndpoint -HostName $Vm2Ip -Port 9000 -ServiceLabel "HDFS NameNode RPC on VM2"
-Test-TcpEndpoint -HostName $Vm2Ip -Port 9870 -ServiceLabel "HDFS NameNode web on VM2"
+Test-TcpEndpoint -HostName $Vm2Ip -Port 9871 -ServiceLabel "HDFS NameNode web on VM2"
 Test-TcpEndpoint -HostName $Vm2Ip -Port 9083 -ServiceLabel "Hive Metastore on VM2"
 Test-TcpEndpoint -HostName $Vm2Ip -Port 5435 -ServiceLabel "Hive Metastore PostgreSQL on VM2"
 

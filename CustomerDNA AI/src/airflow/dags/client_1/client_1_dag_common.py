@@ -103,6 +103,14 @@ def build_runtime_env() -> dict[str, str]:
             "CUSTOMERDNA_AIRFLOW_HDFS_WEB_ENDPOINT",
             DEFAULT_CONTAINER_SAFE_HDFS_WEB,
         )
+    env.setdefault(
+        "CUSTOMERDNA_HDFS_WEB_VERIFY_TLS",
+        env.get("CUSTOMERDNA_AIRFLOW_HDFS_WEB_VERIFY_TLS", "false"),
+    )
+    env.setdefault(
+        "CUSTOMERDNA_HDFS_WEB_CA_CERT_PATH",
+        env.get("CUSTOMERDNA_AIRFLOW_HDFS_WEB_CA_CERT_PATH", ""),
+    )
 
     if env.get("CUSTOMERDNA_HDFS_NAMENODE_URI", "").strip() in LOCAL_HDFS_NAMENODE_URIS:
         env["CUSTOMERDNA_HDFS_NAMENODE_URI"] = env.get(

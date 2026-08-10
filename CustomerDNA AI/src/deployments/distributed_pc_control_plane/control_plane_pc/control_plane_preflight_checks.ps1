@@ -99,7 +99,7 @@ Test-TcpEndpoint -HostName "10.10.252.13" -Port 9092 -Label "Kafka broker on VM3
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 88 -Label "Kerberos KDC on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 749 -Label "Kerberos admin server on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 9000 -Label "HDFS NameNode RPC on VM2"
-Test-TcpEndpoint -HostName "10.10.252.12" -Port 9870 -Label "HDFS NameNode web on VM2"
+Test-TcpEndpoint -HostName "10.10.252.12" -Port 9871 -Label "HDFS NameNode web on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 9083 -Label "Hive Metastore on VM2"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 22 -Label "SSH on VM2 for remote Spark submission"
 Test-TcpEndpoint -HostName "10.10.252.12" -Port 7077 -Label "Spark master on VM2"

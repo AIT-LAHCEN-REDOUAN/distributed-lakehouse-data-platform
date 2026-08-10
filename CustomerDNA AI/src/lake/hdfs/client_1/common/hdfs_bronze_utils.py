@@ -34,7 +34,9 @@ from hdfs_bronze_config import (
     HDFS_REMOTE_SSH_USER,
     HDFS_REMOTE_STAGING_CONTAINER_DIR,
     HDFS_REMOTE_STAGING_HOST_DIR,
+    HDFS_WEB_CA_CERT_PATH,
     HDFS_WEB_ENDPOINT,
+    HDFS_WEB_VERIFY_TLS,
     HDFS_WEBHDFS_USER,
 )
 
@@ -52,6 +54,12 @@ HDFS_LS_LINE_PATTERN = re.compile(
     r"(?P<time>\d{2}:\d{2})\s+"
     r"(?P<path>.+)$"
 )
+
+
+def _requests_verify_argument() -> bool | str:
+    if HDFS_WEB_VERIFY_TLS and HDFS_WEB_CA_CERT_PATH:
+        return HDFS_WEB_CA_CERT_PATH
+    return HDFS_WEB_VERIFY_TLS
 
 
 @dataclass(frozen=True)
@@ -116,6 +124,7 @@ class HdfsBronzeClient:
             f"{self.web_endpoint}/jmx",
             params={"qry": "Hadoop:service=NameNode,name=NameNodeInfo"},
             timeout=REQUEST_TIMEOUT_SECONDS,
+            verify=_requests_verify_argument(),
         )
         try:
             response.raise_for_status()
@@ -194,6 +203,7 @@ class HdfsBronzeClient:
             timeout=REQUEST_TIMEOUT_SECONDS,
             allow_redirects=False,
             stream=stream,
+            verify=_requests_verify_argument(),
         )
         return response
 
@@ -222,6 +232,7 @@ class HdfsBronzeClient:
                 timeout=REQUEST_TIMEOUT_SECONDS,
                 allow_redirects=False,
                 stream=stream,
+                verify=_requests_verify_argument(),
             )
             return redirected
 

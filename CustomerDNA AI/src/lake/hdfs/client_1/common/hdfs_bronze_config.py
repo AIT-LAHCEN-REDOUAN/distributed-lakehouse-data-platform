@@ -43,6 +43,13 @@ def _normalize_bronze_root(path_value: str) -> str:
 
 
 HDFS_WEB_ENDPOINT = os.getenv("CUSTOMERDNA_HDFS_WEB_ENDPOINT", _default_hdfs_web_endpoint()).strip()
+HDFS_WEB_VERIFY_TLS = os.getenv("CUSTOMERDNA_HDFS_WEB_VERIFY_TLS", "true").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+HDFS_WEB_CA_CERT_PATH = os.getenv("CUSTOMERDNA_HDFS_WEB_CA_CERT_PATH", "").strip()
 HDFS_NAMENODE_URI = os.getenv("CUSTOMERDNA_HDFS_NAMENODE_URI", _default_hdfs_namenode_uri()).strip()
 HDFS_BRONZE_ROOT = _normalize_bronze_root(
     os.getenv("CUSTOMERDNA_HDFS_BRONZE_ROOT", "/bronze/client_1")

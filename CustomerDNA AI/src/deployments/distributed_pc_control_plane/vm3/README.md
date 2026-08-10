@@ -35,7 +35,7 @@ Kafka controller quorum also expects VM2 to already be online.
 ## Access Points On VM3
 
 - Kafka broker external: `10.10.252.13:9092`
-- HDFS DataNode web: `http://10.10.252.13:9864`
+- HDFS DataNode web: `https://10.10.252.13:9865`
 - Spark worker UI: `http://10.10.252.13:8087`
 - Trino worker HTTP: `http://10.10.252.13:8080`
 - cAdvisor: `http://10.10.252.13:8081`

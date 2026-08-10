@@ -61,7 +61,7 @@ check_tcp 10.10.252.12 8443 "Trino TLS gateway on VM2"
 
 echo
 echo "[Local host ports before startup]"
-for port in 88 749 9092 9093 29092 9000 9870 9864 5435 9083 7077 8086 8087 18080 10000 4040 8088 8081; do
+for port in 88 749 9092 9093 29092 9000 9871 9865 5435 9083 7077 8086 8087 18080 10000 4040 8088 8081; do
   if ss -ltn "( sport = :${port} )" | grep -q ":${port}"; then
     echo "[WARN] Port ${port} already in use on this VM"
   else

@@ -51,7 +51,7 @@ primary_endpoints:
     - 10.10.252.12:9092
     - 10.10.252.13:9092
   hdfs_namenode_rpc: 10.10.252.12:9000
-  hdfs_namenode_web: 10.10.252.12:9870
+  hdfs_namenode_web: https://10.10.252.12:9871
   hive_metastore: 10.10.252.12:9083
   hive_metastore_postgres: 10.10.252.12:5435
   spark_master: spark://10.10.252.12:7077

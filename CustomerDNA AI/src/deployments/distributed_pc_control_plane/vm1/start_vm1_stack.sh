@@ -111,37 +111,66 @@ wait_for_remote_kadmin() {
 
 ensure_principal() {
   local principal="$1"
+  local principal_lookup
 
-  if ! KRB5_CONFIG="${KRB5_CONFIG_FILE}" \
-    kadmin -p "${CUSTOMERDNA_KRB5_ADMIN_PRINCIPAL}" -w "${CUSTOMERDNA_KRB5_ADMIN_PASSWORD}" \
-    -q "getprinc ${principal}" >/dev/null 2>&1; then
+  principal_lookup="$(
+    KRB5_CONFIG="${KRB5_CONFIG_FILE}" \
+      kadmin -p "${CUSTOMERDNA_KRB5_ADMIN_PRINCIPAL}" -w "${CUSTOMERDNA_KRB5_ADMIN_PASSWORD}" \
+      -q "getprinc ${principal}" 2>&1 || true
+  )"
+  if echo "${principal_lookup}" | grep -F "Principal does not exist" >/dev/null 2>&1; then
     KRB5_CONFIG="${KRB5_CONFIG_FILE}" \
       kadmin -p "${CUSTOMERDNA_KRB5_ADMIN_PRINCIPAL}" -w "${CUSTOMERDNA_KRB5_ADMIN_PASSWORD}" \
       -q "addprinc -randkey ${principal}" >/dev/null
   fi
 }
 
-write_keytab() {
-  local principal="$1"
-  local target_path="$2"
+validate_keytab_entry() {
+  local target_path="$1"
+  local principal="$2"
+
+  if ! sudo klist -k "${target_path}" | grep -F "${principal}" >/dev/null 2>&1; then
+    echo "[ERROR] Keytab ${target_path} does not contain expected principal ${principal}"
+    exit 1
+  fi
+}
+
+write_keytab_entries() {
+  local target_path="$1"
+  shift
   local temp_keytab
+  local principal
 
   temp_keytab="$(mktemp)"
-  KRB5_CONFIG="${KRB5_CONFIG_FILE}" \
-    kadmin -p "${CUSTOMERDNA_KRB5_ADMIN_PRINCIPAL}" -w "${CUSTOMERDNA_KRB5_ADMIN_PASSWORD}" \
-    -q "ktadd -k ${temp_keytab} -norandkey ${principal}" >/dev/null
+  rm -f "${temp_keytab}"
+
+  for principal in "$@"; do
+    KRB5_CONFIG="${KRB5_CONFIG_FILE}" \
+      kadmin -p "${CUSTOMERDNA_KRB5_ADMIN_PRINCIPAL}" -w "${CUSTOMERDNA_KRB5_ADMIN_PASSWORD}" \
+      -q "ktadd -k ${temp_keytab} -norandkey ${principal}" >/dev/null
+  done
 
   sudo mkdir -p "$(dirname "${target_path}")"
   sudo install -m 0644 "${temp_keytab}" "${target_path}"
+
+  for principal in "$@"; do
+    validate_keytab_entry "${target_path}" "${principal}"
+  done
+
   rm -f "${temp_keytab}"
 }
 
 provision_principal_keytab() {
-  local principal="$1"
-  local target_path="$2"
-  echo "[INFO] Provisioning ${principal} -> ${target_path}"
-  ensure_principal "${principal}"
-  write_keytab "${principal}" "${target_path}"
+  local target_path="$1"
+  shift
+  local principal
+
+  for principal in "$@"; do
+    ensure_principal "${principal}"
+  done
+
+  echo "[INFO] Provisioning ${target_path} with principals: $*"
+  write_keytab_entries "${target_path}" "$@"
 }
 
 require_command docker "Docker is not installed."
@@ -193,12 +222,17 @@ if [[ "${CUSTOMERDNA_HADOOP_SECURE_MODE:-false}" == "true" ]]; then
   wait_for_remote_kadmin 120
 
   echo "[2/5] Provisioning Kerberos principals and keytabs"
-  provision_principal_keytab "dn/datanode-1@${CUSTOMERDNA_KRB5_REALM}" \
-    "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/datanode-1/dn.service.keytab"
-  provision_principal_keytab "spark@${CUSTOMERDNA_KRB5_REALM}" \
-    "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/spark/spark.service.keytab"
-  provision_principal_keytab "trino@${CUSTOMERDNA_KRB5_REALM}" \
-    "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/trino/trino.service.keytab"
+  provision_principal_keytab \
+    "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/datanode-1/dn.service.keytab" \
+    "dn/datanode-1@${CUSTOMERDNA_KRB5_REALM}" \
+    "HTTP/datanode-1@${CUSTOMERDNA_KRB5_REALM}" \
+    "host/datanode-1@${CUSTOMERDNA_KRB5_REALM}"
+  provision_principal_keytab \
+    "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/spark/spark.service.keytab" \
+    "spark@${CUSTOMERDNA_KRB5_REALM}"
+  provision_principal_keytab \
+    "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/trino/trino.service.keytab" \
+    "trino@${CUSTOMERDNA_KRB5_REALM}"
 else
   echo "[1/5] Kerberos secure mode disabled; skipping remote KDC wait"
   echo "[2/5] Kerberos secure mode disabled; skipping keytab provisioning"
@@ -217,7 +251,7 @@ echo
 echo "Access points"
 echo "------------------------------------------------------------"
 echo "Kafka broker 1    : ${VM1_HOST_IP:-10.10.252.11}:9092"
-echo "HDFS DataNode web : http://${VM1_HOST_IP:-10.10.252.11}:9864"
+echo "HDFS DataNode web : https://${VM1_HOST_IP:-10.10.252.11}:${CUSTOMERDNA_HDFS_DATANODE_HTTPS_PORT:-9865}"
 echo "Spark worker UI   : http://${VM1_HOST_IP:-10.10.252.11}:8087"
 echo "Trino worker      : http://${VM1_HOST_IP:-10.10.252.11}:8080"
 echo "cAdvisor          : http://${VM1_HOST_IP:-10.10.252.11}:8081"

@@ -67,8 +67,8 @@ if [[ "${ENABLE_UFW}" == "true" ]]; then
   ufw allow 88/udp
   ufw allow 749/tcp
   ufw allow 9000/tcp
-  ufw allow 9870/tcp
-  ufw allow 9864/tcp
+  ufw allow 9871/tcp
+  ufw allow 9865/tcp
   ufw allow 5435/tcp
   ufw allow 9083/tcp
   ufw allow 7077/tcp

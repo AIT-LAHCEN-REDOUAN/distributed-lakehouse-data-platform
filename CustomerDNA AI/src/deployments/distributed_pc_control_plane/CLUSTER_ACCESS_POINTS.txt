@@ -22,7 +22,7 @@ VM1
 
 Accessible in browser
 - Spark Worker UI: http://10.10.252.11:8087
-- HDFS DataNode web: http://10.10.252.11:9864
+- HDFS DataNode web: https://10.10.252.11:9865
 - cAdvisor: http://10.10.252.11:8081
 
 Not browser-first / service endpoints
@@ -34,7 +34,7 @@ VM2
 ============================================================
 
 Accessible in browser
-- HDFS NameNode web: http://10.10.252.12:9870
+- HDFS NameNode web: https://10.10.252.12:9871
 - Spark Master UI: http://10.10.252.12:8086
 - Spark History UI: http://10.10.252.12:18080
 - Trino Coordinator UI (HTTP): http://10.10.252.12:8088/ui/
@@ -56,7 +56,7 @@ VM3
 
 Accessible in browser
 - Spark Worker UI: http://10.10.252.13:8087
-- HDFS DataNode web: http://10.10.252.13:9864
+- HDFS DataNode web: https://10.10.252.13:9865
 - cAdvisor: http://10.10.252.13:8081
 
 Not browser-first / service endpoints

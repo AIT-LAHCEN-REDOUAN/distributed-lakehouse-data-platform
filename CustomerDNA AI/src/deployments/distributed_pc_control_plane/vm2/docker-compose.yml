@@ -59,12 +59,25 @@ services:
       CORE_CONF_hadoop_security_authentication: kerberos
       CORE_CONF_hadoop_security_authorization: "true"
       CORE_CONF_hadoop_rpc_protection: ${CUSTOMERDNA_HDFS_RPC_PROTECTION}
+      CORE_CONF_hadoop_http_authentication_type: kerberos
+      CORE_CONF_hadoop_http_authentication_kerberos_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
+      CORE_CONF_hadoop_http_authentication_kerberos_keytab: /etc/security/keytabs/nn.service.keytab
+      CORE_CONF_hadoop_http_authentication_simple_anonymous_allowed: "false"
       HDFS_CONF_dfs_replication: ${CUSTOMERDNA_HDFS_REPLICATION}
       HDFS_CONF_dfs_permissions_enabled: "false"
+      HDFS_CONF_dfs_http_policy: HTTPS_ONLY
       HDFS_CONF_dfs_webhdfs_enabled: "true"
       HDFS_CONF_dfs_block_access_token_enable: "true"
-      HDFS_CONF_dfs_namenode_kerberos_principal: nn/namenode@${CUSTOMERDNA_KRB5_REALM}
+      HDFS_CONF_dfs_namenode_kerberos_principal: nn/_HOST@${CUSTOMERDNA_KRB5_REALM}
       HDFS_CONF_dfs_namenode_keytab_file: /etc/security/keytabs/nn.service.keytab
+      HDFS_CONF_dfs_web_authentication_kerberos_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
+      HDFS_CONF_dfs_web_authentication_kerberos_keytab: /etc/security/keytabs/nn.service.keytab
+      HDFS_CONF_dfs_namenode_kerberos_internal_spnego_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
+      HDFS_CONF_dfs_namenode_http___address: 0.0.0.0:0
+      HDFS_CONF_dfs_namenode_https___address: 0.0.0.0:${CUSTOMERDNA_HDFS_NAMENODE_HTTPS_PORT:-9871}
+      HDFS_CONF_dfs_https_server_keystore_resource: ssl-server.xml
+      HDFS_CONF_dfs_client_https_need___auth: "false"
+      HDFS_CONF_dfs_client_https_keystore_resource: ssl-client.xml
       HDFS_CONF_dfs_data_transfer_protection: ${CUSTOMERDNA_HDFS_DATA_TRANSFER_PROTECTION}
       HDFS_CONF_dfs_encrypt_data_transfer: ${CUSTOMERDNA_HDFS_WIRE_ENCRYPTION}
       HDFS_CONF_dfs_client_use_datanode_hostname: "true"
@@ -73,6 +86,9 @@ services:
       HDFS_CONF_dfs_namenode_datanode_registration_ip___hostname___check: "false"
     volumes:
       - ${CUSTOMERDNA_RUNTIME_HDFS_NAMENODE_DIR:-./runtime/hdfs/namenode}:/hadoop/dfs/name
+      - ./hdfs/tls/ssl-server.xml:/etc/hadoop/ssl-server.xml:ro
+      - ./hdfs/tls/ssl-client.xml:/etc/hadoop/ssl-client.xml:ro
+      - ./hdfs/tls:/etc/hadoop/tls:ro
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro
       - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/namenode:/etc/security/keytabs:ro
 
@@ -95,12 +111,25 @@ services:
       CORE_CONF_hadoop_security_authentication: kerberos
       CORE_CONF_hadoop_security_authorization: "true"
       CORE_CONF_hadoop_rpc_protection: ${CUSTOMERDNA_HDFS_RPC_PROTECTION}
+      CORE_CONF_hadoop_http_authentication_type: kerberos
+      CORE_CONF_hadoop_http_authentication_kerberos_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
+      CORE_CONF_hadoop_http_authentication_kerberos_keytab: /etc/security/keytabs/dn.service.keytab
+      CORE_CONF_hadoop_http_authentication_simple_anonymous_allowed: "false"
       HDFS_CONF_dfs_replication: ${CUSTOMERDNA_HDFS_REPLICATION}
       HDFS_CONF_dfs_permissions_enabled: "false"
+      HDFS_CONF_dfs_http_policy: HTTPS_ONLY
       HDFS_CONF_dfs_webhdfs_enabled: "true"
       HDFS_CONF_dfs_block_access_token_enable: "true"
-      HDFS_CONF_dfs_datanode_kerberos_principal: dn/datanode-2@${CUSTOMERDNA_KRB5_REALM}
+      HDFS_CONF_dfs_datanode_kerberos_principal: dn/_HOST@${CUSTOMERDNA_KRB5_REALM}
       HDFS_CONF_dfs_datanode_keytab_file: /etc/security/keytabs/dn.service.keytab
+      HDFS_CONF_dfs_web_authentication_kerberos_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
+      HDFS_CONF_dfs_web_authentication_kerberos_keytab: /etc/security/keytabs/dn.service.keytab
+      HDFS_CONF_dfs_datanode_kerberos_internal_spnego_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
+      HDFS_CONF_dfs_datanode_http___address: 0.0.0.0:0
+      HDFS_CONF_dfs_datanode_https___address: 0.0.0.0:${CUSTOMERDNA_HDFS_DATANODE_HTTPS_PORT:-9865}
+      HDFS_CONF_dfs_https_server_keystore_resource: ssl-server.xml
+      HDFS_CONF_dfs_client_https_need___auth: "false"
+      HDFS_CONF_dfs_client_https_keystore_resource: ssl-client.xml
       HDFS_CONF_dfs_data_transfer_protection: ${CUSTOMERDNA_HDFS_DATA_TRANSFER_PROTECTION}
       HDFS_CONF_dfs_encrypt_data_transfer: ${CUSTOMERDNA_HDFS_WIRE_ENCRYPTION}
       HDFS_CONF_dfs_datanode_hostname: datanode-2
@@ -108,9 +137,12 @@ services:
       HDFS_CONF_dfs_client_use_datanode_hostname: "true"
       KRB5_CONFIG: /etc/krb5.conf
       HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
-      SERVICE_PRECONDITION: namenode:9870
+      SERVICE_PRECONDITION: namenode:${CUSTOMERDNA_HDFS_NAMENODE_HTTPS_PORT:-9871}
     volumes:
       - ${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-./runtime/hdfs/datanode}:/hadoop/dfs/data
+      - ./hdfs/tls/ssl-server.xml:/etc/hadoop/ssl-server.xml:ro
+      - ./hdfs/tls/ssl-client.xml:/etc/hadoop/ssl-client.xml:ro
+      - ./hdfs/tls:/etc/hadoop/tls:ro
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro
       - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/datanode-2:/etc/security/keytabs:ro
 
@@ -121,6 +153,11 @@ services:
     container_name: hdfs-admin-client
     hostname: hdfs-admin-client
     network_mode: host
+    entrypoint:
+      - /bin/bash
+      - -lc
+    command:
+      - while true; do sleep 3600; done
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
       - "datanode-1:${VM1_HOST_IP}"
@@ -128,6 +165,8 @@ services:
       - "datanode-3:${VM3_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
     restart: unless-stopped
+    healthcheck:
+      disable: true
     depends_on:
       - kerberos-kdc
       - namenode

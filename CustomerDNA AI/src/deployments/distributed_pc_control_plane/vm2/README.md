@@ -52,7 +52,7 @@ On older VM CPUs, newer Trino images can fail immediately with `CPU does not sup
 
 - Kafka broker external: `10.10.252.12:9092`
 - HDFS NameNode RPC: `10.10.252.12:9000`
-- HDFS NameNode web: `http://10.10.252.12:9870`
+- HDFS NameNode web: `https://10.10.252.12:9871`
 - Hive Metastore: `10.10.252.12:9083`
 - Hive Metastore PostgreSQL: `10.10.252.12:5435`
 - Spark master: `spark://10.10.252.12:7077`

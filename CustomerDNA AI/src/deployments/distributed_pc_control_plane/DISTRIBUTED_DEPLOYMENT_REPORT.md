@@ -523,10 +523,10 @@ Purpose:
 ### 10.2 HDFS
 
 - NameNode RPC: `10.10.252.12:9000`
-- NameNode web UI: `http://10.10.252.12:9870`
-- VM1 DataNode UI: `http://10.10.252.11:9864`
-- VM2 DataNode UI: `http://10.10.252.12:9864`
-- VM3 DataNode UI: `http://10.10.252.13:9864`
+- NameNode web UI: `https://10.10.252.12:9871`
+- VM1 DataNode UI: `https://10.10.252.11:9865`
+- VM2 DataNode UI: `https://10.10.252.12:9865`
+- VM3 DataNode UI: `https://10.10.252.13:9865`
 
 ### 10.3 Hive
 
@@ -944,4 +944,3 @@ In practical terms, this folder is the bridge between:
 
 - the project architecture on paper,
 - and the actual deployed system that can be shown, tested, explained, and defended.
-

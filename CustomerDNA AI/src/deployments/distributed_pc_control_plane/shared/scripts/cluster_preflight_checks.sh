@@ -28,7 +28,7 @@ check_tcp "${VM2_IP}" 9092 "Kafka broker on VM2"
 check_tcp "${VM3_IP}" 9092 "Kafka broker on VM3"
 
 check_tcp "${VM2_IP}" 9000 "HDFS NameNode RPC on VM2"
-check_tcp "${VM2_IP}" 9870 "HDFS NameNode web on VM2"
+check_tcp "${VM2_IP}" 9871 "HDFS NameNode web on VM2"
 check_tcp "${VM2_IP}" 9083 "Hive Metastore on VM2"
 check_tcp "${VM2_IP}" 5435 "Hive Metastore PostgreSQL on VM2"
 
