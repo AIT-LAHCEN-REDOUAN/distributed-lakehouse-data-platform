@@ -1,0 +1,15 @@
+Firefox Kerberos / SPNEGO settings for CustomerDNA
+
+Open Firefox and go to:
+about:config
+
+Set these preferences exactly:
+
+network.auth.use-sspi = false
+network.negotiate-auth.trusted-uris = .customerdna.local,namenode.customerdna.local,datanode-1.customerdna.local,datanode-2.customerdna.local,datanode-3.customerdna.local
+network.negotiate-auth.delegation-uris = .customerdna.local,namenode.customerdna.local,datanode-1.customerdna.local,datanode-2.customerdna.local,datanode-3.customerdna.local
+
+Important:
+- Use hostnames or domains only.
+- Do not include :9871, :9865, or any other port.
+- Fully close and reopen Firefox after saving the values.

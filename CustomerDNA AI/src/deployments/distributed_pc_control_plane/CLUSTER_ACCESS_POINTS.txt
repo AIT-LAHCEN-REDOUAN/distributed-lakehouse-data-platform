@@ -35,6 +35,7 @@ VM2
 
 Accessible in browser
 - HDFS NameNode web: https://10.10.252.12:9871 | username: Kerberos/SPNEGO ticket required | password: not a browser password
+- HDFS NameNode browser alias: https://namenode.customerdna.local:9871 | username: demo_hdfs@CUSTOMERDNA.LOCAL via Firefox Kerberos ticket | password: CustomerDNA_Hdfs_Browser_2026!
 - Spark Master UI: http://10.10.252.12:8086 | username: no login | password: not applicable
 - Spark History UI: http://10.10.252.12:18080 | username: no login | password: not applicable
 - Trino Coordinator UI (HTTP): http://10.10.252.12:8088/ui/ | username: customerdna_analyst | password: CustomerDNA_Trino_Analyst_2026!
