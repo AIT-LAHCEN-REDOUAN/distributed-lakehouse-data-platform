@@ -13,6 +13,10 @@
     <value>true</value>
   </property>
   <property>
+    <name>hadoop.security.auth_to_local</name>
+    <value>RULE:[1:$1@$0](.*@CUSTOMERDNA.LOCAL)s/@.*// RULE:[2:$1/$2@$0](.*@CUSTOMERDNA.LOCAL)s/.*/hdfs/ DEFAULT</value>
+  </property>
+  <property>
     <name>hadoop.rpc.protection</name>
     <value>privacy</value>
   </property>

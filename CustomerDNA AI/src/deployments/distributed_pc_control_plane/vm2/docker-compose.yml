@@ -58,6 +58,7 @@ services:
       CORE_CONF_fs_defaultFS: ${CUSTOMERDNA_HDFS_NAMENODE_URI}
       CORE_CONF_hadoop_security_authentication: kerberos
       CORE_CONF_hadoop_security_authorization: "true"
+      CORE_CONF_hadoop_security_auth_to_local: "RULE:[1:$1@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/@.*// RULE:[2:$1/$2@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ DEFAULT"
       CORE_CONF_hadoop_rpc_protection: ${CUSTOMERDNA_HDFS_RPC_PROTECTION}
       CORE_CONF_hadoop_http_authentication_type: kerberos
       CORE_CONF_hadoop_http_authentication_kerberos_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
@@ -112,6 +113,7 @@ services:
       CORE_CONF_fs_defaultFS: ${CUSTOMERDNA_HDFS_NAMENODE_URI}
       CORE_CONF_hadoop_security_authentication: kerberos
       CORE_CONF_hadoop_security_authorization: "true"
+      CORE_CONF_hadoop_security_auth_to_local: "RULE:[1:$1@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/@.*// RULE:[2:$1/$2@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ DEFAULT"
       CORE_CONF_hadoop_rpc_protection: ${CUSTOMERDNA_HDFS_RPC_PROTECTION}
       CORE_CONF_hadoop_http_authentication_type: kerberos
       CORE_CONF_hadoop_http_authentication_kerberos_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
@@ -181,6 +183,7 @@ services:
       CORE_CONF_fs_defaultFS: ${CUSTOMERDNA_HDFS_NAMENODE_URI}
       CORE_CONF_hadoop_security_authentication: kerberos
       CORE_CONF_hadoop_security_authorization: "true"
+      CORE_CONF_hadoop_security_auth_to_local: "RULE:[1:$1@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/@.*// RULE:[2:$1/$2@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ DEFAULT"
       CORE_CONF_hadoop_rpc_protection: ${CUSTOMERDNA_HDFS_RPC_PROTECTION}
     volumes:
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro
