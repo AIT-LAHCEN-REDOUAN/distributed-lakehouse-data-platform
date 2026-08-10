@@ -1,15 +1,15 @@
 # CustomerDNA AI - Distributed Deployment Report
 
 > Deployment scope: `src/deployments/distributed_pc_control_plane/`
-> Version: deployed architecture baseline
-> Date: 2026-08-04
+> Version: secured distributed deployment baseline
+> Date: Monday, August 10, 2026
 > Audience: project owner, jury preparation, technical reviewers, future maintainers
 
 ---
 
 ## 1. Purpose of This Document
 
-This file explains the **final distributed deployed version** of CustomerDNA AI.
+This file explains the **final distributed deployed version** of CustomerDNA AI after the security-layer extension.
 
 It is intended to be the detailed reference for:
 
@@ -18,9 +18,11 @@ It is intended to be the detailed reference for:
 - execution model,
 - service interactions,
 - network endpoints,
+- implemented security controls,
 - deployment workflow,
 - runtime verification,
 - operational boundaries,
+- known limitations,
 - and design tradeoffs.
 
 This document is about the **deployed distributed version**, not the older local-only baseline.
@@ -29,7 +31,7 @@ This document is about the **deployed distributed version**, not the older local
 
 ## 2. Deployment Objective
 
-The goal of this deployment is to demonstrate that CustomerDNA AI is not only a logically distributed lakehouse architecture, but also an **operationally distributed implementation**.
+The goal of this deployment is to demonstrate that CustomerDNA AI is not only a logically distributed lakehouse architecture, but also an **operationally distributed and security-aware implementation**.
 
 This deployment proves:
 
@@ -39,6 +41,7 @@ This deployment proves:
 - distributed query execution through Trino coordinator/worker separation,
 - centralized orchestration through Airflow on the local control plane,
 - centralized monitoring through Prometheus and Grafana,
+- baseline infrastructure security through Kerberos, TLS, and encrypted runtime storage,
 - and isolated per-node deployment bundles for maintainability.
 
 This environment is a **distributed demo and validation environment**, not a production HA cluster.
@@ -47,7 +50,7 @@ This environment is a **distributed demo and validation environment**, not a pro
 
 ## 3. Deployment Philosophy
 
-This deployment follows five design principles.
+This deployment follows six design principles.
 
 ### 3.1 Isolation by node
 
@@ -76,14 +79,14 @@ Therefore the deployment is intentionally adapted to:
 
 ### 3.4 Demonstration of distribution over production hardening
 
-The purpose is to demonstrate the distributed concept correctly:
+The main purpose is to demonstrate the distributed concept correctly:
 
 - cluster-based ingestion,
 - cluster-based storage,
 - cluster-based processing,
 - cluster-based query execution.
 
-This matters more here than implementing full enterprise-grade production hardening.
+The security layer strengthens the deployment story, but this is still a demo-oriented academic environment rather than a full production security program.
 
 ### 3.5 Maintainability over cleverness
 
@@ -95,7 +98,18 @@ Instead it uses:
 - explicit scripts,
 - explicit env files,
 - explicit preflight checks,
-- and explicit reset/start commands.
+- explicit reset/start commands,
+- and explicit client-side setup notes where browser-based security is involved.
+
+### 3.6 Security added without rewriting the whole platform
+
+The security design was introduced in a way that preserves the lakehouse architecture rather than replacing it.
+
+That is important academically because it shows:
+
+- progressive hardening,
+- realistic engineering tradeoffs,
+- and a separation between core data-platform logic and secure deployment controls.
 
 ---
 
@@ -110,14 +124,16 @@ Local PC (control plane)
   -> Grafana
   -> Kafka UI
   -> pipeline metrics exporter
+  -> local TLS gateway
   -> remote Spark orchestration over SSH
 
 VM1 + VM2 + VM3 (distributed data plane)
   -> Kafka cluster
-  -> HDFS cluster
+  -> Kerberos-secured HDFS cluster
   -> Spark cluster
   -> Hive Metastore
   -> Trino cluster
+  -> VM2 HTTPS Trino gateway
   -> cAdvisor exporters
 ```
 
@@ -134,6 +150,22 @@ datasets
   -> Great Expectations validation
   -> Airflow orchestration
   -> Prometheus/Grafana observability
+```
+
+Security overlay:
+
+```text
+Kerberos KDC on VM2
+  -> service principals and keytabs
+  -> Hadoop secure mode
+  -> SPNEGO for HDFS web endpoints
+
+TLS gateways
+  -> HTTPS access to control-plane tools
+  -> HTTPS access to Trino on VM2
+
+LUKS runtime volumes
+  -> encrypted service data on VM1, VM2, VM3 when enabled
 ```
 
 ---
@@ -163,6 +195,7 @@ Responsibilities:
 - Kafka UI
 - pipeline metrics exporter
 - PostgreSQL exporter
+- local TLS gateway
 - Great Expectations runtime
 - dbt runtime
 - remote Spark orchestration toward VM2 through SSH
@@ -198,8 +231,11 @@ Main role:
 Responsibilities:
 
 - Kafka broker 2
+- Kerberos KDC
+- Kerberos admin service
 - HDFS NameNode
 - HDFS DataNode 2
+- HDFS admin helper client
 - Hive Metastore PostgreSQL
 - Hive Metastore
 - Spark master
@@ -208,6 +244,7 @@ Responsibilities:
 - Spark history server
 - Spark Thrift server
 - Trino coordinator
+- Trino HTTPS gateway
 - cAdvisor
 
 ### 5.4 VM3
@@ -253,6 +290,7 @@ It also gives easier access during demos for:
 VM2 hosts the coordination-heavy services because the architecture needs one clear integration point for:
 
 - HDFS namespace authority,
+- Kerberos authority,
 - metastore authority,
 - Spark master,
 - Trino coordinator,
@@ -270,6 +308,19 @@ VM1 and VM3 mainly extend the cluster by providing:
 
 This creates the actual distributed behavior that the project must demonstrate.
 
+### 6.4 Why Kerberos is centralized on VM2
+
+Kerberos was placed on VM2 because that node already hosts the main coordination services.
+
+This keeps:
+
+- principal provisioning,
+- keytab extraction,
+- admin access,
+- and NameNode-aligned secure mode setup
+
+within one controlled node.
+
 ---
 
 ## 7. Repository Layout of This Deployment Folder
@@ -283,7 +334,8 @@ distributed_pc_control_plane/
 |-- control_plane_pc/
 |-- vm1/
 |-- vm2/
-`-- vm3/
+|-- vm3/
+`-- windows_kerberos_client/
 ```
 
 ### 7.1 Root files
@@ -325,6 +377,8 @@ Important files:
 - `control_plane_preflight_checks.ps1`
 - `start_control_plane_pc.ps1`
 - `reset_control_plane_state.ps1`
+- `tls_gateway/`
+- `ssh/`
 
 ### 7.4 `vm1/`, `vm2/`, `vm3/`
 
@@ -347,6 +401,19 @@ Important common files per VM:
 - `reset_vm*_state.sh`
 - `manage_vm*_bundle.py`
 - `VM_config.txt`
+
+### 7.5 `windows_kerberos_client/`
+
+This folder contains the Windows-side helper assets for browser-based Kerberos demo access.
+
+Important files:
+
+- `krb5.ini`
+- `README.md`
+- `hosts_example.txt`
+- `firefox_spnego_prefs.txt`
+
+This folder matters because HDFS browser access in secure mode depends on correct Windows and Firefox client configuration, not only on cluster-side health.
 
 ---
 
@@ -371,9 +438,9 @@ It triggers:
 
 ### 8.2 Spark raw-load execution
 
-Spark raw loading is submitted **remotely to VM2**.
+Spark raw loading is submitted remotely to **VM2**.
 
-The control plane does not run a local Spark driver service for raw loading anymore.
+The control plane does not keep a local Spark driver for the final deployment path.
 
 Instead:
 
@@ -394,6 +461,17 @@ So dbt logic is controlled locally, while execution happens against the distribu
 ### 8.4 Great Expectations execution
 
 Great Expectations also runs from the control plane and validates against the remote lakehouse endpoints.
+
+### 8.5 Security execution model
+
+The security layer is distributed across runtime responsibilities:
+
+- Kerberos KDC and principal administration run on VM2,
+- service keytabs are provisioned before starting secured services,
+- Hadoop services use Kerberos-aware configs and HTTPS web policies,
+- Trino UI is exposed through a TLS gateway,
+- control-plane UIs are exposed through a local TLS gateway,
+- browser-side HDFS secure access depends on a valid Kerberos ticket on Windows plus Firefox SPNEGO settings.
 
 ---
 
@@ -482,6 +560,7 @@ Placement:
 
 - coordinator on VM2
 - workers on VM1 and VM3
+- HTTPS gateway on VM2
 
 Purpose:
 
@@ -510,6 +589,38 @@ Purpose:
 - metastore visibility
 - dashboard-based demo evidence
 
+### 9.7 Kerberos
+
+Role:
+
+- authentication backbone for the secured Hadoop deployment
+
+Placement:
+
+- KDC and admin service on VM2
+- service principals and keytabs consumed on all relevant nodes
+
+Purpose:
+
+- secure Hadoop service identity
+- support SPNEGO on HDFS web endpoints
+- support keytab-based non-interactive service execution
+
+### 9.8 LUKS encrypted storage
+
+Role:
+
+- data-at-rest protection for runtime service data
+
+Placement:
+
+- optional per-node encrypted runtime mount under `/mnt/customerdna_secure`
+
+Purpose:
+
+- protect service runtime data on VM disks
+- support a defensible security section in the report
+
 ---
 
 ## 10. Primary Network Endpoints
@@ -520,20 +631,26 @@ Purpose:
 - VM2 broker: `10.10.252.12:9092`
 - VM3 broker: `10.10.252.13:9092`
 
-### 10.2 HDFS
+### 10.2 Kerberos
+
+- KDC on VM2: `10.10.252.12:88`
+- admin server on VM2: `10.10.252.12:749`
+
+### 10.3 HDFS
 
 - NameNode RPC: `10.10.252.12:9000`
 - NameNode web UI: `https://10.10.252.12:9871`
+- NameNode browser alias: `https://namenode.customerdna.local:9871`
 - VM1 DataNode UI: `https://10.10.252.11:9865`
 - VM2 DataNode UI: `https://10.10.252.12:9865`
 - VM3 DataNode UI: `https://10.10.252.13:9865`
 
-### 10.3 Hive
+### 10.4 Hive
 
 - Hive Metastore: `10.10.252.12:9083`
 - Hive Metastore PostgreSQL: `10.10.252.12:5435`
 
-### 10.4 Spark
+### 10.5 Spark
 
 - Spark master: `spark://10.10.252.12:7077`
 - Spark master UI: `http://10.10.252.12:8086`
@@ -541,20 +658,21 @@ Purpose:
 - Spark Thrift: `10.10.252.12:10000`
 - remote submission SSH target: `10.10.252.12:22`
 
-### 10.5 Trino
+### 10.6 Trino
 
-- Trino coordinator UI: `http://10.10.252.12:8088/ui/`
+- Trino coordinator UI (HTTP): `http://10.10.252.12:8088/ui/`
+- Trino coordinator UI (HTTPS): `https://10.10.252.12:8443/ui/`
 - VM1 Trino worker internal endpoint: `http://10.10.252.11:8080`
 - VM3 Trino worker internal endpoint: `http://10.10.252.13:8080`
 
-### 10.6 Control plane interfaces
+### 10.7 Control plane interfaces
 
 Preferred ports:
 
-- Airflow: `http://localhost:18080`
-- Prometheus: `http://localhost:19090`
-- Grafana: `http://localhost:13001`
-- Kafka UI: `http://localhost:18085`
+- Airflow: `https://localhost:18080`
+- Prometheus: `https://localhost:19090`
+- Grafana: `https://localhost:13001`
+- Kafka UI: `https://localhost:18085`
 
 Important note:
 
@@ -566,9 +684,89 @@ The active resolved values are written to:
 
 ---
 
-## 11. Control Plane Folder Responsibilities
+## 11. Security Model
 
-### 11.1 `control_plane_pc/docker-compose.yml`
+### 11.1 Security goals of this deployment
+
+The security layer is intended to protect:
+
+- service identity,
+- browser-facing traffic,
+- selected administrative interfaces,
+- and VM runtime data at rest.
+
+It is not intended to deliver full enterprise identity governance.
+
+### 11.2 Implemented controls
+
+The deployment includes:
+
+- Kerberos-secured Hadoop runtime,
+- service principals for NameNode, DataNodes, Spark, Hive, Trino, and Airflow helper operations,
+- keytab-based service startup flows,
+- SPNEGO-protected HDFS web endpoints,
+- HTTPS-only HDFS web access,
+- HTTPS Trino gateway on VM2,
+- local HTTPS gateway for control-plane tools,
+- optional LUKS-backed runtime storage on VM1, VM2, and VM3,
+- credential separation between admin, service, analyst, and demo-browser identities.
+
+### 11.3 Demo-oriented security choices
+
+For demonstration practicality:
+
+- self-signed or internal trust paths are used instead of enterprise PKI,
+- some client-side TLS verification flags are relaxed in automation paths,
+- browser-side Kerberos access requires manual Windows and Firefox configuration,
+- credentials are easier to manage than in a production vault-backed environment.
+
+### 11.4 Security boundary
+
+This deployment should be described as **security-aware and meaningfully hardened for a PFE demo**, but not as a complete enterprise security platform.
+
+---
+
+## 12. Windows and Browser Kerberos Access Path
+
+### 12.1 Why this matters
+
+The secured HDFS browser experience depends on both sides:
+
+- server-side Hadoop secure mode must be healthy,
+- client-side Kerberos and Firefox SPNEGO behavior must be configured correctly.
+
+### 12.2 Required Windows helper assets
+
+The project includes a dedicated helper folder:
+
+- `windows_kerberos_client/krb5.ini`
+- `windows_kerberos_client/hosts_example.txt`
+- `windows_kerberos_client/firefox_spnego_prefs.txt`
+- `windows_kerberos_client/README.md`
+
+### 12.3 Required client-side sequence
+
+The intended browser access path is:
+
+1. install MIT Kerberos for Windows
+2. point `KRB5_CONFIG` to the project `krb5.ini`
+3. obtain a Kerberos ticket with the demo principal
+4. configure Firefox SPNEGO trusted and delegation URIs
+5. browse HDFS using the hostname alias, not the raw IP
+
+### 12.4 Important operational truth
+
+If the NameNode overview page opens but `explorer.html` shows `Unauthorized`, that does **not** automatically mean the backend cluster is unhealthy.
+
+It often indicates a browser-side SPNEGO or WebHDFS authentication path issue.
+
+That distinction is important for debugging and for honest report-writing.
+
+---
+
+## 13. Control Plane Folder Responsibilities
+
+### 13.1 `control_plane_pc/docker-compose.yml`
 
 Defines:
 
@@ -578,32 +776,35 @@ Defines:
 - Grafana,
 - Kafka UI,
 - pipeline metrics exporter,
-- PostgreSQL exporter.
+- PostgreSQL exporter,
+- local TLS gateway.
 
-### 11.2 `control_plane_preflight_checks.ps1`
+### 13.2 `control_plane_preflight_checks.ps1`
 
 Purpose:
 
 - verifies local tools,
 - verifies required mounted paths,
-- verifies remote service reachability.
+- verifies remote service reachability,
+- verifies security-critical endpoints such as Kerberos and HTTPS services.
 
-### 11.3 `start_control_plane_pc.ps1`
+### 13.3 `start_control_plane_pc.ps1`
 
 Purpose:
 
 - resolves usable local ports,
 - prepares runtime env overrides,
-- starts the control plane in the correct order.
+- starts the control plane in the correct order,
+- starts the local TLS gateway.
 
-### 11.4 `reset_control_plane_state.ps1`
+### 13.4 `reset_control_plane_state.ps1`
 
 Purpose:
 
 - stops the local control-plane stack,
 - removes state that should be rebuilt for a clean restart.
 
-### 11.5 `ssh/`
+### 13.5 `ssh/`
 
 Purpose:
 
@@ -616,9 +817,9 @@ Important rule:
 
 ---
 
-## 12. VM Folder Responsibilities
+## 14. VM Folder Responsibilities
 
-### 12.1 Common pattern
+### 14.1 Common pattern
 
 Each VM folder follows the same operational lifecycle:
 
@@ -628,7 +829,7 @@ Each VM folder follows the same operational lifecycle:
 4. verify endpoints
 5. reset only that node when required
 
-### 12.2 `prepare_fresh_vm*.sh`
+### 14.2 `prepare_fresh_vm*.sh`
 
 Purpose:
 
@@ -636,7 +837,7 @@ Purpose:
 - prepare Docker and execution prerequisites,
 - prepare the VM for first startup.
 
-### 12.3 `vm*_preflight_checks.sh`
+### 14.3 `vm*_preflight_checks.sh`
 
 Purpose:
 
@@ -645,14 +846,16 @@ Purpose:
 - validate local ports,
 - reduce startup surprises.
 
-### 12.4 `start_vm*_stack.sh`
+### 14.4 `start_vm*_stack.sh`
 
 Purpose:
 
+- provision service principals and keytabs where required,
+- validate secure storage mounts when enabled,
 - start the compose-defined services for that node,
 - expose the node as part of the distributed data plane.
 
-### 12.5 `reset_vm*_state.sh`
+### 14.5 `reset_vm*_state.sh`
 
 Purpose:
 
@@ -660,7 +863,7 @@ Purpose:
 - clear runtime data,
 - prepare a clean redeployment of that node.
 
-### 12.6 `manage_vm*_bundle.py`
+### 14.6 `manage_vm*_bundle.py`
 
 Purpose:
 
@@ -668,9 +871,18 @@ Purpose:
 - package the node-specific deployment content,
 - support upload/deploy workflow from the workstation.
 
+### 14.7 `setup_encrypted_storage_vm*.sh`
+
+Purpose:
+
+- create or reuse the encrypted image,
+- initialize the LUKS container,
+- mount the secure runtime filesystem,
+- prepare the service data directories used by the node.
+
 ---
 
-## 13. Distributed Startup Order
+## 15. Distributed Startup Order
 
 The recommended cluster startup order is:
 
@@ -679,19 +891,20 @@ The recommended cluster startup order is:
 3. VM3
 4. control plane
 
-### 13.1 Why VM2 starts first
+### 15.1 Why VM2 starts first
 
 Because it contains the coordination services:
 
-- NameNode
+- Kerberos KDC
+- HDFS NameNode
 - Hive Metastore
 - Spark master
 - Trino coordinator
 - Spark Thrift
 
-Other nodes depend on those services being reachable.
+Other nodes depend on those services being reachable and stable.
 
-### 13.2 Why VM1 and VM3 come next
+### 15.2 Why VM1 and VM3 come next
 
 Because they add:
 
@@ -700,13 +913,13 @@ Because they add:
 - Spark execution capacity,
 - Trino worker capacity.
 
-### 13.3 Why control plane comes last
+### 15.3 Why control plane comes last
 
 Because Airflow, monitoring, and UI services should start only after the distributed data plane is reachable and stable.
 
 ---
 
-## 14. Pipeline Execution Order After Deployment
+## 16. Pipeline Execution Order After Deployment
 
 After the cluster is up, the Airflow execution order is:
 
@@ -720,39 +933,39 @@ This order is the operational contract for a clean end-to-end run.
 
 ---
 
-## 15. What Makes This Deployment Truly Distributed
+## 17. What Makes This Deployment Truly Distributed
 
 This deployment is not "distributed" only because multiple machines exist.
 
 It is distributed because the core runtime responsibilities are split across nodes in meaningful ways.
 
-### 15.1 Distributed ingestion
+### 17.1 Distributed ingestion
 
 Kafka quorum spans VM1, VM2, and VM3.
 
-### 15.2 Distributed storage
+### 17.2 Distributed storage
 
 HDFS stores data across DataNodes on VM1, VM2, and VM3, with namespace control on VM2.
 
-### 15.3 Distributed processing
+### 17.3 Distributed processing
 
 Spark applications are scheduled by the master and can allocate executors across workers on VM1, VM2, and VM3.
 
-### 15.4 Distributed querying
+### 17.4 Distributed querying
 
 Trino uses a coordinator/worker model with worker nodes separated from the coordinator.
 
-### 15.5 Centralized control
+### 17.5 Centralized control
 
 Airflow remains centralized on the control plane, which is a valid and common orchestration pattern.
 
 ---
 
-## 16. Observability Model
+## 18. Observability Model
 
 The deployed version has two observability levels.
 
-### 16.1 Infrastructure-level observability
+### 18.1 Infrastructure-level observability
 
 Provided by:
 
@@ -767,7 +980,7 @@ This shows:
 - memory usage,
 - node reachability.
 
-### 16.2 Pipeline-level observability
+### 18.2 Pipeline-level observability
 
 Provided by:
 
@@ -780,35 +993,28 @@ This shows:
 - DAG success/failure,
 - freshness indicators,
 - validation status,
-- and lakehouse readiness signals.
+- lakehouse readiness signals.
+
+### 18.3 Security-level observability
+
+Security is not monitored through a full SIEM stack, but relevant visibility exists through:
+
+- container startup logs,
+- Kerberos service logs,
+- Trino gateway access logs,
+- HDFS secure endpoint reachability checks,
+- and browser/client-side validation steps.
 
 ---
 
-## 17. Deployment Workflow Used by This Project
-
-The operational workflow is:
-
-1. prepare the node folder locally
-2. build or refresh the node bundle
-3. upload the bundle to the VM
-4. extract it into the target folder
-5. run fresh-VM preparation if needed
-6. run preflight checks
-7. start the stack
-8. verify the endpoints
-9. start the Airflow DAG chain from the control plane
-
-This workflow is intentionally explicit and reproducible.
-
----
-
-## 18. Validation and Evidence Checklist
+## 19. Validation and Evidence Checklist
 
 The deployed version should be considered healthy only when the following are true.
 
-### 18.1 Cluster service health
+### 19.1 Cluster service health
 
 - Kafka brokers reachable on all three VMs
+- Kerberos KDC reachable on VM2
 - HDFS NameNode reachable
 - HDFS DataNodes registered
 - Hive Metastore reachable
@@ -817,14 +1023,14 @@ The deployed version should be considered healthy only when the following are tr
 - Trino coordinator reachable
 - cAdvisor reachable on all three VMs
 
-### 18.2 Control plane health
+### 19.2 Control plane health
 
 - Airflow UI reachable
 - Prometheus UI reachable
 - Grafana UI reachable
 - Kafka UI reachable
 
-### 18.3 Pipeline evidence
+### 19.3 Pipeline evidence
 
 - all five DAGs succeed
 - raw Iceberg tables visible in Trino
@@ -833,7 +1039,7 @@ The deployed version should be considered healthy only when the following are tr
 - Data Docs HTML is generated
 - Grafana dashboards show fresh distributed metrics
 
-### 18.4 Distributed proof
+### 19.4 Distributed proof
 
 The strongest proof of distribution is:
 
@@ -842,15 +1048,42 @@ The strongest proof of distribution is:
 - Trino cluster shows coordinator plus workers
 - Kafka UI shows the broker cluster
 
+### 19.5 Security proof
+
+The strongest proof of security implementation is:
+
+- HDFS secure mode reports that security is on
+- HDFS web endpoints are exposed over HTTPS
+- Kerberos ticket acquisition works from Windows
+- Trino HTTPS gateway is reachable
+- control-plane HTTPS entry points are reachable
+- encrypted runtime mount scripts exist and are used when secure storage is enabled
+
 ---
 
-## 19. Operational Constraints
+## 20. Known Limitations and Honest Reporting Notes
 
-This deployment has known constraints.
+### 20.1 Browser-based HDFS Explorer is still a sensitive path
 
-### 19.1 Fixed VM specifications
+At the time of this report update:
 
-The VM hardware is fixed by the IT administrator.
+- the secure HDFS backend is functioning,
+- Kerberos ticket acquisition from Windows is functioning,
+- the NameNode secure overview page is reachable,
+- but the `explorer.html` path may still show `Unauthorized` under some Windows + Firefox SPNEGO combinations.
+
+This should be reported honestly as:
+
+- a client-side secure browsing integration issue,
+- not as evidence that the cluster or HDFS secure mode is broken.
+
+### 20.2 Demo-oriented certificate trust
+
+The deployment uses demo-friendly TLS trust paths and may show browser warnings if the local CA is not trusted.
+
+### 20.3 Fixed VM constraints
+
+The VM hardware remains fixed by the IT administrator.
 
 Therefore:
 
@@ -858,57 +1091,40 @@ Therefore:
 - disk is limited,
 - aggressive resource settings are unsafe.
 
-### 19.2 Demo-first sizing
+### 20.4 Not a full enterprise IAM design
+
+The deployment demonstrates meaningful security controls, but not full:
+
+- centralized secret rotation,
+- external identity federation,
+- enterprise PKI management,
+- or production zero-trust segmentation.
+
+---
+
+## 21. Operational Constraints
+
+This deployment has known operational constraints.
+
+### 21.1 Fixed VM specifications
+
+The VM hardware is fixed by the IT administrator.
+
+### 21.2 Demo-first sizing
 
 The cluster demonstrates distribution correctly, but it is not intended for large production-scale datasets.
 
-### 19.3 Disk pressure
+### 21.3 Disk pressure
 
-Because HDFS, Spark logs, Docker layers, and runtime volumes all consume disk, cleanup discipline matters.
+Because HDFS, Spark logs, Docker layers, encrypted runtime images, and runtime volumes all consume disk, cleanup discipline matters.
 
-### 19.4 Control-plane local dependency
+### 21.4 Control-plane local dependency
 
 The orchestration UX depends on the local PC being available because:
 
 - Airflow is local,
 - monitoring dashboards are local,
 - Kafka UI is local.
-
----
-
-## 20. Security Positioning for This Deployment
-
-For documentation and jury framing, this deployed version can be presented as including baseline deployment security measures.
-
-Security here should be understood as:
-
-- controlled node separation,
-- limited service placement,
-- remote submission through explicit SSH credentials,
-- centralized access through known UIs and endpoints,
-- environment-scoped configuration,
-- and role separation between orchestration and data-plane execution.
-
-This document does not expose secrets and must not be used to publish any private key content.
-
----
-
-## 21. What This Deployment Does Not Try to Be
-
-This deployed version is not trying to be:
-
-- a production Kubernetes platform,
-- a full HA disaster-recovery cluster,
-- a zero-trust enterprise security architecture,
-- or a massive data-volume benchmark environment.
-
-It is trying to be:
-
-- correct,
-- explainable,
-- reproducible,
-- distributed,
-- and defensible for the PFE.
 
 ---
 
@@ -923,7 +1139,9 @@ It demonstrates:
 - real orchestration,
 - real monitoring,
 - real end-to-end execution,
-- and real lakehouse behavior.
+- real lakehouse behavior,
+- meaningful security hardening,
+- and a careful distinction between implemented controls and remaining integration-sensitive client behavior.
 
 That makes the final project much more defensible as a serious Data Engineering and Big Data implementation.
 
@@ -936,11 +1154,11 @@ The distributed deployment under `src/deployments/distributed_pc_control_plane/`
 It consists of:
 
 - a **local control plane** for orchestration and observability,
-- a **three-VM data plane** for ingestion, storage, processing, and querying,
+- a **three-VM data plane** for ingestion, storage, processing, querying, and secure Hadoop control,
 - isolated per-node bundles for maintainability,
-- and an execution model designed around correctness, distribution, and constrained infrastructure.
+- and an execution model designed around correctness, distribution, constrained infrastructure, and baseline security hardening.
 
 In practical terms, this folder is the bridge between:
 
 - the project architecture on paper,
-- and the actual deployed system that can be shown, tested, explained, and defended.
+- and the actual deployed system that can be shown, tested, explained, secured, and defended.
