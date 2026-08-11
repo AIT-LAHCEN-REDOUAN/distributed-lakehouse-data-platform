@@ -57,7 +57,7 @@ services:
     environment:
       CLUSTER_NAME: ${CUSTOMERDNA_CLUSTER_NAME}
       KRB5_CONFIG: /etc/krb5.conf
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf
     volumes:
       - ${CUSTOMERDNA_RUNTIME_HDFS_NAMENODE_DIR:-./runtime/hdfs/namenode}:/hadoop/dfs/name
       - ./hdfs/namenode-config/core-site.xml:/etc/hadoop/core-site.xml:ro
@@ -239,8 +239,8 @@ services:
       HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
-      SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf
       SPARK_LOCAL_IP: ${VM2_HOST_IP}
       SPARK_PUBLIC_DNS: ${VM2_HOST_IP}
     command:
@@ -282,10 +282,10 @@ services:
       HADOOP_CONF_DIR: /etc/hadoop/conf
       KRB5_CONFIG: /etc/krb5.conf
       KRB5CCNAME: FILE:/tmp/krb5cc_spark
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
       SPARK_LOCAL_IP: ${VM2_HOST_IP}
       SPARK_PUBLIC_DNS: ${VM2_HOST_IP}
       CUSTOMERDNA_HIVE_METASTORE_URI: thrift://${VM2_HOST_IP}:${HIVE_METASTORE_PORT}
@@ -344,11 +344,11 @@ services:
       HADOOP_CONF_DIR: /etc/hadoop/conf
       KRB5_CONFIG: /etc/krb5.conf
       KRB5CCNAME: FILE:/tmp/krb5cc_spark
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
-      SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_LOCAL_IP: ${VM2_HOST_IP}
       SPARK_LOCAL_HOSTNAME: ${VM2_HOST_IP}
       SPARK_PUBLIC_DNS: ${VM2_HOST_IP}
@@ -400,10 +400,10 @@ services:
       HADOOP_CONF_DIR: /etc/hadoop/conf
       KRB5_CONFIG: /etc/krb5.conf
       KRB5CCNAME: FILE:/tmp/krb5cc_spark
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
       SPARK_HISTORY_OPTS: >-
         -Dspark.history.fs.logDirectory=file:/tmp/spark-events
         -Dspark.history.ui.port=${SPARK_HISTORY_WEBUI_PORT}
@@ -440,10 +440,10 @@ services:
       HADOOP_CONF_DIR: /etc/hadoop/conf
       KRB5_CONFIG: /etc/krb5.conf
       KRB5CCNAME: FILE:/tmp/krb5cc_spark
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
       SPARK_NO_DAEMONIZE: "true"
     command:
       - /bin/bash

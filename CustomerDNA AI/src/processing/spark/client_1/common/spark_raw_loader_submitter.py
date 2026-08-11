@@ -82,6 +82,10 @@ SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS = int(
 )
 KRB5_CONFIG_PATH = os.getenv("CUSTOMERDNA_KRB5_CONFIG_PATH", "/etc/krb5.conf").strip() or "/etc/krb5.conf"
 KRB5_CCACHE_PATH = os.getenv("CUSTOMERDNA_KRB5_CCACHE_PATH", "FILE:/tmp/krb5cc_spark").strip() or "FILE:/tmp/krb5cc_spark"
+SPARK_JAAS_CONFIG_PATH = (
+    os.getenv("CUSTOMERDNA_SPARK_JAAS_CONFIG_PATH", "/opt/spark/custom-conf/jaas.conf").strip()
+    or "/opt/spark/custom-conf/jaas.conf"
+)
 
 
 def _unique_csv(values: list[str]) -> str:
@@ -192,9 +196,19 @@ def _build_spark_submit_command(
         "--conf",
         f"spark.kerberos.keytab={SPARK_KERBEROS_KEYTAB}",
         "--conf",
-        f"spark.driver.extraJavaOptions=-Djava.security.krb5.conf={KRB5_CONFIG_PATH} -Djavax.security.auth.useSubjectCredsOnly=false",
+        (
+            "spark.driver.extraJavaOptions="
+            f"-Djava.security.krb5.conf={KRB5_CONFIG_PATH} "
+            f"-Djava.security.auth.login.config={SPARK_JAAS_CONFIG_PATH} "
+            "-Djavax.security.auth.useSubjectCredsOnly=false"
+        ),
         "--conf",
-        f"spark.executor.extraJavaOptions=-Djava.security.krb5.conf={KRB5_CONFIG_PATH} -Djavax.security.auth.useSubjectCredsOnly=false",
+        (
+            "spark.executor.extraJavaOptions="
+            f"-Djava.security.krb5.conf={KRB5_CONFIG_PATH} "
+            f"-Djava.security.auth.login.config={SPARK_JAAS_CONFIG_PATH} "
+            "-Djavax.security.auth.useSubjectCredsOnly=false"
+        ),
     ]
 
     if SPARK_DRIVER_HOST:
@@ -453,6 +467,7 @@ def submit_hdfs_bronze_to_iceberg_spark_job(
     print(f"[SPARK] Kerberos keytab: {SPARK_KERBEROS_KEYTAB}")
     print(f"[SPARK] KRB5 config path: {KRB5_CONFIG_PATH}")
     print(f"[SPARK] Credential cache path: {KRB5_CCACHE_PATH}")
+    print(f"[SPARK] JAAS config path: {SPARK_JAAS_CONFIG_PATH}")
     print(f"[SPARK] Expected rows: {expected_rows if expected_rows is not None else 0}")
     print(f"[SPARK] Expected bronze files: {expected_file_count if expected_file_count is not None else 0}")
 
