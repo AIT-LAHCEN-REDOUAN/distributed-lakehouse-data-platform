@@ -1,8 +1,8 @@
 # CustomerDNA AI - Distributed Deployment Report
 
 > Deployment scope: `src/deployments/distributed_pc_control_plane/`
-> Version: secured distributed deployment baseline
-> Date: Monday, August 10, 2026
+> Version: secured distributed deployment baseline with stabilized Kerberos and browser access path
+> Date: Tuesday, August 11, 2026
 > Audience: project owner, jury preparation, technical reviewers, future maintainers
 
 ---
@@ -746,13 +746,14 @@ The project includes a dedicated helper folder:
 
 ### 12.3 Required client-side sequence
 
-The intended browser access path is:
+The validated browser access path is:
 
 1. install MIT Kerberos for Windows
-2. point `KRB5_CONFIG` to the project `krb5.ini`
+2. place the project `krb5.ini` in the active MIT Kerberos client configuration path or point `KRB5_CONFIG` to it
 3. obtain a Kerberos ticket with the demo principal
 4. configure Firefox SPNEGO trusted and delegation URIs
-5. browse HDFS using the hostname alias, not the raw IP
+5. point Firefox to the MIT Kerberos GSS library if required
+6. browse HDFS using the hostname alias, not the raw IP
 
 ### 12.4 Important operational truth
 
@@ -761,6 +762,17 @@ If the NameNode overview page opens but `explorer.html` shows `Unauthorized`, th
 It often indicates a browser-side SPNEGO or WebHDFS authentication path issue.
 
 That distinction is important for debugging and for honest report-writing.
+
+### 12.5 Stabilized result achieved in this deployment
+
+After the final client-side correction pass, the secured HDFS browser flow was validated end to end:
+
+- Kerberos ticket acquisition works from Windows,
+- Firefox can reuse that ticket for SPNEGO negotiation,
+- the secure NameNode overview page opens through the hostname alias,
+- and `explorer.html` can browse HDFS successfully when the client configuration is exact.
+
+This means the remaining risk is not an unresolved backend defect, but a configuration-sensitive client workflow that must be reproduced carefully on any new Windows machine.
 
 ---
 
@@ -1032,12 +1044,13 @@ The deployed version should be considered healthy only when the following are tr
 
 ### 19.3 Pipeline evidence
 
-- all five DAGs succeed
-- raw Iceberg tables visible in Trino
-- dbt analytical tables visible in Trino
-- GX validations succeed
-- Data Docs HTML is generated
-- Grafana dashboards show fresh distributed metrics
+- the secured baseline supports the five-DAG execution order
+- environment reset and readiness validation succeed under the hardened runtime
+- raw Iceberg tables remain the official output of the Kafka -> HDFS -> Spark stage
+- dbt analytical tables remain the official curated output of the transformation stage
+- GX validations remain the official data-quality evidence layer
+- Data Docs HTML remains the expected quality-report artifact
+- Grafana dashboards remain the expected distributed observability artifact
 
 ### 19.4 Distributed proof
 
@@ -1055,6 +1068,7 @@ The strongest proof of security implementation is:
 - HDFS secure mode reports that security is on
 - HDFS web endpoints are exposed over HTTPS
 - Kerberos ticket acquisition works from Windows
+- Firefox-based Kerberos browsing of HDFS works through the hostname alias when the documented client settings are applied
 - Trino HTTPS gateway is reachable
 - control-plane HTTPS entry points are reachable
 - encrypted runtime mount scripts exist and are used when secure storage is enabled
@@ -1063,25 +1077,37 @@ The strongest proof of security implementation is:
 
 ## 20. Known Limitations and Honest Reporting Notes
 
-### 20.1 Browser-based HDFS Explorer is still a sensitive path
+### 20.1 Browser-based HDFS Explorer is configuration-sensitive
 
 At the time of this report update:
 
 - the secure HDFS backend is functioning,
 - Kerberos ticket acquisition from Windows is functioning,
 - the NameNode secure overview page is reachable,
-- but the `explorer.html` path may still show `Unauthorized` under some Windows + Firefox SPNEGO combinations.
+- and the `explorer.html` path is working in the validated Firefox setup,
+- but this path remains sensitive to exact client-side Kerberos and Firefox SPNEGO configuration.
 
 This should be reported honestly as:
 
-- a client-side secure browsing integration issue,
+- a configuration-sensitive secure browsing workflow,
 - not as evidence that the cluster or HDFS secure mode is broken.
 
-### 20.2 Demo-oriented certificate trust
+### 20.2 Security hardening required targeted runtime fixes
+
+The security layer was not only a configuration addition. It required operational stabilization work, including:
+
+- ensuring Airflow runtime variables point to the secure endpoints and deployment-safe hostnames,
+- reducing dbt concurrency to a safer demo value,
+- ensuring Spark-side services obtain and renew Kerberos tickets before contacting Hive Metastore,
+- and validating the Windows + Firefox Kerberos client path for HDFS browsing.
+
+This is an important academic point because it shows that secure distributed systems often need runtime adaptation, not only checkbox-style configuration.
+
+### 20.3 Demo-oriented certificate trust
 
 The deployment uses demo-friendly TLS trust paths and may show browser warnings if the local CA is not trusted.
 
-### 20.3 Fixed VM constraints
+### 20.4 Fixed VM constraints
 
 The VM hardware remains fixed by the IT administrator.
 
@@ -1091,7 +1117,7 @@ Therefore:
 - disk is limited,
 - aggressive resource settings are unsafe.
 
-### 20.4 Not a full enterprise IAM design
+### 20.5 Not a full enterprise IAM design
 
 The deployment demonstrates meaningful security controls, but not full:
 

@@ -1,14 +1,14 @@
-# AdOptimizer Customer Data Platform - Business Rules & Project Specification
+# CustomerDNA AI - Business Rules & Project Specification
 
-> **Global Project Document** | Version 17.4
-> Status: Distributed lakehouse architecture fully validated end to end for Client 1 with Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Airflow, Great Expectations, Prometheus, and Grafana
-> Last Updated: 2026-07-29
+> **Global Project Document** | Version 17.5
+> Status: Distributed customer-data lakehouse baseline aligned with the secured Client 1 deployment using Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Airflow, Great Expectations, Prometheus, and Grafana
+> Last Updated: 2026-08-11
 
 ---
 
 ## 1. Document Purpose
 
-This document is the main business-rules and technical-specification reference for the implemented customer-data platform delivered inside the broader **AdOptimizer AI** initiative.
+This document is the main business-rules and technical-specification reference for the implemented **CustomerDNA AI** customer-data platform.
 
 It defines:
 
@@ -38,12 +38,8 @@ This section is a practical starting point for a new engineer (or an external as
 
 - Active scope: Client 1 only
 - Active datasets:
-  - `datasets/client_1/Customer_Personality_Analysis/marketing_campaign.csv`
-  - `datasets/client_1/E-commerce_customer_churn/E-commerce_customer_churn.xlsx`
-  - `datasets/client_1/Retailrocket_recommender_system_dataset/category_tree.csv`
-  - `datasets/client_1/Retailrocket_recommender_system_dataset/events.csv`
-  - `datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part1.csv`
-  - `datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part2.csv`
+  - `datasets/client_1/bank_marketing/bank-additional-full.csv`
+  - `datasets/client_1/online_shoppers_intention/online_shoppers_intention.csv`
   - `datasets/client_1/UCI_Online_Retail_2/online_retail_2.xlsx`
 
 ### 1.1.3 What “Done” Means in This Repository
@@ -62,11 +58,15 @@ The project is considered implemented locally when all these are true:
 
 Recommended operational order (from a clean start):
 
-1. `customerdna_client1_lakehouse_readiness_pipeline` (pre-check)
+1. `customerdna_client1_environment_reset_pipeline`
 2. `customerdna_client1_lakehouse_setup_pipeline`
-3. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
-4. `customerdna_client1_dbt_spark_lakehouse_pipeline`
-5. `customerdna_client1_lakehouse_readiness_pipeline` (post-check, optional)
+3. `customerdna_client1_lakehouse_readiness_pipeline`
+4. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+5. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+
+Optional verification rerun:
+
+6. `customerdna_client1_lakehouse_readiness_pipeline` (post-run confirmation)
 
 ### 1.1.5 Key Evidence Locations (for Validation and Reporting)
 
@@ -94,15 +94,15 @@ If any referenced compose/env/config file is missing or ambiguous, deployment mu
 ## 2. Project Identity
 
 ### 2.1 Official Project Name
-**AdOptimizer Customer Data Platform**
+**CustomerDNA AI**
 
-### 2.2 Relationship to AdOptimizer AI
-The platform must be understood as the **data-engineering foundation** of the broader **AdOptimizer AI** program.
+### 2.2 Relationship to the broader academic vision
+The platform must be understood as the **data-engineering foundation** of a broader Customer 360 and future AI/ML roadmap.
 
 In this relationship:
 
-- **AdOptimizer AI** is the umbrella business and intelligent-platform vision.
-- **AdOptimizer Customer Data Platform** is the implemented data platform responsible for collecting, standardizing, governing, storing, and exposing customer-related data products.
+- **CustomerDNA AI** is the implemented distributed customer-data platform.
+- the current implementation is responsible for collecting, standardizing, governing, storing, validating, securing, and exposing customer-related data products.
 - analytics and future AI/ML capabilities depend on this platform, but they are not the primary identity of the current implementation.
 
 ### 2.3 Core Positioning
@@ -135,7 +135,8 @@ The platform must remain:
 - runnable in development,
 - portable to Docker-based environments,
 - explainable for deployment on a company-owned server cluster,
-- scalable toward multi-node execution later.
+- scalable toward multi-node execution later,
+- and defensible as a progressively hardened academic deployment through Kerberos, TLS, and encrypted runtime storage.
 
 ---
 
@@ -162,7 +163,7 @@ Typical operational problems include:
 
 The project therefore addresses the following question:
 
-> How can we build a distributed customer-data engineering platform that ingests heterogeneous datasets, persists them in a bronze data lake, processes them through a scalable lakehouse architecture, validates data quality, orchestrates the complete flow, and exposes trusted analytical outputs for downstream consumption within the broader AdOptimizer AI vision?
+> How can we build a distributed customer-data engineering platform that ingests heterogeneous datasets, persists them in a bronze data lake, processes them through a scalable lakehouse architecture, validates data quality, orchestrates the complete flow, secures critical data paths, and exposes trusted analytical outputs for downstream consumption and future Customer 360 / AI-ready use cases?
 
 ---
 
@@ -204,11 +205,15 @@ The implemented platform must be explained through its concrete operational sequ
 
 Recommended operational order (from a clean start):
 
-1. `customerdna_client1_lakehouse_readiness_pipeline` (pre-check)
+1. `customerdna_client1_environment_reset_pipeline`
 2. `customerdna_client1_lakehouse_setup_pipeline`
-3. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
-4. `customerdna_client1_dbt_spark_lakehouse_pipeline`
-5. `customerdna_client1_lakehouse_readiness_pipeline` (post-check, optional)
+3. `customerdna_client1_lakehouse_readiness_pipeline`
+4. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+5. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+
+Optional verification rerun:
+
+6. `customerdna_client1_lakehouse_readiness_pipeline`
 
 In practical terms, the executed runtime flow is:
 
@@ -228,16 +233,17 @@ The report and oral defense must describe the platform according to this real ex
 
 ### 4.2 Final Validated Runtime State
 
-The project has now reached a **validated local operational state** in which:
+The project has reached a **validated architectural and operational baseline** in which:
 
+- the secured distributed architecture is implemented across the local control plane and VM1, VM2, and VM3,
 - the HDFS bronze zone initializes correctly,
-- Hive Metastore namespaces are initialized correctly,
-- Spark processes source data and writes Iceberg raw tables successfully,
-- dbt-spark transformations run successfully,
-- Trino exposes the curated lakehouse objects successfully,
-- Great Expectations checkpoints succeed on the implemented scope,
-- Airflow orchestrates the four-DAG chain successfully,
-- Prometheus and Grafana expose working infrastructure and pipeline-health dashboards.
+- Hive Metastore namespaces initialize correctly,
+- Airflow orchestrates the five-stage execution contract,
+- Kerberos-secured Hadoop services, TLS-protected access paths, and encrypted runtime storage are part of the deployed baseline,
+- Spark raw loading and dbt-spark curation remain the official processing path for Client 1,
+- Trino remains the official SQL access layer over the lakehouse,
+- Great Expectations remains the official validation layer,
+- Prometheus and Grafana remain the official observability layer.
 
 This validated state must be treated as the current architectural baseline of the project.
 
@@ -257,7 +263,8 @@ This validated state must be treated as the current architectural baseline of th
 - make dbt-spark the official transformation modeling layer for curated lakehouse outputs,
 - validate platform outputs with Great Expectations,
 - orchestrate the platform with Airflow,
-- monitor the platform with Prometheus and Grafana.
+- monitor the platform with Prometheus and Grafana,
+- and demonstrate that security hardening can be added without breaking the core distributed lakehouse responsibilities.
 
 ### 5.2 Medium-Term Objectives
 
@@ -269,7 +276,7 @@ This validated state must be treated as the current architectural baseline of th
 ### 5.3 Long-Term Objectives
 
 - evolve toward a reusable multi-client customer data platform,
-- support broader AdOptimizer AI workloads,
+- support broader Customer 360 and AI/ML workloads,
 - scale from local development to server deployment and then to multi-node execution.
 
 ---
@@ -289,6 +296,9 @@ This validated state must be treated as the current architectural baseline of th
 - Airflow pipeline orchestration,
 - Great Expectations validation,
 - Prometheus and Grafana monitoring,
+- Kerberos-secured Hadoop runtime,
+- TLS-protected service exposure,
+- encrypted runtime storage through LUKS-backed volumes in the secured deployment,
 - architecture documentation and deployment readiness.
 
 ### 6.2 Out of Scope for the Core Platform Identity
@@ -335,23 +345,18 @@ The platform must avoid:
 
 ### 8.1 Client 1 Active Source Groups
 
-Client 1 currently uses four heterogeneous source groups:
+Client 1 currently uses three heterogeneous source groups:
 
 | Dataset Group | Business Meaning |
 |---|---|
-| Customer Personality Analysis | demographics, spending patterns, campaign response |
-| E-commerce Customer Churn | churn behavior and usage indicators |
-| RetailRocket Dataset | behavioral events, item properties, category structure |
+| Bank Marketing | campaign targeting, response behavior, customer profile attributes |
+| Online Shoppers Intention | web-session behavior and conversion intent signals |
 | UCI Online Retail II | transaction and sales behavior |
 
 ### 8.2 Active Source Files
 
-- `datasets/client_1/Customer_Personality_Analysis/marketing_campaign.csv`
-- `datasets/client_1/E-commerce_customer_churn/E-commerce_customer_churn.xlsx`
-- `datasets/client_1/Retailrocket_recommender_system_dataset/category_tree.csv`
-- `datasets/client_1/Retailrocket_recommender_system_dataset/events.csv`
-- `datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part1.csv`
-- `datasets/client_1/Retailrocket_recommender_system_dataset/item_properties_part2.csv`
+- `datasets/client_1/bank_marketing/bank-additional-full.csv`
+- `datasets/client_1/online_shoppers_intention/online_shoppers_intention.csv`
 - `datasets/client_1/UCI_Online_Retail_2/online_retail_2.xlsx`
 
 ### 8.3 Source Interpretation Rule
@@ -513,12 +518,9 @@ Each layer must keep its own responsibility:
 ### 11.1 Dataset-Specific Topic Pattern
 Client 1 topics must follow:
 
-- `client1.marketing_campaign`
-- `client1.ecommerce_customer_churn`
-- `client1.retailrocket_category_tree`
-- `client1.retailrocket_events`
-- `client1.retailrocket_item_properties`
-- `client1.online_retail`
+- `client1.bank_marketing`
+- `client1.online_shoppers_intention`
+- `client1.online_retail_2`
 
 ### 11.2 Bronze Persistence Rule
 Each ingestion run must create dataset-specific bronze artifacts in HDFS under a client-aware structure.
@@ -566,23 +568,28 @@ Business and analytical consumers must query curated Iceberg tables through Trin
 
 ## 13. Orchestration Design Rules
 
-### 13.1 Four-Phase Orchestration Principle
-The platform should remain decomposed into clear orchestration phases:
+### 13.1 Five-Stage Orchestration Principle
+The platform should remain decomposed into clear orchestration stages:
 
-1. **Foundation / environment setup**
-2. **Bronze ingestion and processing**
-3. **dbt-spark transformation and curation**
-4. **Lakehouse readiness and quality validation**
+1. **Environment reset and cleanup**
+2. **Foundation / lakehouse setup**
+3. **Readiness and dependency validation**
+4. **Bronze ingestion and raw lakehouse processing**
+5. **dbt-spark transformation and curation**
 
 This decomposition is implemented concretely through the following DAGs:
 
 Recommended operational order (from a clean start):
 
-1. `customerdna_client1_lakehouse_readiness_pipeline` (pre-check)
+1. `customerdna_client1_environment_reset_pipeline`
 2. `customerdna_client1_lakehouse_setup_pipeline`
-3. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
-4. `customerdna_client1_dbt_spark_lakehouse_pipeline`
-5. `customerdna_client1_lakehouse_readiness_pipeline` (post-check, optional)
+3. `customerdna_client1_lakehouse_readiness_pipeline`
+4. `customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline`
+5. `customerdna_client1_dbt_spark_lakehouse_pipeline`
+
+Optional verification rerun:
+
+6. `customerdna_client1_lakehouse_readiness_pipeline`
 
 ### 13.2 Orchestration Benefit Rule
 This split is intentional because it improves:
@@ -623,6 +630,17 @@ It exists to prove that the system is:
 - measurable,
 - debuggable,
 - explainable to operational stakeholders.
+
+### 14.4 Security and observability alignment rule
+
+Security controls must remain observable and explainable.
+
+Therefore the deployed baseline must make it possible to verify:
+
+- Kerberos-secured Hadoop service startup,
+- TLS-protected access paths for HDFS web, Trino gateway, and control-plane tools,
+- encrypted runtime storage enablement on the VMs,
+- and cluster health after security-layer changes.
 
 ---
 
@@ -704,7 +722,7 @@ Its advantages are:
 
 For the defense, the platform must be presented in the following order:
 
-1. business context inside AdOptimizer AI
+1. business context and customer-data problem framing
 2. multi-source customer data challenge
 3. ingestion backbone with Kafka
 4. bronze persistence in HDFS
@@ -715,6 +733,7 @@ For the defense, the platform must be presented in the following order:
 9. validation with Great Expectations
 10. orchestration with Airflow
 11. observability with Prometheus and Grafana
+12. deployment hardening with Kerberos, TLS, and encrypted runtime storage
 
 This is the correct narrative order for the project.
 
@@ -733,7 +752,8 @@ This is the correct narrative order for the project.
 9. **Airflow is the official orchestration layer.**
 10. **Prometheus and Grafana are mandatory observability components.**
 11. **Traditional PostgreSQL business-warehouse logic is no longer the target architecture.**
-12. **The platform must be presented primarily as a distributed Data Engineering platform under AdOptimizer AI.**
+12. **Kerberos, TLS, and encrypted runtime storage are part of the secured deployment baseline and must be described as progressive hardening, not as unrelated add-ons.**
+13. **The platform must be presented primarily as a distributed Data Engineering platform that prepares trusted customer data for future Customer 360 and AI/ML work.**
 
 ---
 
@@ -855,3 +875,4 @@ This is the correct scientific and engineering interpretation for the PFE report
 | 17.2 | 2026-07-17 | Refined for the final validated state: architecture transition marked as completed, runtime validation status clarified, and the global document aligned with the fully successful local end-to-end lakehouse execution. |
 | 17.3 | 2026-07-18 | Added local-vs-distributed deployment comparison rules, benchmark metrics, and guidance for preserving local runnable behavior while preparing future multi-machine evaluation. |
 | 17.4 | 2026-07-29 | Updated project-structure section to match the current repository (removed legacy references), aligned DAG execution guidance with the pre-check/setup/run/post-check pattern, and clarified Great Expectations Data Docs as report evidence. |
+| 17.5 | 2026-08-11 | Re-aligned the document with the current three-dataset Client 1 scope, the five-DAG secured execution order, and the implemented Kerberos/TLS/LUKS deployment baseline. |
