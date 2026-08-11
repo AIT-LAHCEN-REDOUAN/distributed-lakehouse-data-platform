@@ -83,6 +83,7 @@ services:
     environment:
       HOME: /opt/spark/work-dir
       IVY_HOME: /opt/spark/work-dir/.ivy2
+      HADOOP_CONF_DIR: /etc/hadoop/conf
       KRB5_CONFIG: /etc/krb5.conf
       KRB5CCNAME: FILE:/tmp/krb5cc_spark
       HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
@@ -117,6 +118,7 @@ services:
       - ${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-./runtime/spark/events}:/tmp/spark-events
       - ${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-./runtime/spark/ivy2}:/opt/spark/work-dir/.ivy2
       - ./spark/config:/opt/spark/custom-conf:ro
+      - ./hdfs/config:/etc/hadoop/conf:ro
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro
       - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/spark:/etc/security/keytabs:ro
 
