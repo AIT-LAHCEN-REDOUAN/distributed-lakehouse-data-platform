@@ -2,6 +2,6 @@
 <configuration>
   <property>
     <name>fs.defaultFS</name>
-    <value>hdfs://10.10.252.12:9000</value>
+    <value>hdfs://namenode.customerdna.local:9000</value>
   </property>
 </configuration>

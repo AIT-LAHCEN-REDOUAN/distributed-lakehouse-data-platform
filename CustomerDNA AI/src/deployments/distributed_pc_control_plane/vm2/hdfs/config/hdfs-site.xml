@@ -30,7 +30,7 @@
   </property>
   <property>
     <name>dfs.namenode.kerberos.principal</name>
-    <value>nn/_HOST@CUSTOMERDNA.LOCAL</value>
+    <value>nn/namenode.customerdna.local@CUSTOMERDNA.LOCAL</value>
   </property>
   <property>
     <name>dfs.namenode.keytab.file</name>

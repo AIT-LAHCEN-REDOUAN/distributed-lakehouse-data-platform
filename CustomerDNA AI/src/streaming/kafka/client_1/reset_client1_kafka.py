@@ -36,6 +36,44 @@ KAFKA_ADMIN_CONNECT_RETRY_INTERVAL_SECONDS = max(
     1,
     int(os.getenv("CUSTOMERDNA_KAFKA_ADMIN_CONNECT_RETRY_INTERVAL_SECONDS", "5")),
 )
+KAFKA_TOPIC_STATE_TIMEOUT_SECONDS = max(
+    30,
+    int(os.getenv("CUSTOMERDNA_KAFKA_TOPIC_STATE_TIMEOUT_SECONDS", "120")),
+)
+KAFKA_TOPIC_STATE_POLL_INTERVAL_SECONDS = max(
+    1,
+    int(os.getenv("CUSTOMERDNA_KAFKA_TOPIC_STATE_POLL_INTERVAL_SECONDS", "2")),
+)
+KAFKA_TOPIC_DELETE_ATTEMPTS = max(
+    1,
+    int(os.getenv("CUSTOMERDNA_KAFKA_TOPIC_DELETE_ATTEMPTS", "3")),
+)
+
+
+def list_topics_with_retry(
+    admin_client: KafkaAdminClient,
+    *,
+    operation_label: str,
+    timeout_seconds: int = KAFKA_TOPIC_STATE_TIMEOUT_SECONDS,
+) -> set[str]:
+    """Fetch Kafka topic metadata with short retries during controller churn."""
+    deadline = time.time() + timeout_seconds
+    last_error: Exception | None = None
+
+    while time.time() < deadline:
+        try:
+            return set(admin_client.list_topics())
+        except (RequestTimedOutError, NoBrokersAvailable) as exc:
+            last_error = exc
+            print(
+                f"[WARN] Kafka metadata not ready while {operation_label}. "
+                f"Retrying in {KAFKA_TOPIC_STATE_POLL_INTERVAL_SECONDS}s..."
+            )
+            time.sleep(KAFKA_TOPIC_STATE_POLL_INTERVAL_SECONDS)
+
+    raise RuntimeError(
+        f"Timed out while fetching Kafka topic metadata during {operation_label}."
+    ) from last_error
 
 
 def build_admin_client() -> KafkaAdminClient:
@@ -52,7 +90,11 @@ def build_admin_client() -> KafkaAdminClient:
                 api_version_auto_timeout_ms=10000,
             )
             # Force metadata fetch so we only continue once the broker is truly usable.
-            admin_client.list_topics()
+            list_topics_with_retry(
+                admin_client,
+                operation_label="waiting for Kafka admin connectivity",
+                timeout_seconds=15,
+            )
             return admin_client
         except NoBrokersAvailable as exc:
             last_error = exc
@@ -69,14 +111,50 @@ def build_admin_client() -> KafkaAdminClient:
 
 def delete_topics(admin_client: KafkaAdminClient, topics: list[str]) -> None:
     """Delete Client 1 topics if they exist."""
-    existing_topics = set(admin_client.list_topics())
+    existing_topics = list_topics_with_retry(
+        admin_client,
+        operation_label="discovering topics to delete",
+    )
     topics_to_delete = [topic for topic in topics if topic in existing_topics]
 
     if not topics_to_delete:
         print("[INFO] No existing Client 1 topics were found to delete.")
         return
 
-    admin_client.delete_topics(topics=topics_to_delete)
+    last_timeout: RequestTimedOutError | None = None
+    for attempt in range(1, KAFKA_TOPIC_DELETE_ATTEMPTS + 1):
+        try:
+            admin_client.delete_topics(topics=topics_to_delete)
+            last_timeout = None
+            break
+        except RequestTimedOutError as exc:
+            last_timeout = exc
+            print(
+                "[WARN] Kafka topic deletion request timed out while waiting for the controller. "
+                f"Attempt {attempt}/{KAFKA_TOPIC_DELETE_ATTEMPTS}. "
+                "Verifying whether deletion is already progressing..."
+            )
+            try:
+                remaining_topics = [
+                    topic
+                    for topic in topics_to_delete
+                    if topic in list_topics_with_retry(
+                        admin_client,
+                        operation_label="verifying timed-out topic deletion",
+                        timeout_seconds=15,
+                    )
+                ]
+            except RuntimeError:
+                remaining_topics = topics_to_delete
+
+            if not remaining_topics:
+                last_timeout = None
+                break
+
+            if attempt == KAFKA_TOPIC_DELETE_ATTEMPTS:
+                raise
+
+            time.sleep(KAFKA_TOPIC_STATE_POLL_INTERVAL_SECONDS)
 
     for topic in topics_to_delete:
         print(f"[INFO] Delete requested for topic: {topic}")
@@ -84,12 +162,20 @@ def delete_topics(admin_client: KafkaAdminClient, topics: list[str]) -> None:
     wait_for_topic_deletion(admin_client, topics_to_delete)
 
 
-def wait_for_topic_deletion(admin_client: KafkaAdminClient, topics: list[str], timeout_seconds: int = 60) -> None:
+def wait_for_topic_deletion(
+    admin_client: KafkaAdminClient,
+    topics: list[str],
+    timeout_seconds: int = KAFKA_TOPIC_STATE_TIMEOUT_SECONDS,
+) -> None:
     """Wait until topics disappear from Kafka metadata."""
     deadline = time.time() + timeout_seconds
 
     while time.time() < deadline:
-        existing_topics = set(admin_client.list_topics())
+        existing_topics = list_topics_with_retry(
+            admin_client,
+            operation_label="waiting for topic deletion",
+            timeout_seconds=15,
+        )
         remaining_topics = [topic for topic in topics if topic in existing_topics]
 
         if not remaining_topics:
@@ -97,17 +183,25 @@ def wait_for_topic_deletion(admin_client: KafkaAdminClient, topics: list[str], t
                 print(f"[SUCCESS] Deleted topic: {topic}")
             return
 
-        time.sleep(1)
+        time.sleep(KAFKA_TOPIC_STATE_POLL_INTERVAL_SECONDS)
 
     raise TimeoutError(f"Timed out while waiting for topic deletion: {', '.join(topics)}")
 
 
-def wait_for_topic_creation(admin_client: KafkaAdminClient, topics: list[str], timeout_seconds: int = 60) -> None:
+def wait_for_topic_creation(
+    admin_client: KafkaAdminClient,
+    topics: list[str],
+    timeout_seconds: int = KAFKA_TOPIC_STATE_TIMEOUT_SECONDS,
+) -> None:
     """Wait until every expected topic appears in Kafka metadata."""
     deadline = time.time() + timeout_seconds
 
     while time.time() < deadline:
-        existing_topics = set(admin_client.list_topics())
+        existing_topics = list_topics_with_retry(
+            admin_client,
+            operation_label="waiting for topic creation",
+            timeout_seconds=15,
+        )
         missing_topics = [topic for topic in topics if topic not in existing_topics]
 
         if not missing_topics:
@@ -115,7 +209,7 @@ def wait_for_topic_creation(admin_client: KafkaAdminClient, topics: list[str], t
                 print(f"[SUCCESS] Created empty topic: {topic}")
             return
 
-        time.sleep(1)
+        time.sleep(KAFKA_TOPIC_STATE_POLL_INTERVAL_SECONDS)
 
     raise TimeoutError(f"Timed out while waiting for topic creation: {', '.join(topics)}")
 
