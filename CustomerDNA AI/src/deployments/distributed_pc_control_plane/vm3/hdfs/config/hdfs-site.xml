@@ -34,7 +34,7 @@
   </property>
   <property>
     <name>dfs.web.authentication.kerberos.principal</name>
-    <value>HTTP/_HOST@CUSTOMERDNA.LOCAL</value>
+    <value>*</value>
   </property>
   <property>
     <name>dfs.web.authentication.kerberos.keytab</name>
@@ -42,7 +42,7 @@
   </property>
   <property>
     <name>dfs.datanode.kerberos.internal.spnego.principal</name>
-    <value>HTTP/_HOST@CUSTOMERDNA.LOCAL</value>
+    <value>*</value>
   </property>
   <property>
     <name>dfs.datanode.http.address</name>

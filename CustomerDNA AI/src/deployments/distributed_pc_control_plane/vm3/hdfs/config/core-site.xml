@@ -21,6 +21,10 @@
     <value>privacy</value>
   </property>
   <property>
+    <name>hadoop.http.filter.initializers</name>
+    <value>org.apache.hadoop.security.AuthenticationFilterInitializer</value>
+  </property>
+  <property>
     <name>hadoop.http.authentication.type</name>
     <value>kerberos</value>
   </property>
@@ -35,5 +39,9 @@
   <property>
     <name>hadoop.http.authentication.simple.anonymous.allowed</name>
     <value>false</value>
+  </property>
+  <property>
+    <name>hadoop.http.authentication.cookie.domain</name>
+    <value>.customerdna.local</value>
   </property>
 </configuration>

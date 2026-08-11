@@ -233,9 +233,12 @@ if [[ "${CUSTOMERDNA_HADOOP_SECURE_MODE:-false}" == "true" ]]; then
   provision_principal_keytab \
     "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/namenode/nn.service.keytab" \
     "nn/namenode@${CUSTOMERDNA_KRB5_REALM}" \
+    "nn/namenode.customerdna.local@${CUSTOMERDNA_KRB5_REALM}" \
+    "nn/${VM2_HOST_IP}@${CUSTOMERDNA_KRB5_REALM}" \
     "HTTP/namenode@${CUSTOMERDNA_KRB5_REALM}" \
     "HTTP/namenode.customerdna.local@${CUSTOMERDNA_KRB5_REALM}" \
-    "host/namenode@${CUSTOMERDNA_KRB5_REALM}"
+    "host/namenode@${CUSTOMERDNA_KRB5_REALM}" \
+    "host/namenode.customerdna.local@${CUSTOMERDNA_KRB5_REALM}"
   provision_principal_keytab \
     "${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-${SCRIPT_DIR}/runtime/kerberos/keytabs}/datanode-2/dn.service.keytab" \
     "dn/datanode-2@${CUSTOMERDNA_KRB5_REALM}" \

@@ -30,11 +30,11 @@
   </property>
   <property>
     <name>hadoop.http.authentication.kerberos.principal</name>
-    <value>HTTP/_HOST@CUSTOMERDNA.LOCAL</value>
+    <value>HTTP/namenode.customerdna.local@CUSTOMERDNA.LOCAL</value>
   </property>
   <property>
     <name>hadoop.http.authentication.kerberos.keytab</name>
-    <value>/etc/security/keytabs/dn.service.keytab</value>
+    <value>/etc/security/keytabs/nn.service.keytab</value>
   </property>
   <property>
     <name>hadoop.http.authentication.simple.anonymous.allowed</name>

@@ -50,6 +50,7 @@ services:
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
     restart: unless-stopped
     depends_on:
       - kerberos-kdc
@@ -59,8 +60,8 @@ services:
       HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
     volumes:
       - ${CUSTOMERDNA_RUNTIME_HDFS_NAMENODE_DIR:-./runtime/hdfs/namenode}:/hadoop/dfs/name
-      - ./hdfs/config/core-site.xml:/etc/hadoop/core-site.xml:ro
-      - ./hdfs/config/hdfs-site.xml:/etc/hadoop/hdfs-site.xml:ro
+      - ./hdfs/namenode-config/core-site.xml:/etc/hadoop/core-site.xml:ro
+      - ./hdfs/namenode-config/hdfs-site.xml:/etc/hadoop/hdfs-site.xml:ro
       - ./hdfs/tls/ssl-server.xml:/etc/hadoop/ssl-server.xml:ro
       - ./hdfs/tls/ssl-client.xml:/etc/hadoop/ssl-client.xml:ro
       - ./hdfs/tls:/etc/hadoop/tls:ro
@@ -76,9 +77,11 @@ services:
     network_mode: host
     extra_hosts:
       - "datanode-2:${VM2_HOST_IP}"
+      - "datanode-2.customerdna.local:${VM2_HOST_IP}"
       - "datanode-1:${VM1_HOST_IP}"
       - "datanode-3:${VM3_HOST_IP}"
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
     restart: unless-stopped
     depends_on:
       - namenode
@@ -89,8 +92,8 @@ services:
       SERVICE_PRECONDITION: namenode:${CUSTOMERDNA_HDFS_NAMENODE_HTTPS_PORT:-9871}
     volumes:
       - ${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-./runtime/hdfs/datanode}:/hadoop/dfs/data
-      - ./hdfs/config/core-site.xml:/etc/hadoop/core-site.xml:ro
-      - ./hdfs/config/hdfs-site.xml:/etc/hadoop/hdfs-site.xml:ro
+      - ./hdfs/datanode-config/core-site.xml:/etc/hadoop/core-site.xml:ro
+      - ./hdfs/datanode-config/hdfs-site.xml:/etc/hadoop/hdfs-site.xml:ro
       - ./hdfs/tls/ssl-server.xml:/etc/hadoop/ssl-server.xml:ro
       - ./hdfs/tls/ssl-client.xml:/etc/hadoop/ssl-client.xml:ro
       - ./hdfs/tls:/etc/hadoop/tls:ro
@@ -110,12 +113,21 @@ services:
       - /bin/bash
       - -lc
     command:
-      - while true; do sleep 3600; done
+      - >
+        kinit -kt ${CUSTOMERDNA_HDFS_ADMIN_KEYTAB} airflow@${CUSTOMERDNA_KRB5_REALM}
+        && while true; do
+             sleep 1800;
+             kinit -R || kinit -kt ${CUSTOMERDNA_HDFS_ADMIN_KEYTAB} airflow@${CUSTOMERDNA_KRB5_REALM};
+           done
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "datanode-1:${VM1_HOST_IP}"
+      - "datanode-1.customerdna.local:${VM1_HOST_IP}"
       - "datanode-2:${VM2_HOST_IP}"
+      - "datanode-2.customerdna.local:${VM2_HOST_IP}"
       - "datanode-3:${VM3_HOST_IP}"
+      - "datanode-3.customerdna.local:${VM3_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
     restart: unless-stopped
     healthcheck:

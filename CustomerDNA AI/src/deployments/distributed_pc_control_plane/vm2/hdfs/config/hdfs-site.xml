@@ -38,7 +38,7 @@
   </property>
   <property>
     <name>dfs.web.authentication.kerberos.principal</name>
-    <value>HTTP/_HOST@CUSTOMERDNA.LOCAL</value>
+    <value>*</value>
   </property>
   <property>
     <name>dfs.web.authentication.kerberos.keytab</name>
@@ -46,7 +46,7 @@
   </property>
   <property>
     <name>dfs.namenode.kerberos.internal.spnego.principal</name>
-    <value>HTTP/_HOST@CUSTOMERDNA.LOCAL</value>
+    <value>*</value>
   </property>
   <property>
     <name>dfs.namenode.http-address</name>
@@ -86,7 +86,7 @@
   </property>
   <property>
     <name>dfs.datanode.kerberos.principal</name>
-    <value>dn/_HOST@CUSTOMERDNA.LOCAL</value>
+    <value>dn/datanode-2@CUSTOMERDNA.LOCAL</value>
   </property>
   <property>
     <name>dfs.datanode.keytab.file</name>
@@ -94,7 +94,7 @@
   </property>
   <property>
     <name>dfs.datanode.kerberos.internal.spnego.principal</name>
-    <value>HTTP/_HOST@CUSTOMERDNA.LOCAL</value>
+    <value>*</value>
   </property>
   <property>
     <name>dfs.datanode.http.address</name>
@@ -107,5 +107,9 @@
   <property>
     <name>dfs.datanode.use.datanode.hostname</name>
     <value>true</value>
+  </property>
+  <property>
+    <name>dfs.datanode.hostname</name>
+    <value>datanode-2</value>
   </property>
 </configuration>

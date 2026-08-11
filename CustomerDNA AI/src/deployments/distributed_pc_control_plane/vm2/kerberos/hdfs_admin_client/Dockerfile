@@ -9,7 +9,7 @@ RUN sed -i 's|http://deb.debian.org/debian|http://archive.debian.org/debian|g' /
     && sed -i '/stretch-updates/d' /etc/apt/sources.list \
     && printf 'Acquire::Check-Valid-Until \"false\";\nAcquire::AllowInsecureRepositories \"true\";\n' > /etc/apt/apt.conf.d/99archive \
     && apt-get update -o Acquire::Check-Valid-Until=false -o Acquire::AllowInsecureRepositories=true \
-    && apt-get install -y --no-install-recommends krb5-user \
+    && apt-get install -y --no-install-recommends krb5-user libgssapi-krb5-2 libsasl2-modules-gssapi-mit \
     && rm -rf /var/lib/apt/lists/*
 
 CMD ["/bin/bash", "-lc", "while true; do sleep 3600; done"]
