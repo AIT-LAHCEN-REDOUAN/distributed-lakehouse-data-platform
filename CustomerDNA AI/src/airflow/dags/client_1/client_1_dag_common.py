@@ -161,9 +161,20 @@ def build_runtime_env() -> dict[str, str]:
         )
         else "false"
     )
+    env.setdefault(
+        "CUSTOMERDNA_TRINO_USER",
+        env.get("CUSTOMERDNA_AIRFLOW_TRINO_USER", "airflow"),
+    )
+    env.setdefault(
+        "CUSTOMERDNA_TRINO_PASSWORD",
+        env.get("CUSTOMERDNA_AIRFLOW_TRINO_PASSWORD", ""),
+    )
+    env.setdefault(
+        "CUSTOMERDNA_TRINO_CA_CERT_PATH",
+        env.get("CUSTOMERDNA_AIRFLOW_TRINO_CA_CERT_PATH", ""),
+    )
     env.setdefault("CUSTOMERDNA_TRINO_CATALOG", "lakehouse")
     env.setdefault("CUSTOMERDNA_TRINO_SCHEMA", "raw_data")
-    env.setdefault("CUSTOMERDNA_TRINO_USER", "airflow")
     env.setdefault("CUSTOMERDNA_ICEBERG_RAW_NAMESPACE", "raw_data")
 
     if env.get("CUSTOMERDNA_DBT_SPARK_HOST", "").strip() in LOCAL_SPARK_THRIFT_HOSTS:
