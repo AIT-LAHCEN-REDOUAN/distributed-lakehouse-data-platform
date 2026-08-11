@@ -276,10 +276,11 @@ services:
       HOME: /opt/spark/work-dir
       IVY_HOME: /opt/spark/work-dir/.ivy2
       KRB5_CONFIG: /etc/krb5.conf
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      KRB5CCNAME: FILE:/tmp/krb5cc_spark
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
       SPARK_LOCAL_IP: ${VM2_HOST_IP}
       SPARK_PUBLIC_DNS: ${VM2_HOST_IP}
       CUSTOMERDNA_HIVE_METASTORE_URI: thrift://${VM2_HOST_IP}:${HIVE_METASTORE_PORT}
@@ -299,12 +300,15 @@ services:
       - -lc
       - >
         mkdir -p /opt/spark/work-dir/.ivy2/cache /opt/spark/work-dir/.ivy2/jars
-        && kinit -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL}
+        || exit 1;
+        export KRB5CCNAME=FILE:/tmp/krb5cc_spark;
+        kdestroy -c /tmp/krb5cc_spark >/dev/null 2>&1 || true;
+        kinit -c /tmp/krb5cc_spark -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL}
         || exit 1;
         (
              while true; do
                sleep 1800;
-               kinit -R || kinit -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL};
+               kinit -c /tmp/krb5cc_spark -R || kinit -c /tmp/krb5cc_spark -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL};
              done
            ) >/dev/null 2>&1 &
         while true; do sleep 3600; done
@@ -316,7 +320,14 @@ services:
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
+      - "spark-worker-1:${VM1_HOST_IP}"
+      - "spark-worker-1.customerdna.local:${VM1_HOST_IP}"
+      - "spark-worker-2:${VM2_HOST_IP}"
+      - "spark-worker-2.customerdna.local:${VM2_HOST_IP}"
+      - "spark-worker-3:${VM3_HOST_IP}"
+      - "spark-worker-3.customerdna.local:${VM3_HOST_IP}"
     restart: unless-stopped
     depends_on:
       - kerberos-kdc
@@ -325,23 +336,35 @@ services:
       HOME: /opt/spark/work-dir
       IVY_HOME: /opt/spark/work-dir/.ivy2
       KRB5_CONFIG: /etc/krb5.conf
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      KRB5CCNAME: FILE:/tmp/krb5cc_spark
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
-      SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_LOCAL_IP: ${VM2_HOST_IP}
+      SPARK_LOCAL_HOSTNAME: ${VM2_HOST_IP}
       SPARK_PUBLIC_DNS: ${VM2_HOST_IP}
     command:
-      - /opt/spark/bin/spark-class
-      - org.apache.spark.deploy.worker.Worker
-      - spark://${VM2_HOST_IP}:${SPARK_MASTER_PORT}
-      - --webui-port
-      - ${SPARK_WORKER_WEBUI_PORT}
-      - --cores
-      - ${SPARK_WORKER_CORES}
-      - --memory
-      - ${SPARK_WORKER_MEMORY}
+      - /bin/bash
+      - -lc
+      - >
+        export KRB5CCNAME=FILE:/tmp/krb5cc_spark;
+        kdestroy -c /tmp/krb5cc_spark >/dev/null 2>&1 || true;
+        kinit -c /tmp/krb5cc_spark -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL}
+        || exit 1;
+        (
+             while true; do
+               sleep 1800;
+               kinit -c /tmp/krb5cc_spark -R || kinit -c /tmp/krb5cc_spark -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL};
+             done
+           ) >/dev/null 2>&1 &
+        exec /opt/spark/bin/spark-class
+        org.apache.spark.deploy.worker.Worker
+        spark://${VM2_HOST_IP}:${SPARK_MASTER_PORT}
+        --webui-port ${SPARK_WORKER_WEBUI_PORT}
+        --cores ${SPARK_WORKER_CORES}
+        --memory ${SPARK_WORKER_MEMORY}
     volumes:
       - ${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-./runtime/spark/events}:/tmp/spark-events
       - ${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-./runtime/spark/ivy2}:/opt/spark/work-dir/.ivy2
@@ -366,10 +389,11 @@ services:
       HOME: /opt/spark/work-dir
       IVY_HOME: /opt/spark/work-dir/.ivy2
       KRB5_CONFIG: /etc/krb5.conf
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      KRB5CCNAME: FILE:/tmp/krb5cc_spark
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
       SPARK_HISTORY_OPTS: >-
         -Dspark.history.fs.logDirectory=file:/tmp/spark-events
         -Dspark.history.ui.port=${SPARK_HISTORY_WEBUI_PORT}
@@ -402,21 +426,24 @@ services:
       HOME: /opt/spark/work-dir
       IVY_HOME: /opt/spark/work-dir/.ivy2
       KRB5_CONFIG: /etc/krb5.conf
-      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      KRB5CCNAME: FILE:/tmp/krb5cc_spark
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_CONF_DIR: /opt/spark/custom-conf
       SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
-      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
       SPARK_NO_DAEMONIZE: "true"
     command:
       - /bin/bash
       - -lc
       - >
-        kinit -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL}
+        export KRB5CCNAME=FILE:/tmp/krb5cc_spark;
+        kdestroy -c /tmp/krb5cc_spark >/dev/null 2>&1 || true;
+        kinit -c /tmp/krb5cc_spark -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL}
         || exit 1;
         (
              while true; do
                sleep 1800;
-               kinit -R || kinit -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL};
+               kinit -c /tmp/krb5cc_spark -R || kinit -c /tmp/krb5cc_spark -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL};
              done
            ) >/dev/null 2>&1 &
         mkdir -p /opt/spark/logs &&

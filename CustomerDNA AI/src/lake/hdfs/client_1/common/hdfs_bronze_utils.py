@@ -45,6 +45,8 @@ from hdfs_bronze_config import (
 REQUEST_TIMEOUT_SECONDS = 120
 DATANODE_ALIAS_CACHE_TTL_SECONDS = 60
 SSH_CONNECT_TIMEOUT_SECONDS = 20
+SSH_UPLOAD_RETRY_ATTEMPTS = 3
+SSH_UPLOAD_RETRY_DELAY_SECONDS = 2
 HDFS_LS_LINE_PATTERN = re.compile(
     r"^(?P<permissions>[dl-][rwx-]{9})\s+"
     r"(?P<replication>\d+|-)\s+"
@@ -499,42 +501,108 @@ class RemoteSshHdfsBronzeClient:
         remote_host_temp = f"{self.staging_host_dir}/{uuid.uuid4().hex}_{local_path.name}"
         remote_container_temp = f"{self.staging_container_dir}/{Path(remote_host_temp).name}"
         remote_parent = str(Path(normalized).parent).replace("\\", "/")
+        attempt_errors: list[str] = []
 
-        client = self._connect()
-        try:
-            mkdir_command = f"mkdir -p {shlex.quote(self.staging_host_dir)}"
-            _, stdout, stderr = client.exec_command(mkdir_command)
-            if stdout.channel.recv_exit_status() != 0:
-                raise RuntimeError(stderr.read().decode("utf-8", errors="replace"))
-
-            sftp = client.open_sftp()
+        for attempt in range(1, SSH_UPLOAD_RETRY_ATTEMPTS + 1):
+            client = self._connect()
             try:
-                sftp.put(str(local_path), remote_host_temp)
-            finally:
-                sftp.close()
+                mkdir_command = f"mkdir -p {shlex.quote(self.staging_host_dir)}"
+                _, stdout, stderr = client.exec_command(mkdir_command)
+                if stdout.channel.recv_exit_status() != 0:
+                    raise RuntimeError(stderr.read().decode("utf-8", errors="replace"))
 
-            put_flags = "-f " if overwrite else ""
-            remote_command = self._build_container_command(
-                f"hdfs dfs -mkdir -p {shlex.quote(remote_parent)} && "
-                f"hdfs dfs -put {put_flags}{shlex.quote(remote_container_temp)} {shlex.quote(normalized)} && "
-                f"rm -f {shlex.quote(remote_container_temp)}"
-            )
-            _, stdout, stderr = client.exec_command(remote_command)
-            exit_code = stdout.channel.recv_exit_status()
-            if exit_code != 0:
-                raise RuntimeError(
-                    "Remote HDFS upload failed.\n"
-                    f"stdout:\n{stdout.read().decode('utf-8', errors='replace')}\n"
-                    f"stderr:\n{stderr.read().decode('utf-8', errors='replace')}"
+                sftp = client.open_sftp()
+                try:
+                    sftp.put(str(local_path), remote_host_temp)
+                finally:
+                    sftp.close()
+
+                visibility_command = self._build_container_command(
+                    f"test -f {shlex.quote(remote_container_temp)} && "
+                    f"wc -c < {shlex.quote(remote_container_temp)}"
                 )
-        finally:
-            try:
-                cleanup_command = f"rm -f {shlex.quote(remote_host_temp)}"
-                _, stdout, _ = client.exec_command(cleanup_command)
-                stdout.channel.recv_exit_status()
-            except Exception:
-                pass
-            client.close()
+                _, stdout, stderr = client.exec_command(visibility_command)
+                visibility_exit_code = stdout.channel.recv_exit_status()
+                visibility_stdout = stdout.read().decode("utf-8", errors="replace").strip()
+                visibility_stderr = stderr.read().decode("utf-8", errors="replace").strip()
+                if visibility_exit_code != 0:
+                    raise RuntimeError(
+                        "Staged upload file is not visible inside the remote HDFS admin container.\n"
+                        f"stdout:\n{visibility_stdout}\n"
+                        f"stderr:\n{visibility_stderr}"
+                    )
+
+                put_flags = "-f " if overwrite else ""
+                remote_command = self._build_container_command(
+                    f"test -f {shlex.quote(remote_container_temp)} && "
+                    f"hdfs dfs -mkdir -p {shlex.quote(remote_parent)} && "
+                    f"hdfs dfs -put {put_flags}{shlex.quote(remote_container_temp)} {shlex.quote(normalized)} && "
+                    f"rm -f {shlex.quote(remote_container_temp)}"
+                )
+                _, stdout, stderr = client.exec_command(remote_command)
+                exit_code = stdout.channel.recv_exit_status()
+                stdout_text = stdout.read().decode("utf-8", errors="replace")
+                stderr_text = stderr.read().decode("utf-8", errors="replace")
+                if exit_code != 0:
+                    raise RuntimeError(
+                        "Remote HDFS upload command failed.\n"
+                        f"command:\n{remote_command}\n"
+                        f"stdout:\n{stdout_text}\n"
+                        f"stderr:\n{stderr_text}"
+                    )
+
+                return
+            except Exception as exc:
+                host_diagnostics = ""
+                container_diagnostics = ""
+                try:
+                    host_diag_command = (
+                        f"ls -l {shlex.quote(remote_host_temp)} 2>&1 || true"
+                    )
+                    _, stdout, _ = client.exec_command(host_diag_command)
+                    stdout.channel.recv_exit_status()
+                    host_diagnostics = stdout.read().decode("utf-8", errors="replace").strip()
+                except Exception:
+                    pass
+
+                try:
+                    container_diag_command = self._build_container_command(
+                        f"ls -l {shlex.quote(remote_container_temp)} 2>&1 || true"
+                    )
+                    _, stdout, stderr = client.exec_command(container_diag_command)
+                    stdout.channel.recv_exit_status()
+                    container_stdout = stdout.read().decode("utf-8", errors="replace").strip()
+                    container_stderr = stderr.read().decode("utf-8", errors="replace").strip()
+                    container_diagnostics = (
+                        f"stdout:\n{container_stdout}\n"
+                        f"stderr:\n{container_stderr}"
+                    ).strip()
+                except Exception:
+                    pass
+
+                attempt_errors.append(
+                    f"Attempt {attempt}/{SSH_UPLOAD_RETRY_ATTEMPTS} failed for {normalized}.\n"
+                    f"Remote host temp: {remote_host_temp}\n"
+                    f"Remote container temp: {remote_container_temp}\n"
+                    f"Host diagnostics:\n{host_diagnostics or '[no host diagnostics]'}\n"
+                    f"Container diagnostics:\n{container_diagnostics or '[no container diagnostics]'}\n"
+                    f"Root cause:\n{exc}"
+                )
+                if attempt < SSH_UPLOAD_RETRY_ATTEMPTS:
+                    time.sleep(SSH_UPLOAD_RETRY_DELAY_SECONDS)
+                else:
+                    raise RuntimeError(
+                        "Remote HDFS upload failed after multiple attempts.\n\n"
+                        + "\n\n".join(attempt_errors)
+                    ) from exc
+            finally:
+                try:
+                    cleanup_command = f"rm -f {shlex.quote(remote_host_temp)}"
+                    _, stdout, _ = client.exec_command(cleanup_command)
+                    stdout.channel.recv_exit_status()
+                except Exception:
+                    pass
+                client.close()
 
     def list_status(self, hdfs_path: str, *, recursive: bool = False) -> list[dict[str, object]]:
         normalized = self.normalize_path(hdfs_path)

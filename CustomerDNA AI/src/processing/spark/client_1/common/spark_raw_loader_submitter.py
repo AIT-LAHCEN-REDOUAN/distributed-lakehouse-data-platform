@@ -47,8 +47,27 @@ SPARK_BLOCKMANAGER_PORT = os.getenv("CUSTOMERDNA_SPARK_BLOCKMANAGER_PORT", "").s
 SPARK_EXECUTOR_MEMORY = os.getenv("CUSTOMERDNA_SPARK_EXECUTOR_MEMORY", "").strip()
 SPARK_EXECUTOR_CORES = os.getenv("CUSTOMERDNA_SPARK_EXECUTOR_CORES", "").strip()
 SPARK_CORES_MAX = os.getenv("CUSTOMERDNA_SPARK_CORES_MAX", "").strip()
-SPARK_KERBEROS_PRINCIPAL = os.getenv("CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL", "").strip()
-SPARK_KERBEROS_KEYTAB = os.getenv("CUSTOMERDNA_SPARK_KERBEROS_KEYTAB", "").strip()
+SPARK_KERBEROS_PRINCIPAL = os.getenv(
+    "CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL",
+    "spark@CUSTOMERDNA.LOCAL",
+).strip() or "spark@CUSTOMERDNA.LOCAL"
+SPARK_KERBEROS_KEYTAB = os.getenv(
+    "CUSTOMERDNA_SPARK_KERBEROS_KEYTAB",
+    "/etc/security/keytabs/spark.service.keytab",
+).strip() or "/etc/security/keytabs/spark.service.keytab"
+HDFS_CANONICAL_HOST = (
+    os.getenv("CUSTOMERDNA_HDFS_CANONICAL_HOST", "namenode.customerdna.local").strip()
+    or "namenode.customerdna.local"
+)
+HDFS_NAMENODE_KERBEROS_PRINCIPAL = os.getenv(
+    "CUSTOMERDNA_HDFS_NAMENODE_KERBEROS_PRINCIPAL",
+    f"nn/{HDFS_CANONICAL_HOST}@CUSTOMERDNA.LOCAL",
+).strip() or f"nn/{HDFS_CANONICAL_HOST}@CUSTOMERDNA.LOCAL"
+HDFS_RPC_PROTECTION = os.getenv("CUSTOMERDNA_HDFS_RPC_PROTECTION", "privacy").strip() or "privacy"
+HDFS_DATA_TRANSFER_PROTECTION = os.getenv(
+    "CUSTOMERDNA_HDFS_DATA_TRANSFER_PROTECTION",
+    "privacy",
+).strip() or "privacy"
 SPARK_REMOTE_SSH_HOST = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_HOST", "").strip()
 SPARK_REMOTE_SSH_PORT = int(os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_PORT", "22").strip() or "22")
 SPARK_REMOTE_SSH_USER = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_USER", "").strip()
@@ -60,6 +79,17 @@ SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH = os.getenv(
 SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS = int(
     os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS", "20").strip() or "20"
 )
+KRB5_CONFIG_PATH = os.getenv("CUSTOMERDNA_KRB5_CONFIG_PATH", "/etc/krb5.conf").strip() or "/etc/krb5.conf"
+KRB5_CCACHE_PATH = os.getenv("CUSTOMERDNA_KRB5_CCACHE_PATH", "FILE:/tmp/krb5cc_spark").strip() or "FILE:/tmp/krb5cc_spark"
+
+
+def _unique_csv(values: list[str]) -> str:
+    unique_values: list[str] = []
+    for value in values:
+        value = value.strip()
+        if value and value not in unique_values:
+            unique_values.append(value)
+    return ",".join(unique_values)
 
 
 @dataclass(frozen=True)
@@ -91,11 +121,16 @@ def _build_spark_submit_command(
 ) -> list[str]:
     parsed_hdfs_uri = urlparse(hdfs_namenode_uri)
     container_safe_hdfs_uri = hdfs_namenode_uri
-    if parsed_hdfs_uri.scheme == "hdfs" and parsed_hdfs_uri.hostname in {"localhost", "127.0.0.1"}:
+    if parsed_hdfs_uri.scheme == "hdfs" and parsed_hdfs_uri.hostname in {
+        "localhost",
+        "127.0.0.1",
+        "namenode",
+        "10.10.252.12",
+    }:
         container_safe_hdfs_uri = urlunparse(
             (
                 parsed_hdfs_uri.scheme,
-                f"namenode:{parsed_hdfs_uri.port or 9000}",
+                f"{HDFS_CANONICAL_HOST}:{parsed_hdfs_uri.port or 9000}",
                 parsed_hdfs_uri.path,
                 parsed_hdfs_uri.params,
                 parsed_hdfs_uri.query,
@@ -109,6 +144,48 @@ def _build_spark_submit_command(
         SPARK_MASTER_URL,
         "--conf",
         "spark.eventLog.enabled=false",
+        "--conf",
+        f"spark.hadoop.fs.defaultFS={container_safe_hdfs_uri}",
+        "--conf",
+        "spark.hadoop.hadoop.security.authentication=kerberos",
+        "--conf",
+        "spark.hadoop.hadoop.security.authorization=true",
+        "--conf",
+        f"spark.hadoop.hadoop.rpc.protection={HDFS_RPC_PROTECTION}",
+        "--conf",
+        f"spark.hadoop.dfs.namenode.kerberos.principal={HDFS_NAMENODE_KERBEROS_PRINCIPAL}",
+        "--conf",
+        f"spark.hadoop.dfs.data.transfer.protection={HDFS_DATA_TRANSFER_PROTECTION}",
+        "--conf",
+        "spark.hadoop.dfs.encrypt.data.transfer=true",
+        "--conf",
+        "spark.hadoop.dfs.client.use.datanode.hostname=true",
+        "--conf",
+        "spark.hadoop.dfs.client.use.legacy.blockreader.local=false",
+        "--conf",
+        "spark.hadoop.dfs.block.access.token.enable=true",
+        "--conf",
+        "spark.hadoop.dfs.client.https.need-auth=false",
+        "--conf",
+        "spark.hadoop.ipc.client.fallback-to-simple-auth-allowed=false",
+        "--conf",
+        "spark.kerberos.renewal.credentials=ccache",
+        "--conf",
+        f"spark.driverEnv.KRB5_CONFIG={KRB5_CONFIG_PATH}",
+        "--conf",
+        f"spark.driverEnv.KRB5CCNAME={KRB5_CCACHE_PATH}",
+        "--conf",
+        f"spark.executorEnv.KRB5_CONFIG={KRB5_CONFIG_PATH}",
+        "--conf",
+        f"spark.executorEnv.KRB5CCNAME={KRB5_CCACHE_PATH}",
+        "--conf",
+        f"spark.kerberos.principal={SPARK_KERBEROS_PRINCIPAL}",
+        "--conf",
+        f"spark.kerberos.keytab={SPARK_KERBEROS_KEYTAB}",
+        "--conf",
+        f"spark.driver.extraJavaOptions=-Djava.security.krb5.conf={KRB5_CONFIG_PATH} -Djavax.security.auth.useSubjectCredsOnly=false",
+        "--conf",
+        f"spark.executor.extraJavaOptions=-Djava.security.krb5.conf={KRB5_CONFIG_PATH} -Djavax.security.auth.useSubjectCredsOnly=false",
     ]
 
     if SPARK_DRIVER_HOST:
@@ -125,14 +202,6 @@ def _build_spark_submit_command(
         command.extend(["--conf", f"spark.executor.cores={SPARK_EXECUTOR_CORES}"])
     if SPARK_CORES_MAX:
         command.extend(["--conf", f"spark.cores.max={SPARK_CORES_MAX}"])
-    if SPARK_KERBEROS_PRINCIPAL and SPARK_KERBEROS_KEYTAB:
-        command.extend(["--principal", SPARK_KERBEROS_PRINCIPAL, "--keytab", SPARK_KERBEROS_KEYTAB])
-    elif SPARK_KERBEROS_PRINCIPAL or SPARK_KERBEROS_KEYTAB:
-        raise RuntimeError(
-            "Spark Kerberos submission requires both CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL "
-            "and CUSTOMERDNA_SPARK_KERBEROS_KEYTAB."
-        )
-
     command.extend(
         [
             SPARK_JOB_PATH,

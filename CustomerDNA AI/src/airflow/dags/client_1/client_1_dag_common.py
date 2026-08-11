@@ -8,6 +8,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Callable
+from urllib.parse import urlparse, urlunparse
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -56,7 +57,8 @@ LOCAL_SPARK_THRIFT_HOSTS = {"", "localhost", "127.0.0.1"}
 
 DEFAULT_CONTAINER_SAFE_KAFKA_BOOTSTRAP = "broker:29092"
 DEFAULT_CONTAINER_SAFE_HDFS_WEB = "namenode:9870"
-DEFAULT_CONTAINER_SAFE_HDFS_URI = "hdfs://namenode:9000"
+DEFAULT_CONTAINER_SAFE_HDFS_HOST = "namenode.customerdna.local"
+DEFAULT_CONTAINER_SAFE_HDFS_URI = f"hdfs://{DEFAULT_CONTAINER_SAFE_HDFS_HOST}:9000"
 DEFAULT_CONTAINER_SAFE_HIVE_METASTORE_HOST = "hive-metastore"
 DEFAULT_CONTAINER_SAFE_HIVE_METASTORE_PORT = "9083"
 DEFAULT_CONTAINER_SAFE_SPARK_MASTER_UI = "http://spark-master:8086"
@@ -105,6 +107,26 @@ def _should_verify_tls(endpoint_or_url: str, explicit_value: str | None = None) 
     return endpoint_or_url.strip().startswith("https://")
 
 
+def _normalize_hdfs_namenode_uri(raw_uri: str) -> str:
+    parsed = urlparse(raw_uri.strip())
+    if parsed.scheme != "hdfs" or not parsed.hostname:
+        return raw_uri.strip()
+
+    if parsed.hostname not in {"localhost", "127.0.0.1", "namenode", "10.10.252.12"}:
+        return raw_uri.strip()
+
+    return urlunparse(
+        (
+            parsed.scheme,
+            f"{DEFAULT_CONTAINER_SAFE_HDFS_HOST}:{parsed.port or 9000}",
+            parsed.path,
+            parsed.params,
+            parsed.query,
+            parsed.fragment,
+        )
+    )
+
+
 def build_runtime_env() -> dict[str, str]:
     env = os.environ.copy()
 
@@ -134,9 +156,15 @@ def build_runtime_env() -> dict[str, str]:
 
     airflow_hdfs_namenode_uri = env.get("CUSTOMERDNA_AIRFLOW_HDFS_NAMENODE_URI", "").strip()
     if airflow_hdfs_namenode_uri:
-        env["CUSTOMERDNA_HDFS_NAMENODE_URI"] = airflow_hdfs_namenode_uri
+        env["CUSTOMERDNA_HDFS_NAMENODE_URI"] = _normalize_hdfs_namenode_uri(
+            airflow_hdfs_namenode_uri
+        )
     elif env.get("CUSTOMERDNA_HDFS_NAMENODE_URI", "").strip() in LOCAL_HDFS_NAMENODE_URIS:
         env["CUSTOMERDNA_HDFS_NAMENODE_URI"] = DEFAULT_CONTAINER_SAFE_HDFS_URI
+    elif env.get("CUSTOMERDNA_HDFS_NAMENODE_URI", "").strip():
+        env["CUSTOMERDNA_HDFS_NAMENODE_URI"] = _normalize_hdfs_namenode_uri(
+            env["CUSTOMERDNA_HDFS_NAMENODE_URI"]
+        )
 
     env["CUSTOMERDNA_HIVE_METASTORE_HOST"] = (
         env.get("CUSTOMERDNA_AIRFLOW_HIVE_METASTORE_HOST", "").strip()
