@@ -24,6 +24,105 @@ function Get-EnvMap {
     return $values
 }
 
+function Get-SshKnownHostsTargets {
+    param(
+        [Parameter(Mandatory = $true)][hashtable]$EnvValues
+    )
+
+    $targets = New-Object System.Collections.Generic.HashSet[string]
+
+    $directHostKeys = @(
+        "CUSTOMERDNA_HDFS_REMOTE_SSH_HOST",
+        "CUSTOMERDNA_SPARK_REMOTE_SSH_HOST",
+        "CUSTOMERDNA_AIRFLOW_DW_HOST",
+        "CUSTOMERDNA_POSTGRES_HOST",
+        "CUSTOMERDNA_MONITORING_POSTGRES_HOST"
+    )
+
+    foreach ($key in $directHostKeys) {
+        if ($EnvValues.ContainsKey($key)) {
+            $value = "$($EnvValues[$key])".Trim()
+            if ($value) {
+                $null = $targets.Add($value)
+            }
+        }
+    }
+
+    $serverListKeys = @(
+        "CUSTOMERDNA_KAFKA_UI_BOOTSTRAP_SERVERS",
+        "CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS"
+    )
+
+    foreach ($key in $serverListKeys) {
+        if (-not $EnvValues.ContainsKey($key)) {
+            continue
+        }
+
+        $entries = "$($EnvValues[$key])".Split(",", [System.StringSplitOptions]::RemoveEmptyEntries)
+        foreach ($entry in $entries) {
+            $candidate = $entry.Trim()
+            if (-not $candidate) {
+                continue
+            }
+
+            if ($candidate.Contains(":")) {
+                $candidate = $candidate.Split(":")[0].Trim()
+            }
+
+            if ($candidate) {
+                $null = $targets.Add($candidate)
+            }
+        }
+    }
+
+    return @($targets)
+}
+
+function Update-SshKnownHostsFile {
+    param(
+        [Parameter(Mandatory = $true)][string]$ScriptDir,
+        [Parameter(Mandatory = $true)][hashtable]$EnvValues
+    )
+
+    $sshDir = Join-Path $ScriptDir "ssh"
+    $knownHostsPath = Join-Path $sshDir "known_hosts"
+    New-Item -ItemType Directory -Force -Path $sshDir | Out-Null
+
+    if (-not (Get-Command ssh-keyscan -ErrorAction SilentlyContinue)) {
+        throw "OpenSSH ssh-keyscan is required to build the control-plane known_hosts file."
+    }
+
+    $targets = Get-SshKnownHostsTargets -EnvValues $EnvValues
+    if (-not $targets -or $targets.Count -eq 0) {
+        throw "Unable to determine any SSH targets for known_hosts generation from .env."
+    }
+
+    $entries = New-Object System.Collections.Generic.List[string]
+    foreach ($target in $targets) {
+        Write-Host "[INFO] Scanning SSH host key for $target"
+        $scanOutput = & ssh-keyscan -T 5 -H $target 2>$null
+        if ($LASTEXITCODE -ne 0 -or -not $scanOutput) {
+            throw "Failed to collect SSH host keys for $target via ssh-keyscan."
+        }
+
+        foreach ($line in $scanOutput) {
+            if ($line -and -not $line.StartsWith("#")) {
+                $entries.Add($line)
+            }
+        }
+    }
+
+    if ($entries.Count -eq 0) {
+        throw "ssh-keyscan returned no usable host key entries."
+    }
+
+    $entries |
+        Sort-Object -Unique |
+        Set-Content -Path $knownHostsPath -Encoding ascii
+
+    Write-Host "[OK] Refreshed SSH known_hosts file: $knownHostsPath"
+}
+
 function Test-PortInUse {
     param(
         [Parameter(Mandatory = $true)][int]$Port
@@ -187,6 +286,9 @@ $runtimeValues = @{}
 if (Test-Path $runtimeComposeEnv) {
     $runtimeValues = Get-EnvMap -Path $runtimeComposeEnv
 }
+
+Update-SshKnownHostsFile -ScriptDir $scriptDir -EnvValues $envValues
+
 $preferredAirflowPort = "18080"
 if ($envValues.ContainsKey("CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT") -and $envValues["CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT"]) {
     $preferredAirflowPort = $envValues["CUSTOMERDNA_CONTROL_PLANE_AIRFLOW_PORT"]

@@ -10,7 +10,7 @@ from pathlib import Path
 
 from kafka import KafkaAdminClient
 from kafka.admin import NewTopic
-from kafka.errors import TopicAlreadyExistsError
+from kafka.errors import NoBrokersAvailable, RequestTimedOutError, TopicAlreadyExistsError
 
 CURRENT_DIR = Path(__file__).resolve().parent
 COMMON_DIR = CURRENT_DIR / "common"
@@ -28,14 +28,43 @@ from kafka_config import (  # noqa: E402
 TOPIC_PARTITIONS = max(1, int(os.getenv("CUSTOMERDNA_KAFKA_DEFAULT_PARTITIONS", "3")))
 TOPIC_REPLICATION_FACTOR = max(1, int(os.getenv("CUSTOMERDNA_KAFKA_REPLICATION_FACTOR", "1")))
 TOPIC_MIN_INSYNC_REPLICAS = max(1, int(os.getenv("CUSTOMERDNA_KAFKA_MIN_INSYNC_REPLICAS", "1")))
+KAFKA_ADMIN_CONNECT_TIMEOUT_SECONDS = max(
+    5,
+    int(os.getenv("CUSTOMERDNA_KAFKA_ADMIN_CONNECT_TIMEOUT_SECONDS", "90")),
+)
+KAFKA_ADMIN_CONNECT_RETRY_INTERVAL_SECONDS = max(
+    1,
+    int(os.getenv("CUSTOMERDNA_KAFKA_ADMIN_CONNECT_RETRY_INTERVAL_SECONDS", "5")),
+)
 
 
 def build_admin_client() -> KafkaAdminClient:
-    """Create a Kafka admin client for reset operations."""
-    return KafkaAdminClient(
-        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-        client_id="customerdna-client1-kafka-reset",
-    )
+    """Create a Kafka admin client for reset operations with brief broker readiness retries."""
+    deadline = time.time() + KAFKA_ADMIN_CONNECT_TIMEOUT_SECONDS
+    last_error: Exception | None = None
+
+    while time.time() < deadline:
+        try:
+            admin_client = KafkaAdminClient(
+                bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+                client_id="customerdna-client1-kafka-reset",
+                request_timeout_ms=30000,
+                api_version_auto_timeout_ms=10000,
+            )
+            # Force metadata fetch so we only continue once the broker is truly usable.
+            admin_client.list_topics()
+            return admin_client
+        except NoBrokersAvailable as exc:
+            last_error = exc
+            print(
+                "[WARN] Kafka brokers are not ready yet. "
+                f"Retrying in {KAFKA_ADMIN_CONNECT_RETRY_INTERVAL_SECONDS}s..."
+            )
+            time.sleep(KAFKA_ADMIN_CONNECT_RETRY_INTERVAL_SECONDS)
+
+    raise RuntimeError(
+        "Kafka brokers did not become ready in time for reset operations."
+    ) from last_error
 
 
 def delete_topics(admin_client: KafkaAdminClient, topics: list[str]) -> None:
@@ -73,6 +102,24 @@ def wait_for_topic_deletion(admin_client: KafkaAdminClient, topics: list[str], t
     raise TimeoutError(f"Timed out while waiting for topic deletion: {', '.join(topics)}")
 
 
+def wait_for_topic_creation(admin_client: KafkaAdminClient, topics: list[str], timeout_seconds: int = 60) -> None:
+    """Wait until every expected topic appears in Kafka metadata."""
+    deadline = time.time() + timeout_seconds
+
+    while time.time() < deadline:
+        existing_topics = set(admin_client.list_topics())
+        missing_topics = [topic for topic in topics if topic not in existing_topics]
+
+        if not missing_topics:
+            for topic in topics:
+                print(f"[SUCCESS] Created empty topic: {topic}")
+            return
+
+        time.sleep(1)
+
+    raise TimeoutError(f"Timed out while waiting for topic creation: {', '.join(topics)}")
+
+
 def create_topics(admin_client: KafkaAdminClient, topics: list[str]) -> None:
     """Recreate Client 1 topics as empty topics."""
     new_topics = [
@@ -91,9 +138,13 @@ def create_topics(admin_client: KafkaAdminClient, topics: list[str]) -> None:
         admin_client.create_topics(new_topics=new_topics, validate_only=False)
     except TopicAlreadyExistsError:
         print("[INFO] One or more topics already existed during recreation.")
+    except RequestTimedOutError:
+        print(
+            "[WARN] Kafka topic creation request timed out while waiting for the controller. "
+            "Verifying whether the topics were created anyway..."
+        )
 
-    for topic in topics:
-        print(f"[SUCCESS] Created empty topic: {topic}")
+    wait_for_topic_creation(admin_client, topics)
 
 
 def clear_directory_contents(target_dir: Path) -> int:

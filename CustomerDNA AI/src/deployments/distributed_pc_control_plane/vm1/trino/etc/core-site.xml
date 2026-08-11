@@ -14,7 +14,15 @@
   </property>
   <property>
     <name>hadoop.security.auth_to_local</name>
-    <value>RULE:[1:$1@$0](demo_hdfs@CUSTOMERDNA.LOCAL)s/.*/hdfs/ RULE:[1:$1@$0](.*@CUSTOMERDNA.LOCAL)s/@.*// RULE:[2:$1/$2@$0](.*@CUSTOMERDNA.LOCAL)s/.*/hdfs/ DEFAULT</value>
+    <value>RULE:[1:$1@$0](demo_hdfs@CUSTOMERDNA.LOCAL)s/.*/hdfs/ RULE:[2:$1/$2@$0](nn/.*@CUSTOMERDNA.LOCAL)s/.*/hdfs/ RULE:[2:$1/$2@$0](dn/.*@CUSTOMERDNA.LOCAL)s/.*/hdfs/ RULE:[2:$1/$2@$0](HTTP/.*@CUSTOMERDNA.LOCAL)s/.*/hdfs/ RULE:[2:$1/$2@$0](hive/.*@CUSTOMERDNA.LOCAL)s/.*/hive/ RULE:[2:$1/$2@$0](trino/.*@CUSTOMERDNA.LOCAL)s/.*/trino/ RULE:[2:$1/$2@$0](spark/.*@CUSTOMERDNA.LOCAL)s/.*/spark/ RULE:[1:$1@$0](.*@CUSTOMERDNA.LOCAL)s/@.*// DEFAULT</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hive.hosts</name>
+    <value>127.0.0.1,localhost,10.10.252.12,hive-metastore,hive-metastore.customerdna.local</value>
+  </property>
+  <property>
+    <name>hadoop.proxyuser.hive.groups</name>
+    <value>*</value>
   </property>
   <property>
     <name>hadoop.rpc.protection</name>

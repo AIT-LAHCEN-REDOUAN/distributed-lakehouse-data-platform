@@ -9,7 +9,7 @@ from collections.abc import Callable, Iterable
 
 from kafka import KafkaAdminClient, KafkaConsumer, KafkaProducer, TopicPartition
 from kafka.admin import NewTopic
-from kafka.errors import TopicAlreadyExistsError
+from kafka.errors import RequestTimedOutError, TopicAlreadyExistsError
 
 from kafka_config import KAFKA_BOOTSTRAP_SERVERS
 
@@ -23,6 +23,25 @@ DEFAULT_TOPIC_MIN_INSYNC_REPLICAS = max(
     1,
     int(os.getenv("CUSTOMERDNA_KAFKA_MIN_INSYNC_REPLICAS", "1")),
 )
+TOPIC_CREATION_CONFIRM_TIMEOUT_SECONDS = max(
+    10,
+    int(os.getenv("CUSTOMERDNA_KAFKA_TOPIC_CONFIRM_TIMEOUT_SECONDS", "90")),
+)
+
+
+def _wait_for_topic_visibility(admin_client: KafkaAdminClient, topic_name: str) -> None:
+    """Wait until the created topic is visible in Kafka metadata."""
+    deadline = time.time() + TOPIC_CREATION_CONFIRM_TIMEOUT_SECONDS
+
+    while time.time() < deadline:
+        if topic_name in set(admin_client.list_topics()):
+            print(f"[INFO] Topic ready: {topic_name}")
+            return
+        time.sleep(1)
+
+    raise TimeoutError(
+        f"Timed out while waiting for Kafka topic metadata to include '{topic_name}'."
+    )
 
 
 def build_reliable_producer() -> KafkaProducer:
@@ -69,9 +88,27 @@ def ensure_topic_exists(
             ],
             validate_only=False,
         )
-        print(f"[INFO] Created topic: {topic_name}")
     except TopicAlreadyExistsError:
         print(f"[INFO] Topic already exists: {topic_name}")
+    except RequestTimedOutError:
+        print(
+            f"[WARN] Topic creation timed out for {topic_name}. "
+            "Verifying whether Kafka completed the operation anyway..."
+        )
+    else:
+        print(f"[INFO] Created topic request sent: {topic_name}")
+        _wait_for_topic_visibility(admin_client, topic_name)
+        return
+    finally:
+        if 'admin_client' in locals():
+            admin_client.close()
+
+    admin_client = KafkaAdminClient(
+        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+        client_id="customerdna-client1-topic-admin-postcheck",
+    )
+    try:
+        _wait_for_topic_visibility(admin_client, topic_name)
     finally:
         admin_client.close()
 

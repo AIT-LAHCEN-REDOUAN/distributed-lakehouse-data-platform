@@ -142,7 +142,9 @@ services:
       CORE_CONF_fs_defaultFS: ${CUSTOMERDNA_HDFS_NAMENODE_URI}
       CORE_CONF_hadoop_security_authentication: kerberos
       CORE_CONF_hadoop_security_authorization: "true"
-      CORE_CONF_hadoop_security_auth_to_local: "RULE:[1:$1@$0](demo_hdfs@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ RULE:[1:$1@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/@.*// RULE:[2:$1/$2@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ DEFAULT"
+      CORE_CONF_hadoop_security_auth_to_local: "RULE:[1:$1@$0](demo_hdfs@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ RULE:[2:$1/$2@$0](nn/.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ RULE:[2:$1/$2@$0](dn/.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ RULE:[2:$1/$2@$0](HTTP/.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ RULE:[2:$1/$2@$0](hive/.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hive/ RULE:[2:$1/$2@$0](trino/.*@${CUSTOMERDNA_KRB5_REALM})s/.*/trino/ RULE:[2:$1/$2@$0](spark/.*@${CUSTOMERDNA_KRB5_REALM})s/.*/spark/ RULE:[1:$1@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/@.*// DEFAULT"
+      CORE_CONF_hadoop_proxyuser_hive_hosts: 127.0.0.1,localhost,${VM2_HOST_IP},hive-metastore,hive-metastore.customerdna.local
+      CORE_CONF_hadoop_proxyuser_hive_groups: "*"
       CORE_CONF_hadoop_rpc_protection: ${CUSTOMERDNA_HDFS_RPC_PROTECTION}
     volumes:
       - ./kerberos/krb5.conf:/etc/krb5.conf:ro

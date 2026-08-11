@@ -11,7 +11,14 @@ http://{$VM2_HOST_IP}:8088, http://localhost:8088 {
         output file /var/log/caddy/trino-http-access.json
         format json
     }
-    reverse_proxy 127.0.0.1:8089
+    reverse_proxy 127.0.0.1:8089 {
+        header_up Authorization
+        header_up Host {http.request.host}
+        header_up X-Trino-User {http.auth.user.id}
+        header_up X-Forwarded-Proto http
+        header_up X-Forwarded-Host {http.request.host}
+        header_up X-Forwarded-Port 8088
+    }
 }
 
 https://{$VM2_HOST_IP}:{$CUSTOMERDNA_TRINO_TLS_PORT}, https://localhost:{$CUSTOMERDNA_TRINO_TLS_PORT} {
@@ -24,5 +31,12 @@ https://{$VM2_HOST_IP}:{$CUSTOMERDNA_TRINO_TLS_PORT}, https://localhost:{$CUSTOM
         output file /var/log/caddy/trino-https-access.json
         format json
     }
-    reverse_proxy 127.0.0.1:8089
+    reverse_proxy 127.0.0.1:8089 {
+        header_up Authorization
+        header_up Host {http.request.host}
+        header_up X-Trino-User {http.auth.user.id}
+        header_up X-Forwarded-Proto https
+        header_up X-Forwarded-Host {http.request.host}
+        header_up X-Forwarded-Port {$CUSTOMERDNA_TRINO_TLS_PORT}
+    }
 }

@@ -91,6 +91,15 @@ else {
     Write-Host "       Remote Spark submission from Airflow to VM2 will fail until this key is added."
 }
 
+$sshKnownHostsPath = Join-Path $scriptDir "ssh/known_hosts"
+if (Test-Path $sshKnownHostsPath) {
+    Write-Host "[OK] SSH known_hosts present: $sshKnownHostsPath"
+}
+else {
+    Write-Host "[WARN] Missing SSH known_hosts: $sshKnownHostsPath"
+    Write-Host "       Secure HDFS reset and remote Spark submission will fail until the control plane regenerates this file."
+}
+
 Write-Host ""
 Write-Host "[Remote dependencies]"
 Test-TcpEndpoint -HostName "10.10.252.11" -Port 9092 -Label "Kafka broker on VM1"
