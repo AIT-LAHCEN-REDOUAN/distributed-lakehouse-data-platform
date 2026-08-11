@@ -50,6 +50,8 @@ def run_load_event_consumer(dataset_key: str) -> None:
     print(f"Dataset: {dataset_key}")
     print(f"Bronze-ready topic: {topic_name}")
     print(f"Target Iceberg table: raw_data.{target_table}")
+    print(f"Consumer group: {consumer_group}")
+    print(f"Consumer timeout (ms): {consumer_timeout_ms}")
 
     consumer = build_consumer(
         topic_name=topic_name,
@@ -67,6 +69,15 @@ def run_load_event_consumer(dataset_key: str) -> None:
             ) from exc
 
         event_payload = message.value
+        print(
+            "[KAFKA EVENT] "
+            f"partition={message.partition}, "
+            f"offset={message.offset}, "
+            f"timestamp={message.timestamp}, "
+            f"key={message.key}"
+        )
+        print(f"[KAFKA EVENT PAYLOAD] {json.dumps(event_payload, sort_keys=True, ensure_ascii=True)}")
+
         event_dataset = str(event_payload.get("dataset_name", "")).strip()
         if event_dataset != dataset_key:
             raise RuntimeError(

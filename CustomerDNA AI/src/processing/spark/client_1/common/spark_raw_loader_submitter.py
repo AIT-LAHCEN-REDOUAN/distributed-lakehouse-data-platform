@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import time
+import traceback
 from dataclasses import dataclass
 from urllib.parse import urlparse, urlunparse
 
@@ -437,19 +438,37 @@ def submit_hdfs_bronze_to_iceberg_spark_job(
             f"SPARK_SUBMIT_OPTS='-Divy.home={SPARK_IVY_HOME} -Divy.cache.dir={SPARK_IVY_HOME}/cache'; "
             f"{shlex.join(base_command)}"
         ),
-    ] 
+    ]
 
     print(f"[SPARK] Submission container: {SPARK_SUBMIT_CONTAINER}")
     print(f"[SPARK] Submit command: {' '.join(base_command)}")
-    if _should_use_remote_ssh():
-        print(
-            "[SPARK] Remote execution: "
-            f"{SPARK_REMOTE_SSH_USER}@{SPARK_REMOTE_SSH_HOST}:{SPARK_REMOTE_SSH_PORT}"
-        )
-        stdout = _run_with_remote_ssh(command)
-    elif docker is not None:
-        stdout = _run_with_docker_sdk(command)
-    else:
-        stdout = _run_with_docker_cli(command)
+    print(f"[SPARK] Master URL: {SPARK_MASTER_URL}")
+    print(f"[SPARK] Dataset key: {dataset_key}")
+    print(f"[SPARK] Target table: raw_data.{target_table}")
+    print(f"[SPARK] Bronze prefix: {bronze_prefix}")
+    print(f"[SPARK] Original HDFS URI: {hdfs_namenode_uri}")
+    print(f"[SPARK] Kerberos principal: {SPARK_KERBEROS_PRINCIPAL}")
+    print(f"[SPARK] Kerberos keytab: {SPARK_KERBEROS_KEYTAB}")
+    print(f"[SPARK] KRB5 config path: {KRB5_CONFIG_PATH}")
+    print(f"[SPARK] Credential cache path: {KRB5_CCACHE_PATH}")
+    print(f"[SPARK] Expected rows: {expected_rows if expected_rows is not None else 0}")
+    print(f"[SPARK] Expected bronze files: {expected_file_count if expected_file_count is not None else 0}")
+
+    try:
+        if _should_use_remote_ssh():
+            print(
+                "[SPARK] Remote execution: "
+                f"{SPARK_REMOTE_SSH_USER}@{SPARK_REMOTE_SSH_HOST}:{SPARK_REMOTE_SSH_PORT}"
+            )
+            stdout = _run_with_remote_ssh(command)
+        elif docker is not None:
+            stdout = _run_with_docker_sdk(command)
+        else:
+            stdout = _run_with_docker_cli(command)
+    except Exception as exc:
+        print(f"[SPARK][ERROR] Submission failed before summary parsing: {exc}")
+        print("[SPARK][ERROR] Python traceback follows:")
+        print(traceback.format_exc().rstrip())
+        raise
 
     return _parse_result(stdout)

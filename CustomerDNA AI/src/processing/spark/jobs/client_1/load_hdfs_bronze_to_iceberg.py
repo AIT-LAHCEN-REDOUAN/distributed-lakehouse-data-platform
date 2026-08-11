@@ -6,6 +6,7 @@ import argparse
 import os
 import re
 import time
+import traceback
 from datetime import datetime
 
 from pyspark.sql import SparkSession
@@ -108,6 +109,105 @@ def verify_target_row_count(spark: SparkSession, *, table_identifier: str) -> in
     return int(spark.table(table_identifier).count())
 
 
+def log_runtime_diagnostics(spark: SparkSession, args: argparse.Namespace, bronze_path: str) -> None:
+    sc = spark.sparkContext
+    print("[DIAGNOSTICS] Spark runtime context")
+    print(f"[DIAGNOSTICS] Spark version: {spark.version}")
+    print(f"[DIAGNOSTICS] Spark app name: {sc.appName}")
+    print(f"[DIAGNOSTICS] Spark master: {sc.master}")
+    print(f"[DIAGNOSTICS] Spark application id: {sc.applicationId}")
+    print(f"[DIAGNOSTICS] Spark default parallelism: {sc.defaultParallelism}")
+    print(f"[DIAGNOSTICS] Target write partitions: {TARGET_WRITE_PARTITIONS}")
+    print(f"[DIAGNOSTICS] Shuffle partitions: {spark.conf.get('spark.sql.shuffle.partitions')}")
+
+    print("[DIAGNOSTICS] Job arguments")
+    print(f"[DIAGNOSTICS] Dataset key: {args.dataset_key}")
+    print(f"[DIAGNOSTICS] Target table: {args.target_table}")
+    print(f"[DIAGNOSTICS] Iceberg catalog: {args.iceberg_catalog}")
+    print(f"[DIAGNOSTICS] Iceberg namespace: {args.iceberg_namespace}")
+    print(f"[DIAGNOSTICS] Bronze prefix: {args.bronze_prefix}")
+    print(f"[DIAGNOSTICS] Bronze path: {bronze_path}")
+    print(f"[DIAGNOSTICS] Expected rows: {args.expected_rows}")
+    print(f"[DIAGNOSTICS] Expected file count: {args.expected_file_count}")
+
+    print("[DIAGNOSTICS] Selected Spark configuration")
+    for conf_key in [
+        "spark.kerberos.principal",
+        "spark.kerberos.keytab",
+        "spark.kerberos.access.hadoopFileSystems",
+        "spark.driver.host",
+        "spark.driver.bindAddress",
+        "spark.driver.port",
+        "spark.blockManager.port",
+        "spark.executor.memory",
+        "spark.executor.cores",
+        "spark.cores.max",
+    ]:
+        print(f"[DIAGNOSTICS] {conf_key}={spark.conf.get(conf_key, '<unset>')}")
+
+    print("[DIAGNOSTICS] Selected Hadoop configuration")
+    hadoop_conf = sc._jsc.hadoopConfiguration()
+    for conf_key in [
+        "fs.defaultFS",
+        "hadoop.security.authentication",
+        "hadoop.security.authorization",
+        "hadoop.rpc.protection",
+        "dfs.namenode.kerberos.principal",
+        "dfs.datanode.kerberos.principal",
+        "dfs.block.access.token.enable",
+        "dfs.data.transfer.protection",
+        "dfs.encrypt.data.transfer",
+        "dfs.client.use.datanode.hostname",
+    ]:
+        print(f"[DIAGNOSTICS] {conf_key}={hadoop_conf.get(conf_key) or '<unset>'}")
+
+    print("[DIAGNOSTICS] Selected environment variables")
+    for env_key in [
+        "KRB5_CONFIG",
+        "KRB5CCNAME",
+        "HADOOP_CONF_DIR",
+        "SPARK_CONF_DIR",
+        "JAVA_HOME",
+        "HOSTNAME",
+    ]:
+        print(f"[DIAGNOSTICS] {env_key}={os.getenv(env_key, '<unset>')}")
+
+    try:
+        ugi = sc._jvm.org.apache.hadoop.security.UserGroupInformation
+        current_user = ugi.getCurrentUser()
+        print("[DIAGNOSTICS] Hadoop security context")
+        print(f"[DIAGNOSTICS] Current user: {current_user.getUserName()}")
+        print(f"[DIAGNOSTICS] Authentication method: {current_user.getAuthenticationMethod()}")
+        print(f"[DIAGNOSTICS] Has Kerberos credentials: {current_user.hasKerberosCredentials()}")
+        print(f"[DIAGNOSTICS] Security enabled: {ugi.isSecurityEnabled()}")
+    except Exception as exc:
+        print(f"[DIAGNOSTICS][WARN] Unable to inspect Hadoop security context: {exc}")
+
+    try:
+        print("[DIAGNOSTICS] HDFS preflight")
+        path_cls = sc._jvm.org.apache.hadoop.fs.Path
+        fs = path_cls(bronze_path).getFileSystem(hadoop_conf)
+        bronze_path_obj = path_cls(bronze_path)
+        print(f"[DIAGNOSTICS] Filesystem URI: {fs.getUri()}")
+        print(f"[DIAGNOSTICS] Working directory: {fs.getWorkingDirectory()}")
+        print(f"[DIAGNOSTICS] Bronze path exists: {fs.exists(bronze_path_obj)}")
+
+        if fs.exists(bronze_path_obj):
+            statuses = fs.listStatus(bronze_path_obj)
+            preview_limit = min(5, len(statuses))
+            print(f"[DIAGNOSTICS] Bronze path entries discovered: {len(statuses)}")
+            for index in range(preview_limit):
+                status = statuses[index]
+                print(
+                    "[DIAGNOSTICS] Bronze entry "
+                    f"{index + 1}: path={status.getPath()}, isFile={status.isFile()}, length={status.getLen()}"
+                )
+    except Exception as exc:
+        print(f"[DIAGNOSTICS][ERROR] HDFS preflight failed: {exc}")
+        print("[DIAGNOSTICS][ERROR] HDFS preflight traceback follows:")
+        print(traceback.format_exc().rstrip())
+
+
 def main() -> int:
     args = parse_args()
     start_counter = time.perf_counter()
@@ -122,8 +222,12 @@ def main() -> int:
 
     try:
         bronze_path = build_bronze_path(args)
+        log_runtime_diagnostics(spark, args, bronze_path)
         raw_df = load_bronze_dataframe(spark, bronze_path)
         bronze_files_read = len(raw_df.inputFiles())
+        print(f"[DIAGNOSTICS] Spark input files discovered: {bronze_files_read}")
+        for index, input_file in enumerate(raw_df.inputFiles()[:5], start=1):
+            print(f"[DIAGNOSTICS] Input file {index}: {input_file}")
 
         if bronze_files_read == 0:
             raise RuntimeError(f"No bronze files were found under {bronze_path}.")
@@ -133,7 +237,9 @@ def main() -> int:
             )
 
         prepared_df = flatten_payload(raw_df)
+        print(f"[DIAGNOSTICS] Prepared dataframe schema: {prepared_df.schema.simpleString()}")
         prepared_df, spark_partitions_used = repartition_for_cluster(prepared_df)
+        print(f"[DIAGNOSTICS] Partitions after repartition step: {spark_partitions_used}")
         rows_loaded = int(prepared_df.count())
 
         if rows_loaded == 0:
@@ -171,6 +277,8 @@ def main() -> int:
         return 0
     except Exception as exc:
         print(f"[ERROR] Spark HDFS-to-Iceberg raw load failed: {exc}")
+        print("[ERROR] Python traceback follows:")
+        print(traceback.format_exc().rstrip())
         return 1
     finally:
         spark.stop()
