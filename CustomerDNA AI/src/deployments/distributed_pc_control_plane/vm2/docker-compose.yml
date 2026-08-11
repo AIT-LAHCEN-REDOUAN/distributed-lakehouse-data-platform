@@ -228,6 +228,7 @@ services:
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
     restart: unless-stopped
     environment:
@@ -264,6 +265,7 @@ services:
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
       - "spark-submit-client:${VM2_HOST_IP}"
     restart: unless-stopped
@@ -379,6 +381,7 @@ services:
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
       - "spark-history-server:${VM2_HOST_IP}"
     restart: unless-stopped
@@ -414,6 +417,7 @@ services:
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
       - "spark-thrift-server:${VM2_HOST_IP}"
     restart: unless-stopped
@@ -486,6 +490,7 @@ services:
       - namenode
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
       - "datanode-1:${VM1_HOST_IP}"
       - "datanode-2:${VM2_HOST_IP}"
