@@ -43,6 +43,15 @@ def _normalized_http_url(value: str) -> str:
     return normalized
 
 
+def _parse_truthy_flag(raw_value: str | None, *, default: bool = False) -> bool:
+    if raw_value is None:
+        return default
+    normalized = raw_value.strip().lower()
+    if not normalized:
+        return default
+    return normalized in {"1", "true", "yes", "on"}
+
+
 def _http_probe_status(
     value: str,
     *,
@@ -220,15 +229,21 @@ def build_metrics_payload() -> str:
     lines: list[str] = []
     trino_monitoring_user = os.getenv("CUSTOMERDNA_MONITORING_TRINO_USER", "")
     trino_monitoring_password = os.getenv("CUSTOMERDNA_MONITORING_TRINO_PASSWORD", "")
-    trino_monitoring_verify_tls = os.getenv(
-        "CUSTOMERDNA_MONITORING_TRINO_VERIFY_TLS",
-        "false",
-    ).strip().lower() in {"1", "true", "yes", "on"}
+    trino_monitoring_url = _normalized_http_url(
+        os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088")
+    )
+    trino_monitoring_verify_tls = _parse_truthy_flag(
+        os.getenv("CUSTOMERDNA_MONITORING_TRINO_VERIFY_TLS"),
+        default=trino_monitoring_url.startswith("https://"),
+    )
     trino_monitoring_ca_cert_path = os.getenv("CUSTOMERDNA_MONITORING_TRINO_CA_CERT_PATH", "").strip()
-    hdfs_monitoring_verify_tls = os.getenv(
-        "CUSTOMERDNA_MONITORING_HDFS_VERIFY_TLS",
-        "false",
-    ).strip().lower() in {"1", "true", "yes", "on"}
+    hdfs_monitoring_url = _normalized_http_url(
+        os.getenv("CUSTOMERDNA_MONITORING_HDFS_WEB_ENDPOINT", "host.docker.internal:9870")
+    )
+    hdfs_monitoring_verify_tls = _parse_truthy_flag(
+        os.getenv("CUSTOMERDNA_MONITORING_HDFS_VERIFY_TLS"),
+        default=hdfs_monitoring_url.startswith("https://"),
+    )
     hdfs_monitoring_ca_cert_path = os.getenv("CUSTOMERDNA_MONITORING_HDFS_CA_CERT_PATH", "").strip()
 
     service_targets = (
@@ -244,9 +259,9 @@ def build_metrics_payload() -> str:
         {
             "service_name": "hdfs_namenode_web",
             "check_type": "http",
-            "target": _normalized_http_url(os.getenv("CUSTOMERDNA_MONITORING_HDFS_WEB_ENDPOINT", "host.docker.internal:9870")),
+            "target": hdfs_monitoring_url,
             "value": _http_probe_status(
-                os.getenv("CUSTOMERDNA_MONITORING_HDFS_WEB_ENDPOINT", "host.docker.internal:9870"),
+                hdfs_monitoring_url,
                 verify_tls=hdfs_monitoring_verify_tls,
                 ca_cert_path=hdfs_monitoring_ca_cert_path,
             ),
@@ -278,9 +293,9 @@ def build_metrics_payload() -> str:
         {
             "service_name": "trino_query_service",
             "check_type": "http",
-            "target": _normalized_http_url(os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088")) + "/v1/info",
+            "target": f"{trino_monitoring_url}/v1/info",
             "value": _http_probe_status(
-                os.getenv("CUSTOMERDNA_MONITORING_TRINO_URL", "http://host.docker.internal:8088") + "/v1/info",
+                f"{trino_monitoring_url}/v1/info",
                 username=trino_monitoring_user,
                 password=trino_monitoring_password,
                 verify_tls=trino_monitoring_verify_tls,

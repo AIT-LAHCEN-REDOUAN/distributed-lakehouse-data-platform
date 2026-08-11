@@ -53,6 +53,10 @@ SPARK_REMOTE_SSH_HOST = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_HOST", "").strip
 SPARK_REMOTE_SSH_PORT = int(os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_PORT", "22").strip() or "22")
 SPARK_REMOTE_SSH_USER = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_USER", "").strip()
 SPARK_REMOTE_SSH_KEY_PATH = os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_KEY_PATH", "").strip()
+SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH = os.getenv(
+    "CUSTOMERDNA_SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH",
+    "/opt/customerdna/.ssh/known_hosts",
+).strip()
 SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS = int(
     os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS", "20").strip() or "20"
 )
@@ -228,6 +232,8 @@ def _validate_remote_ssh_configuration() -> None:
         missing.append("CUSTOMERDNA_SPARK_REMOTE_SSH_USER")
     if not SPARK_REMOTE_SSH_KEY_PATH:
         missing.append("CUSTOMERDNA_SPARK_REMOTE_SSH_KEY_PATH")
+    if not SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH:
+        missing.append("CUSTOMERDNA_SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH")
 
     if missing:
         raise RuntimeError(
@@ -245,13 +251,26 @@ def _validate_remote_ssh_configuration() -> None:
             "Remote Spark SSH key file does not exist inside the Airflow container: "
             f"{SPARK_REMOTE_SSH_KEY_PATH}"
         )
+    if not os.path.exists(SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH):
+        raise RuntimeError(
+            "Remote Spark known_hosts file does not exist inside the Airflow container: "
+            f"{SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH}"
+        )
+
+
+def _build_verified_ssh_client():
+    assert paramiko is not None  # pragma: no cover - guarded by validation
+    client = paramiko.SSHClient()
+    client.load_system_host_keys()
+    client.load_host_keys(SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH)
+    client.set_missing_host_key_policy(paramiko.RejectPolicy())
+    return client
 
 
 def _run_with_remote_ssh(command: list[str]) -> str:
     _validate_remote_ssh_configuration()
 
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client = _build_verified_ssh_client()
 
     remote_command = shlex.join(
         ["docker", "exec", SPARK_SUBMIT_CONTAINER, *command]

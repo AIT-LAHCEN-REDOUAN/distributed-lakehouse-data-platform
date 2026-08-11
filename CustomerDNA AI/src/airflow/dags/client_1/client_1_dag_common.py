@@ -89,6 +89,21 @@ DEFAULT_ARGS = {
 }
 
 
+def _parse_truthy_flag(raw_value: str | None, *, default: bool = False) -> bool:
+    if raw_value is None:
+        return default
+    normalized = raw_value.strip().lower()
+    if not normalized:
+        return default
+    return normalized in {"1", "true", "yes", "on"}
+
+
+def _should_verify_tls(endpoint_or_url: str, explicit_value: str | None = None) -> bool:
+    if explicit_value is not None and explicit_value.strip():
+        return _parse_truthy_flag(explicit_value, default=False)
+    return endpoint_or_url.strip().startswith("https://")
+
+
 def build_runtime_env() -> dict[str, str]:
     env = os.environ.copy()
 
@@ -103,9 +118,13 @@ def build_runtime_env() -> dict[str, str]:
             "CUSTOMERDNA_AIRFLOW_HDFS_WEB_ENDPOINT",
             DEFAULT_CONTAINER_SAFE_HDFS_WEB,
         )
-    env.setdefault(
-        "CUSTOMERDNA_HDFS_WEB_VERIFY_TLS",
-        env.get("CUSTOMERDNA_AIRFLOW_HDFS_WEB_VERIFY_TLS", "false"),
+    env["CUSTOMERDNA_HDFS_WEB_VERIFY_TLS"] = (
+        "true"
+        if _should_verify_tls(
+            env.get("CUSTOMERDNA_HDFS_WEB_ENDPOINT", ""),
+            env.get("CUSTOMERDNA_AIRFLOW_HDFS_WEB_VERIFY_TLS"),
+        )
+        else "false"
     )
     env.setdefault(
         "CUSTOMERDNA_HDFS_WEB_CA_CERT_PATH",
@@ -134,6 +153,14 @@ def build_runtime_env() -> dict[str, str]:
         "CUSTOMERDNA_TRINO_URL",
         env.get("CUSTOMERDNA_AIRFLOW_TRINO_URL", DEFAULT_CONTAINER_SAFE_TRINO_URL),
     )
+    env["CUSTOMERDNA_TRINO_VERIFY_TLS"] = (
+        "true"
+        if _should_verify_tls(
+            env.get("CUSTOMERDNA_TRINO_URL", ""),
+            env.get("CUSTOMERDNA_AIRFLOW_TRINO_VERIFY_TLS") or env.get("CUSTOMERDNA_TRINO_VERIFY_TLS"),
+        )
+        else "false"
+    )
     env.setdefault("CUSTOMERDNA_TRINO_CATALOG", "lakehouse")
     env.setdefault("CUSTOMERDNA_TRINO_SCHEMA", "raw_data")
     env.setdefault("CUSTOMERDNA_TRINO_USER", "airflow")
@@ -149,6 +176,18 @@ def build_runtime_env() -> dict[str, str]:
         env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_PORT", DEFAULT_CONTAINER_SAFE_SPARK_THRIFT_PORT),
     )
     env.setdefault("CUSTOMERDNA_DBT_SPARK_USER", "airflow")
+    env.setdefault(
+        "CUSTOMERDNA_DBT_SPARK_AUTH",
+        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_AUTH")
+        or env.get("CUSTOMERDNA_DBT_SPARK_AUTH")
+        or "NONE",
+    )
+    env.setdefault(
+        "CUSTOMERDNA_DBT_SPARK_KERBEROS_SERVICE_NAME",
+        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_KERBEROS_SERVICE_NAME")
+        or env.get("CUSTOMERDNA_DBT_SPARK_KERBEROS_SERVICE_NAME")
+        or "spark",
+    )
     env["DBT_PROFILES_DIR"] = str(DBT_SPARK_ROOT)
 
     return env
@@ -386,12 +425,10 @@ def _build_http_url(endpoint: str) -> str:
 
 
 def _build_trino_tls_verify_setting(env: dict[str, str]) -> bool | str:
-    verify_tls = env.get("CUSTOMERDNA_TRINO_VERIFY_TLS", "false").strip().lower() in {
-        "1",
-        "true",
-        "yes",
-        "on",
-    }
+    verify_tls = _should_verify_tls(
+        env.get("CUSTOMERDNA_TRINO_URL", ""),
+        env.get("CUSTOMERDNA_TRINO_VERIFY_TLS"),
+    )
     if not verify_tls:
         return False
     ca_cert_path = env.get("CUSTOMERDNA_TRINO_CA_CERT_PATH", "").strip()

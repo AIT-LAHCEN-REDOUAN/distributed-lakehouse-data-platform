@@ -30,6 +30,7 @@ from hdfs_bronze_config import (
     HDFS_REMOTE_KRB5_CONFIG_PATH,
     HDFS_REMOTE_SSH_HOST,
     HDFS_REMOTE_SSH_KEY_PATH,
+    HDFS_REMOTE_SSH_KNOWN_HOSTS_PATH,
     HDFS_REMOTE_SSH_PORT,
     HDFS_REMOTE_SSH_USER,
     HDFS_REMOTE_STAGING_CONTAINER_DIR,
@@ -75,7 +76,7 @@ class HdfsBronzeClient:
     def __init__(self, web_endpoint: str, namenode_uri: str, webhdfs_user: str):
         base = web_endpoint.strip().rstrip("/")
         if not base.startswith(("http://", "https://")):
-            base = f"http://{base}"
+            base = f"{'https' if HDFS_WEB_VERIFY_TLS else 'http'}://{base}"
 
         self.web_endpoint = base
         self.namenode_uri = namenode_uri
@@ -341,6 +342,7 @@ class RemoteSshHdfsBronzeClient:
         ssh_port: int,
         ssh_user: str,
         ssh_key_path: str,
+        ssh_known_hosts_path: str,
         container_name: str,
         krb5_config_path: str,
         kinit_principal: str,
@@ -352,6 +354,7 @@ class RemoteSshHdfsBronzeClient:
         self.ssh_port = int(ssh_port)
         self.ssh_user = ssh_user.strip()
         self.ssh_key_path = ssh_key_path.strip()
+        self.ssh_known_hosts_path = ssh_known_hosts_path.strip()
         self.container_name = container_name.strip()
         self.krb5_config_path = krb5_config_path.strip() or "/etc/krb5.conf"
         self.kinit_principal = kinit_principal.strip()
@@ -368,6 +371,8 @@ class RemoteSshHdfsBronzeClient:
             missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_SSH_USER")
         if not self.ssh_key_path:
             missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_SSH_KEY_PATH")
+        if not self.ssh_known_hosts_path:
+            missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_SSH_KNOWN_HOSTS_PATH")
         if not self.kinit_principal:
             missing_fields.append("CUSTOMERDNA_HDFS_REMOTE_KINIT_PRINCIPAL")
         if not self.kinit_keytab_path:
@@ -383,6 +388,18 @@ class RemoteSshHdfsBronzeClient:
                 "Secure HDFS SSH mode requires the 'paramiko' package in the current Python runtime."
             )
 
+        if not Path(self.ssh_key_path).exists():
+            raise RuntimeError(
+                "Secure HDFS SSH mode could not find the SSH private key inside the current runtime: "
+                f"{self.ssh_key_path}"
+            )
+
+        if not Path(self.ssh_known_hosts_path).exists():
+            raise RuntimeError(
+                "Secure HDFS SSH mode could not find the SSH known_hosts file inside the current runtime: "
+                f"{self.ssh_known_hosts_path}"
+            )
+
     @staticmethod
     def normalize_path(hdfs_path: str) -> str:
         cleaned = "/" + str(hdfs_path).strip().strip("/")
@@ -391,7 +408,9 @@ class RemoteSshHdfsBronzeClient:
     def _connect(self):
         assert paramiko is not None  # pragma: no cover - guarded in __init__
         client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.load_system_host_keys()
+        client.load_host_keys(self.ssh_known_hosts_path)
+        client.set_missing_host_key_policy(paramiko.RejectPolicy())
         client.connect(
             hostname=self.ssh_host,
             port=self.ssh_port,
@@ -575,6 +594,7 @@ def build_hdfs_client() -> HdfsBronzeClient:
             ssh_port=HDFS_REMOTE_SSH_PORT,
             ssh_user=HDFS_REMOTE_SSH_USER,
             ssh_key_path=HDFS_REMOTE_SSH_KEY_PATH,
+            ssh_known_hosts_path=HDFS_REMOTE_SSH_KNOWN_HOSTS_PATH,
             container_name=HDFS_REMOTE_CONTAINER_NAME,
             krb5_config_path=HDFS_REMOTE_KRB5_CONFIG_PATH,
             kinit_principal=HDFS_REMOTE_KINIT_PRINCIPAL,

@@ -37,6 +37,19 @@ def _default_hdfs_namenode_uri() -> str:
     return "hdfs://localhost:9000"
 
 
+def _default_hdfs_access_mode() -> str:
+    secure_ssh_settings = (
+        os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_HOST", "").strip(),
+        os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_USER", "").strip(),
+        os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_KEY_PATH", "").strip(),
+        os.getenv("CUSTOMERDNA_HDFS_REMOTE_KINIT_PRINCIPAL", "").strip(),
+        os.getenv("CUSTOMERDNA_HDFS_REMOTE_KINIT_KEYTAB_PATH", "").strip(),
+    )
+    if all(secure_ssh_settings):
+        return "ssh_cli"
+    return "webhdfs"
+
+
 def _normalize_bronze_root(path_value: str) -> str:
     cleaned = "/" + path_value.strip().strip("/")
     return cleaned.rstrip("/") or "/bronze/client_1"
@@ -55,11 +68,15 @@ HDFS_BRONZE_ROOT = _normalize_bronze_root(
     os.getenv("CUSTOMERDNA_HDFS_BRONZE_ROOT", "/bronze/client_1")
 )
 HDFS_WEBHDFS_USER = os.getenv("CUSTOMERDNA_HDFS_WEBHDFS_USER", "hdfs").strip() or "hdfs"
-HDFS_ACCESS_MODE = os.getenv("CUSTOMERDNA_HDFS_ACCESS_MODE", "webhdfs").strip().lower() or "webhdfs"
+HDFS_ACCESS_MODE = os.getenv("CUSTOMERDNA_HDFS_ACCESS_MODE", _default_hdfs_access_mode()).strip().lower() or _default_hdfs_access_mode()
 HDFS_REMOTE_SSH_HOST = os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_HOST", "").strip()
 HDFS_REMOTE_SSH_PORT = int(os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_PORT", "22").strip() or "22")
 HDFS_REMOTE_SSH_USER = os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_USER", "").strip()
 HDFS_REMOTE_SSH_KEY_PATH = os.getenv("CUSTOMERDNA_HDFS_REMOTE_SSH_KEY_PATH", "").strip()
+HDFS_REMOTE_SSH_KNOWN_HOSTS_PATH = os.getenv(
+    "CUSTOMERDNA_HDFS_REMOTE_SSH_KNOWN_HOSTS_PATH",
+    "/opt/customerdna/.ssh/known_hosts",
+).strip() or "/opt/customerdna/.ssh/known_hosts"
 HDFS_REMOTE_CONTAINER_NAME = os.getenv("CUSTOMERDNA_HDFS_REMOTE_CONTAINER_NAME", "hdfs-admin-client").strip() or "hdfs-admin-client"
 HDFS_REMOTE_KRB5_CONFIG_PATH = os.getenv("CUSTOMERDNA_HDFS_REMOTE_KRB5_CONFIG_PATH", "/etc/krb5.conf").strip() or "/etc/krb5.conf"
 HDFS_REMOTE_KINIT_PRINCIPAL = os.getenv("CUSTOMERDNA_HDFS_REMOTE_KINIT_PRINCIPAL", "").strip()

@@ -26,6 +26,7 @@ Make sure the Spark Thrift Server is running, then:
 $env:DBT_PROFILES_DIR="D:\github\Master_PFE_Project\CustomerDNA AI\src\transformation\dbt_spark\client_1"
 $env:CUSTOMERDNA_DBT_SPARK_HOST="localhost"
 $env:CUSTOMERDNA_DBT_SPARK_PORT="10000"
+$env:CUSTOMERDNA_DBT_SPARK_AUTH="NONE"
 dbt debug
 dbt run
 dbt test

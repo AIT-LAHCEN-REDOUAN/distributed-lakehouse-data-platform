@@ -10,15 +10,22 @@ from typing import Any
 import requests
 
 
+def _parse_truthy_flag(raw_value: str | None, *, default: bool = False) -> bool:
+    if raw_value is None:
+        return default
+    normalized = raw_value.strip().lower()
+    if not normalized:
+        return default
+    return normalized in {"1", "true", "yes", "on"}
+
+
 TRINO_URL = os.getenv("CUSTOMERDNA_TRINO_URL", "http://localhost:8088").rstrip("/")
 TRINO_USER = os.getenv("CUSTOMERDNA_TRINO_USER", "customerdna")
 TRINO_PASSWORD = os.getenv("CUSTOMERDNA_TRINO_PASSWORD", "")
-TRINO_VERIFY_TLS = os.getenv("CUSTOMERDNA_TRINO_VERIFY_TLS", "false").strip().lower() in {
-    "1",
-    "true",
-    "yes",
-    "on",
-}
+TRINO_VERIFY_TLS = _parse_truthy_flag(
+    os.getenv("CUSTOMERDNA_TRINO_VERIFY_TLS"),
+    default=TRINO_URL.startswith("https://"),
+)
 TRINO_CA_CERT_PATH = os.getenv("CUSTOMERDNA_TRINO_CA_CERT_PATH", "").strip()
 TRINO_CATALOG = os.getenv("CUSTOMERDNA_TRINO_CATALOG", "lakehouse")
 TRINO_SCHEMA = os.getenv("CUSTOMERDNA_TRINO_SCHEMA", "raw_data")
