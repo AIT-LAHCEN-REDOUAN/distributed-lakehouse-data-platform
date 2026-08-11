@@ -408,7 +408,6 @@ class RemoteSshHdfsBronzeClient:
     def _connect(self):
         assert paramiko is not None  # pragma: no cover - guarded in __init__
         client = paramiko.SSHClient()
-        client.load_system_host_keys()
         client.load_host_keys(self.ssh_known_hosts_path)
         client.set_missing_host_key_policy(paramiko.RejectPolicy())
         client.connect(

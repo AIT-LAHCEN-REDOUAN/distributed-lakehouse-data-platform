@@ -298,9 +298,16 @@ services:
       - /bin/sh
       - -lc
       - >
-        mkdir -p /opt/spark/work-dir/.ivy2/cache
-        /opt/spark/work-dir/.ivy2/jars
-        && while true; do sleep 3600; done
+        mkdir -p /opt/spark/work-dir/.ivy2/cache /opt/spark/work-dir/.ivy2/jars
+        && kinit -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL}
+        || exit 1;
+        (
+             while true; do
+               sleep 1800;
+               kinit -R || kinit -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL};
+             done
+           ) >/dev/null 2>&1 &
+        while true; do sleep 3600; done
 
   spark-worker-2:
     image: ${CUSTOMERDNA_SPARK_IMAGE}
@@ -404,6 +411,14 @@ services:
       - /bin/bash
       - -lc
       - >
+        kinit -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL}
+        || exit 1;
+        (
+             while true; do
+               sleep 1800;
+               kinit -R || kinit -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL};
+             done
+           ) >/dev/null 2>&1 &
         mkdir -p /opt/spark/logs &&
         /opt/spark/sbin/start-thriftserver.sh
         --master spark://${VM2_HOST_IP}:${SPARK_MASTER_PORT}

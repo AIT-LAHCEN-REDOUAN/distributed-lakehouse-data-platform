@@ -63,6 +63,7 @@ DEFAULT_CONTAINER_SAFE_SPARK_MASTER_UI = "http://spark-master:8086"
 DEFAULT_CONTAINER_SAFE_SPARK_THRIFT_HOST = "spark-thrift-server"
 DEFAULT_CONTAINER_SAFE_SPARK_THRIFT_PORT = "10000"
 DEFAULT_CONTAINER_SAFE_TRINO_URL = "http://trino:8080"
+DEFAULT_DBT_THREADS = "2"
 
 
 for env_path in (
@@ -107,17 +108,17 @@ def _should_verify_tls(endpoint_or_url: str, explicit_value: str | None = None) 
 def build_runtime_env() -> dict[str, str]:
     env = os.environ.copy()
 
-    if env.get("CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS", "").strip() in LOCAL_KAFKA_BOOTSTRAP_VALUES:
-        env["CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS"] = env.get(
-            "CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS",
-            DEFAULT_CONTAINER_SAFE_KAFKA_BOOTSTRAP,
-        )
+    airflow_kafka_bootstrap = env.get("CUSTOMERDNA_AIRFLOW_KAFKA_BOOTSTRAP_SERVERS", "").strip()
+    if airflow_kafka_bootstrap:
+        env["CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS"] = airflow_kafka_bootstrap
+    elif env.get("CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS", "").strip() in LOCAL_KAFKA_BOOTSTRAP_VALUES:
+        env["CUSTOMERDNA_KAFKA_BOOTSTRAP_SERVERS"] = DEFAULT_CONTAINER_SAFE_KAFKA_BOOTSTRAP
 
-    if env.get("CUSTOMERDNA_HDFS_WEB_ENDPOINT", "").strip() in LOCAL_HDFS_WEB_ENDPOINTS:
-        env["CUSTOMERDNA_HDFS_WEB_ENDPOINT"] = env.get(
-            "CUSTOMERDNA_AIRFLOW_HDFS_WEB_ENDPOINT",
-            DEFAULT_CONTAINER_SAFE_HDFS_WEB,
-        )
+    airflow_hdfs_web_endpoint = env.get("CUSTOMERDNA_AIRFLOW_HDFS_WEB_ENDPOINT", "").strip()
+    if airflow_hdfs_web_endpoint:
+        env["CUSTOMERDNA_HDFS_WEB_ENDPOINT"] = airflow_hdfs_web_endpoint
+    elif env.get("CUSTOMERDNA_HDFS_WEB_ENDPOINT", "").strip() in LOCAL_HDFS_WEB_ENDPOINTS:
+        env["CUSTOMERDNA_HDFS_WEB_ENDPOINT"] = DEFAULT_CONTAINER_SAFE_HDFS_WEB
     env["CUSTOMERDNA_HDFS_WEB_VERIFY_TLS"] = (
         "true"
         if _should_verify_tls(
@@ -131,27 +132,31 @@ def build_runtime_env() -> dict[str, str]:
         env.get("CUSTOMERDNA_AIRFLOW_HDFS_WEB_CA_CERT_PATH", ""),
     )
 
-    if env.get("CUSTOMERDNA_HDFS_NAMENODE_URI", "").strip() in LOCAL_HDFS_NAMENODE_URIS:
-        env["CUSTOMERDNA_HDFS_NAMENODE_URI"] = env.get(
-            "CUSTOMERDNA_AIRFLOW_HDFS_NAMENODE_URI",
-            DEFAULT_CONTAINER_SAFE_HDFS_URI,
-        )
+    airflow_hdfs_namenode_uri = env.get("CUSTOMERDNA_AIRFLOW_HDFS_NAMENODE_URI", "").strip()
+    if airflow_hdfs_namenode_uri:
+        env["CUSTOMERDNA_HDFS_NAMENODE_URI"] = airflow_hdfs_namenode_uri
+    elif env.get("CUSTOMERDNA_HDFS_NAMENODE_URI", "").strip() in LOCAL_HDFS_NAMENODE_URIS:
+        env["CUSTOMERDNA_HDFS_NAMENODE_URI"] = DEFAULT_CONTAINER_SAFE_HDFS_URI
 
-    env.setdefault(
-        "CUSTOMERDNA_HIVE_METASTORE_HOST",
-        env.get("CUSTOMERDNA_AIRFLOW_HIVE_METASTORE_HOST", DEFAULT_CONTAINER_SAFE_HIVE_METASTORE_HOST),
+    env["CUSTOMERDNA_HIVE_METASTORE_HOST"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_HIVE_METASTORE_HOST", "").strip()
+        or env.get("CUSTOMERDNA_HIVE_METASTORE_HOST", "").strip()
+        or DEFAULT_CONTAINER_SAFE_HIVE_METASTORE_HOST
     )
-    env.setdefault(
-        "CUSTOMERDNA_HIVE_METASTORE_PORT",
-        env.get("CUSTOMERDNA_AIRFLOW_HIVE_METASTORE_PORT", DEFAULT_CONTAINER_SAFE_HIVE_METASTORE_PORT),
+    env["CUSTOMERDNA_HIVE_METASTORE_PORT"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_HIVE_METASTORE_PORT", "").strip()
+        or env.get("CUSTOMERDNA_HIVE_METASTORE_PORT", "").strip()
+        or DEFAULT_CONTAINER_SAFE_HIVE_METASTORE_PORT
     )
-    env.setdefault(
-        "CUSTOMERDNA_SPARK_MASTER_UI_URL",
-        env.get("CUSTOMERDNA_AIRFLOW_SPARK_MASTER_UI_URL", DEFAULT_CONTAINER_SAFE_SPARK_MASTER_UI),
+    env["CUSTOMERDNA_SPARK_MASTER_UI_URL"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_SPARK_MASTER_UI_URL", "").strip()
+        or env.get("CUSTOMERDNA_SPARK_MASTER_UI_URL", "").strip()
+        or DEFAULT_CONTAINER_SAFE_SPARK_MASTER_UI
     )
-    env.setdefault(
-        "CUSTOMERDNA_TRINO_URL",
-        env.get("CUSTOMERDNA_AIRFLOW_TRINO_URL", DEFAULT_CONTAINER_SAFE_TRINO_URL),
+    env["CUSTOMERDNA_TRINO_URL"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_TRINO_URL", "").strip()
+        or env.get("CUSTOMERDNA_TRINO_URL", "").strip()
+        or DEFAULT_CONTAINER_SAFE_TRINO_URL
     )
     env["CUSTOMERDNA_TRINO_VERIFY_TLS"] = (
         "true"
@@ -161,43 +166,52 @@ def build_runtime_env() -> dict[str, str]:
         )
         else "false"
     )
-    env.setdefault(
-        "CUSTOMERDNA_TRINO_USER",
-        env.get("CUSTOMERDNA_AIRFLOW_TRINO_USER", "airflow"),
+    env["CUSTOMERDNA_TRINO_USER"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_TRINO_USER", "").strip()
+        or env.get("CUSTOMERDNA_TRINO_USER", "").strip()
+        or "airflow"
     )
-    env.setdefault(
-        "CUSTOMERDNA_TRINO_PASSWORD",
-        env.get("CUSTOMERDNA_AIRFLOW_TRINO_PASSWORD", ""),
+    env["CUSTOMERDNA_TRINO_PASSWORD"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_TRINO_PASSWORD", "").strip()
+        or env.get("CUSTOMERDNA_TRINO_PASSWORD", "").strip()
     )
-    env.setdefault(
-        "CUSTOMERDNA_TRINO_CA_CERT_PATH",
-        env.get("CUSTOMERDNA_AIRFLOW_TRINO_CA_CERT_PATH", ""),
+    env["CUSTOMERDNA_TRINO_CA_CERT_PATH"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_TRINO_CA_CERT_PATH", "").strip()
+        or env.get("CUSTOMERDNA_TRINO_CA_CERT_PATH", "").strip()
     )
     env.setdefault("CUSTOMERDNA_TRINO_CATALOG", "lakehouse")
     env.setdefault("CUSTOMERDNA_TRINO_SCHEMA", "raw_data")
     env.setdefault("CUSTOMERDNA_ICEBERG_RAW_NAMESPACE", "raw_data")
 
-    if env.get("CUSTOMERDNA_DBT_SPARK_HOST", "").strip() in LOCAL_SPARK_THRIFT_HOSTS:
-        env["CUSTOMERDNA_DBT_SPARK_HOST"] = env.get(
-            "CUSTOMERDNA_AIRFLOW_DBT_SPARK_HOST",
-            DEFAULT_CONTAINER_SAFE_SPARK_THRIFT_HOST,
-        )
-    env.setdefault(
-        "CUSTOMERDNA_DBT_SPARK_PORT",
-        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_PORT", DEFAULT_CONTAINER_SAFE_SPARK_THRIFT_PORT),
+    airflow_dbt_spark_host = env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_HOST", "").strip()
+    if airflow_dbt_spark_host:
+        env["CUSTOMERDNA_DBT_SPARK_HOST"] = airflow_dbt_spark_host
+    elif env.get("CUSTOMERDNA_DBT_SPARK_HOST", "").strip() in LOCAL_SPARK_THRIFT_HOSTS:
+        env["CUSTOMERDNA_DBT_SPARK_HOST"] = DEFAULT_CONTAINER_SAFE_SPARK_THRIFT_HOST
+    env["CUSTOMERDNA_DBT_SPARK_PORT"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_PORT", "").strip()
+        or env.get("CUSTOMERDNA_DBT_SPARK_PORT", "").strip()
+        or DEFAULT_CONTAINER_SAFE_SPARK_THRIFT_PORT
     )
-    env.setdefault("CUSTOMERDNA_DBT_SPARK_USER", "airflow")
-    env.setdefault(
-        "CUSTOMERDNA_DBT_SPARK_AUTH",
-        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_AUTH")
-        or env.get("CUSTOMERDNA_DBT_SPARK_AUTH")
-        or "NONE",
+    env["CUSTOMERDNA_DBT_SPARK_USER"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_USER", "").strip()
+        or env.get("CUSTOMERDNA_DBT_SPARK_USER", "").strip()
+        or "airflow"
     )
-    env.setdefault(
-        "CUSTOMERDNA_DBT_SPARK_KERBEROS_SERVICE_NAME",
-        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_KERBEROS_SERVICE_NAME")
-        or env.get("CUSTOMERDNA_DBT_SPARK_KERBEROS_SERVICE_NAME")
-        or "spark",
+    env["CUSTOMERDNA_DBT_SPARK_AUTH"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_AUTH", "").strip()
+        or env.get("CUSTOMERDNA_DBT_SPARK_AUTH", "").strip()
+        or "NONE"
+    )
+    env["CUSTOMERDNA_DBT_SPARK_KERBEROS_SERVICE_NAME"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_DBT_SPARK_KERBEROS_SERVICE_NAME", "").strip()
+        or env.get("CUSTOMERDNA_DBT_SPARK_KERBEROS_SERVICE_NAME", "").strip()
+        or "spark"
+    )
+    env["CUSTOMERDNA_DBT_THREADS"] = (
+        env.get("CUSTOMERDNA_AIRFLOW_DBT_THREADS", "").strip()
+        or env.get("CUSTOMERDNA_DBT_THREADS", "").strip()
+        or DEFAULT_DBT_THREADS
     )
     env["DBT_PROFILES_DIR"] = str(DBT_SPARK_ROOT)
 

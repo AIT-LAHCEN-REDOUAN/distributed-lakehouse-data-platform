@@ -261,7 +261,6 @@ def _validate_remote_ssh_configuration() -> None:
 def _build_verified_ssh_client():
     assert paramiko is not None  # pragma: no cover - guarded by validation
     client = paramiko.SSHClient()
-    client.load_system_host_keys()
     client.load_host_keys(SPARK_REMOTE_SSH_KNOWN_HOSTS_PATH)
     client.set_missing_host_key_policy(paramiko.RejectPolicy())
     return client
