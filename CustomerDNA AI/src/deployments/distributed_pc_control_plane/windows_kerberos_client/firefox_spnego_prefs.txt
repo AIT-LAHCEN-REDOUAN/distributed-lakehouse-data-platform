@@ -6,10 +6,13 @@ about:config
 Set these preferences exactly:
 
 network.auth.use-sspi = false
+network.negotiate-auth.using-native-gsslib = false
+network.negotiate-auth.gsslib = C:\Program Files (x86)\MIT\Kerberos\bin\gssapi32.dll
 network.negotiate-auth.trusted-uris = .customerdna.local,namenode.customerdna.local,datanode-1.customerdna.local,datanode-2.customerdna.local,datanode-3.customerdna.local
 network.negotiate-auth.delegation-uris = .customerdna.local,namenode.customerdna.local,datanode-1.customerdna.local,datanode-2.customerdna.local,datanode-3.customerdna.local
 
 Important:
 - Use hostnames or domains only.
 - Do not include :9871, :9865, or any other port.
+- Use the MIT Kerberos GSS library path exactly as shown above.
 - Fully close and reopen Firefox after saving the values.

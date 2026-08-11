@@ -36,40 +36,13 @@ services:
       - "namenode:${VM2_HOST_IP}"
     restart: unless-stopped
     environment:
-      CORE_CONF_fs_defaultFS: ${CUSTOMERDNA_HDFS_NAMENODE_URI}
-      CORE_CONF_hadoop_security_authentication: kerberos
-      CORE_CONF_hadoop_security_authorization: "true"
-      CORE_CONF_hadoop_security_auth_to_local: "RULE:[1:$1@$0](demo_hdfs@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ RULE:[1:$1@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/@.*// RULE:[2:$1/$2@$0](.*@${CUSTOMERDNA_KRB5_REALM})s/.*/hdfs/ DEFAULT"
-      CORE_CONF_hadoop_rpc_protection: ${CUSTOMERDNA_HDFS_RPC_PROTECTION}
-      CORE_CONF_hadoop_http_authentication_type: kerberos
-      CORE_CONF_hadoop_http_authentication_kerberos_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
-      CORE_CONF_hadoop_http_authentication_kerberos_keytab: /etc/security/keytabs/dn.service.keytab
-      CORE_CONF_hadoop_http_authentication_simple_anonymous_allowed: "false"
-      HDFS_CONF_dfs_replication: ${CUSTOMERDNA_HDFS_REPLICATION}
-      HDFS_CONF_dfs_permissions_enabled: "false"
-      HDFS_CONF_dfs_http_policy: HTTPS_ONLY
-      HDFS_CONF_dfs_webhdfs_enabled: "true"
-      HDFS_CONF_dfs_block_access_token_enable: "true"
-      HDFS_CONF_dfs_datanode_kerberos_principal: dn/_HOST@${CUSTOMERDNA_KRB5_REALM}
-      HDFS_CONF_dfs_datanode_keytab_file: /etc/security/keytabs/dn.service.keytab
-      HDFS_CONF_dfs_web_authentication_kerberos_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
-      HDFS_CONF_dfs_web_authentication_kerberos_keytab: /etc/security/keytabs/dn.service.keytab
-      HDFS_CONF_dfs_datanode_kerberos_internal_spnego_principal: HTTP/_HOST@${CUSTOMERDNA_KRB5_REALM}
-      HDFS_CONF_dfs_datanode_http___address: 0.0.0.0:0
-      HDFS_CONF_dfs_datanode_https___address: 0.0.0.0:${CUSTOMERDNA_HDFS_DATANODE_HTTPS_PORT:-9865}
-      HDFS_CONF_dfs_https_server_keystore_resource: ssl-server.xml
-      HDFS_CONF_dfs_client_https_need___auth: "false"
-      HDFS_CONF_dfs_client_https_keystore_resource: ssl-client.xml
-      HDFS_CONF_dfs_data_transfer_protection: ${CUSTOMERDNA_HDFS_DATA_TRANSFER_PROTECTION}
-      HDFS_CONF_dfs_encrypt_data_transfer: ${CUSTOMERDNA_HDFS_WIRE_ENCRYPTION}
-      HDFS_CONF_dfs_datanode_hostname: datanode-3
-      HDFS_CONF_dfs_datanode_use_datanode_hostname: "true"
-      HDFS_CONF_dfs_client_use_datanode_hostname: "true"
       KRB5_CONFIG: /etc/krb5.conf
       HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
       SERVICE_PRECONDITION: namenode:${CUSTOMERDNA_HDFS_NAMENODE_HTTPS_PORT:-9871}
     volumes:
       - ${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-./runtime/hdfs/datanode}:/hadoop/dfs/data
+      - ./hdfs/config/core-site.xml:/etc/hadoop/core-site.xml:ro
+      - ./hdfs/config/hdfs-site.xml:/etc/hadoop/hdfs-site.xml:ro
       - ./hdfs/tls/ssl-server.xml:/etc/hadoop/ssl-server.xml:ro
       - ./hdfs/tls/ssl-client.xml:/etc/hadoop/ssl-client.xml:ro
       - ./hdfs/tls:/etc/hadoop/tls:ro

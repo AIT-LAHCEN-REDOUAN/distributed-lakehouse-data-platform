@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://namenode:9000</value>
+  </property>
+  <property>
+    <name>hadoop.security.authentication</name>
+    <value>kerberos</value>
+  </property>
+  <property>
+    <name>hadoop.security.authorization</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>hadoop.security.auth_to_local</name>
+    <value>RULE:[1:$1@$0](demo_hdfs@CUSTOMERDNA.LOCAL)s/.*/hdfs/ RULE:[1:$1@$0](.*@CUSTOMERDNA.LOCAL)s/@.*// RULE:[2:$1/$2@$0](.*@CUSTOMERDNA.LOCAL)s/.*/hdfs/ DEFAULT</value>
+  </property>
+  <property>
+    <name>hadoop.rpc.protection</name>
+    <value>privacy</value>
+  </property>
+  <property>
+    <name>hadoop.http.authentication.type</name>
+    <value>kerberos</value>
+  </property>
+  <property>
+    <name>hadoop.http.authentication.kerberos.principal</name>
+    <value>HTTP/_HOST@CUSTOMERDNA.LOCAL</value>
+  </property>
+  <property>
+    <name>hadoop.http.authentication.kerberos.keytab</name>
+    <value>/etc/security/keytabs/dn.service.keytab</value>
+  </property>
+  <property>
+    <name>hadoop.http.authentication.simple.anonymous.allowed</name>
+    <value>false</value>
+  </property>
+</configuration>
