@@ -81,7 +81,14 @@ SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS = int(
     os.getenv("CUSTOMERDNA_SPARK_REMOTE_SSH_CONNECT_TIMEOUT_SECONDS", "20").strip() or "20"
 )
 KRB5_CONFIG_PATH = os.getenv("CUSTOMERDNA_KRB5_CONFIG_PATH", "/etc/krb5.conf").strip() or "/etc/krb5.conf"
-KRB5_CCACHE_PATH = os.getenv("CUSTOMERDNA_KRB5_CCACHE_PATH", "FILE:/tmp/krb5cc_spark").strip() or "FILE:/tmp/krb5cc_spark"
+KRB5_CCACHE_PATH = (
+    os.getenv("CUSTOMERDNA_KRB5_CCACHE_PATH", "FILE:/tmp/krb5cc_spark").strip()
+    or "FILE:/tmp/krb5cc_spark"
+)
+KRB5_CLIENT_KTNAME = (
+    os.getenv("CUSTOMERDNA_KRB5_CLIENT_KTNAME", SPARK_KERBEROS_KEYTAB).strip()
+    or SPARK_KERBEROS_KEYTAB
+)
 SPARK_JAAS_CONFIG_PATH = (
     os.getenv("CUSTOMERDNA_SPARK_JAAS_CONFIG_PATH", "/opt/spark/custom-conf/jaas.conf").strip()
     or "/opt/spark/custom-conf/jaas.conf"
@@ -184,11 +191,15 @@ def _build_spark_submit_command(
         "--conf",
         f"spark.driverEnv.KRB5CCNAME={KRB5_CCACHE_PATH}",
         "--conf",
+        f"spark.driverEnv.KRB5_CLIENT_KTNAME={KRB5_CLIENT_KTNAME}",
+        "--conf",
         "spark.driverEnv.HADOOP_CONF_DIR=/etc/hadoop/conf",
         "--conf",
         f"spark.executorEnv.KRB5_CONFIG={KRB5_CONFIG_PATH}",
         "--conf",
         f"spark.executorEnv.KRB5CCNAME={KRB5_CCACHE_PATH}",
+        "--conf",
+        f"spark.executorEnv.KRB5_CLIENT_KTNAME={KRB5_CLIENT_KTNAME}",
         "--conf",
         "spark.executorEnv.HADOOP_CONF_DIR=/etc/hadoop/conf",
         "--conf",
@@ -451,7 +462,13 @@ def submit_hdfs_bronze_to_iceberg_spark_job(
             f"mkdir -p {shlex.quote(SPARK_IVY_HOME)}/cache {shlex.quote(SPARK_IVY_HOME)}/jars && "
             f"export HOME={shlex.quote(SPARK_HOME_DIR)} "
             f"IVY_HOME={shlex.quote(SPARK_IVY_HOME)} "
-            f"SPARK_SUBMIT_OPTS='-Divy.home={SPARK_IVY_HOME} -Divy.cache.dir={SPARK_IVY_HOME}/cache'; "
+            f"KRB5_CONFIG={shlex.quote(KRB5_CONFIG_PATH)} "
+            f"KRB5CCNAME={shlex.quote(KRB5_CCACHE_PATH)} "
+            "HADOOP_CONF_DIR=/etc/hadoop/conf "
+            f"SPARK_CONF_DIR={shlex.quote('/opt/spark/custom-conf')} && "
+            # Preserve container-provided Kerberos/JAAS submit options while appending Ivy cache settings.
+            f"export SPARK_SUBMIT_OPTS=\"${{SPARK_SUBMIT_OPTS:-}} -Divy.home={SPARK_IVY_HOME} "
+            f"-Divy.cache.dir={SPARK_IVY_HOME}/cache\"; "
             f"{shlex.join(base_command)}"
         ),
     ]

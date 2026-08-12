@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import socket
+import subprocess
 import time
 import traceback
 from datetime import datetime
@@ -208,6 +210,62 @@ def log_runtime_diagnostics(spark: SparkSession, args: argparse.Namespace, bronz
         print(traceback.format_exc().rstrip())
 
 
+def log_executor_security_probe(spark: SparkSession) -> None:
+    def _probe(_):
+        hostname = socket.gethostname()
+        krb5_config = os.getenv("KRB5_CONFIG", "<unset>")
+        krb5_ccname = os.getenv("KRB5CCNAME", "<unset>")
+        krb5_client_ktname = os.getenv("KRB5_CLIENT_KTNAME", "<unset>")
+        cache_path = krb5_ccname.removeprefix("FILE:") if krb5_ccname and krb5_ccname != "<unset>" else None
+        output_lines = [
+            f"hostname={hostname}",
+            f"KRB5_CONFIG={krb5_config}",
+            f"KRB5CCNAME={krb5_ccname}",
+            f"KRB5_CLIENT_KTNAME={krb5_client_ktname}",
+        ]
+
+        commands = [
+            ("id", ["id"]),
+            ("ls_cache", ["ls", "-l", cache_path] if cache_path else ["sh", "-lc", "echo no-cache-path"]),
+            ("ls_keytab", ["ls", "-l", krb5_client_ktname] if krb5_client_ktname and krb5_client_ktname != "<unset>" else ["sh", "-lc", "echo no-keytab-path"]),
+            ("klist", ["klist", *(["-c", cache_path] if cache_path else [])]),
+            (
+                "kvno",
+                [
+                    "kvno",
+                    "nn/namenode.customerdna.local@CUSTOMERDNA.LOCAL",
+                ],
+            ),
+        ]
+
+        for label, command in commands:
+            try:
+                completed = subprocess.run(
+                    command,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    timeout=20,
+                )
+                stdout = completed.stdout.strip() or "<empty>"
+                stderr = completed.stderr.strip() or "<empty>"
+                output_lines.append(f"{label}.exit_code={completed.returncode}")
+                output_lines.append(f"{label}.stdout={stdout}")
+                output_lines.append(f"{label}.stderr={stderr}")
+            except Exception as exc:
+                output_lines.append(f"{label}.error={exc}")
+
+        yield " | ".join(output_lines)
+
+    try:
+        probe_output = spark.sparkContext.parallelize([1], 1).mapPartitions(_probe).collect()
+        for line in probe_output:
+            print(f"[EXECUTOR_DIAGNOSTICS] {line}")
+    except Exception as exc:
+        print(f"[EXECUTOR_DIAGNOSTICS][WARN] Executor security probe failed before data read: {exc}")
+        print(traceback.format_exc().rstrip())
+
+
 def main() -> int:
     args = parse_args()
     start_counter = time.perf_counter()
@@ -223,6 +281,7 @@ def main() -> int:
     try:
         bronze_path = build_bronze_path(args)
         log_runtime_diagnostics(spark, args, bronze_path)
+        log_executor_security_probe(spark)
         raw_df = load_bronze_dataframe(spark, bronze_path)
         bronze_files_read = len(raw_df.inputFiles())
         print(f"[DIAGNOSTICS] Spark input files discovered: {bronze_files_read}")
