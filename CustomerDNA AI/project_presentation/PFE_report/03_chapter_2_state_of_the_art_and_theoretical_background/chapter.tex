@@ -12,6 +12,15 @@ Traditional information systems were largely organized around centralized databa
 
 Distributed data platforms emerged as a response to these limitations. Their purpose is not only to increase raw capacity, but also to separate responsibilities according to operational logic. In a modern platform, event transport, raw storage, distributed computation, metadata management, analytical exposure, data quality validation, and observability can be handled by different services while still forming a coherent whole. This decomposition allows each concern to evolve with the technical model best suited to it.
 
+Figure~\ref{fig:centralized-vs-distributed} summarizes this transition from a monolithic structure toward a layered distributed platform. It highlights the architectural shift from a single server concentrating ingestion, storage, processing, and access responsibilities to a distributed model in which ingestion, storage, compute, metadata, and analytical exposure are separated into specialized layers.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{90_assets/figures/chapter_2/fig_2_1_centralized_vs_distributed.png}
+    \caption{Conceptual evolution from centralized architectures to distributed data platforms.}
+    \label{fig:centralized-vs-distributed}
+\end{figure}
+
 \subsection{Vertical Scaling vs Horizontal Scaling}
 One of the first decisions in large-scale systems concerns how growth should be absorbed. Vertical scaling strengthens a machine by increasing CPU, memory, or storage capacity. It is often simpler in the short term because the system does not need to be partitioned immediately. Nevertheless, it has two major limits: physical growth is finite, and dependence on a small number of powerful machines weakens resilience.
 
