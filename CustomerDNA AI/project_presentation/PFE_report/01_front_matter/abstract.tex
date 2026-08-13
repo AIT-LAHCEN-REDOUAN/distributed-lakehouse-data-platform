@@ -1,10 +1,20 @@
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
+\thispagestyle{plain}
 
-This report presents \projectname, a distributed customer data lakehouse platform developed within the broader \initiative{} initiative at \companyname. The project addresses the need for a secure, scalable, and orchestrated foundation for customer data consolidation, analytical processing, and future Customer 360 and AI-driven capabilities.
+Modern organizations increasingly rely on data produced from multiple heterogeneous sources, including transactional systems, e-commerce platforms, behavioral event streams, and customer profile datasets. However, transforming these raw inputs into reliable, governed, and analytics-ready data products requires a structured data engineering platform capable of ingestion, storage, distributed processing, validation, orchestration, and monitoring.
 
-The implemented platform combines heterogeneous data ingestion, distributed storage, distributed processing, metadata governance, SQL query exposure, transformation control, data quality validation, orchestration, observability, and deployment hardening. The physical architecture separates responsibilities across a local control plane and three virtual machines in order to demonstrate service distribution, multi-node collaboration, and operational isolation. The technical stack integrates Kafka, HDFS, Spark, Iceberg, Hive Metastore, Trino, dbt-spark, Great Expectations, Airflow, Prometheus, and Grafana.
+This final year project presents the design and implementation of \projectname, a distributed customer data lakehouse platform developed under the broader \initiative{} initiative at \companyname. The platform focuses on building a scalable data engineering foundation for multi-source customer data. It integrates Apache Kafka for ingestion, Hadoop HDFS for distributed storage, Apache Spark for distributed processing, Apache Iceberg and Hive Metastore for lakehouse table management, Trino for SQL exploration, dbt-spark for transformation modeling, Great Expectations for data quality validation, Apache Airflow for orchestration, and Prometheus with Grafana for observability.
 
-The final deployed version also incorporates a security layer based on Kerberos-secured Hadoop services, SPNEGO-protected HDFS browser access, TLS-protected interfaces, authenticated Trino access, SSH-based remote Spark submission, and encrypted runtime storage support. As a result, the project must be understood not as a finished machine learning product, but as a secure and distributed customer data engineering foundation capable of supporting future segmentation, churn analysis, lifetime value analysis, personalization, and intelligent marketing services.
+The project demonstrates an end-to-end architecture that transforms raw customer-related datasets into structured lakehouse layers and trusted analytical data products. The implemented solution emphasizes modularity, reproducibility, scalability, data quality, observability, security, and readiness for future analytics and machine learning use cases.
+
+\vspace{1.2cm}
+\noindent\rule{\textwidth}{0.4pt}
+
+\vspace{0.6cm}
+\noindent\textbf{Keywords :} Big Data, Data Engineering, Distributed Systems, Data Lakehouse, Apache Kafka, HDFS, Apache Spark, Apache Iceberg, Trino, dbt-spark, Data Quality, Observability, Security.
+
+\vspace{0.6cm}
+\noindent\rule{\textwidth}{0.4pt}
 
 \clearpage

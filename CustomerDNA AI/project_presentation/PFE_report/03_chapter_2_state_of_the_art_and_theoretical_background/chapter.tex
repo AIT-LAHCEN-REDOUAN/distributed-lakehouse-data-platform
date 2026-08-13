@@ -1,23 +1,28 @@
 \chapter{State of the Art and Theoretical Background}
 
 \section{Introduction}
-This chapter develops the academic foundation required to defend the project rigorously. It reviews the major theoretical concepts that justify the architectural choices made in \projectname.
+This chapter develops the academic foundation required to defend the project rigorously. Its purpose is to establish the major concepts, architectural trade-offs, and distributed data system principles that justify the final design choices adopted in \projectname.
 
-\section{Customer Data Platforms and Customer 360}
-This section should define the concept of a customer data platform, explain why customer data unification matters, and position the project as a technical foundation for future Customer 360 use cases.
+\section{Foundations of Modern Distributed Data Systems}
+This section should explain how data systems evolved from centralized architectures toward distributed platforms capable of handling scale, heterogeneity, and operational complexity. It should define the importance of horizontal scaling, service distribution, and the system qualities of reliability, scalability, and maintainability. It should also introduce the notion of data-intensive applications and explain why these concerns are central to the academic positioning of \projectname.
 
-\section{Data Lakes, Warehouses, and Lakehouses}
-This section should compare data lakes, data warehouses, and lakehouses. It should highlight why the lakehouse model is appropriate for mixed ingestion, scalable storage, analytical querying, and governed transformation.
+\section{Core Theoretical Trade-offs in Distributed Data Engineering}
+This section should present the essential trade-offs that shape distributed data system design. It should cover the CAP theorem, consistency trade-offs, ACID and BASE models, data partitioning, replication, fault tolerance, service resilience, and the difference between batch and stream processing. It should also explain schema-on-write and schema-on-read as major design choices that influence storage and analytical flexibility.
 
-\section{Distributed Data Systems}
-This section should explain the principles of distributed storage, distributed computation, service separation, fault tolerance, and horizontal scalability.
+\section{Big Data Foundations}
+This section should establish the broader Big Data context of the project. It should explain the Five Vs of Big Data, discuss heterogeneous customer-oriented data sources, and present the core principles of distributed storage and distributed computation that support modern data platforms.
 
-\section{Workflow Orchestration and Data Quality}
-This section should introduce orchestration concepts, task dependencies, observability, and the role of data quality controls in production-grade data platforms.
+\section{Evolution of Analytical Data Architectures}
+This section should compare the major architectural paradigms that emerged in response to distributed data challenges. It should cover traditional data warehouses, data lakes, data lakehouses, Lambda architecture, and Kappa architecture. The section should end with a comparative analysis showing why the lakehouse model best fits the goals of \projectname.
 
-\section{Security in Distributed Data Platforms}
-This section should provide the theoretical basis for authentication, authorization, encryption in transit, encryption at rest, and service exposure hardening.
+\section{Foundational Concepts for Governance and Trust in Data Platforms}
+This section should explain the theoretical role of metadata, cataloging, data discovery, lineage, traceability, and data quality dimensions. It should also introduce observability as a principle for understanding, controlling, and validating distributed data operations.
+
+\section{Security Foundations for Distributed Data Platforms}
+This section should present the theoretical basis for authentication, authorization, encryption in transit, encryption at rest, and secure service exposure in multi-node environments. The objective is to prepare the reader for the security controls implemented later in the report.
+
+\section{Positioning of the Present Work}
+This section should connect the theoretical foundations of the chapter to the present project. It should explain how \projectname{} aligns with distributed lakehouse principles, why it must be defended as a data engineering platform rather than a final AI product, and how it is positioned within the broader \initiative{} initiative.
 
 \section{Chapter Conclusion}
-This chapter provides the theoretical background that justifies the technical design and implementation choices documented in the following chapters.
-
+This chapter provides the theoretical background that justifies the technical design and implementation choices documented in the following chapters. It must create a strong academic transition toward the requirements analysis and system design phase of the report.
