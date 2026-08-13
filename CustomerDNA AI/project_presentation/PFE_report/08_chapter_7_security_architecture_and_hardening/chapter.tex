@@ -1,0 +1,32 @@
+\chapter{Security Architecture and Hardening}
+
+\section{Introduction}
+This chapter explains the security controls introduced into \projectname{} and their role in protecting the distributed platform.
+
+\section{Security Objectives}
+The security layer aims to protect service access, secure browser-facing interfaces, control distributed identity, and reduce exposure of operational services.
+
+\section{Kerberos-Secured Hadoop Services}
+This section should explain the use of Kerberos for Hadoop authentication and why secure identity exchange is important in a distributed system.
+
+\section{SPNEGO-Protected HDFS Browser Access}
+This section should explain how browser access to HDFS was protected and why this matters for administrative interfaces.
+
+\section{TLS-Protected Interfaces}
+This section should explain the TLS layer added to exposed services and the distinction between internal service traffic and browser-facing endpoints.
+
+\section{Authenticated Trino Access}
+This section should explain Trino gateway protection, authenticated access, and the user-facing implications of secure SQL exposure.
+
+\section{SSH-Based Remote Spark Submission}
+This section should explain how remote execution from the control plane to VM2 is secured operationally.
+
+\section{Encrypted Runtime Storage Support}
+This section should explain the role of encrypted runtime storage and its contribution to protecting data at rest.
+
+\section{Security Boundaries and Remaining Limits}
+This section should present the implemented scope honestly and distinguish completed hardening from future enterprise-grade enhancements.
+
+\section{Chapter Conclusion}
+This chapter should show that security was integrated as an architectural concern rather than added as a superficial afterthought.
+

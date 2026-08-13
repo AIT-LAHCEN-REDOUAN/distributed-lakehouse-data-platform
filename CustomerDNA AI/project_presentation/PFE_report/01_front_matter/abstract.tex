@@ -1,0 +1,10 @@
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+
+This report presents \projectname, a distributed customer data lakehouse platform developed within the broader \initiative{} initiative at \companyname. The project addresses the need for a secure, scalable, and orchestrated foundation for customer data consolidation, analytical processing, and future Customer 360 and AI-driven capabilities.
+
+The implemented platform combines heterogeneous data ingestion, distributed storage, distributed processing, metadata governance, SQL query exposure, transformation control, data quality validation, orchestration, observability, and deployment hardening. The physical architecture separates responsibilities across a local control plane and three virtual machines in order to demonstrate service distribution, multi-node collaboration, and operational isolation. The technical stack integrates Kafka, HDFS, Spark, Iceberg, Hive Metastore, Trino, dbt-spark, Great Expectations, Airflow, Prometheus, and Grafana.
+
+The final deployed version also incorporates a security layer based on Kerberos-secured Hadoop services, SPNEGO-protected HDFS browser access, TLS-protected interfaces, authenticated Trino access, SSH-based remote Spark submission, and encrypted runtime storage support. As a result, the project must be understood not as a finished machine learning product, but as a secure and distributed customer data engineering foundation capable of supporting future segmentation, churn analysis, lifetime value analysis, personalization, and intelligent marketing services.
+
+\clearpage

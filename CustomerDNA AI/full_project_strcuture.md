@@ -1,6 +1,6 @@
 # AdOptimizer CDP - Updated Project Structure
 
-> Updated on 2026-08-12 after the Client 1 dataset refactor, distributed deployment refactor, and security-layer integration.
+> Updated on 2026-08-13 after the Client 1 dataset refactor, distributed deployment refactor, security-layer integration, and report-workspace reorganization.
 > This file focuses on the current active project structure.
 > Generated caches, historical logs, compiled artifacts, and transient runtime files are intentionally omitted unless they are part of the engineered design.
 
@@ -101,7 +101,87 @@ project_requirements/
 
 ---
 
-## 4. Source Code Root
+## 4. Report and Presentation Workspace
+
+```text
+project_presentation/
+|-- PFE_report/
+|   |-- README.md
+|   |-- 00_master/
+|   |   |-- ARCHITECTURE_AND_SECURITY_SUMMARY.md
+|   |   |-- PRISM_UPLOAD_ORDER.md
+|   |   |-- PROJECT_IDENTITY_AND_SCOPE.md
+|   |   `-- REPORT_CHAPTER_BLUEPRINT.md
+|   |-- 01_front_matter/
+|   |-- 02_chapter_1_general_project_context/
+|   |-- 03_chapter_2_state_of_the_art_and_theoretical_background/
+|   |-- 04_chapter_3_technology_watch/
+|   |-- 05_chapter_4_requirements_analysis_and_system_design/
+|   |-- 06_chapter_5_implementation_of_the_distributed_lakehouse_platform/
+|   |-- 07_chapter_6_deployment_strategy_and_distributed_execution/
+|   |-- 08_chapter_7_security_architecture_and_hardening/
+|   |-- 09_chapter_8_validation_testing_and_results/
+|   |-- 10_chapter_9_discussion_and_critical_analysis/
+|   |-- 11_chapter_10_general_conclusion_and_perspectives/
+|   |-- 12_references/
+|   |-- 13_appendices/
+|   |-- 90_assets/
+|   |   |-- diagrams_drawio/
+|   |   |-- figures/
+|   |   `-- tables/
+|   |-- 91_evidence/
+|   |   |-- logs_and_validation_notes/
+|   |   `-- screenshots/
+|   `-- 99_submission_package/
+`-- PFE_presentation/
+    |-- README.md
+    |-- 00_master/
+    |   `-- PRESENTATION_WORKFLOW.md
+    |-- 00_planning/
+    |-- 01_storyline/
+    |-- 02_slide_drafts/
+    |-- 03_visual_assets/
+    |-- 04_demo_flow/
+    |-- 05_speaker_notes/
+    |-- 90_assets/
+    |   |-- diagrams_drawio/
+    |   |-- figures/
+    |   `-- icons_and_visuals/
+    |-- 91_evidence/
+    |   |-- demo_sequence/
+    |   `-- screenshots/
+    |-- 92_export_package/
+    `-- 99_final_delivery/
+```
+
+### Meaning
+
+- `project_presentation/`
+  - container folder holding two independent academic workspaces
+- `PFE_report/`
+  - standalone report workspace that can be opened and compiled alone in TeXstudio
+- `00_master/`
+  - report-wide structure, local summaries, and writing workflow
+- `01_front_matter/`
+  - abstract, acknowledgements, acronyms, and other opening pages
+- `02_...` to `11_...`
+  - one folder per main chapter to keep writing modular and easy to review
+- `12_references/`
+  - bibliography preparation and chapter-to-source organization
+- `13_appendices/`
+  - supplementary technical material and annexes
+- `90_assets/`
+  - reusable figures, tables, and Draw.io diagrams
+- `91_evidence/`
+  - screenshots, logs, and validation artifacts used as proof
+- `99_submission_package/`
+  - final cleaned report delivery package
+- `PFE_presentation/`
+  - standalone future oral-defense workspace with its own assets, notes, and export package
+
+---
+
+## 5. Source Code Root
 
 ```text
 src/
@@ -135,7 +215,7 @@ Each folder maps to one platform responsibility:
 
 ---
 
-## 5. Airflow Orchestration Layer
+## 6. Airflow Orchestration Layer
 
 ```text
 src/airflow/
@@ -178,7 +258,7 @@ src/airflow/
 
 ---
 
-## 6. Kafka Ingestion Layer
+## 7. Kafka Ingestion Layer
 
 ```text
 src/streaming/kafka/
@@ -233,7 +313,7 @@ src/streaming/kafka/
 
 ---
 
-## 7. HDFS Storage Layer
+## 8. HDFS Storage Layer
 
 ```text
 src/lake/hdfs/
@@ -264,7 +344,7 @@ src/lake/hdfs/
 
 ---
 
-## 8. Spark Processing Layer
+## 9. Spark Processing Layer
 
 ```text
 src/processing/spark/
@@ -303,7 +383,7 @@ src/processing/spark/
 
 ---
 
-## 9. Hive Metastore and Catalog Layer
+## 10. Hive Metastore and Catalog Layer
 
 ```text
 src/catalog/hive/
@@ -335,7 +415,7 @@ src/catalog/hive/
 
 ---
 
-## 10. Trino Query Layer
+## 11. Trino Query Layer
 
 ```text
 src/query/trino/
@@ -370,7 +450,7 @@ src/query/trino/
 
 ---
 
-## 11. dbt-spark Transformation Layer
+## 12. dbt-spark Transformation Layer
 
 ```text
 src/transformation/dbt_spark/
@@ -423,7 +503,7 @@ src/transformation/dbt_spark/
 
 ---
 
-## 12. Great Expectations Quality Layer
+## 13. Great Expectations Quality Layer
 
 ```text
 src/quality/great_expectations/
@@ -466,7 +546,7 @@ src/quality/great_expectations/
 
 ---
 
-## 13. Monitoring and Observability Layer
+## 14. Monitoring and Observability Layer
 
 ```text
 src/monitoring/
@@ -517,7 +597,7 @@ src/monitoring/
 
 ---
 
-## 14. Distributed Deployment Layer
+## 15. Distributed Deployment Layer
 
 ```text
 src/deployments/
@@ -627,7 +707,7 @@ src/deployments/
 
 ---
 
-## 15. Architectural Reading Rule
+## 16. Architectural Reading Rule
 
 The correct way to read this repository is:
 
@@ -650,7 +730,7 @@ source -> ingest -> store -> process -> catalog -> query -> transform -> validat
 
 ---
 
-## 16. Important Interpretation Rule
+## 17. Important Interpretation Rule
 
 This structure is intentionally layered.
 

@@ -1,0 +1,35 @@
+\chapter{Implementation of the Distributed Lakehouse Platform}
+
+\section{Introduction}
+This chapter presents the concrete implementation of \projectname{} from ingestion to analytical serving.
+
+\section{Data Sources and Dataset Modeling}
+This section should describe the selected customer-oriented datasets, the reason for their retention, and their role in the platform.
+
+\section{Kafka-Based Ingestion Layer}
+This section should describe topic organization, producers, consumers, and ingestion orchestration logic.
+
+\section{HDFS Bronze Storage Layer}
+This section should describe bronze storage organization, batch landing patterns, and the role of distributed persistence.
+
+\section{Spark Processing and Iceberg Loading}
+This section should explain Spark jobs, schema handling, loading behavior, and the creation of analytical Iceberg tables.
+
+\section{Hive Metastore and Catalog Governance}
+This section should explain how metadata is centralized and exposed to upper analytical services.
+
+\section{Trino Query Layer}
+This section should explain SQL access patterns, query federation role, and secure access exposure.
+
+\section{dbt-spark Transformation Layer}
+This section should explain transformation modeling, model organization, and governed analytical layer creation.
+
+\section{Great Expectations Validation Layer}
+This section should explain quality checks and their role in proving governance and trustworthiness.
+
+\section{Airflow Orchestration Layer}
+This section should explain the DAG structure, sequencing, operational controls, and restart logic.
+
+\section{Chapter Conclusion}
+This chapter should demonstrate that the platform is implemented as a coherent system rather than as isolated components.
+

@@ -1,65 +1,51 @@
 \documentclass[12pt,a4paper,oneside]{report}
 
-% ============================================================
-% CustomerDNA AI - PFE Report
-% Master entry point
-%
-% This file intentionally remains thin and only orchestrates:
-% - shared report configuration
-% - frontmatter
-% - main chapters
-%
-% Content lives in:
-% - config/
-% - frontmatter/
-% - chapters/
-% ============================================================
-
-\newcommand{\ConfigPath}{config}
-\newcommand{\FrontmatterPath}{frontmatter}
-\newcommand{\ChapterPath}{chapters}
-
-\input{\ConfigPath/report_setup.tex}
+\input{00_master/report_preamble.tex}
 
 \begin{document}
 
-% ------------------------------------------------------------
-% Cover
-% ------------------------------------------------------------
-\input{\FrontmatterPath/cover.tex}
-
-% ------------------------------------------------------------
-% Frontmatter
-% ------------------------------------------------------------
-\clearpage
 \pagenumbering{roman}
 \setcounter{page}{1}
-\pagestyle{frontplain}
 
-\input{\FrontmatterPath/dedication.tex}
-\input{\FrontmatterPath/acknowledgements.tex}
-\input{\FrontmatterPath/abstract.tex}
-\input{\FrontmatterPath/resume.tex}
-\input{\FrontmatterPath/acronyms.tex}
-\input{\FrontmatterPath/table_of_contents.tex}
-\input{\FrontmatterPath/list_of_figures.tex}
-\input{\FrontmatterPath/list_of_tables.tex}
+% Cover page intentionally omitted.
+% The official cover page will be added later once provided by the professor.
 
-% ------------------------------------------------------------
-% Main matter
-% ------------------------------------------------------------
+\input{01_front_matter/dedication.tex}
+\input{01_front_matter/acknowledgements.tex}
+\input{01_front_matter/abstract.tex}
+\input{01_front_matter/resume.tex}
+
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+\clearpage
+\input{01_front_matter/acronyms.tex}
+
 \clearpage
 \pagenumbering{arabic}
 \setcounter{page}{1}
-\pagestyle{main}
 
-\input{\ChapterPath/general_introduction.tex}
-\input{\ChapterPath/chapter_i.tex}
-\input{\ChapterPath/chapter_ii.tex}
-\input{\ChapterPath/chapter_iii.tex}
-\input{\ChapterPath/chapter_iv.tex}
-\input{\ChapterPath/chapter_v.tex}
-\input{\ChapterPath/chapter_vi.tex}
-\input{\ChapterPath/chapter_vii.tex}
+\input{02_chapter_1_general_project_context/chapter.tex}
+\input{03_chapter_2_state_of_the_art_and_theoretical_background/chapter.tex}
+\input{04_chapter_3_technology_watch/chapter.tex}
+\input{05_chapter_4_requirements_analysis_and_system_design/chapter.tex}
+\input{06_chapter_5_implementation_of_the_distributed_lakehouse_platform/chapter.tex}
+\input{07_chapter_6_deployment_strategy_and_distributed_execution/chapter.tex}
+\input{08_chapter_7_security_architecture_and_hardening/chapter.tex}
+\input{09_chapter_8_validation_testing_and_results/chapter.tex}
+\input{10_chapter_9_discussion_and_critical_analysis/chapter.tex}
+\input{11_chapter_10_general_conclusion_and_perspectives/chapter.tex}
+
+\clearpage
+% Keep the bibliography visible during the skeleton phase even before
+% chapter-level citation commands are introduced.
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{12_references/references}
+
+\appendix
+\input{13_appendices/appendices_overview.tex}
 
 \end{document}

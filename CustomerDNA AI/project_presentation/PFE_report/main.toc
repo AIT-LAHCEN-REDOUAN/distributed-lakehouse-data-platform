@@ -1,0 +1,96 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{Dedication}{i}{chapter*.1}%
+\contentsline {chapter}{Acknowledgements}{ii}{chapter*.2}%
+\contentsline {chapter}{Abstract}{iii}{chapter*.3}%
+\contentsline {chapter}{Resume}{iv}{chapter*.4}%
+\contentsline {chapter}{List of Acronyms and Abbreviations}{xi}{chapter*.8}%
+\contentsline {chapter}{\numberline {1}General Project Context}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Company and Strategic Context}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Problem Statement}{1}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Project Positioning}{2}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Chapter Conclusion}{2}{section.1.5}%
+\contentsline {chapter}{\numberline {2}State of the Art and Theoretical Background}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introduction}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Customer Data Platforms and Customer 360}{3}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Data Lakes, Warehouses, and Lakehouses}{3}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Distributed Data Systems}{3}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Workflow Orchestration and Data Quality}{4}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Security in Distributed Data Platforms}{4}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Chapter Conclusion}{4}{section.2.7}%
+\contentsline {chapter}{\numberline {3}Technology Watch}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Introduction}{5}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Selection Criteria}{5}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Ingestion and Messaging Technologies}{5}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Storage and Lakehouse Technologies}{5}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Processing, Query, and Transformation Technologies}{6}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Quality, Orchestration, and Monitoring Technologies}{6}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Security Technology Choices}{6}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Chapter Conclusion}{6}{section.3.8}%
+\contentsline {chapter}{\numberline {4}Requirements Analysis and System Design}{7}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction}{7}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Functional Requirements}{7}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Non-Functional Requirements}{7}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Actors and Usage Perspective}{7}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Global Logical Architecture}{8}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Physical Multi-Node Architecture}{8}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Design Rationale}{8}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Chapter Conclusion}{8}{section.4.8}%
+\contentsline {chapter}{\numberline {5}Implementation of the Distributed Lakehouse Platform}{9}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction}{9}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Data Sources and Dataset Modeling}{9}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Kafka-Based Ingestion Layer}{9}{section.5.3}%
+\contentsline {section}{\numberline {5.4}HDFS Bronze Storage Layer}{9}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Spark Processing and Iceberg Loading}{10}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Hive Metastore and Catalog Governance}{10}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Trino Query Layer}{10}{section.5.7}%
+\contentsline {section}{\numberline {5.8}dbt-spark Transformation Layer}{10}{section.5.8}%
+\contentsline {section}{\numberline {5.9}Great Expectations Validation Layer}{10}{section.5.9}%
+\contentsline {section}{\numberline {5.10}Airflow Orchestration Layer}{10}{section.5.10}%
+\contentsline {section}{\numberline {5.11}Chapter Conclusion}{10}{section.5.11}%
+\contentsline {chapter}{\numberline {6}Deployment Strategy and Distributed Execution}{11}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Introduction}{11}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Control Plane Responsibilities}{11}{section.6.2}%
+\contentsline {section}{\numberline {6.3}VM-Level Service Separation}{11}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Data Flow Across Machines}{11}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Distributed Processing Proof}{12}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Operational Packaging and Deployment Bundles}{12}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Chapter Conclusion}{12}{section.6.7}%
+\contentsline {chapter}{\numberline {7}Security Architecture and Hardening}{13}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Introduction}{13}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Security Objectives}{13}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Kerberos-Secured Hadoop Services}{13}{section.7.3}%
+\contentsline {section}{\numberline {7.4}SPNEGO-Protected HDFS Browser Access}{13}{section.7.4}%
+\contentsline {section}{\numberline {7.5}TLS-Protected Interfaces}{14}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Authenticated Trino Access}{14}{section.7.6}%
+\contentsline {section}{\numberline {7.7}SSH-Based Remote Spark Submission}{14}{section.7.7}%
+\contentsline {section}{\numberline {7.8}Encrypted Runtime Storage Support}{14}{section.7.8}%
+\contentsline {section}{\numberline {7.9}Security Boundaries and Remaining Limits}{14}{section.7.9}%
+\contentsline {section}{\numberline {7.10}Chapter Conclusion}{14}{section.7.10}%
+\contentsline {chapter}{\numberline {8}Validation, Testing, and Results}{15}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Introduction}{15}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Validation Strategy}{15}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Infrastructure Validation}{15}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Pipeline Validation}{15}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Distributed Execution Validation}{16}{section.8.5}%
+\contentsline {section}{\numberline {8.6}Security Validation}{16}{section.8.6}%
+\contentsline {section}{\numberline {8.7}Observability and Monitoring Validation}{16}{section.8.7}%
+\contentsline {section}{\numberline {8.8}Main Results}{16}{section.8.8}%
+\contentsline {section}{\numberline {8.9}Chapter Conclusion}{16}{section.8.9}%
+\contentsline {chapter}{\numberline {9}Discussion and Critical Analysis}{17}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Introduction}{17}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Strengths of the Final Architecture}{17}{section.9.2}%
+\contentsline {section}{\numberline {9.3}Trade-Offs and Constraints}{17}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Academic Value}{17}{section.9.4}%
+\contentsline {section}{\numberline {9.5}Industrial Value}{18}{section.9.5}%
+\contentsline {section}{\numberline {9.6}Critical Limits}{18}{section.9.6}%
+\contentsline {section}{\numberline {9.7}Chapter Conclusion}{18}{section.9.7}%
+\contentsline {chapter}{\numberline {10}General Conclusion and Perspectives}{19}{chapter.10}%
+\contentsline {section}{\numberline {10.1}General Conclusion}{19}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Main Achievements}{19}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Future Perspectives}{19}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Final Positioning}{20}{section.10.4}%
+\contentsline {chapter}{\numberline {A}Appendices}{22}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Appendix Organization}{22}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Recommended Appendix Contents}{22}{section.A.2}%
+\contentsline {section}{\numberline {A.3}Evidence Location}{22}{section.A.3}%

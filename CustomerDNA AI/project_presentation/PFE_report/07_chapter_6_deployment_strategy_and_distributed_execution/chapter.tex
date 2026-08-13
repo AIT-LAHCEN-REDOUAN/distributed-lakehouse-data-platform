@@ -1,0 +1,31 @@
+\chapter{Deployment Strategy and Distributed Execution}
+
+\section{Introduction}
+This chapter explains how the platform is deployed physically and how distributed execution is demonstrated across multiple nodes.
+
+\section{Control Plane Responsibilities}
+This section should describe the local control plane services, their role, and why they remain separated from the data-plane virtual machines.
+
+\section{VM-Level Service Separation}
+This section should explain why VM1, VM2, and VM3 host different services and how this separation supports resilience, modularity, and clearer operational reasoning.
+
+\section{Data Flow Across Machines}
+The report should clearly explain the end-to-end movement of data:
+\begin{itemize}
+  \item source datasets to Kafka,
+  \item Kafka to HDFS bronze,
+  \item HDFS to Spark,
+  \item Spark to Iceberg,
+  \item Iceberg and Metastore to Trino,
+  \item transformations and validation to final analytical exposure.
+\end{itemize}
+
+\section{Distributed Processing Proof}
+This section should explain how Spark workers collaborate across nodes and how the deployment proves multi-node execution rather than single-machine processing.
+
+\section{Operational Packaging and Deployment Bundles}
+This section should document the deployment bundles, environment preparation, startup scripts, and operational checks used to launch the platform.
+
+\section{Chapter Conclusion}
+This chapter should prove that the deployment is intentionally distributed, reproducible, and academically defensible.
+
