@@ -4,6 +4,10 @@ This file is a local standalone summary for the report workspace.
 
 ## Official project identity
 
+- **University**
+  - Abdelmalek Essaadi University
+- **School**
+  - Ecole Normale Superieure of Tetouan
 - **Company context**
   - SMART AUTOMATION TECHNOLOGIES
 - **Global initiative**
@@ -52,3 +56,14 @@ It is the secure and distributed customer-data foundation that can support futur
 - personalization,
 - persona generation,
 - and intelligent marketing decision support.
+
+## Institutional reference for the report
+
+The academic report should use the following institutional references consistently:
+
+- **University**
+  - Abdelmalek Essaadi University
+  - official website: https://www.uae.ac.ma/
+- **School**
+  - Ecole Normale Superieure of Tetouan
+  - official website: https://ens.uae.ac.ma/
