@@ -1,26 +1,217 @@
 \chapter{Requirements Analysis and System Design}
 
 \section{Introduction}
-This chapter formalizes the functional and non-functional requirements of \projectname{} and translates them into an architectural design.
+This chapter translates the business framing and technical choices established in the previous chapters into a structured design baseline for \projectname. Its purpose is to identify what the platform must do, which constraints it must respect, who will interact with it, and how the final multi-layer architecture answers those needs. Unlike Chapter 3, which focused on tool selection, this chapter focuses on requirement formalization and on the architectural organization of the implemented solution.
+
+\section{Requirement Elicitation Context}
+The requirements of \projectname{} were derived from three complementary sources:
+\begin{itemize}
+    \item the business objective of creating a distributed customer-data foundation under the broader \initiative{} vision;
+    \item the engineering need to ingest, store, process, validate, orchestrate, expose, and monitor heterogeneous customer-related datasets;
+    \item the operational reality of a lightweight academic multi-node environment with security hardening requirements.
+\end{itemize}
+
+As a result, the chapter does not present abstract requirements in isolation. Each requirement is directly connected to an implemented capability of the platform and to the final distributed deployment model.
 
 \section{Functional Requirements}
-The platform must support heterogeneous data ingestion, distributed storage, distributed transformation, catalog integration, SQL access, orchestration, monitoring, and validation workflows.
+The functional scope of the platform is centered on the end-to-end lifecycle of customer-related data, from ingestion to governed analytical access. The most important functional requirements are summarized in Table~\ref{tab:chapter4-functional-part1} and Table~\ref{tab:chapter4-functional-part2}.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{1.3cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Functional requirement}} & \textcolor{white}{\textbf{Technical acceptance criterion}} \\
+        \hline
+        FR-1 & Ingest heterogeneous customer-related datasets through a structured pipeline. & The platform accepts the active Client 1 datasets and routes them through the defined ingestion workflow without manual reshaping of the overall process. \\
+        \hline
+        FR-2 & Provide topic-based transport for reproducible raw data movement. & Kafka topics are created, used, and reset through controlled pipeline operations, with visible topic-based message flow. \\
+        \hline
+        FR-3 & Persist replayable raw data in a distributed bronze landing zone. & HDFS stores bronze artifacts in a durable, distributed structure that can be re-read by downstream Spark processing stages. \\
+        \hline
+        FR-4 & Load bronze data into governed raw lakehouse tables. & Spark reads the persisted bronze files and writes structured raw tables registered in the lakehouse layer. \\
+        \hline
+        FR-5 & Centralize analytical metadata for table discovery and reuse. & Hive Metastore exposes the table definitions required for downstream engines to identify and access the lakehouse objects. \\
+        \hline
+    \end{tabularx}
+    \caption{Primary functional requirements of the platform, part 1}
+    \label{tab:chapter4-functional-part1}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{1.3cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Functional requirement}} & \textcolor{white}{\textbf{Technical acceptance criterion}} \\
+        \hline
+        FR-6 & Provide interactive SQL access for analytical exploration. & Trino executes catalog, schema, row-count, and representative analytical queries over governed lakehouse tables. \\
+        \hline
+        FR-7 & Support layered transformations from raw to curated analytical outputs. & dbt-spark runs declared transformation models and preserves dependency-aware model execution. \\
+        \hline
+        FR-8 & Apply lightweight data quality validation and persist validation evidence. & Great Expectations checks structural and semantic rules and records validation artifacts for the controlled datasets. \\
+        \hline
+        FR-9 & Orchestrate the operational sequence of the data platform. & Airflow executes environment reset, readiness, ingestion, and validation DAGs with visible task state and run history. \\
+        \hline
+        FR-10 & Expose infrastructure and pipeline observability signals. & Prometheus scrapes the configured endpoints and Grafana displays service-readiness and pipeline-oriented monitoring indicators. \\
+        \hline
+    \end{tabularx}
+    \caption{Primary functional requirements of the platform, part 2}
+    \label{tab:chapter4-functional-part2}
+\end{table}
+\FloatBarrier
 
 \section{Non-Functional Requirements}
-The platform must demonstrate scalability, modularity, security, observability, service separation, reproducibility, and suitability for academic demonstration.
+Beyond functional behavior, the platform must also satisfy a set of quality constraints related to performance, modularity, traceability, security, and demonstration readiness. These requirements are summarized in Table~\ref{tab:chapter4-nonfunctional}.
 
-\section{Actors and Usage Perspective}
-This section should identify key actors such as data engineers, analysts, platform administrators, and future data science consumers.
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{1.4cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Non-functional requirement}} & \textcolor{white}{\textbf{Design implication}} \\
+        \hline
+        NFR-1 & Scalability through distributed execution rather than single-node concentration. & Storage, compute, and query roles are separated across multiple nodes and services. \\
+        \hline
+        NFR-2 & Modularity and separation of concerns. & Ingestion, storage, processing, metadata, validation, orchestration, monitoring, and security are implemented as distinct layers. \\
+        \hline
+        NFR-3 & Reproducibility of ingestion and transformation flows. & The platform preserves replayable bronze data, versioned transformation logic, and explicit orchestration sequences. \\
+        \hline
+        NFR-4 & Observability of service and pipeline behavior. & Health checks, metrics, dashboards, and orchestration logs must make failures visible and diagnosable. \\
+        \hline
+        NFR-5 & Security of access, movement, and persisted runtime data. & Authentication, encrypted service exposure, and protected storage must be integrated into the deployment design. \\
+        \hline
+        NFR-6 & Academic clarity and demonstrability. & The architecture must remain explainable, structured, and feasible to defend in front of a jury. \\
+        \hline
+    \end{tabularx}
+    \caption{Main non-functional requirements of the platform}
+    \label{tab:chapter4-nonfunctional}
+\end{table}
+\FloatBarrier
 
 \section{Global Logical Architecture}
-This section should present the logical data flow from ingestion to validation and analytical exposure.
+At the logical level, \projectname{} is organized as a layered customer-data platform rather than as a monolithic data pipeline. Each layer has a precise responsibility in the end-to-end flow:
+\begin{itemize}
+    \item \textbf{Ingestion layer:} receives and transports the raw input datasets through Kafka.
+    \item \textbf{Bronze persistence layer:} stores replayable raw artifacts in HDFS.
+    \item \textbf{Raw lakehouse layer:} structures the raw persisted inputs through Spark and Iceberg.
+    \item \textbf{Metadata layer:} centralizes table definitions through Hive Metastore.
+    \item \textbf{Analytical access layer:} exposes curated tables through Trino.
+    \item \textbf{Transformation layer:} applies modeled transformations through dbt-spark.
+    \item \textbf{Validation layer:} checks trust and structural integrity through Great Expectations.
+    \item \textbf{Orchestration and observability layer:} coordinates and supervises the full process through Airflow, Prometheus, and Grafana.
+\end{itemize}
+
+\textit{Diagram placeholder: global logical architecture of the platform from ingestion to analytical access and validation.}
+
+This logical decomposition is important because it explains the system as a coordinated architecture rather than as a sequence of unrelated tools. It also clarifies why the same dataset may pass through different representations before becoming a trusted analytical asset.
 
 \section{Physical Multi-Node Architecture}
-This section should present the role separation across the control plane, VM1, VM2, and VM3.
+At the physical level, the final design is distributed across one control plane and three data-plane virtual machines. Table~\ref{tab:chapter4-nodes} summarizes this allocation.
 
-\section{Design Rationale}
-The final design should be explained as a balance between academic rigor, distributed execution proof, security hardening, and resource constraints.
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{1.5cm}|L{1.8cm}|L{3.2cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Node}} & \textcolor{white}{\textbf{IP / Type}} & \textcolor{white}{\textbf{VM specifications}} & \textcolor{white}{\textbf{Main services}} & \textcolor{white}{\textbf{Architectural role}} \\
+        \hline
+        Control plane & Local workstation & Not applicable, because this node is not part of the Linux VM fleet. & Airflow, Prometheus, Grafana, Kafka UI, metrics exporter, local TLS gateway, remote orchestration runtime & Supervises, orchestrates, monitors, and drives the distributed data plane. \\
+        \hline
+        VM1 & 10.10.252.11 & Ubuntu 22.04.5 LTS, QEMU virtual CPU (2 sockets $\times$ 2 cores), 3.8 GiB RAM, 26 GB disk, no dedicated GPU. & Kafka broker 1, HDFS DataNode 1, Spark worker 1, Trino worker 1, cAdvisor & Worker node dedicated to distributed storage, processing, and query participation. \\
+        \hline
+        VM2 & 10.10.252.12 & Ubuntu 22.04.5 LTS, QEMU virtual CPU (2 sockets $\times$ 2 cores), 3.8 GiB RAM, 26 GB disk, no dedicated GPU. & Kafka broker 2, Kerberos KDC, NameNode, DataNode 2, Hive Metastore, Spark master, Spark submit helper, Spark worker 2, Spark Thrift Server, Trino coordinator, HTTPS Trino gateway, cAdvisor & Leader node of the data plane and central coordination point for protected cluster services. \\
+        \hline
+        VM3 & 10.10.252.13 & Ubuntu 22.04.5 LTS, QEMU virtual CPU (2 sockets $\times$ 2 cores), 3.8 GiB RAM, 26 GB disk, no dedicated GPU. & Kafka broker 3, HDFS DataNode 3, Spark worker 3, Trino worker 2, cAdvisor & Additional worker node reinforcing distributed storage, compute, and query execution. \\
+        \hline
+    \end{tabularx}
+    \caption{Physical node distribution of the final deployment}
+    \label{tab:chapter4-nodes}
+\end{table}
+\FloatBarrier
 
-\section{Chapter Conclusion}
-This chapter provides the design baseline for the concrete implementation detailed in the next chapter.
+\textit{Diagram placeholder: physical multi-node architecture showing the control plane, VM1, VM2, VM3, and the major service placements.}
 
+\section{End-to-End Data Flow}
+The end-to-end operational flow of the platform can be summarized in the following sequence:
+\begin{enumerate}
+    \item source datasets are prepared and published through the ingestion workflow;
+    \item Kafka receives and organizes the movement through controlled topics;
+    \item bronze artifacts are landed in HDFS as replayable raw persistence;
+    \item Spark reads the bronze zone and loads structured raw tables into the lakehouse;
+    \item Hive Metastore registers the table definitions;
+    \item Trino exposes analytical access to the governed tables;
+    \item dbt-spark applies business-oriented transformations;
+    \item Great Expectations validates the resulting datasets;
+    \item Airflow orchestrates and supervises the sequence;
+    \item Prometheus and Grafana expose the monitoring evidence.
+\end{enumerate}
+
+\textit{Diagram placeholder: end-to-end data flow from source datasets to validated analytical outputs.}
+
+This sequence is especially important for the report because it gives the jury a simple operational story to follow when moving from requirements to implementation and later to validation.
+
+\section{Security-by-Design Integration}
+Security is not positioned as an external afterthought. It is integrated into the design of the platform through explicit controls attached to core layers. Table~\ref{tab:chapter4-security-controls} summarizes this logic.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{3.0cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Security control}} & \textcolor{white}{\textbf{Protected scope}} & \textcolor{white}{\textbf{Design contribution}} \\
+        \hline
+        Kerberos & Hadoop secure mode and service authentication & Ensures that protected cluster services rely on explicit identity rather than implicit trust. \\
+        \hline
+        SPNEGO & Secured Hadoop web interfaces & Extends authenticated access to browser-facing Hadoop endpoints. \\
+        \hline
+        TLS & Sensitive exposed service endpoints & Protects data movement and browser-facing access paths. \\
+        \hline
+        LUKS & Runtime storage volumes on the VMs & Reinforces encryption at rest for persisted service data. \\
+        \hline
+        SSH-based remote orchestration & Control-plane to data-plane submission path & Keeps remote execution structured and controlled from the orchestration side. \\
+        \hline
+        Authenticated gateways & Query and access entry points & Reduces uncontrolled direct exposure of critical services. \\
+        \hline
+    \end{tabularx}
+    \caption{Security controls integrated into the system design}
+    \label{tab:chapter4-security-controls}
+\end{table}
+\FloatBarrier
+
+\section{Design Rationale and Trade-offs}
+The final design is the result of deliberate engineering trade-offs rather than maximum-complexity choices:
+\begin{itemize}
+    \item \textbf{Distributed proof over oversized scale:} the architecture demonstrates real service distribution while remaining feasible on lightweight academic VMs.
+    \item \textbf{Layering over monolithic simplification:} the system is decomposed into clear responsibilities to strengthen maintainability and defense clarity.
+    \item \textbf{Security hardening without architectural replacement:} the security layer reinforces the platform without changing its lakehouse logic.
+    \item \textbf{Operational clarity over hidden automation:} explicit scripts, bundles, checks, and service roles make the deployment easier to explain and debug.
+    \item \textbf{Future readiness over premature AI claims:} the design prepares downstream Customer 360 and AI use cases without pretending that those intelligent modules are already fully implemented.
+\end{itemize}
+
+These trade-offs are important for the jury defense because they show that the architecture was shaped by real constraints, not by arbitrary tool accumulation.
+
+\section{Conclusion}
+This chapter converted the business framing and technical stack into a coherent design baseline for \projectname. It formalized the main functional and non-functional requirements, described the global logical architecture, clarified the physical multi-node deployment, summarized the end-to-end data flow, and positioned security as an integrated design concern.
+
+On this basis, the next chapter can now present the concrete implementation of the distributed lakehouse platform, using the design choices defined here as the reference model.

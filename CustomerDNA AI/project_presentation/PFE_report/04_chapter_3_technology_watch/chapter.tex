@@ -1,26 +1,143 @@
 \chapter{Technology Watch}
 
 \section{Introduction}
-This chapter explains the technology selection process used to assemble the final platform.
+Chapter 2 established the theoretical logic of distributed data platforms; this chapter moves to the technical layer by presenting the main technologies retained for the implementation of \projectname. Its objective is not to document each tool exhaustively, but to justify the final stack in a concise and readable way. The selected technologies were chosen because together they support distributed ingestion, replayable storage, scalable processing, governed analytical tables, SQL access, transformation control, quality validation, orchestration, observability, and security hardening.
 
 \section{Selection Criteria}
-The comparison should consider compatibility with distributed deployment, maturity, documentation quality, ecosystem adoption, security capabilities, operational simplicity, and suitability for academic demonstration.
+\begin{itemize}
+    \item \textbf{Distributed compatibility:} each component had to work in a multi-node deployment rather than in a single-machine setup only.
+    \item \textbf{Academic defensibility:} retained tools had to be mature, documented, and recognizable in modern data engineering practice.
+    \item \textbf{Integration coherence:} technologies had to complement one another instead of creating disconnected silos.
+    \item \textbf{Operational relevance:} the final stack had to support reproducibility, service separation, observability, and security hardening.
+    \item \textbf{Feasibility:} the best choice was the one that offered the strongest balance between relevance, implementation realism, and clarity of demonstration.
+\end{itemize}
 
 \section{Ingestion and Messaging Technologies}
-This section should explain the selection of Kafka for event-driven ingestion and controlled topic-based data movement.
+\begin{figure}[!htbp]
+    \centering
+    \setlength{\tabcolsep}{16pt}
+    \renewcommand{\arraystretch}{1.1}
+    \begin{tabular}{c}
+        \includegraphics[width=0.16\textwidth]{90_assets/logos/Tech_logos/apache_kafka.png} \\
+        Kafka
+    \end{tabular}
+    \caption{Technology retained for the ingestion and messaging layer}
+    \label{fig:chapter3-kafka}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Selected technology:} Apache Kafka.
+    \item \textbf{Main role:} serve as the ingestion backbone and organize data movement through explicit topics.
+    \item \textbf{Why it fits the project:} it makes ingestion structured, replayable, and easier to monitor.
+    \item \textbf{Architectural value:} it provides a controlled transport layer between raw dataset production and bronze persistence.
+    \item \textbf{Reason for preference:} compared with direct script-based file transport, Kafka offers a more robust and defensible ingestion model.
+\end{itemize}
 
 \section{Storage and Lakehouse Technologies}
-This section should justify the use of HDFS for distributed storage and Iceberg for managed analytical table layers.
+\begin{figure}[!htbp]
+    \centering
+    \setlength{\tabcolsep}{12pt}
+    \renewcommand{\arraystretch}{1.1}
+    \begin{tabular}{ccc}
+        \includegraphics[width=0.13\textwidth]{90_assets/logos/Tech_logos/hadoop_hdfs.png} &
+        \includegraphics[width=0.13\textwidth]{90_assets/logos/Tech_logos/Apache_Iceberg.png} &
+        \includegraphics[width=0.13\textwidth]{90_assets/logos/Tech_logos/Apache_Hive.png} \\
+        HDFS & Iceberg & Hive Metastore
+    \end{tabular}
+    \caption{Technologies retained for distributed storage and lakehouse management}
+    \label{fig:chapter3-storage}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{HDFS:} retained as the distributed raw storage layer for bronze data persistence.
+    \item \textbf{Why HDFS fits:} it supports replication, replayability, multi-node durability, and strong compatibility with distributed compute.
+    \item \textbf{Iceberg:} selected for the curated analytical layer of the lakehouse.
+    \item \textbf{Why Iceberg fits:} it brings stronger table semantics through schema evolution, partition-aware organization, and transactional consistency.
+    \item \textbf{Hive Metastore:} used as the metadata catalog for table discovery and interpretation.
+    \item \textbf{Overall value:} this combination separates raw distributed persistence from governed analytical table management.
+\end{itemize}
 
 \section{Processing, Query, and Transformation Technologies}
-This section should justify the use of Spark for distributed processing, Trino for SQL exposure, and dbt-spark for transformation governance.
+\begin{figure}[H]
+    \centering
+    \setlength{\tabcolsep}{18pt}
+    \renewcommand{\arraystretch}{1.3}
+    \begin{tabular}{cc}
+        \includegraphics[width=0.16\textwidth]{90_assets/logos/Tech_logos/spark.png} &
+        \includegraphics[width=0.16\textwidth]{90_assets/logos/Tech_logos/trino.png} \\
+        Spark & Trino \\
+        \includegraphics[width=0.16\textwidth]{90_assets/logos/Tech_logos/data_build_tool.png} &
+        \includegraphics[width=0.16\textwidth]{90_assets/logos/Tech_logos/Apache_Parquet.png} \\
+        dbt & Parquet
+    \end{tabular}
+    \caption{Technologies retained for processing, SQL access, and transformation control}
+    \label{fig:chapter3-processing}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Spark:} selected as the distributed compute engine of the platform.
+    \item \textbf{Why Spark fits:} it transforms raw data into structured analytical layers while exploiting cluster parallelism and integrating naturally with HDFS and Iceberg.
+    \item \textbf{Trino:} selected as the SQL access layer for interactive analytical querying.
+    \item \textbf{Why Trino fits:} it clearly separates analytical access from large-scale transformation logic.
+    \item \textbf{dbt-spark:} retained for transformation governance and model organization.
+    \item \textbf{Why dbt fits:} it makes transformations versioned, declarative, and easier to document.
+    \item \textbf{Parquet:} kept as a supporting analytical file format because it aligns well with compression and columnar query performance.
+\end{itemize}
 
 \section{Quality, Orchestration, and Monitoring Technologies}
-This section should justify Great Expectations, Airflow, Prometheus, Grafana, and supporting observability services.
+\begin{figure}[H]
+    \centering
+    \setlength{\tabcolsep}{24pt}
+    \renewcommand{\arraystretch}{1.35}
+    \begin{tabular}{cc}
+        \includegraphics[width=0.18\textwidth]{90_assets/logos/Tech_logos/great_expectations.png} &
+        \includegraphics[width=0.18\textwidth]{90_assets/logos/Tech_logos/Airflow.png} \\
+        Great Expectations & Airflow \\
+        \includegraphics[width=0.18\textwidth]{90_assets/logos/Tech_logos/Prometheus.png} &
+        \includegraphics[width=0.18\textwidth]{90_assets/logos/Tech_logos/Grafana.png} \\
+        Prometheus & Grafana
+    \end{tabular}
+    \caption{Technologies retained for data quality, orchestration, and observability}
+    \label{fig:chapter3-observability}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Great Expectations:} retained for formal data quality validation.
+    \item \textbf{Why it fits:} it turns quality into an explicit engineering control with visible checks and validation evidence.
+    \item \textbf{Airflow:} selected as the orchestration layer.
+    \item \textbf{Why it fits:} it coordinates the main pipeline stages and makes execution more reproducible and easier to demonstrate.
+    \item \textbf{Prometheus and Grafana:} selected for observability.
+    \item \textbf{Why they fit:} they expose infrastructure and pipeline state through metrics and dashboards, which is essential in a distributed environment.
+\end{itemize}
 
 \section{Security Technology Choices}
-This section should justify Kerberos, SPNEGO, TLS, SSH-based submission, and encrypted storage support.
+\begin{itemize}
+    \item \textbf{Kerberos:} selected for strong service authentication inside the distributed environment.
+    \item \textbf{SPNEGO:} used to extend authenticated access to secured Hadoop web interfaces.
+    \item \textbf{TLS:} retained to protect data movement and sensitive service exposure across nodes.
+    \item \textbf{LUKS:} used to reinforce encryption at rest on protected runtime storage.
+    \item \textbf{SSH:} retained for remote submission and administration in the deployment model.
+    \item \textbf{Gateway protection:} credential-controlled exposure ensures that critical services remain structured and defensible.
+\end{itemize}
 
-\section{Chapter Conclusion}
-This chapter should show that the final stack was selected for coherence, defensibility, and practical integration rather than for tool accumulation.
+\section{Synthesis of the Final Stack}
+\begin{itemize}
+    \item Kafka controls ingestion.
+    \item HDFS preserves raw distributed data.
+    \item Spark performs distributed transformation.
+    \item Iceberg and Hive Metastore govern the lakehouse tables.
+    \item Trino exposes SQL access.
+    \item dbt structures transformation logic.
+    \item Great Expectations validates trust in data products.
+    \item Airflow orchestrates execution.
+    \item Prometheus and Grafana provide observability.
+    \item Docker supports service isolation and reproducible deployment.
+    \item The strength of the stack lies in its coherence, not in the number of tools.
+\end{itemize}
 
+\section{Conclusion}
+\begin{itemize}
+    \item This chapter justified the main technologies selected for \projectname.
+    \item The retained stack was chosen because it supports distributed ingestion, storage, processing, transformation, quality validation, orchestration, observability, and security in a coherent way.
+    \item With the theoretical foundations established in Chapter 2 and the technology choices clarified here, the report can now move toward requirements analysis and system design.
+\end{itemize}

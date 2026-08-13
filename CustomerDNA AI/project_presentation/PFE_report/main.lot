@@ -3,10 +3,24 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Primary functional requirements of the platform, part 1}}{26}{table.caption.15}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Primary functional requirements of the platform, part 2}}{26}{table.caption.16}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Main non-functional requirements of the platform}}{27}{table.caption.17}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces Physical node distribution of the final deployment}}{28}{table.caption.18}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Security controls integrated into the system design}}{29}{table.caption.19}%
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Active datasets retained in the implemented platform}}{32}{table.caption.20}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Implemented orchestration flow of the platform}}{36}{table.caption.21}%
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces Main responsibilities of the local control plane}}{39}{table.caption.22}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces VM-level service allocation in the distributed deployment}}{39}{table.caption.23}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces Operational deployment artifacts used in the project}}{42}{table.caption.24}%
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {7.1}{\ignorespaces Main security objectives and corresponding implementation controls}}{44}{table.caption.25}%
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {8.1}{\ignorespaces Validation strategy adopted for the deployed platform}}{51}{table.caption.26}%
+\contentsline {table}{\numberline {8.2}{\ignorespaces Operational meaning of the main DAG validations}}{53}{table.caption.27}%
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {9.1}{\ignorespaces Main constraints and the corresponding design responses}}{58}{table.caption.28}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }

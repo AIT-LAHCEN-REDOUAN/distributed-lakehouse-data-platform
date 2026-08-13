@@ -1,30 +1,40 @@
 \chapter{General Conclusion and Perspectives}
 
 \section{General Conclusion}
-\projectname{} delivers a distributed and secured customer data lakehouse platform implemented within the broader \initiative{} initiative at \companyname. The project demonstrates that customer-oriented data can be ingested, stored, processed, transformed, validated, exposed, orchestrated, observed, and protected within a coherent multi-node architecture.
+\projectname{} delivers a distributed and secured customer-data lakehouse platform implemented within the broader \initiative{} initiative at \companyname. The project demonstrates that heterogeneous customer-oriented data can be ingested, transported, persisted, processed, transformed, validated, exposed, monitored, and protected through a coherent multi-node architecture. In academic terms, the work proves the feasibility of a modern Big Data Engineering platform that combines distributed systems principles, lakehouse logic, orchestration, governance, observability, and baseline infrastructure security in one integrated implementation.
 
 \section{Main Achievements}
 The project establishes a practical foundation that combines:
 \begin{itemize}
-  \item distributed ingestion and storage,
-  \item distributed processing,
-  \item governed analytical exposure,
-  \item orchestration,
-  \item observability,
-  \item and integrated security controls.
+  \item distributed ingestion through Kafka,
+  \item distributed bronze persistence through HDFS,
+  \item distributed processing through Spark,
+  \item governed metadata and lakehouse organization through Hive Metastore and Iceberg,
+  \item analytical SQL exposure through Trino,
+  \item transformation discipline through dbt-spark,
+  \item data-quality validation through Great Expectations,
+  \item explicit orchestration through Airflow,
+  \item centralized observability through Prometheus and Grafana,
+  \item and integrated security controls through Kerberos, SPNEGO, TLS, authenticated gateways, SSH-based remote execution, and encrypted runtime storage support.
 \end{itemize}
+
+These achievements are important because they collectively position the project as a genuine platform contribution rather than a narrow pipeline demonstration.
 
 \section{Future Perspectives}
 The platform can later support:
 \begin{itemize}
-  \item Customer 360 consolidation,
-  \item customer segmentation,
-  \item churn prediction,
+  \item deeper Customer 360 consolidation across additional customer sources,
+  \item richer curated marts and semantic business layers,
+  \item customer segmentation and persona generation,
+  \item churn prediction and early-warning models,
   \item lifetime value estimation,
-  \item personalization services,
-  \item and AI-driven marketing decision support.
+  \item personalization and campaign optimization services,
+  \item recommendation and decision-support modules under the broader AdOptimizer AI initiative.
 \end{itemize}
 
-\section{Final Positioning}
-The final outcome should be defended as a strong data engineering and distributed systems contribution that prepares the path for future intelligent services without claiming to already be the final AI product.
+From an engineering perspective, future work can also strengthen the platform itself by extending fine-grained access control, improving certificate and secret lifecycle management, expanding evidence automation, and scaling the deployment toward larger workloads.
 
+\section{Final Positioning}
+The final outcome should be defended as a strong Data Engineering and Distributed Systems contribution. The project is the \textbf{data platform foundation} of the broader intelligent marketing vision, not the finished intelligent marketing product itself. This positioning is academically stronger and more defensible because it respects the true scope of the implemented work while clearly showing its strategic importance.
+
+In summary, AdOptimizer CDP should be presented as a secure, distributed, observable, and quality-aware customer-data lakehouse platform that prepares the path for future Customer 360 and AI-driven marketing services under AdOptimizer AI. That is both the real delivered value of the project and the most rigorous way to defend it.

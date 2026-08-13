@@ -6,12 +6,13 @@
 \usepackage{setspace}
 \usepackage[final]{microtype}
 \usepackage{graphicx}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{tabularx}
 \usepackage{float}
+\usepackage{placeins}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{amsmath}
@@ -47,6 +48,17 @@
 
 \setlist[itemize]{leftmargin=2em}
 \setlist[enumerate]{leftmargin=2.2em}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\captionsetup[table]{font=small,labelfont=bf,skip=6pt}
+\captionsetup[figure]{font=small,labelfont=bf,skip=6pt}
+
+\definecolor{tableheaderblue}{RGB}{118,155,204}
+\definecolor{tablelineblue}{RGB}{158,186,224}
+\definecolor{tablebodyblue}{RGB}{246,249,253}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
 \newcommand{\projectname}{AdOptimizer CDP}
 \newcommand{\initiative}{AdOptimizer AI}

@@ -4,6 +4,10 @@
 \contentsline {figure}{\numberline {1.2}{\ignorespaces Core values of SMART AUTOMATION TECHNOLOGIES}}{2}{figure.caption.10}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Technology retained for the ingestion and messaging layer}}{21}{figure.caption.11}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Technologies retained for distributed storage and lakehouse management}}{21}{figure.caption.12}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Technologies retained for processing, SQL access, and transformation control}}{22}{figure.caption.13}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Technologies retained for data quality, orchestration, and observability}}{23}{figure.caption.14}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

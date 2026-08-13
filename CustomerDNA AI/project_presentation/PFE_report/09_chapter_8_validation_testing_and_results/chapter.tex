@@ -1,29 +1,181 @@
 \chapter{Validation, Testing, and Results}
 
 \section{Introduction}
-This chapter presents the validation methodology and the main technical results obtained from the deployed platform.
+This chapter presents the validation methodology and the main technical results of \projectname{}. The objective of the validation work is to prove that the platform is not only well designed, but also operational, distributed, monitored, and secured in practice. The chapter therefore focuses on evidence-oriented validation rather than on theoretical expectation alone.
 
 \section{Validation Strategy}
-The validation should cover service readiness, distributed execution, ingestion success, storage correctness, analytical exposure, transformation success, quality controls, and observability.
+The validation strategy was structured around several complementary dimensions:
+\begin{itemize}
+    \item infrastructure readiness;
+    \item end-to-end orchestration readiness;
+    \item distributed execution evidence;
+    \item secure-access verification;
+    \item data-quality and observability evidence.
+\end{itemize}
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|Y|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Validation axis}} & \textcolor{white}{\textbf{What was checked}} & \textcolor{white}{\textbf{Expected proof}} \\
+        \hline
+        Infrastructure validation & service endpoints, cluster health, secured ports, cluster membership & the platform components are reachable and stable \\
+        \hline
+        Pipeline validation & Airflow DAG execution path and task sequencing & the operational workflow can run in the intended order \\
+        \hline
+        Distributed execution validation & multi-worker participation and cross-node service roles & the architecture is truly distributed, not pseudo-distributed \\
+        \hline
+        Security validation & Kerberos, SPNEGO, TLS, authenticated entry points & protected access paths are functioning as designed \\
+        \hline
+        Observability validation & dashboards, metrics, exporters, and run history & the platform exposes usable operational evidence \\
+        \hline
+    \end{tabularx}
+    \caption{Validation strategy adopted for the deployed platform}
+    \label{tab:chapter8-validation-strategy}
+\end{table}
+
+This strategy is particularly important for the jury because it transforms the project defense into an evidence-based argument. Instead of claiming that the platform should work, the report can point to concrete service checks, DAG outcomes, monitoring views, and secured access demonstrations.
+\FloatBarrier
 
 \section{Infrastructure Validation}
-This section should summarize the checks performed for Kafka, HDFS, Hive Metastore, Spark, Trino, Kerberos, TLS gateways, and monitoring services.
+Infrastructure validation focused on proving that the main services were correctly deployed and reachable in the final environment. This includes the Kafka cluster, HDFS cluster, Hive Metastore, Spark cluster, Trino cluster, Kerberos services, browser-facing TLS gateways, and the monitoring stack.
+
+At the service level, the validation campaign confirmed the following key conditions:
+\begin{itemize}
+    \item Kafka brokers were reachable across VM1, VM2, and VM3;
+    \item HDFS reported an active NameNode and live DataNodes across the three VMs;
+    \item Hive Metastore was reachable and usable as the metadata authority;
+    \item Spark master, workers, history server, and Thrift access were available;
+    \item Trino coordinator and workers were aligned with the secured access path;
+    \item Kerberos and related secure endpoints were reachable;
+    \item Prometheus, Grafana, and exporter services were available from the control plane.
+\end{itemize}
+
+This infrastructure validation is essential because it establishes the platform baseline before any pipeline result can be interpreted. A successful data run is only meaningful if the underlying cluster services are themselves healthy and correctly interconnected.
+
+\textit{Diagram placeholder: infrastructure validation map linking each core service family to its verification checkpoints.}
 
 \section{Pipeline Validation}
-This section should present the main DAG execution results and explain how the orchestration proves operational readiness.
+Pipeline validation was centered on the five operational DAGs that structure the lifecycle of the platform:
+\begin{enumerate}
+    \item environment reset pipeline;
+    \item lakehouse setup pipeline;
+    \item lakehouse readiness pipeline;
+    \item Kafka--HDFS--Spark lakehouse pipeline;
+    \item dbt-spark lakehouse pipeline.
+\end{enumerate}
+
+The role of this validation was not merely to confirm that Airflow can trigger tasks. It was to prove that the platform can:
+\begin{itemize}
+    \item return to a clean baseline;
+    \item reinitialize its technical structures;
+    \item verify readiness before deeper execution;
+    \item materialize the raw lakehouse foundation;
+    \item and continue toward transformation-oriented analytical preparation.
+\end{itemize}
+
+The environment reset and lakehouse readiness phases are especially important because they transform troubleshooting experience into formal operational logic. Rather than depending on ad hoc manual cleanup, the platform can be defended as having explicit lifecycle control.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|Y|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{DAG}} & \textcolor{white}{\textbf{Validation meaning}} & \textcolor{white}{\textbf{Evidence type}} \\
+        \hline
+        Environment reset & proves reproducible cleanup and reset capability & Airflow task history, logs, and end-state verification \\
+        \hline
+        Lakehouse setup & proves technical structures can be prepared consistently & service-side readiness after initialization \\
+        \hline
+        Lakehouse readiness & proves the platform checks its own critical services before deeper processing & positive readiness tasks across HDFS, Hive, Spark, and Trino \\
+        \hline
+        Kafka--HDFS--Spark pipeline & proves raw distributed ingestion and lakehouse loading path & topic activity, bronze persistence, Spark execution, raw lakehouse outputs \\
+        \hline
+        dbt-spark pipeline & proves modeled transformation logic can operate on the distributed lakehouse foundation & model execution traces, curated outputs, validation coupling \\
+        \hline
+    \end{tabularx}
+    \caption{Operational meaning of the main DAG validations}
+    \label{tab:chapter8-dag-validation}
+\end{table}
+
+\textit{Diagram placeholder: five-DAG validation sequence with evidence checkpoints for each orchestration stage.}
+\FloatBarrier
 
 \section{Distributed Execution Validation}
-This section should provide evidence that multiple Spark workers and virtual machines collaborate during processing.
+Distributed execution validation aimed to prove that processing and service behavior are not confined to one node. The evidence comes from several complementary observations:
+\begin{itemize}
+    \item Spark master visibility over workers located on multiple VMs;
+    \item HDFS DataNode participation across VM1, VM2, and VM3;
+    \item Kafka broker distribution across the three-node cluster;
+    \item Trino coordinator/worker separation across the VMs.
+\end{itemize}
+
+The most direct proof concerns Spark. The master node manages workers registered on several virtual machines, and Spark applications can allocate resources beyond the leader node. Even when light workloads do not saturate every worker equally, the cluster topology and execution path still demonstrate a true distributed compute model.
+
+Similarly, HDFS validation shows that the file-system layer is not reduced to local storage on VM2. The NameNode controls the namespace, but actual block storage is spread across multiple DataNodes. This is a critical argument for the defense because it proves that the storage layer also participates in the distributed design.
+
+\textit{Diagram placeholder: validation evidence of multi-node participation across Spark, HDFS, Kafka, and Trino.}
 
 \section{Security Validation}
-This section should present authentication and protected-access checks, especially for HDFS browser access and secured analytical services.
+Security validation focused on proving that the implemented protection mechanisms are not only present in configuration files, but usable in practice.
+
+The main validated points are:
+\begin{itemize}
+    \item Kerberos-secured Hadoop services were active in the deployment;
+    \item the HDFS browser path functioned through the Windows Kerberos + Firefox SPNEGO configuration once the client path was correctly aligned;
+    \item HTTPS-protected HDFS web access was operational;
+    \item the Trino gateway exposed a protected analytical access path;
+    \item the control plane interfaces were exposed through secured local entry points.
+\end{itemize}
+
+One especially important result is the final browser-based HDFS validation. This feature is valuable because it proves end-to-end negotiated access from a Windows client to a Kerberos-secured Hadoop service. At the same time, the report must remain honest: this path is sensitive to exact client-side configuration and should be defended as validated but configuration-dependent, not as universally frictionless.
+
+\textit{Diagram placeholder: validated security access paths for HDFS browsing, protected analytical exposure, and secured orchestration.}
 
 \section{Observability and Monitoring Validation}
-This section should summarize the role of Grafana, Prometheus, cAdvisor, and pipeline metrics in validating operational visibility.
+Observability validation confirms that the platform does not rely only on raw container logs for diagnosis. Instead, it exposes a structured monitoring layer composed of:
+\begin{itemize}
+    \item Prometheus for metric collection;
+    \item Grafana for dashboard-based visibility;
+    \item cAdvisor on VM1, VM2, and VM3 for node/container metrics;
+    \item pipeline-related exporters and Airflow run history for workflow evidence.
+\end{itemize}
+
+This monitoring layer matters academically because it strengthens the maturity of the platform. A distributed system is harder to defend when failures can only be explained retrospectively through manual shell inspection. Here, the project shows that service states, cluster readiness, and pipeline outcomes are visible through explicit observability mechanisms.
+
+The existence of dashboards, exporters, and centralized metric collection also contributes to the evidence strategy of the report. It allows the platform to be presented not only as running, but as observable and diagnosable.
+
+\textit{Diagram placeholder: observability stack linking Prometheus, Grafana, cAdvisor, and pipeline evidence sources.}
 
 \section{Main Results}
-This section should present the overall technical outcome: the platform is deployed, secure, distributed, orchestrated, and usable as a foundation for future higher-level analytics.
+The main technical result of the project is the delivery of a distributed, orchestrated, monitored, and security-aware customer-data lakehouse platform under the AdOptimizer CDP scope.
 
-\section{Chapter Conclusion}
-This chapter should demonstrate that the project is operationally validated rather than only theoretically designed.
+The final validated outcome can be summarized as follows:
+\begin{itemize}
+    \item heterogeneous customer-related datasets can be ingested through a controlled Kafka path;
+    \item raw data can be persisted in a replayable bronze layer on distributed HDFS;
+    \item Spark can structure and load raw lakehouse tables in a distributed environment;
+    \item Hive Metastore centralizes metadata for governed table access;
+    \item Trino provides analytical SQL exposure over the lakehouse foundation;
+    \item dbt-spark introduces modeled transformation discipline;
+    \item Great Expectations provides quality-oriented evidence;
+    \item Airflow provides explicit lifecycle orchestration;
+    \item Prometheus and Grafana provide operational visibility;
+    \item Kerberos, SPNEGO, TLS, authenticated gateways, and encrypted runtime storage strengthen the final deployment.
+\end{itemize}
 
+The most important interpretive result is that the platform can be defended as a \textbf{Customer 360-ready analytical foundation}, not as a finished enterprise AI product. This distinction is central to the academic honesty of the report.
+
+\section{Conclusion}
+This chapter demonstrated that \projectname{} was validated operationally and not only designed conceptually. Service readiness, pipeline execution, distributed participation, secure access paths, and observability mechanisms were all used to build an evidence-based understanding of the final platform.
+
+As a result, the project can be defended as a deployed and tested distributed data engineering system that provides a trustworthy base for later Customer 360 and AI-oriented work. The next chapter takes a more critical perspective by discussing the strengths, trade-offs, academic value, industrial relevance, and remaining limits of the final architecture.
