@@ -1,12 +1,21 @@
-# CustomerDNA AI - Updated Project Structure
+# AdOptimizer CDP - Updated Project Structure
 
-> Updated on 2026-08-04 after the Client 1 dataset refactor and distributed deployment refactor.
+> Updated on 2026-08-12 after the Client 1 dataset refactor, distributed deployment refactor, and security-layer integration.
 > This file focuses on the current active project structure.
 > Generated caches, historical logs, compiled artifacts, and transient runtime files are intentionally omitted unless they are part of the engineered design.
 
 ---
 
 ## 1. Root Layout
+
+### Naming clarification
+
+- **AdOptimizer AI**
+  - the global strategic initiative at SMART AUTOMATION TECHNOLOGIES
+- **AdOptimizer CDP**
+  - the actual PFE project identity and business-facing platform name
+- **`CustomerDNA AI/`**
+  - the repository folder name kept for continuity in the local workspace
 
 ```text
 CustomerDNA AI/
@@ -21,6 +30,8 @@ CustomerDNA AI/
 
 ### Structure meaning
 
+- `CustomerDNA AI/`
+  - repository root folder name only; the implemented platform identity is AdOptimizer CDP
 - `datasets/`
   - active Client 1 source data used by the platform
 - `project_presentation/`
@@ -70,6 +81,8 @@ datasets/
 project_requirements/
 |-- BUSINESS_RULES.md
 |-- BUSINESS_RULES_PFE_REPORT.md
+|-- PRISM_REPORT_MASTER_CONTEXT.md
+|-- REPORT_MASTER_ARCHITECTURE_MATRIX.md
 `-- initial_project_description.txt
 ```
 
@@ -78,9 +91,13 @@ project_requirements/
 - `BUSINESS_RULES.md`
   - engineering scope and operational truth source
 - `BUSINESS_RULES_PFE_REPORT.md`
-  - jury-facing and report-facing business framing
+  - jury-facing and report-facing business framing for AdOptimizer CDP under AdOptimizer AI
+- `PRISM_REPORT_MASTER_CONTEXT.md`
+  - single high-density synthesis file for Prism or other automated report-generation systems
+- `REPORT_MASTER_ARCHITECTURE_MATRIX.md`
+  - strict structured matrix for Prism parsing, cross-checking, and Draw.io architecture preparation
 - `initial_project_description.txt`
-  - original project vision baseline
+  - updated high-level positioning of AdOptimizer CDP within the broader AdOptimizer AI initiative
 
 ---
 
@@ -647,4 +664,3 @@ That is exactly why the repository is defensible in a jury context:
 - the deployment is visible in the codebase,
 - the quality layer is visible in the codebase,
 - and the final system is explainable end to end.
-

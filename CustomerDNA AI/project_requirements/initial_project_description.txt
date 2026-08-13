@@ -1,27 +1,46 @@
-CustomerDNA AI - Distributed Lakehouse Data Engineering Platform for Customer Analytics (AdOptimizer CDP)
+AdOptimizer CDP - Distributed Data Lakehouse Platform for Customer Analytics
 
-Problem Statement: Customer-related data is fragmented across multiple heterogeneous sources (CSV/XLSX event, transaction, and campaign datasets), with inconsistent structure and quality. This fragmentation reduces reproducibility, makes operational ingestion difficult to audit and replay, and limits the ability to expose trusted analytical datasets for downstream analytics and future AI/ML use cases.
+Company Context:
+SMART AUTOMATION TECHNOLOGIES aims to leverage a broader intelligent marketing and advertising vision under the global project name **AdOptimizer AI**.
 
-Proposed Solution: The project implements a distributed lakehouse-oriented Data Engineering platform that ingests datasets through Kafka, lands replayable bronze artifacts in HDFS, processes them with Spark into managed Iceberg tables registered in Hive Metastore, exposes SQL access through Trino, applies curated transformations through dbt-spark, validates data quality through Great Expectations (including HTML Data Docs evidence), orchestrates execution through Airflow, and monitors runtime behavior using Prometheus and Grafana.
+Project Positioning:
+Within that global initiative, this PFE project is the dedicated **distributed data lakehouse platform** that acts as the data-engineering and Big Data foundation for customer-related analytics, governed data processing, and future AI-driven marketing use cases.
+
+Correct Relationship:
+- **AdOptimizer AI**
+  - the broader strategic platform vision at company level
+- **AdOptimizer CDP**
+  - the Customer Data Platform-oriented implementation scope of this PFE
+- **Distributed Data Lakehouse Platform**
+  - the concrete technical nature of the implemented system
+
+Problem Statement:
+Customer-related data is fragmented across multiple heterogeneous sources such as campaign-response data, behavioral session data, and transaction history. This fragmentation reduces reproducibility, weakens trust in analytics, complicates ingestion and replay, and makes it harder to expose governed datasets for downstream business intelligence and future AI/ML services.
+
+Proposed Solution:
+The project implements a distributed lakehouse-oriented Data Engineering platform that ingests heterogeneous customer datasets through Kafka, lands replayable bronze artifacts in HDFS, processes them with Spark into managed Iceberg tables registered in Hive Metastore, exposes analytical access through Trino, applies governed transformations through dbt-spark, validates data quality through Great Expectations, orchestrates the pipeline through Airflow, and monitors runtime behavior using Prometheus and Grafana.
 
 Main Modules:
-- Multi-source dataset organization for Client 1 under datasets/
+- Multi-source dataset organization for Client 1 under `datasets/`
 - Kafka-based ingestion transport with dataset-specific topics
 - HDFS bronze landing zone initialization and management
 - Spark-based raw loading into Iceberg lakehouse tables
-- Hive Metastore catalog for table discovery and interoperability
-- Trino SQL access over Iceberg-backed lakehouse tables
+- Hive Metastore catalog for metadata interoperability
+- Trino SQL access over Iceberg-backed analytical tables
 - dbt-spark models for staging, intermediate, and analytics layers
 - Great Expectations validations with stored results and Data Docs HTML
 - Airflow orchestration through a multi-DAG operational sequence
-- Observability stack (Prometheus, Grafana, custom pipeline metrics exporter)
-- Deployment readiness: validated local Docker Compose baseline, with a preparation plan for multi-VM distributed deployment (control plane + data plane separation)
+- Observability stack with Prometheus, Grafana, and pipeline metrics exporting
+- Distributed deployment model with local control plane and multi-VM data plane
+- Baseline infrastructure security through Kerberos, TLS, authenticated gateways, and encrypted runtime storage
 
 Expected Results:
-- Reproducible end-to-end pipelines (ingestion -> bronze -> lakehouse -> curated analytics)
+- Reproducible end-to-end pipelines from ingestion to curated analytics
 - Trusted analytical tables accessible through SQL
-- Automated validation artifacts usable as report/defense evidence
-- Operational observability (pipeline health + infrastructure signals)
-- A reusable technical foundation for scaling toward larger workloads and future AI/ML consumers
+- Replayable raw persistence in distributed storage
+- Automated validation evidence usable in the report and jury defense
+- Operational observability over both pipelines and infrastructure
+- A secure and scalable technical foundation for future Customer 360 and AdOptimizer AI use cases
 
-Academic Contribution: The work contributes to Data Engineering by delivering an end-to-end distributed lakehouse pipeline that integrates event transport, distributed storage, distributed processing, table-format governance, SQL access, transformation governance, data quality automation, orchestration, and observability, with a clear path from local validation to multi-machine deployment.
+Academic Contribution:
+The project contributes to Data Engineering by delivering a distributed, observable, quality-aware, and security-aware lakehouse pipeline that integrates event transport, distributed storage, distributed processing, metadata governance, SQL querying, transformation governance, orchestration, and validation into one coherent customer-data platform foundation.

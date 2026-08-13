@@ -1,9 +1,9 @@
-# CustomerDNA AI - PFE Report Business Rules
+# AdOptimizer CDP - PFE Report Business Rules
 
 > PFE jury-focused framing document
 > Scope: Data Engineering, Big Data, distributed lakehouse, secure distributed deployment, orchestration, quality, and observability
-> Version: 5.1
-> Last Updated: Monday, August 10, 2026
+> Version: 5.2
+> Last Updated: Wednesday, August 12, 2026
 
 ---
 
@@ -29,13 +29,20 @@ This file is intentionally interpretive rather than operational.
 
 It explains what the project means, why it was built this way, how it should be defended academically, and which claims are valid versus exaggerated.
 
+For automated report-generation workflows, this file should be read together with:
+
+- `project_requirements/REPORT_MASTER_ARCHITECTURE_MATRIX.md`
+- `project_requirements/PRISM_REPORT_MASTER_CONTEXT.md`
+- `src/deployments/distributed_pc_control_plane/DISTRIBUTED_DEPLOYMENT_REPORT.md`
+- `project_requirements/initial_project_description.txt`
+
 ---
 
 ## 2. Official Project Identity
 
 ### 2.1 Official Project Name
 
-**CustomerDNA AI - Distributed Customer Data Lakehouse Platform**
+**AdOptimizer CDP - Distributed Customer Data Lakehouse Platform**
 
 ### 2.2 Correct Academic Positioning
 
@@ -61,7 +68,7 @@ The project must **not** be presented primarily as:
 
 ### 2.4 Correct High-Level Identity Sentence
 
-> CustomerDNA AI is a secure distributed customer-data engineering platform that ingests heterogeneous customer-related datasets, stores them in a replayable bronze layer, processes them through a lakehouse pipeline, exposes curated analytical tables, validates data quality, orchestrates execution, monitors runtime behavior, and applies baseline infrastructure security controls to create a trustworthy foundation for future Customer 360 and AI-driven marketing use cases.
+> AdOptimizer CDP is a secure distributed customer-data engineering platform that ingests heterogeneous customer-related datasets, stores them in a replayable bronze layer, processes them through a lakehouse pipeline, exposes curated analytical tables, validates data quality, orchestrates execution, monitors runtime behavior, and applies baseline infrastructure security controls to create a trustworthy foundation for future Customer 360 and AI-driven marketing use cases under the broader AdOptimizer AI vision.
 
 ---
 
@@ -92,6 +99,10 @@ The engineering question answered by this project is:
 ---
 
 ## 4. Business Vision and Downstream AI Context
+
+The broader organizational initiative is **AdOptimizer AI**, which SMART AUTOMATION TECHNOLOGIES intends to leverage as its long-term intelligent advertising and marketing platform vision.
+
+Within that broader initiative, the present PFE project must be positioned as **AdOptimizer CDP**, meaning the customer-data platform and distributed lakehouse foundation that supports future AdOptimizer AI services.
 
 The broader business vision behind the project is a future Customer 360 and intelligent marketing platform.
 
@@ -238,7 +249,10 @@ The deployment chapter must additionally show that this architecture is wrapped 
 
 - Kerberos-authenticated Hadoop secure mode,
 - SPNEGO-protected HDFS web access,
+- hostname-based secure browser access for HDFS through the Kerberos client path,
 - TLS-protected browser-facing interfaces,
+- HTTPS + authenticated gateway access for Trino,
+- SSH-based remote Spark submission from the control plane to the cluster leader,
 - encrypted runtime storage on the VMs,
 - and controlled entry points for orchestration and SQL access.
 
@@ -435,8 +449,10 @@ The report must also explain that the data flow is not left completely open:
 
 - Hadoop service-to-service interactions are secured through Kerberos-aware configuration,
 - HDFS browser-facing endpoints are exposed through HTTPS,
-- Trino browser-facing access is available through an HTTPS gateway,
+- HDFS browser access is expected to use hostname aliases and SPNEGO rather than raw IP access,
+- Trino browser-facing access is available through an HTTPS gateway with controlled authenticated entry,
 - browser-to-control-plane access is protected through a local TLS gateway,
+- Spark raw loading is orchestrated from the control plane through explicit SSH submission to VM2 rather than a fragile local-driver path,
 - and VM runtime service data can be placed on encrypted LUKS-backed storage.
 
 ---
@@ -720,11 +736,13 @@ The security chapter may describe the platform as including:
 - service principals and keytab-based service authentication,
 - SPNEGO-protected HDFS web endpoints,
 - HTTPS-only HDFS NameNode and DataNode web interfaces,
-- HTTPS-protected Trino gateway access,
+- validated Windows + Firefox Kerberos client workflow for secure HDFS browsing,
+- HTTPS-protected Trino gateway access with controlled authenticated entry,
 - HTTPS-protected control-plane browser access through a local TLS gateway,
 - environment-scoped credential handling for demo operations,
 - host-level separation between control plane and data plane,
 - remote Spark submission through explicit SSH access,
+- runtime alignment between Spark, Hive, Trino, and Hadoop secure-mode settings,
 - and optional LUKS-backed encrypted runtime storage on the VMs.
 
 ### 14.2 Security Controls That Must Be Described Carefully
@@ -732,7 +750,9 @@ The security chapter may describe the platform as including:
 The following controls are valid to present, but with correct scope language:
 
 - browser-side Kerberos for HDFS browsing is implemented as a **demo access path** and requires local client configuration on Windows and Firefox,
+- browser-side secure access must use the documented hostname aliases and Kerberos client configuration rather than raw IP navigation,
 - demo TLS currently uses internal/self-signed trust paths rather than a public enterprise certificate chain,
+- authenticated SQL browser access is protected at the gateway level but should not be described as a full enterprise IAM layer,
 - the deployment is secured enough to defend architectural intent, but it is not a complete enterprise IAM program.
 
 ### 14.3 Important Report Rule
@@ -751,6 +771,7 @@ If the report discusses secure browser access to HDFS Explorer specifically, it 
 
 - secure HDFS and Kerberos are implemented,
 - HDFS secure pages are reachable,
+- the validated browser path depends on MIT Kerberos client setup plus Firefox SPNEGO settings,
 - but browser-side SPNEGO integration on Windows/Firefox is an integration-sensitive client path and should not be confused with the health of the backend cluster itself.
 
 This is the honest and defensible way to describe the current state.
@@ -776,6 +797,9 @@ The implemented system includes:
 - Prometheus and Grafana monitoring,
 - distributed VM deployment demonstration,
 - Kerberos-secured Hadoop deployment,
+- validated secure HDFS browser access workflow for Windows + Firefox,
+- HTTPS + authenticated Trino access gateway,
+- SSH-based remote Spark submission from the control plane to the cluster leader,
 - HTTPS browser-facing access paths,
 - and optional encrypted-at-rest VM runtime storage.
 
@@ -797,7 +821,7 @@ The following are intentionally downstream or future:
 
 ### 15.3 Correct Boundary Sentence
 
-> The current PFE ends at the level of a deployed, observable, quality-aware, and security-aware distributed data platform. AI and ML capabilities are downstream consumers of the curated outputs, not the core implemented scope of this report.
+> The current PFE ends at the level of a deployed, observable, quality-aware, and security-aware distributed data platform under AdOptimizer CDP. AI and ML capabilities under the broader AdOptimizer AI vision are downstream consumers of the curated outputs, not the core implemented scope of this report.
 
 ---
 
@@ -837,6 +861,7 @@ The defense should emphasize:
 - the operational role of orchestration,
 - the importance of quality evidence,
 - the role of observability,
+- the fact that secure deployment choices were integrated into the actual execution path rather than added as decorative theory,
 - the fact that the architecture prepares downstream Customer 360 and AI use cases,
 - and the fact that security was not ignored after deployment, but added as a meaningful infrastructure layer.
 
@@ -914,7 +939,7 @@ This is the cleanest and most defensible order.
 
 ## 21. Final Positioning Statement
 
-> CustomerDNA AI is a secure distributed customer-data lakehouse platform that centralizes heterogeneous customer-related datasets through Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Great Expectations, Airflow, and observability tooling in order to produce trusted analytical foundations for Customer 360 analysis and future AI-driven marketing use cases.
+> AdOptimizer CDP is a secure distributed customer-data lakehouse platform that centralizes heterogeneous customer-related datasets through Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Great Expectations, Airflow, and observability tooling in order to produce trusted analytical foundations for Customer 360 analysis and future AI-driven marketing use cases under the broader AdOptimizer AI vision.
 
 ---
 

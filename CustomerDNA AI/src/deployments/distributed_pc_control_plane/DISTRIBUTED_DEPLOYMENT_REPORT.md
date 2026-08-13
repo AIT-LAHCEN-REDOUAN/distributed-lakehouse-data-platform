@@ -1,15 +1,15 @@
-# CustomerDNA AI - Distributed Deployment Report
+# AdOptimizer CDP - Distributed Deployment Report
 
 > Deployment scope: `src/deployments/distributed_pc_control_plane/`
-> Version: secured distributed deployment baseline with stabilized Kerberos and browser access path
-> Date: Tuesday, August 11, 2026
+> Version: secured distributed deployment baseline with stabilized Kerberos, browser access path, and hardened remote Spark orchestration
+> Date: Wednesday, August 12, 2026
 > Audience: project owner, jury preparation, technical reviewers, future maintainers
 
 ---
 
 ## 1. Purpose of This Document
 
-This file explains the **final distributed deployed version** of CustomerDNA AI after the security-layer extension.
+This file explains the **final distributed deployed version** of AdOptimizer CDP after the security-layer extension.
 
 It is intended to be the detailed reference for:
 
@@ -27,11 +27,17 @@ It is intended to be the detailed reference for:
 
 This document is about the **deployed distributed version**, not the older local-only baseline.
 
+For automated report-generation workflows, this file is the deployment-specific companion to:
+
+- `project_requirements/REPORT_MASTER_ARCHITECTURE_MATRIX.md`
+- `project_requirements/PRISM_REPORT_MASTER_CONTEXT.md`
+- `project_requirements/BUSINESS_RULES_PFE_REPORT.md`
+
 ---
 
 ## 2. Deployment Objective
 
-The goal of this deployment is to demonstrate that CustomerDNA AI is not only a logically distributed lakehouse architecture, but also an **operationally distributed and security-aware implementation**.
+The goal of this deployment is to demonstrate that AdOptimizer CDP is not only a logically distributed lakehouse architecture, but also an **operationally distributed and security-aware implementation**.
 
 This deployment proves:
 
@@ -41,7 +47,7 @@ This deployment proves:
 - distributed query execution through Trino coordinator/worker separation,
 - centralized orchestration through Airflow on the local control plane,
 - centralized monitoring through Prometheus and Grafana,
-- baseline infrastructure security through Kerberos, TLS, and encrypted runtime storage,
+- baseline infrastructure security through Kerberos, TLS, authenticated gateways, and encrypted runtime storage,
 - and isolated per-node deployment bundles for maintainability.
 
 This environment is a **distributed demo and validation environment**, not a production HA cluster.
@@ -162,10 +168,14 @@ Kerberos KDC on VM2
 
 TLS gateways
   -> HTTPS access to control-plane tools
-  -> HTTPS access to Trino on VM2
+  -> HTTPS + authenticated access to Trino on VM2
 
 LUKS runtime volumes
   -> encrypted service data on VM1, VM2, VM3 when enabled
+
+Operational stabilization
+  -> SSH-based remote Spark submission from control plane to VM2
+  -> hostname-based HDFS secure browsing path
 ```
 
 ---
@@ -706,7 +716,7 @@ The deployment includes:
 - keytab-based service startup flows,
 - SPNEGO-protected HDFS web endpoints,
 - HTTPS-only HDFS web access,
-- HTTPS Trino gateway on VM2,
+- HTTPS Trino gateway on VM2 with authenticated browser entry,
 - local HTTPS gateway for control-plane tools,
 - optional LUKS-backed runtime storage on VM1, VM2, and VM3,
 - credential separation between admin, service, analyst, and demo-browser identities.
@@ -754,6 +764,7 @@ The validated browser access path is:
 4. configure Firefox SPNEGO trusted and delegation URIs
 5. point Firefox to the MIT Kerberos GSS library if required
 6. browse HDFS using the hostname alias, not the raw IP
+7. renew or recreate the Kerberos ticket if the browser stops negotiating after client-side changes
 
 ### 12.4 Important operational truth
 
@@ -1044,13 +1055,18 @@ The deployed version should be considered healthy only when the following are tr
 
 ### 19.3 Pipeline evidence
 
-- the secured baseline supports the five-DAG execution order
+- the secured baseline preserves the five-DAG execution order
 - environment reset and readiness validation succeed under the hardened runtime
 - raw Iceberg tables remain the official output of the Kafka -> HDFS -> Spark stage
 - dbt analytical tables remain the official curated output of the transformation stage
 - GX validations remain the official data-quality evidence layer
 - Data Docs HTML remains the expected quality-report artifact
 - Grafana dashboards remain the expected distributed observability artifact
+
+Important report rule:
+
+- claim a DAG as operationally validated only when its run logs or screenshots are available as evidence,
+- do not convert the intended execution order into a blanket statement that every DAG was fully benchmarked under every security permutation.
 
 ### 19.4 Distributed proof
 
@@ -1099,6 +1115,8 @@ The security layer was not only a configuration addition. It required operationa
 - ensuring Airflow runtime variables point to the secure endpoints and deployment-safe hostnames,
 - reducing dbt concurrency to a safer demo value,
 - ensuring Spark-side services obtain and renew Kerberos tickets before contacting Hive Metastore,
+- ensuring the Trino browser gateway stays aligned with the coordinator port and authenticated entry path,
+- aligning HDFS secure browsing around hostname-based SPNEGO rather than raw IP navigation,
 - and validating the Windows + Firefox Kerberos client path for HDFS browsing.
 
 This is an important academic point because it shows that secure distributed systems often need runtime adaptation, not only checkbox-style configuration.
@@ -1175,7 +1193,7 @@ That makes the final project much more defensible as a serious Data Engineering 
 
 ## 23. Final Summary
 
-The distributed deployment under `src/deployments/distributed_pc_control_plane/` is the final operational form of CustomerDNA AI for the PFE.
+The distributed deployment under `src/deployments/distributed_pc_control_plane/` is the final operational form of AdOptimizer CDP for the PFE.
 
 It consists of:
 
@@ -1188,3 +1206,12 @@ In practical terms, this folder is the bridge between:
 
 - the project architecture on paper,
 - and the actual deployed system that can be shown, tested, explained, secured, and defended.
+
+Its final deployment story should specifically emphasize that the secured version is not only distributed on paper, but also stabilized in practice through:
+
+- Kerberos-secured Hadoop runtime,
+- SPNEGO + HTTPS HDFS browser access through documented hostname aliases,
+- HTTPS and authenticated Trino access,
+- local TLS exposure for control-plane tools,
+- optional encrypted runtime storage,
+- and SSH-based Spark submission that avoids unstable local-driver networking from the workstation.
