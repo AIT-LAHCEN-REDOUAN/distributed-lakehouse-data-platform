@@ -29,8 +29,25 @@ ROWS_LOADED_PATTERN = re.compile(r"Rows loaded:\s*([0-9,]+)")
 FILES_READ_PATTERN = re.compile(r"Bronze files read:\s*([0-9,]+)")
 DURATION_PATTERN = re.compile(r"Duration \(seconds\):\s*([0-9]+(?:\.[0-9]+)?)")
 
-SPARK_SUBMIT_CONTAINER = os.getenv("CUSTOMERDNA_SPARK_SUBMIT_CONTAINER", "spark-master")
-SPARK_MASTER_URL = os.getenv("CUSTOMERDNA_SPARK_MASTER_URL", "spark://spark-master:7077")
+SPARK_SUBMIT_CONTAINER = os.getenv("CUSTOMERDNA_SPARK_SUBMIT_CONTAINER", "spark-submit-client")
+
+
+def _resolve_spark_master_url() -> str:
+    configured_master = os.getenv("CUSTOMERDNA_SPARK_MASTER_URL", "").strip()
+    if configured_master:
+        return configured_master
+
+    master_host = (
+        os.getenv("VM2_HOST_IP", "").strip()
+        or os.getenv("CUSTOMERDNA_SPARK_DRIVER_HOST", "").strip()
+        or os.getenv("SPARK_MASTER_HOST", "").strip()
+        or "10.10.252.12"
+    )
+    master_port = os.getenv("SPARK_MASTER_PORT", "7077").strip() or "7077"
+    return f"spark://{master_host}:{master_port}"
+
+
+SPARK_MASTER_URL = _resolve_spark_master_url()
 SPARK_BIN = os.getenv("CUSTOMERDNA_SPARK_BIN", "/opt/spark/bin/spark-submit")
 SPARK_JOBS_ROOT_IN_CONTAINER = os.getenv("CUSTOMERDNA_SPARK_JOBS_ROOT_IN_CONTAINER", "/opt/spark/jobs")
 SPARK_JOB_PATH = os.getenv(
@@ -92,6 +109,14 @@ KRB5_CLIENT_KTNAME = (
 SPARK_JAAS_CONFIG_PATH = (
     os.getenv("CUSTOMERDNA_SPARK_JAAS_CONFIG_PATH", "/opt/spark/custom-conf/jaas.conf").strip()
     or "/opt/spark/custom-conf/jaas.conf"
+)
+HDFS_TOKEN_RENEWAL_EXCLUDE = _unique_csv(
+    [
+        os.getenv("CUSTOMERDNA_HDFS_TOKEN_RENEWAL_EXCLUDE", ""),
+        HDFS_CANONICAL_HOST,
+        "namenode",
+        "10.10.252.12",
+    ]
 )
 
 
@@ -161,9 +186,13 @@ def _build_spark_submit_command(
         "--conf",
         "spark.eventLog.enabled=false",
         "--conf",
-        f"spark.kerberos.access.hadoopFileSystems={container_safe_hdfs_uri}",
-        "--conf",
         f"spark.hadoop.fs.defaultFS={container_safe_hdfs_uri}",
+        "--conf",
+        "spark.security.credentials.hadoopfs.enabled=true",
+        "--conf",
+        "spark.kerberos.renewal.credentials=keytab",
+        "--conf",
+        f"spark.hadoop.mapreduce.job.hdfs-servers.token-renewal.exclude={HDFS_TOKEN_RENEWAL_EXCLUDE}",
         "--conf",
         "spark.hadoop.hadoop.security.authentication=kerberos",
         "--conf",
@@ -193,6 +222,8 @@ def _build_spark_submit_command(
         "--conf",
         f"spark.driverEnv.KRB5_CLIENT_KTNAME={KRB5_CLIENT_KTNAME}",
         "--conf",
+        f"spark.driverEnv.CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL={SPARK_KERBEROS_PRINCIPAL}",
+        "--conf",
         "spark.driverEnv.HADOOP_CONF_DIR=/etc/hadoop/conf",
         "--conf",
         f"spark.executorEnv.KRB5_CONFIG={KRB5_CONFIG_PATH}",
@@ -200,6 +231,8 @@ def _build_spark_submit_command(
         f"spark.executorEnv.KRB5CCNAME={KRB5_CCACHE_PATH}",
         "--conf",
         f"spark.executorEnv.KRB5_CLIENT_KTNAME={KRB5_CLIENT_KTNAME}",
+        "--conf",
+        f"spark.executorEnv.CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL={SPARK_KERBEROS_PRINCIPAL}",
         "--conf",
         "spark.executorEnv.HADOOP_CONF_DIR=/etc/hadoop/conf",
         "--conf",
@@ -464,6 +497,8 @@ def submit_hdfs_bronze_to_iceberg_spark_job(
             f"IVY_HOME={shlex.quote(SPARK_IVY_HOME)} "
             f"KRB5_CONFIG={shlex.quote(KRB5_CONFIG_PATH)} "
             f"KRB5CCNAME={shlex.quote(KRB5_CCACHE_PATH)} "
+            f"KRB5_CLIENT_KTNAME={shlex.quote(KRB5_CLIENT_KTNAME)} "
+            f"CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL={shlex.quote(SPARK_KERBEROS_PRINCIPAL)} "
             "HADOOP_CONF_DIR=/etc/hadoop/conf "
             f"SPARK_CONF_DIR={shlex.quote('/opt/spark/custom-conf')} && "
             # Preserve container-provided Kerberos/JAAS submit options while appending Ivy cache settings.

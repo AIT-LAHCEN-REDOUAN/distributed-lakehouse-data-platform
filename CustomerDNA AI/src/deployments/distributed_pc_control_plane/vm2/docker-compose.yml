@@ -107,7 +107,7 @@ services:
       context: ./kerberos/hdfs_admin_client
     image: customerdna-hdfs-admin-client:vm2
     container_name: hdfs-admin-client
-    hostname: hdfs-admin-client
+    hostname: hdfs-admin-client.customerdna.local
     network_mode: host
     entrypoint:
       - /bin/bash
@@ -120,6 +120,8 @@ services:
              kinit -R || kinit -kt ${CUSTOMERDNA_HDFS_ADMIN_KEYTAB} airflow@${CUSTOMERDNA_KRB5_REALM};
            done
     extra_hosts:
+      - "hdfs-admin-client:${VM2_HOST_IP}"
+      - "hdfs-admin-client.customerdna.local:${VM2_HOST_IP}"
       - "namenode:${VM2_HOST_IP}"
       - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "datanode-1:${VM1_HOST_IP}"
@@ -224,9 +226,11 @@ services:
         POSTGRES_JDBC_VERSION: ${CUSTOMERDNA_SPARK_POSTGRES_JDBC_VERSION}
     image: ${CUSTOMERDNA_SPARK_IMAGE}
     container_name: spark-master
-    hostname: spark-master
+    hostname: spark-master.customerdna.local
     network_mode: host
     extra_hosts:
+      - "spark-master:${VM2_HOST_IP}"
+      - "spark-master.customerdna.local:${VM2_HOST_IP}"
       - "namenode:${VM2_HOST_IP}"
       - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
@@ -263,13 +267,14 @@ services:
   spark-submit-client:
     image: ${CUSTOMERDNA_SPARK_IMAGE}
     container_name: spark-submit-client
-    hostname: spark-submit-client
+    hostname: spark-submit-client.customerdna.local
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
       - "namenode.customerdna.local:${VM2_HOST_IP}"
       - "hive-metastore:${VM2_HOST_IP}"
       - "spark-submit-client:${VM2_HOST_IP}"
+      - "spark-submit-client.customerdna.local:${VM2_HOST_IP}"
     restart: unless-stopped
     depends_on:
       - kerberos-kdc
@@ -295,6 +300,7 @@ services:
       CUSTOMERDNA_SPARK_DRIVER_BIND_ADDRESS: ${CUSTOMERDNA_SPARK_DRIVER_BIND_ADDRESS:-0.0.0.0}
       CUSTOMERDNA_SPARK_DRIVER_PORT: ${CUSTOMERDNA_SPARK_DRIVER_PORT:-35001}
       CUSTOMERDNA_SPARK_BLOCKMANAGER_PORT: ${CUSTOMERDNA_SPARK_BLOCKMANAGER_PORT:-35002}
+      SPARK_LOCAL_HOSTNAME: spark-submit-client.customerdna.local
     volumes:
       - ${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-./runtime/spark/ivy2}:/opt/spark/work-dir/.ivy2
       - ./spark/config:/opt/spark/custom-conf:ro
@@ -323,7 +329,7 @@ services:
   spark-worker-2:
     image: ${CUSTOMERDNA_SPARK_IMAGE}
     container_name: spark-worker-2
-    hostname: spark-worker-2
+    hostname: spark-worker-2.customerdna.local
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
@@ -352,7 +358,7 @@ services:
       SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
       SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_LOCAL_IP: ${VM2_HOST_IP}
-      SPARK_LOCAL_HOSTNAME: ${VM2_HOST_IP}
+      SPARK_LOCAL_HOSTNAME: spark-worker-2.customerdna.local
       SPARK_PUBLIC_DNS: ${VM2_HOST_IP}
     command:
       - /bin/bash

@@ -5,6 +5,10 @@
     <value>hdfs://namenode.customerdna.local:9000</value>
   </property>
   <property>
+    <name>hadoop.security.token.service.use_ip</name>
+    <value>false</value>
+  </property>
+  <property>
     <name>hadoop.security.authentication</name>
     <value>kerberos</value>
   </property>

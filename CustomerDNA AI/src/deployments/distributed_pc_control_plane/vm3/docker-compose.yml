@@ -65,7 +65,7 @@ services:
         POSTGRES_JDBC_VERSION: ${CUSTOMERDNA_SPARK_POSTGRES_JDBC_VERSION}
     image: ${CUSTOMERDNA_SPARK_IMAGE}
     container_name: spark-worker-3
-    hostname: spark-worker-3
+    hostname: spark-worker-3.customerdna.local
     network_mode: host
     extra_hosts:
       - "namenode:${VM2_HOST_IP}"
@@ -93,7 +93,7 @@ services:
       SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
       SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
       SPARK_LOCAL_IP: ${VM3_HOST_IP}
-      SPARK_LOCAL_HOSTNAME: ${VM3_HOST_IP}
+      SPARK_LOCAL_HOSTNAME: spark-worker-3.customerdna.local
       SPARK_PUBLIC_DNS: ${VM3_HOST_IP}
     command:
       - /bin/bash

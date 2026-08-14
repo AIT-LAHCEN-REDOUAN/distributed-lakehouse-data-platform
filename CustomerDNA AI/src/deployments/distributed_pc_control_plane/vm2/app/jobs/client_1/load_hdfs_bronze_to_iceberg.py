@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import socket
@@ -18,6 +19,29 @@ from pyspark.sql import functions as F
 IDENTIFIER_CLEAN_PATTERN = re.compile(r"[^a-z0-9_]+")
 TARGET_WRITE_PARTITIONS = max(1, int(os.getenv("CUSTOMERDNA_SPARK_WRITE_PARTITIONS", "2")))
 SHUFFLE_PARTITIONS = max(TARGET_WRITE_PARTITIONS * 2, 4)
+HDFS_TOKEN_RENEWAL_EXCLUDE = (
+    os.getenv(
+        "CUSTOMERDNA_HDFS_TOKEN_RENEWAL_EXCLUDE",
+        "namenode.customerdna.local,namenode,10.10.252.12",
+    ).strip()
+    or "namenode.customerdna.local,namenode,10.10.252.12"
+)
+SPARK_KERBEROS_PRINCIPAL = (
+    os.getenv("CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL", "").strip()
+    or "spark@CUSTOMERDNA.LOCAL"
+)
+SPARK_KERBEROS_KEYTAB = (
+    os.getenv("KRB5_CLIENT_KTNAME", "").strip()
+    or "/etc/security/keytabs/spark.service.keytab"
+)
+HDFS_SAFEMODE_WAIT_TIMEOUT_SECONDS = max(
+    30,
+    int(os.getenv("CUSTOMERDNA_HDFS_SAFEMODE_WAIT_TIMEOUT_SECONDS", "180")),
+)
+HDFS_SAFEMODE_POLL_INTERVAL_SECONDS = max(
+    1,
+    int(os.getenv("CUSTOMERDNA_HDFS_SAFEMODE_POLL_INTERVAL_SECONDS", "5")),
+)
 
 
 def clean_identifier(name: str) -> str:
@@ -54,6 +78,18 @@ def build_spark_session(dataset_key: str) -> SparkSession:
         .config("spark.default.parallelism", str(TARGET_WRITE_PARTITIONS))
         .config("spark.sql.shuffle.partitions", str(SHUFFLE_PARTITIONS))
         .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+        .config("spark.driverEnv.CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL", SPARK_KERBEROS_PRINCIPAL)
+        .config("spark.driverEnv.KRB5_CLIENT_KTNAME", SPARK_KERBEROS_KEYTAB)
+        .config("spark.executorEnv.CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL", SPARK_KERBEROS_PRINCIPAL)
+        .config("spark.executorEnv.KRB5_CLIENT_KTNAME", SPARK_KERBEROS_KEYTAB)
+        .config("spark.kerberos.principal", SPARK_KERBEROS_PRINCIPAL)
+        .config("spark.kerberos.keytab", SPARK_KERBEROS_KEYTAB)
+        .config("spark.security.credentials.hadoopfs.enabled", "false")
+        .config("spark.hadoop.hadoop.security.token.service.use_ip", "false")
+        .config(
+            "spark.hadoop.mapreduce.job.hdfs-servers.token-renewal.exclude",
+            HDFS_TOKEN_RENEWAL_EXCLUDE,
+        )
         .enableHiveSupport()
         .getOrCreate()
     )
@@ -64,7 +100,139 @@ def build_bronze_path(args: argparse.Namespace) -> str:
     return f"{args.hdfs_namenode_uri.rstrip('/')}{bronze_prefix}"
 
 
+def resolve_kerberos_identity(spark: SparkSession) -> tuple[str, str]:
+    principal = (
+        spark.conf.get("spark.kerberos.principal", "").strip()
+        or os.getenv("CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL", "").strip()
+    )
+    keytab = (
+        spark.conf.get("spark.kerberos.keytab", "").strip()
+        or os.getenv("KRB5_CLIENT_KTNAME", "").strip()
+    )
+    return principal, keytab
+
+
+def force_hadoop_kerberos_login(spark: SparkSession) -> None:
+    sc = spark.sparkContext
+    hadoop_conf = sc._jsc.hadoopConfiguration()
+    hadoop_conf.set(
+        "mapreduce.job.hdfs-servers.token-renewal.exclude",
+        HDFS_TOKEN_RENEWAL_EXCLUDE,
+    )
+    hadoop_conf.set("hadoop.security.token.service.use_ip", "false")
+    ugi = sc._jvm.org.apache.hadoop.security.UserGroupInformation
+    ugi.setConfiguration(hadoop_conf)
+
+    principal, keytab = resolve_kerberos_identity(spark)
+    print("[KERBEROS] Preparing explicit Hadoop login from keytab")
+    print(f"[KERBEROS] Principal: {principal or '<unset>'}")
+    print(f"[KERBEROS] Keytab: {keytab or '<unset>'}")
+    print(f"[KERBEROS] Security enabled: {ugi.isSecurityEnabled()}")
+
+    if not principal:
+        raise RuntimeError("Spark Kerberos principal is not configured for explicit Hadoop login.")
+    if not keytab:
+        raise RuntimeError("Spark Kerberos keytab is not configured for explicit Hadoop login.")
+    if not os.path.exists(keytab):
+        raise RuntimeError(f"Spark Kerberos keytab does not exist on the driver: {keytab}")
+
+    try:
+        login_user_before = ugi.getLoginUser()
+        print(f"[KERBEROS] Login user before refresh: {login_user_before.getUserName()}")
+        print(
+            "[KERBEROS] Login auth method before refresh: "
+            f"{login_user_before.getAuthenticationMethod()}"
+        )
+    except Exception as exc:
+        print(f"[KERBEROS][WARN] Unable to inspect login user before refresh: {exc}")
+
+    ugi.loginUserFromKeytab(principal, keytab)
+
+    login_user_after = ugi.getLoginUser()
+    current_user_after = ugi.getCurrentUser()
+    print(f"[KERBEROS] Login user after refresh: {login_user_after.getUserName()}")
+    print(
+        "[KERBEROS] Login auth method after refresh: "
+        f"{login_user_after.getAuthenticationMethod()}"
+    )
+    print(f"[KERBEROS] Current user after refresh: {current_user_after.getUserName()}")
+    print(
+        "[KERBEROS] Current auth method after refresh: "
+        f"{current_user_after.getAuthenticationMethod()}"
+    )
+    print(
+        "[KERBEROS] Current user has Kerberos credentials after refresh: "
+        f"{current_user_after.hasKerberosCredentials()}"
+    )
+
+
+def wait_for_namenode_safemode_exit(bronze_path: str) -> None:
+    if not bronze_path.startswith("hdfs://"):
+        raise RuntimeError(f"Unsupported bronze path for safe-mode wait: {bronze_path}")
+
+    authority = bronze_path.split("://", 1)[1].split("/", 1)[0]
+    hostname = authority.split(":", 1)[0]
+    canonical_http_host = (
+        os.getenv("CUSTOMERDNA_HDFS_CANONICAL_HOST", "").strip() or hostname
+    )
+    https_port = os.getenv("CUSTOMERDNA_HDFS_WEBHTTPS_PORT", "9871").strip() or "9871"
+    jmx_url = (
+        f"https://{canonical_http_host}:{https_port}/jmx"
+        "?qry=Hadoop:service=NameNode,name=NameNodeInfo"
+    )
+
+    print(
+        "[HDFS] Waiting for NameNode safe mode to clear "
+        f"(timeout={HDFS_SAFEMODE_WAIT_TIMEOUT_SECONDS}s, interval={HDFS_SAFEMODE_POLL_INTERVAL_SECONDS}s)"
+    )
+
+    deadline = time.time() + HDFS_SAFEMODE_WAIT_TIMEOUT_SECONDS
+    last_status = "<unavailable>"
+
+    while time.time() < deadline:
+        completed = subprocess.run(
+            ["curl", "--negotiate", "-u", ":", "-sk", jmx_url],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
+        if completed.returncode != 0:
+            last_status = (
+                f"curl failed with exit code {completed.returncode}: "
+                f"{(completed.stderr or '<empty>').strip()}"
+            )
+        else:
+            try:
+                payload = json.loads(completed.stdout)
+                beans = payload.get("beans", []) if isinstance(payload, dict) else []
+                safemode = ""
+                if beans and isinstance(beans[0], dict):
+                    safemode = str(beans[0].get("Safemode", "") or "").strip()
+                last_status = safemode or "<off>"
+                print(f"[HDFS] SafeMode status: {last_status}")
+                if not safemode:
+                    print("[HDFS] NameNode safe mode is OFF. Continuing.")
+                    return
+            except json.JSONDecodeError:
+                last_status = (
+                    "non-JSON JMX response: "
+                    f"{(completed.stdout or '<empty>').strip()[:240]}"
+                )
+
+        remaining = max(0, int(deadline - time.time()))
+        print(f"[HDFS] Safe mode still active/unconfirmed. Retrying in {HDFS_SAFEMODE_POLL_INTERVAL_SECONDS}s ({remaining}s remaining).")
+        time.sleep(HDFS_SAFEMODE_POLL_INTERVAL_SECONDS)
+
+    raise RuntimeError(
+        "NameNode safe mode did not clear before timeout. "
+        f"Last observed status: {last_status}"
+    )
+
+
 def load_bronze_dataframe(spark: SparkSession, bronze_path: str):
+    wait_for_namenode_safemode_exit(bronze_path)
     return spark.read.option("recursiveFileLookup", "true").json(bronze_path)
 
 
@@ -137,6 +305,9 @@ def log_runtime_diagnostics(spark: SparkSession, args: argparse.Namespace, bronz
         "spark.kerberos.principal",
         "spark.kerberos.keytab",
         "spark.kerberos.access.hadoopFileSystems",
+        "spark.security.credentials.hadoopfs.enabled",
+        "spark.hadoop.hadoop.security.token.service.use_ip",
+        "spark.hadoop.mapreduce.job.hdfs-servers.token-renewal.exclude",
         "spark.driver.host",
         "spark.driver.bindAddress",
         "spark.driver.port",
@@ -151,6 +322,7 @@ def log_runtime_diagnostics(spark: SparkSession, args: argparse.Namespace, bronz
     hadoop_conf = sc._jsc.hadoopConfiguration()
     for conf_key in [
         "fs.defaultFS",
+        "hadoop.security.token.service.use_ip",
         "hadoop.security.authentication",
         "hadoop.security.authorization",
         "hadoop.rpc.protection",
@@ -160,6 +332,7 @@ def log_runtime_diagnostics(spark: SparkSession, args: argparse.Namespace, bronz
         "dfs.data.transfer.protection",
         "dfs.encrypt.data.transfer",
         "dfs.client.use.datanode.hostname",
+        "mapreduce.job.hdfs-servers.token-renewal.exclude",
     ]:
         print(f"[DIAGNOSTICS] {conf_key}={hadoop_conf.get(conf_key) or '<unset>'}")
 
@@ -280,6 +453,7 @@ def main() -> int:
 
     try:
         bronze_path = build_bronze_path(args)
+        force_hadoop_kerberos_login(spark)
         log_runtime_diagnostics(spark, args, bronze_path)
         log_executor_security_probe(spark)
         raw_df = load_bronze_dataframe(spark, bronze_path)
