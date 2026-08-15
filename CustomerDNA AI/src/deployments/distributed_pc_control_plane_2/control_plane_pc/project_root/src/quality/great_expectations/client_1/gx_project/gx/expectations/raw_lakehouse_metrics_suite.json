@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "id": "47396a87-752a-40aa-96ca-06ffe88dffd4",
+      "kwargs": {
+        "column": "row_count",
+        "min_value": 1.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    },
+    {
+      "id": "f5368601-4698-4592-9075-1a1e8ab6f1b4",
+      "kwargs": {
+        "column": "column_count",
+        "min_value": 1.0
+      },
+      "meta": {},
+      "severity": "critical",
+      "type": "expect_column_values_to_be_between"
+    }
+  ],
+  "id": "5840f431-f6dc-4745-8347-0dc69ce57d91",
+  "meta": {
+    "great_expectations_version": "1.18.2"
+  },
+  "name": "raw_lakehouse_metrics_suite",
+  "notes": null
+}

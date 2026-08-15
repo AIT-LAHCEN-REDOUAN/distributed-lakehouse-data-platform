@@ -1,0 +1,69 @@
+services:
+  hive-metastore-db:
+    image: postgres:14-alpine
+    container_name: hive-metastore-db
+    hostname: hive-metastore-db
+    command:
+      - postgres
+      - -c
+      - password_encryption=md5
+    environment:
+      POSTGRES_DB: ${HIVE_METASTORE_DB:-metastore_db}
+      POSTGRES_USER: ${HIVE_METASTORE_USER:-hive}
+      POSTGRES_PASSWORD: ${HIVE_METASTORE_PASSWORD:-hive_password}
+      POSTGRES_INITDB_ARGS: --auth-host=md5 --auth-local=md5
+    ports:
+      - "${HIVE_METASTORE_POSTGRES_PORT:-5435}:5432"
+    volumes:
+      - hive_metastore_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${HIVE_METASTORE_USER:-hive} -d ${HIVE_METASTORE_DB:-metastore_db}
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      kafka_shared:
+        aliases:
+          - hive-metastore-db
+
+  hive-metastore:
+    build:
+      context: ./metastore
+      args:
+        HIVE_METASTORE_VERSION: ${HIVE_METASTORE_VERSION:-3.1.3}
+        POSTGRES_JDBC_VERSION: ${POSTGRES_JDBC_VERSION:-42.7.4}
+    image: customerdna-hive-metastore:${HIVE_METASTORE_VERSION:-3.1.3}
+    container_name: hive-metastore
+    hostname: hive-metastore
+    depends_on:
+      hive-metastore-db:
+        condition: service_healthy
+    environment:
+      SERVICE_NAME: metastore
+      DB_DRIVER: postgres
+      HIVE_CUSTOM_CONF_DIR: /hive_custom_conf
+      SERVICE_OPTS: >-
+        -Djavax.jdo.option.ConnectionDriverName=org.postgresql.Driver
+        -Djavax.jdo.option.ConnectionURL=jdbc:postgresql://hive-metastore-db:5432/${HIVE_METASTORE_DB:-metastore_db}
+        -Djavax.jdo.option.ConnectionUserName=${HIVE_METASTORE_USER:-hive}
+        -Djavax.jdo.option.ConnectionPassword=${HIVE_METASTORE_PASSWORD:-hive_password}
+    ports:
+      - "${HIVE_METASTORE_PORT:-9083}:9083"
+    restart: on-failure
+    volumes:
+      - ./config:/hive_custom_conf:ro
+    networks:
+      kafka_shared:
+        aliases:
+          - hive-metastore
+
+volumes:
+  hive_metastore_db_data:
+
+networks:
+  kafka_shared:
+    external: true
+    name: customerdna_kafka_shared
