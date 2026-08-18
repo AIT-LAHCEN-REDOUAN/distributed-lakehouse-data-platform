@@ -3,7 +3,8 @@
 \section{Introduction}
 This chapter introduces the academic, business, and engineering context of \projectname. Its objective is to explain the environment in which the project was conducted, the broader strategic initiative that motivates it, the business problem it addresses, and the exact positioning of the present final year project within that larger transformation effort. It also clarifies the institutional origin of the work: the project was proposed and framed by \companyname{} as part of the professional context in which the present PFE was carried out.
 
-\section{Company and Strategic Context}
+\section{Host Organization and Project Environment}
+\subsection{Company and Strategic Context}
 \projectname{} was developed in the context of \companyname, the company that assigned and supported the project as the professional framework of this final year work. \companyname{} is a technology-oriented environment whose positioning is centered on digital innovation, automation, and intelligent systems. In the present project, the company context is important because it provides the industrial logic behind the need for a robust customer-data engineering platform. Rather than approaching data as a secondary reporting artifact, the project treats data as a strategic technical asset that must be ingested, governed, processed, exposed, validated, monitored, and secured in a coherent way.
 
 \begin{figure}[!htbp]
@@ -15,7 +16,7 @@ This chapter introduces the academic, business, and engineering context of \proj
 
 The broader strategic direction in which this work is positioned is \initiative. This global initiative represents the company's long-term vision for an intelligent advertising and marketing ecosystem able to support advanced customer understanding, future analytics, and data-driven optimization. The present PFE project was therefore not chosen in isolation; it was given by \companyname{} within that broader strategic orientation. However, such a vision cannot be implemented reliably without a strong data foundation. For that reason, the PFE contribution focuses specifically on the distributed customer-data platform layer required to support future intelligent services.
 
-\section{Company Values and Their Relevance to the Project}
+\subsection{Company Values and Their Relevance to the Project}
 The company's institutional values provide a meaningful lens for understanding the spirit of the project. The visual material associated with \companyname{} highlights five major values: \textbf{Innovation}, \textbf{Team Spirit}, \textbf{Integrity}, \textbf{Excellence}, and \textbf{Commitment}. These values are not merely symbolic; they align naturally with the logic of a modern data engineering platform.
 
 \begin{figure}[!htbp]
@@ -27,14 +28,15 @@ The company's institutional values provide a meaningful lens for understanding t
 
 Innovation is reflected in the adoption of a modern lakehouse architecture instead of a conventional isolated reporting workflow. Team spirit is reflected in the platform's role as a shared technical foundation that can later serve engineers, analysts, and future AI-oriented stakeholders. Integrity is reflected in the emphasis on trusted data, validation, reproducibility, and security. Excellence is reflected in the engineering objective of building a coherent end-to-end platform rather than assembling disconnected tools. Commitment is reflected in the effort to stabilize the platform operationally and make it defensible both technically and academically.
 
-\section{Position of the Project Within AdOptimizer AI}
+\subsection{Position of the Project Within AdOptimizer AI}
 Within the broader \initiative{} vision, the present PFE project must be positioned as \projectname, that is, the \textbf{distributed customer data lakehouse platform} that acts as the technical and engineering foundation of the larger initiative. This distinction is essential for the academic defense of the work.
 
 The broader initiative is concerned with future intelligent marketing and advertising capabilities. Such capabilities may later include customer segmentation, conversion analysis, lifetime value analysis, churn-related reasoning, personalization, campaign optimization, and recommendation-oriented decision support. Nevertheless, these downstream intelligent functions are not the main implemented contribution of the present work. The actual contribution of the PFE is the design and implementation of the distributed and secure data platform that makes such future services possible and trustworthy.
 
 This positioning is important because it prevents conceptual confusion during the defense. The project should not be described as a finished machine learning product, nor as a simple business intelligence dashboard. It must instead be defended as a Data Engineering and Big Data platform that delivers the foundational infrastructure necessary to sustain future Customer 360 and AI-driven use cases.
 
-\section{Problem Statement}
+\section{Target Project Presentation}
+\subsection{Problem Statement}
 Customer-related data is naturally fragmented across different operational contexts. In modern organizations, such fragmentation can appear through campaign-response datasets, digital behavioral traces, session-level intent indicators, and commercial transaction histories. When these data sources remain isolated, they weaken analytical trust, complicate reprocessing, reduce reproducibility, and make it difficult to construct governed datasets for downstream consumers.
 
 From an engineering perspective, the problem is therefore not only to store data, but to create a structured platform able to ingest heterogeneous sources, preserve replayable raw artifacts, process them into governed lakehouse tables, expose them to analytical users, validate their quality, orchestrate execution reliably, and monitor operational behavior across a distributed environment. Without such a platform, future customer analytics remain fragile, difficult to scale, and hard to defend from a governance perspective.
@@ -45,12 +47,12 @@ The present project answers the following engineering question:
 How can we build a distributed customer-data platform that ingests heterogeneous datasets through a reproducible pipeline, stores replayable raw data in distributed storage, processes it into governed lakehouse tables, exposes it for analytics, validates its quality, orchestrates it end to end, monitors the full system, and secures core infrastructure flows in a way that is defensible as a modern Big Data Engineering project?
 \end{quote}
 
-\section{Motivation for a Distributed Lakehouse Approach}
+\subsection{Motivation for a Distributed Lakehouse Approach}
 The adoption of a distributed lakehouse architecture is motivated by both technical and academic reasons. From a technical point of view, the project needs to combine heterogeneous ingestion, replayable raw persistence, scalable processing, metadata governance, SQL exploration, transformation control, and data quality verification. From an academic point of view, the project must demonstrate that these capabilities are not isolated tasks, but parts of a coherent architectural response to a real-world data engineering problem.
 
 The distributed lakehouse model is particularly appropriate because it allows the platform to keep raw data in distributed storage, process it with distributed compute resources, and expose curated analytical tables without forcing all data to be transformed immediately into a rigid warehouse-only model. It also supports separation of concerns between ingestion, storage, processing, transformation, validation, orchestration, and monitoring. This makes the architecture both more scalable and more defensible in front of a jury evaluating the project as a Data Engineering system rather than as a set of scripts.
 
-\section{Project Positioning}
+\subsection{Project Positioning}
 The final implemented platform is best described as a \textbf{secure distributed customer-data engineering platform}. Its role is to establish the technical conditions under which customer-related data can be treated as a governed and reusable organizational asset. In this sense, the project integrates ingestion, distributed storage, distributed processing, lakehouse management, analytical querying, transformation governance, validation, orchestration, monitoring, and baseline infrastructure security into one operational foundation.
 
 This positioning creates a strong academic identity for the report. The project is simultaneously:
@@ -62,17 +64,17 @@ This positioning creates a strong academic identity for the report. The project 
     \item and a deployment-oriented technical foundation for downstream Customer 360 and AI use cases.
 \end{itemize}
 
-\section{Main Objectives of the Project}
+\subsection{Main Objectives of the Project}
 The project pursues a set of complementary objectives. First, it aims to organize heterogeneous customer-oriented datasets in a reproducible way. Second, it aims to transport these datasets through Kafka-based ingestion flows in order to create explicit and replayable movement patterns. Third, it aims to persist raw data in an HDFS bronze layer before converting it into structured analytical tables through Spark and Iceberg.
 
 Beyond this core movement, the project also aims to centralize metadata through Hive Metastore, expose trusted analytical access through Trino, manage transformations through dbt-spark, validate data quality through Great Expectations, orchestrate the full sequence through Airflow, and monitor both the infrastructure and the pipelines through Prometheus, Grafana, and pipeline metrics. Finally, the project aims to demonstrate that these services can be deployed in a distributed and secured environment across multiple virtual machines rather than on a single isolated node.
 
-\section{Implemented Scope and Project Boundaries}
+\subsection{Implemented Scope and Project Boundaries}
 The current implemented scope focuses on a customer-oriented multi-source bundle for Client 1. The platform integrates three active datasets that reflect complementary dimensions of customer understanding: campaign and profile data, online behavioral intent data, and commercial retail transaction data. This selection is sufficiently rich to justify future Customer 360 analytics while remaining compatible with the available infrastructure.
 
 At the same time, it is important to state the project's boundaries clearly. The present work does not implement the final downstream machine learning modules such as dynamic segmentation, churn prediction, lifetime value prediction, persona generation, or recommendation engines. Instead, it implements the distributed and secure data foundation required for such future capabilities. This distinction strengthens the rigor of the report because it prevents exaggerated claims and keeps the academic focus on the actual engineering contribution.
 
-\section{Expected Results and Academic Contribution}
+\subsection{Expected Results and Academic Contribution}
 The expected outcome of the project is a reproducible end-to-end data platform in which heterogeneous customer-related datasets can be ingested, stored, processed, transformed, queried, validated, orchestrated, monitored, and secured. Concretely, the platform should produce replayable bronze persistence in distributed storage, trusted analytical tables available through SQL, validation evidence usable in the final defense, and a distributed runtime architecture that demonstrates collaboration across multiple nodes.
 
 From an academic perspective, the project contributes by showing how a modern customer-data platform can be designed as a coherent integration of event transport, distributed storage, distributed computation, metadata governance, analytical access, transformation control, quality assurance, orchestration, observability, and security hardening. The originality of the work does not lie in inventing new algorithms, but in engineering a defensible distributed platform architecture that connects these concerns into one consistent implementation.

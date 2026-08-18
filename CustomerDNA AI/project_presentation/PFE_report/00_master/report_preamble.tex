@@ -21,6 +21,7 @@
 \usepackage{fancyhdr}
 \usepackage{hyperref}
 \usepackage{bookmark}
+\usepackage{tocloft}
 
 \onehalfspacing
 \setlength{\parskip}{0.5em}
@@ -45,6 +46,32 @@
 \fancyhead[L]{AdOptimizer CDP}
 \fancyhead[R]{\nouppercase{\leftmark}}
 \fancyfoot[C]{\thepage}
+\renewcommand{\thechapter}{\Roman{chapter}}
+\newcommand{\tocnumgap}{\hspace{0.7em}}
+\renewcommand{\cftchapaftersnum}{\tocnumgap}
+\renewcommand{\cftsecaftersnum}{\tocnumgap}
+\renewcommand{\cftsubsecaftersnum}{\tocnumgap}
+\renewcommand{\cftfigaftersnum}{\tocnumgap}
+\renewcommand{\cfttabaftersnum}{\tocnumgap}
+\newlength{\tocchapnumlen}
+\newlength{\tocsecnumlen}
+\newlength{\tocsubsecnumlen}
+\newlength{\tocfignumlen}
+\newlength{\toctabnumlen}
+\newlength{\toctitlecol}
+\settowidth{\tocchapnumlen}{\bfseries VIII\tocnumgap}
+\settowidth{\tocsecnumlen}{VIII.9\tocnumgap}
+\settowidth{\tocsubsecnumlen}{II.8.3\tocnumgap}
+\settowidth{\tocfignumlen}{III.10\tocnumgap}
+\settowidth{\toctabnumlen}{VIII.2\tocnumgap}
+\setlength{\toctitlecol}{\tocsecnumlen}
+\setlength{\cftchapnumwidth}{\tocchapnumlen}
+\setlength{\cftsecindent}{1.2em}
+\setlength{\cftsecnumwidth}{\tocsecnumlen}
+\setlength{\cftsubsecindent}{\dimexpr\cftsecindent+\toctitlecol\relax}
+\setlength{\cftsubsecnumwidth}{\tocsubsecnumlen}
+\setlength{\cftfignumwidth}{\tocfignumlen}
+\setlength{\cfttabnumwidth}{\toctabnumlen}
 
 \setlist[itemize]{leftmargin=2em}
 \setlist[enumerate]{leftmargin=2.2em}
