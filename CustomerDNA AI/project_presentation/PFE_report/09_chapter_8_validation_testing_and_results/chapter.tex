@@ -1,7 +1,7 @@
 \chapter{Validation, Testing, and Results}
 
 \section{Introduction}
-This chapter presents the validation methodology and the main technical results of \projectname{}. The objective of the validation work is to prove that the platform is not only well designed, but also operational, distributed, monitored, and secured in practice. The chapter therefore focuses on evidence-oriented validation rather than on theoretical expectation alone. In that sense, the validation logic remains aligned with the broader engineering principles already discussed in the report: distributed services must be verifiable through observable runtime evidence, not only through architectural intent \cite{kleppmann2017ddia,apache_airflow_docs,prometheus_docs}.
+This chapter presents the validation methodology and the main technical results of \projectname{}. The objective of the validation work is to prove that the platform is not only well designed, but also operational, distributed, monitored, and secured in practice. The chapter therefore focuses on evidence-oriented validation rather than on theoretical expectation alone. In that sense, the validation logic remains aligned with the broader engineering principles already discussed in the report: distributed services must be verifiable through observable runtime evidence, not only through architectural intent \cite{kleppmann2017ddia,apache_airflow_docs,prometheus_docs}. To preserve a clean results-oriented structure, the chapter is intentionally organized around textual interpretation, summary tables, and operational screenshots discussed as evidence rather than around conceptual diagrams.
 
 \section{Validation Strategy}
 The validation strategy was structured around several complementary dimensions:
@@ -58,12 +58,7 @@ At the service level, the validation campaign confirmed the following key condit
 
 This infrastructure validation is essential because it establishes the platform baseline before any pipeline result can be interpreted. A successful data run is only meaningful if the underlying cluster services are themselves healthy and correctly interconnected.
 
-\begin{figure}[H]
-    \centering
-    \input{90_assets/latex_diagrams/chapter_8/fig_8_1_infrastructure_validation_map.tex}
-    \caption{Infrastructure validation map linking each core service family to its verification checkpoints.}
-    \label{fig:chapter8-infrastructure-validation}
-\end{figure}
+The corresponding proof for this section is therefore presented through service-state tables, browser checks, and runtime screenshots rather than through a conceptual schema. This choice is more consistent with the role of Chapter VIII, which is to show observed results from the implemented platform.
 
 \section{Pipeline Validation}
 Pipeline validation was centered on the five operational DAGs that structure the lifecycle of the platform:
@@ -112,12 +107,7 @@ The environment reset and lakehouse readiness phases are especially important be
     \label{tab:chapter8-dag-validation}
 \end{table}
 
-\begin{figure}[H]
-    \centering
-    \input{90_assets/latex_diagrams/chapter_8/fig_8_2_dag_validation_sequence.tex}
-    \caption{Five-DAG validation sequence with evidence checkpoints across the operational lifecycle.}
-    \label{fig:chapter8-dag-validation-sequence}
-\end{figure}
+In the final presentation of results, this section is therefore better supported by Airflow run screenshots, task-state tables, and execution summaries than by conceptual flow diagrams.
 \FloatBarrier
 
 \section{Distributed Execution Validation}
@@ -133,12 +123,7 @@ The most direct proof concerns Spark. The master node manages workers registered
 
 Similarly, HDFS validation shows that the file-system layer is not reduced to local storage on VM2. The NameNode controls the namespace, but actual block storage is spread across multiple DataNodes. This is a critical argument for the defense because it proves that the storage layer also participates in the distributed design \cite{apache_hadoop_docs}.
 
-\begin{figure}[H]
-    \centering
-    \input{90_assets/latex_diagrams/chapter_8/fig_8_3_multinode_validation_evidence.tex}
-    \caption{Validation evidence of multi-node participation across Spark, HDFS, Kafka, and Trino.}
-    \label{fig:chapter8-multinode-validation}
-\end{figure}
+This part of the chapter is intended to be documented through runtime screenshots and compact comparison tables showing node participation, worker registration, and distributed service presence across the VMs.
 
 \section{Security Validation}
 Security validation focused on proving that the implemented protection mechanisms are not only present in configuration files, but usable in practice \cite{mit_kerberos_docs,apache_hadoop_docs,trino_docs,openssh_docs,cryptsetup_docs}.
@@ -154,12 +139,7 @@ The main validated points are:
 
 One especially important result is the final browser-based HDFS validation. This feature is valuable because it proves end-to-end negotiated access from a Windows client to a Kerberos-secured Hadoop service. At the same time, the report must remain honest: this path is sensitive to exact client-side configuration and is therefore presented as validated but configuration-dependent, not as universally frictionless.
 
-\begin{figure}[H]
-    \centering
-    \input{90_assets/latex_diagrams/chapter_8/fig_8_4_security_validation_paths.tex}
-    \caption{Validated security access paths for HDFS browsing, protected analytical exposure, and secured orchestration.}
-    \label{fig:chapter8-security-validation}
-\end{figure}
+The evidence retained for this section is consequently expected to come from secured browser access screenshots, authenticated interface checks, and concise result tables summarizing the validated protection paths.
 
 \section{Observability and Monitoring Validation}
 Observability validation confirms that the platform does not rely only on raw container logs for diagnosis. Instead, it exposes a structured monitoring layer composed of:
@@ -174,12 +154,7 @@ This monitoring layer matters academically because it strengthens the maturity o
 
 The existence of dashboards, exporters, and centralized metric collection also contributes to the evidence strategy of the report. It allows the platform to be presented not only as running, but as observable and diagnosable.
 
-\begin{figure}[H]
-    \centering
-    \input{90_assets/latex_diagrams/chapter_8/fig_8_5_observability_stack.tex}
-    \caption{Observability stack linking Prometheus, Grafana, cAdvisor, and pipeline evidence sources.}
-    \label{fig:chapter8-observability-stack}
-\end{figure}
+For the same reason, the observability discussion in this chapter is best documented through dashboard captures and metric-oriented summary tables rather than through additional conceptual illustrations.
 
 \section{Main Results}
 The main technical result of the project is the delivery of a distributed, orchestrated, monitored, and security-aware customer-data lakehouse platform under the AdOptimizer CDP scope.
