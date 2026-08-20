@@ -1,0 +1,47 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=11.6cm, minimum height=11.8cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\Large] at ($(panel.north)+(0,-0.72)$) {Distributed data platform};
+
+  \node[ado small box={2.35cm}{adograyfill}, minimum height=0.98cm] (src1) at (-3.25,-2.05)
+    {\textbf{\small Campaign}\\[-1pt]\small data};
+  \node[ado small box={2.35cm}{adograyfill}, minimum height=0.98cm] (src2) at (0,-2.05)
+    {\textbf{\small Behavioral}\\[-1pt]\small data};
+  \node[ado small box={2.45cm}{adograyfill}, minimum height=0.98cm] (src3) at (3.25,-2.05)
+    {\textbf{\small Transaction}\\[-1pt]\small data};
+
+  \node[ado box={3.55cm}{adobluefill}, minimum height=1.70cm, inner sep=7pt] (ingest) at (-2.65,-3.95)
+    {\textbf{\normalsize Ingestion layer}\\[-1pt]\small capture and route};
+  \node[ado box={3.55cm}{adotealfill}, minimum height=1.70cm, inner sep=7pt] (meta) at (2.65,-3.95)
+    {\textbf{\normalsize Metadata layer}\\[-1pt]\small shared structure};
+
+  \node[ado box={4.10cm}{adobluefill}, minimum height=2.18cm, inner sep=7pt] (storage) at (-2.65,-6.78) {};
+  \node[font=\bfseries\Large] at ($(storage.center)+(0,-0.22)$) {Storage layer};
+  \node[ado small box={0.76cm}{blue!15}, minimum height=0.52cm, inner sep=1pt] at ($(storage.north)+(-1.15,-0.38)$) {\small A};
+  \node[ado small box={0.76cm}{blue!15}, minimum height=0.52cm, inner sep=1pt] at ($(storage.north)+(0,-0.38)$) {\small B};
+  \node[ado small box={0.76cm}{blue!15}, minimum height=0.52cm, inner sep=1pt] at ($(storage.north)+(1.15,-0.38)$) {\small C};
+
+  \node[ado box={4.10cm}{adotealfill}, minimum height=2.18cm, inner sep=7pt] (compute) at (2.65,-6.78) {};
+  \node[font=\bfseries\Large] at ($(compute.center)+(0,-0.22)$) {Compute layer};
+  \node[ado small box={0.76cm}{teal!16}, minimum height=0.52cm, inner sep=1pt] at ($(compute.north)+(-1.15,-0.38)$) {\small A};
+  \node[ado small box={0.76cm}{teal!16}, minimum height=0.52cm, inner sep=1pt] at ($(compute.north)+(0,-0.38)$) {\small B};
+  \node[ado small box={0.76cm}{teal!16}, minimum height=0.52cm, inner sep=1pt] at ($(compute.north)+(1.15,-0.38)$) {\small C};
+
+  \node[ado box={5.15cm}{adograyfill}, minimum height=1.88cm, inner sep=7pt] (access) at (0,-9.72)
+    {\textbf{\normalsize Analytics and access}\\[-1pt]\small governed exploration\\[-1pt]\small and reuse};
+
+  \node[ado small box={1.92cm}{adograyfill}, minimum height=0.82cm] (consumer1) at (-3.00,-11.20) {\small Analysts};
+  \node[ado small box={2.15cm}{adograyfill}, minimum height=0.82cm] (consumer2) at (0,-11.20) {\small BI / SQL};
+  \node[ado small box={2.50cm}{adograyfill}, minimum height=0.82cm] (consumer3) at (3.15,-11.20) {\small Future\\[-1pt]\small services};
+
+  \draw[ado arrow] (src1.south) -- ++(0,-0.22) -| ($(ingest.north)+(-0.70,0)$);
+  \draw[ado arrow] (src2.south) -- ++(0,-0.22) -| ($(ingest.north)+(0.70,0)$);
+  \draw[ado arrow] (src3.south) -- ++(0,-0.22) -- (meta.north);
+  \draw[ado arrow] (ingest.south) -- (storage.north);
+  \draw[ado arrow] (meta.south) -- (compute.north);
+  \draw[ado arrow] (storage.east) -- (compute.west);
+  \draw[ado arrow] ($(storage.south)+(1.00,0)$) |- ($(access.north)+(-1.05,0)$);
+  \draw[ado arrow] ($(compute.south)+(-1.00,0)$) |- ($(access.north)+(1.05,0)$);
+  \draw[ado arrow] ($(access.south)+(-1.55,0)$) |- (consumer1.north);
+  \draw[ado arrow] (access.south) -- (consumer2.north);
+  \draw[ado arrow] ($(access.south)+(1.55,0)$) |- (consumer3.north);
+\end{tikzpicture}

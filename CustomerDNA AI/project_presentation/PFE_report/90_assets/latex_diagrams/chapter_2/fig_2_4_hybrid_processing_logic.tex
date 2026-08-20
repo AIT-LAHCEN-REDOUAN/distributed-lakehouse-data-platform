@@ -1,0 +1,27 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
+  \node[ado box={3.20cm}{adograyfill}, minimum height=0.95cm, inner sep=5pt] (sources) at (0,0.75)
+    {\textbf{\small Data sources}\\[-1pt]\scriptsize files, records, and event traces};
+
+  \node[ado box={2.75cm}{adotealfill}, minimum height=0.95cm, inner sep=5pt] (events) at (-2.45,-1.10)
+    {\textbf{\small Event capture}\\[-1pt]\scriptsize replayable incoming flow};
+  \node[ado box={2.75cm}{adoorangefill}, minimum height=0.95cm, inner sep=5pt] (batch) at (2.45,-1.10)
+    {\textbf{\small Batch refinement}\\[-1pt]\scriptsize historical structuring};
+
+  \node[ado box={2.85cm}{adobluefill}, minimum height=0.95cm, inner sep=5pt] (bronze) at (-2.45,-3.00)
+    {\textbf{\small Durable raw history}\\[-1pt]\scriptsize audit and recomputation};
+  \node[ado box={2.85cm}{adopurplefill}, minimum height=0.95cm, inner sep=5pt] (tables) at (2.45,-3.00)
+    {\textbf{\small Curated table layers}\\[-1pt]\scriptsize governed analytical state};
+
+  \node[ado box={3.70cm}{adograyfill}, minimum height=0.95cm, inner sep=5pt] (access) at (0,-4.95)
+    {\textbf{\small Analytical access}\\[-1pt]\scriptsize trusted exploration, validation, and reuse};
+
+  \draw[ado arrow] (sources.south) -- ++(-0.85,-0.45) -- (events.north);
+  \draw[ado arrow] (sources.south) -- ++(0.85,-0.45) -- (batch.north);
+  \draw[ado arrow] (events.south) -- (bronze.north);
+  \draw[ado arrow] (batch.south) -- (tables.north);
+  \draw[ado arrow] (bronze.east) -- ++(1.10,0) |- ($(access.north)+(-0.75,0)$);
+  \draw[ado arrow] (tables.west) -- ++(-1.10,0) |- ($(access.north)+(0.75,0)$);
+
+  \node[ado annotation, text width=8.4cm] at (0,-6.20)
+    {Replay supports recomputation, while batch refinement stabilizes governed analytical outputs.};
+\end{tikzpicture}

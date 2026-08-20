@@ -1,0 +1,11 @@
+\begin{tikzpicture}[node distance=0.7cm and 0.7cm]
+    \node[ado box=adobluefill, text width=4.7cm] (services)
+    {\adoboxcontent{Validated service families}{Kafka + HDFS + Hive + Spark + Trino + security + monitoring}};
+    \node[ado box=adotealfill, text width=4.7cm, right=of services] (checks)
+    {\adoboxcontent{Verification checkpoints}{ports + cluster health + readiness checks + browser / UI reachability}};
+    \node[ado box=adopurplefill, text width=10.3cm, below=0.9cm of $(services)!0.5!(checks)$] (evidence)
+    {\adoboxcontent{Infrastructure proof baseline}{the platform is reachable, healthy, and ready before deeper data execution}};
+    \draw[ado arrow] (services) -- (checks);
+    \draw[ado dashed arrow] (services.south) -- (evidence.north west);
+    \draw[ado dashed arrow] (checks.south) -- (evidence.north east);
+\end{tikzpicture}

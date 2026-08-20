@@ -1,21 +1,37 @@
 \chapter{Appendices}
 
 \section*{Appendix Organization}
-This appendix section is prepared to host the supporting material required for the final submission.
+This appendix section groups the supporting material that complements the main report without interrupting the flow of the core chapters. It is intended to host operational evidence, configuration extracts, deployment references, and selected validation artifacts that substantiate the implemented platform.
 
-\section*{Recommended Appendix Contents}
-The final version can include:
+\section*{A.1 Deployment and Access Evidence}
+This appendix can host the practical material used to deploy and operate the final environment:
 \begin{itemize}
   \item deployment commands,
-  \item environment variables,
-  \item configuration extracts,
-  \item screenshots used as validation evidence,
   \item service access matrices,
-  \item and operational troubleshooting notes.
+  \item startup and reset order references,
+  \item and selected access-point summaries for the control plane and the three Linux virtual machines.
 \end{itemize}
 
-\section*{Evidence Location}
-The corresponding raw support material should be organized primarily inside:
+\section*{A.2 Configuration and Runtime Extracts}
+This appendix can gather short configuration excerpts that are too detailed for the body chapters but useful for technical verification:
+\begin{itemize}
+  \item environment variables,
+  \item service configuration extracts,
+  \item DAG-related runtime parameters,
+  \item and selected catalog or cluster settings.
+\end{itemize}
+
+\section*{A.3 Validation and Screenshot Evidence}
+This appendix can centralize the final evidence set used to support the validation chapter:
+\begin{itemize}
+  \item screenshots of HDFS, Spark, Trino, Airflow, and monitoring interfaces,
+  \item DAG execution evidence,
+  \item selected data-quality outputs,
+  \item and representative observability views.
+\end{itemize}
+
+\section*{A.4 Evidence Location in the Report Workspace}
+The corresponding raw support material is organized primarily inside:
 \begin{itemize}
   \item \texttt{90\_assets/}
   \item \texttt{91\_evidence/}

@@ -1,7 +1,7 @@
 \chapter{Security Architecture and Hardening}
 
 \section{Introduction}
-This chapter presents the security architecture integrated into \projectname{}. The goal of the security layer is not to transform the platform into a full enterprise zero-trust environment, but to ensure that the final deployment already includes meaningful protection mechanisms for identity, browser access, sensitive service exposure, remote operations, and persisted runtime data.
+This chapter presents the security architecture integrated into \projectname{}. The goal of the security layer is not to transform the platform into a full enterprise zero-trust environment, but to ensure that the final deployment already includes meaningful protection mechanisms for identity, browser access, sensitive service exposure, remote operations, and persisted runtime data. The implemented controls are grounded in standard secure-service principles rather than improvised protections \cite{mit_kerberos_docs,apache_hadoop_docs,openssh_docs,cryptsetup_docs}.
 
 \section{Security Objectives}
 The security work of the project follows five main objectives:
@@ -41,7 +41,7 @@ The security work of the project follows five main objectives:
 \FloatBarrier
 
 \section{Kerberos-Secured Hadoop Services}
-Kerberos is the core identity mechanism used to secure the Hadoop side of the platform. In a distributed environment, services such as the NameNode and DataNodes should not trust requests only because they originate from another cluster component. They must validate the identity of the caller explicitly.
+Kerberos is the core identity mechanism used to secure the Hadoop side of the platform. In a distributed environment, services such as the NameNode and DataNodes should not trust requests only because they originate from another cluster component. They must validate the identity of the caller explicitly \cite{mit_kerberos_docs,apache_hadoop_docs}.
 
 In the implementation, the Kerberos KDC and administration service are hosted on VM2, which is already the coordination-heavy node of the data plane. This is consistent with the overall architecture: the node that centralizes namespace and metadata authority also centralizes identity management for the secure Hadoop runtime.
 
@@ -54,10 +54,15 @@ The practical contribution of Kerberos in this project is threefold:
 
 This mechanism is especially important because it shifts the platform away from a demonstration architecture based only on open internal trust. Instead, the cluster operates with explicit authentication logic that is relevant both academically and operationally.
 
-\textit{Diagram placeholder: Kerberos-centered identity flow between the KDC and protected Hadoop services.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_7/fig_7_1_kerberos_identity_flow.tex}
+    \caption{Kerberos-centered identity flow between the KDC and the protected Hadoop service layer.}
+    \label{fig:chapter7-kerberos-identity-flow}
+\end{figure}
 
 \section{SPNEGO-Protected HDFS Browser Access}
-The HDFS browser path is protected through SPNEGO layered on top of the Kerberos-based identity model. This means that access to the secured NameNode and DataNode web interfaces is not treated as a public or weakly protected administrative convenience. It becomes part of the authenticated architecture.
+The HDFS browser path is protected through SPNEGO layered on top of the Kerberos-based identity model. This means that access to the secured NameNode and DataNode web interfaces is not treated as a public or weakly protected administrative convenience. It becomes part of the authenticated architecture \cite{apache_hadoop_docs,mit_kerberos_docs}.
 
 From a report perspective, this feature is important because administrative web interfaces are often overlooked in student projects even when the back-end services are secured. Here, the platform extends the security posture to the browser-facing HDFS access path.
 
@@ -72,10 +77,15 @@ The implementation required both server-side and client-side alignment:
 
 This path was one of the most configuration-sensitive parts of the deployment, but once stabilized it became strong evidence that the project secured not only APIs and internal services, but also real human-facing browser access to the distributed file system.
 
-\textit{Diagram placeholder: secure HDFS browser path from Windows client Kerberos ticket to SPNEGO-authenticated HTTPS endpoint.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_7/fig_7_2_hdfs_browser_spnego.tex}
+    \caption{Secure HDFS browser path from Windows Kerberos ticket to SPNEGO-authenticated HTTPS endpoint.}
+    \label{fig:chapter7-hdfs-browser-spnego}
+\end{figure}
 
 \section{TLS-Protected Interfaces}
-TLS is used to protect the main browser-facing interfaces of the platform. The implemented objective is not to wrap every internal port blindly, but to secure the access paths that matter most for demonstration, administration, and analytical interaction.
+TLS is used to protect the main browser-facing interfaces of the platform. The implemented objective is not to wrap every internal port blindly, but to secure the access paths that matter most for demonstration, administration, and analytical interaction. In this sense, transport protection complements identity protection rather than replacing it \cite{apache_hadoop_docs,trino_docs}.
 
 Two main exposure zones are protected:
 \begin{itemize}
@@ -87,25 +97,35 @@ The local control-plane interfaces are also exposed through a local TLS gateway,
 
 At the same time, the project keeps an honest boundary: some trust paths remain demo-oriented, and browser warnings may still appear if the local certificate authority is not trusted on the client machine. This does not invalidate the implemented encryption layer; it simply reflects the difference between a secured academic environment and a fully managed enterprise certificate infrastructure.
 
-\textit{Diagram placeholder: TLS-protected service exposure zones for HDFS, Trino, and the local control plane.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_7/fig_7_3_tls_exposure_zones.tex}
+    \caption{TLS-protected service exposure zones for HDFS, Trino, and the local control plane interfaces.}
+    \label{fig:chapter7-tls-exposure-zones}
+\end{figure}
 
 \section{Authenticated Trino Access}
-Trino is not exposed as an open analytical endpoint. Instead, the project implements an authenticated gateway in front of the coordinator-side browser access path. This has two important effects:
+Trino is not exposed as an open analytical endpoint. Instead, the project implements an authenticated gateway in front of the coordinator-side browser access path. This has two important effects \cite{trino_docs}:
 \begin{itemize}
     \item it reduces uncontrolled direct access to the analytical query service;
     \item it demonstrates that user-facing SQL access must also respect basic identity and access boundaries.
 \end{itemize}
 
-The gateway is hosted on VM2 together with the Trino coordinator, which is consistent with the node’s role as the entry point for coordination-heavy services. Through this design, the browser-facing access path is separated from the internal worker topology. Users connect to the protected entry point, while the internal distributed Trino execution still takes place through the coordinator and worker nodes.
+The gateway is hosted on VM2 together with the Trino coordinator, which is consistent with the node's role as the entry point for coordination-heavy services. Through this design, the browser-facing access path is separated from the internal worker topology. Users connect to the protected entry point, while the internal distributed Trino execution still takes place through the coordinator and worker nodes.
 
 This is a meaningful security improvement for the report because it shows that data exposure was considered at the query interface level, not only at the storage or transport level.
 
-\textit{Diagram placeholder: authenticated Trino gateway in front of coordinator and worker execution.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_7/fig_7_4_trino_auth_gateway.tex}
+    \caption{Authenticated Trino gateway in front of coordinator and worker execution.}
+    \label{fig:chapter7-trino-auth-gateway}
+\end{figure}
 
 \section{SSH-Based Remote Spark Submission}
 The orchestration model of the project relies on a remote Spark submission path from the control plane to VM2. This was introduced to avoid unstable local-driver assumptions and to keep the operational launch path aligned with the distributed cluster environment.
 
-From a security perspective, this means the orchestration node must not submit jobs through uncontrolled or manually repeated remote actions. The platform therefore uses an SSH-based remote execution path with dedicated key material and documented access preparation.
+From a security perspective, this means the orchestration node must not submit jobs through uncontrolled or manually repeated remote actions. The platform therefore uses an SSH-based remote execution path with dedicated key material and documented access preparation \cite{openssh_docs}.
 
 This design improves the platform in three ways:
 \begin{itemize}
@@ -116,10 +136,15 @@ This design improves the platform in three ways:
 
 In the broader security architecture, this remote path is not only an operational convenience. It is the secured mechanism through which orchestration reaches distributed compute.
 
-\textit{Diagram placeholder: secured control-plane-to-VM2 remote Spark submission path over SSH.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_7/fig_7_5_remote_spark_ssh.tex}
+    \caption{Secured control-plane-to-VM2 remote Spark submission path over SSH.}
+    \label{fig:chapter7-remote-spark-ssh}
+\end{figure}
 
 \section{Encrypted Runtime Storage Support}
-The project also introduces support for encrypted runtime storage through LUKS on the Linux virtual machines. This measure targets \textbf{data at rest} rather than only service authentication or traffic encryption.
+The project also introduces support for encrypted runtime storage through LUKS on the Linux virtual machines. This measure targets \textbf{data at rest} rather than only service authentication or traffic encryption \cite{cryptsetup_docs}.
 
 In practice, this control is intended to protect runtime service data stored on VM1, VM2, and VM3. The main idea is that a distributed platform should not protect data movement while leaving persisted service data entirely unprotected. Even in an academic setup, demonstrating this distinction is valuable because it shows a more complete understanding of security dimensions.
 
@@ -133,7 +158,12 @@ The implemented logic therefore complements the other controls:
 
 This layered view helps the report explain that security was approached as a set of complementary boundaries rather than a single technology checkbox.
 
-\textit{Diagram placeholder: security coverage map distinguishing identity, browser access, traffic encryption, and encrypted runtime storage.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_7/fig_7_6_security_coverage_layers.tex}
+    \caption{Security coverage map distinguishing identity, browser access, traffic encryption, and encrypted runtime storage.}
+    \label{fig:chapter7-security-coverage}
+\end{figure}
 
 \section{Security Boundaries and Remaining Limits}
 The implemented security layer is meaningful, but it must be described honestly. The project demonstrates baseline infrastructure hardening suitable for an academic distributed platform; it does not claim to be a finished enterprise security program.
@@ -159,7 +189,12 @@ At the same time, some limits remain outside the strict PFE scope:
 
 This distinction is not a weakness in the report. On the contrary, it strengthens its credibility by showing a mature understanding of what was actually implemented and what remains future hardening work.
 
-\textit{Diagram placeholder: implemented security boundary versus out-of-scope future enterprise hardening controls.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_7/fig_7_7_security_boundaries.tex}
+    \caption{Implemented security boundary versus out-of-scope future enterprise hardening controls.}
+    \label{fig:chapter7-security-boundaries}
+\end{figure}
 
 \section{Conclusion}
 This chapter showed that security is integrated into \projectname{} as an architectural layer rather than a superficial add-on. Identity is controlled through Kerberos, browser-based Hadoop access is protected through SPNEGO and HTTPS, analytical exposure is filtered through an authenticated Trino gateway, remote Spark submission is secured operationally through SSH, and encrypted runtime storage strengthens protection at rest.

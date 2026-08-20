@@ -30,11 +30,16 @@ The implementation is based on a compact but representative dataset set selected
 
 Each dataset keeps its source identity during ingestion and bronze persistence. This choice is important because the platform is intended to preserve replayability and traceability before any normalization or business transformation is applied. In practice, the implementation therefore distinguishes between source-specific raw inputs and later converged analytical models. This allows the platform to defend both schema fidelity at the entry point and business-oriented integration in upper layers.
 
-\textit{Diagram placeholder: active dataset families and how each one contributes to the customer-oriented analytical scope of the platform.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_1_dataset_families.tex}
+    \caption{Active dataset families and their complementary contribution to the customer-oriented analytical scope of the platform.}
+    \label{fig:chapter5-dataset-families}
+\end{figure}
 \FloatBarrier
 
 \section{Kafka-Based Ingestion Layer}
-Kafka is used as the transport backbone of the ingestion layer. The implementation does not load datasets directly into storage or processing services; instead, each source is first published through a topic-oriented flow that decouples dataset reading from downstream persistence. This approach improves control, replayability, and operational clarity.
+Kafka is used as the transport backbone of the ingestion layer. The implementation does not load datasets directly into storage or processing services; instead, each source is first published through a topic-oriented flow that decouples dataset reading from downstream persistence. This approach improves control, replayability, and operational clarity, which is consistent with both the Kafka event-log model and broader stream-oriented architectural reasoning \cite{apache_kafka_docs,kreps2014questioning}.
 
 The Kafka cluster is distributed across the three virtual machines:
 \begin{itemize}
@@ -47,7 +52,12 @@ At the implementation level, each source dataset is associated with its own topi
 
 The platform also implements topic reset logic within the orchestration flow. This is important for demonstrations and reproducible reruns, because it allows the environment reset pipeline to clean old ingestion traces before a fresh execution begins.
 
-\textit{Diagram placeholder: dataset publication flow from the control plane to the three-broker Kafka cluster and toward bronze persistence.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_2_kafka_ingestion.tex}
+    \caption{Dataset publication flow from the control plane to the three-broker Kafka cluster and toward bronze persistence.}
+    \label{fig:chapter5-kafka-ingestion}
+\end{figure}
 
 \section{HDFS Bronze Storage Layer}
 The bronze layer is implemented on HDFS as the replayable raw persistence zone of the platform. After Kafka-based transport, source records are landed into HDFS in batch-oriented bronze files before any lakehouse structuring step is executed. This choice gives the project an explicit raw persistence boundary, which is essential for reproducibility, debugging, and future reprocessing.
@@ -62,10 +72,15 @@ In operational terms, this means the namespace authority remains centralized on 
 
 The bronze layer also plays a strategic role in the whole project: it is the stable checkpoint between ingestion and compute. If a downstream Spark stage fails, the platform does not need to reread the original local files or republish the full datasets manually. It can simply restart from the bronze persistence already distributed in HDFS.
 
-\textit{Diagram placeholder: bronze storage organization in HDFS, showing NameNode coordination and DataNode distribution across VM1, VM2, and VM3.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_3_hdfs_bronze.tex}
+    \caption{Bronze storage organization in HDFS, with NameNode coordination on VM2 and DataNode distribution across VM1, VM2, and VM3.}
+    \label{fig:chapter5-hdfs-bronze}
+\end{figure}
 
 \section{Spark Processing and Iceberg Loading}
-Spark is the main distributed processing engine of the platform. Its implementation is aligned with the physical cluster design:
+Spark is the main distributed processing engine of the platform. Its implementation is aligned with the physical cluster design and with the lakehouse objective of turning replayable distributed files into governed analytical tables \cite{apache_spark_docs,apache_iceberg_docs,armbrust2021lakehouse}:
 \begin{itemize}
     \item the Spark master runs on VM2;
     \item workers are distributed across VM1, VM2, and VM3;
@@ -76,10 +91,15 @@ This execution path is important. The final deployment does not rely on a heavy 
 
 From a data perspective, Spark reads the bronze files from HDFS, interprets their schemas, normalizes the raw structures, and writes the outputs into Iceberg-backed raw lakehouse tables. The implementation therefore transforms replayable raw artifacts into governed table objects while preserving distributed execution. The raw lakehouse layer is not yet the final curated business layer; it is the structured foundation on top of which transformations and validations are later applied.
 
-\textit{Diagram placeholder: Spark raw-load path from HDFS bronze files to Iceberg raw tables through the distributed Spark cluster.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_4_spark_raw_load.tex}
+    \caption{Distributed Spark raw-load path from replayable bronze batches to governed raw lakehouse tables.}
+    \label{fig:chapter5-spark-raw-load}
+\end{figure}
 
 \section{Hive Metastore and Catalog Governance}
-Hive Metastore is implemented as the shared metadata authority of the lakehouse platform. It is deployed on VM2 together with its PostgreSQL backing store and acts as the central catalog reference for upper services such as Spark and Trino.
+Hive Metastore is implemented as the shared metadata authority of the lakehouse platform. It is deployed on VM2 together with its PostgreSQL backing store and acts as the central catalog reference for upper services such as Spark and Trino \cite{apache_hive_docs,apache_iceberg_docs}.
 
 Its role in the implementation is essential: once Spark writes the raw Iceberg tables, their definitions must be discoverable through a common metadata layer. Without this shared governance service, each engine would have to manage table visibility independently, which would weaken consistency and make the architecture harder to defend.
 
@@ -92,10 +112,15 @@ In practical terms, Hive Metastore allows the platform to:
 
 This makes the metadata layer a real implementation component, not a theoretical addition. It is the reason the lakehouse can behave like a coordinated data platform rather than a simple collection of files.
 
-\textit{Diagram placeholder: central metadata governance through Hive Metastore between Spark writers and Trino readers.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_5_metadata_governance.tex}
+    \caption{Shared metadata governance through Hive Metastore between distributed writers and analytical readers.}
+    \label{fig:chapter5-metadata-governance}
+\end{figure}
 
 \section{Trino Query Layer}
-Trino provides the analytical SQL access layer of the platform. Its implementation follows a coordinator/worker separation:
+Trino provides the analytical SQL access layer of the platform. Its implementation follows a coordinator/worker separation consistent with distributed query-engine design \cite{trino_docs}:
 \begin{itemize}
     \item the coordinator is hosted on VM2;
     \item worker 1 is hosted on VM1;
@@ -106,10 +131,15 @@ This arrangement is important because it demonstrates that the query layer is al
 
 The query access path is also protected by an authenticated gateway. As a result, the Trino browser interface is not exposed as an uncontrolled plain endpoint. This reinforces the idea that access services in the final platform must remain demonstrable but still aligned with the security posture of the deployment.
 
-\textit{Diagram placeholder: Trino coordinator/worker query path and the secure gateway used for analytical access.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_6_trino_access.tex}
+    \caption{Protected Trino analytical access path from secure entry point to coordinator and distributed workers.}
+    \label{fig:chapter5-trino-access}
+\end{figure}
 
 \section{dbt-spark Transformation Layer}
-dbt-spark is used to organize transformations as declarative models rather than as ad hoc processing scripts. This implementation choice is important because it introduces structure, dependency control, and documentation logic into the transformation stage.
+dbt-spark is used to organize transformations as declarative models rather than as ad hoc processing scripts. This implementation choice is important because it introduces structure, dependency control, and documentation logic into the transformation stage \cite{dbt_docs}.
 
 The implemented transformation flow follows a layered modeling philosophy:
 \begin{itemize}
@@ -121,19 +151,29 @@ The implemented transformation flow follows a layered modeling philosophy:
 
 In this design, dbt does not replace Spark. Instead, it builds on top of Spark Thrift access and uses the distributed lakehouse environment as its execution target. This distinction matters in the report because it shows that transformation governance is separated from raw compute mechanics: Spark provides the engine, while dbt provides the modeling discipline.
 
-\textit{Diagram placeholder: layered dbt transformation flow from raw tables to staging, intermediate, and analytical outputs.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_7_dbt_layers.tex}
+    \caption{Layered dbt transformation flow from raw tables to staging, intermediate, and analytical outputs.}
+    \label{fig:chapter5-dbt-layers}
+\end{figure}
 
 \section{Great Expectations Validation Layer}
-Great Expectations is implemented as the lightweight validation layer of the platform. Its role is not to perform generic visual checking, but to formalize trust conditions over the produced data. This is especially important in an academic lakehouse platform, where the project must prove that outputs are not only generated, but also controlled.
+Great Expectations is implemented as the lightweight validation layer of the platform. Its role is not to perform generic visual checking, but to formalize trust conditions over the produced data. This is especially important in an academic lakehouse platform, where the project must prove that outputs are not only generated, but also controlled \cite{great_expectations_docs}.
 
 The implemented validation logic targets the structural and semantic integrity of selected lakehouse layers. In practice, the platform uses Great Expectations to check that the resulting data products remain consistent with expected shapes and business-level constraints. Validation artifacts are then persisted so that pipeline runs can be defended with observable evidence instead of informal claims.
 
-This layer is therefore central to the governance dimension of the project. It strengthens the transition from “data processed successfully” to “data can be considered trustworthy enough for analytical use.”
+This layer is therefore central to the governance dimension of the project. It strengthens the transition from ``data processed successfully'' to ``data can be considered trustworthy enough for analytical use.''
 
-\textit{Diagram placeholder: validation checkpoints over the lakehouse layers and persistence of validation evidence.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_8_validation_checkpoints.tex}
+    \caption{Validation checkpoints over the lakehouse layers and the persistence of validation evidence.}
+    \label{fig:chapter5-validation-checkpoints}
+\end{figure}
 
 \section{Airflow Orchestration Layer}
-Airflow orchestrates the platform from the local control plane. In the final implementation, orchestration is not reduced to one oversized DAG. Instead, the project is structured around a small set of operational DAGs, each with a clear responsibility in the lifecycle of the environment.
+Airflow orchestrates the platform from the local control plane. In the final implementation, orchestration is not reduced to one oversized DAG. Instead, the project is structured around a small set of operational DAGs, each with a clear responsibility in the lifecycle of the environment \cite{apache_airflow_docs}.
 
 \begin{table}[!htbp]
     \centering
@@ -163,7 +203,12 @@ Airflow orchestrates the platform from the local control plane. In the final imp
 
 This orchestration strategy is important because it matches the real operational logic of the project. The platform can be reset, checked, loaded, transformed, and validated in separate controlled stages. It also makes failures easier to diagnose, because a problem can be linked to a specific orchestration boundary instead of being hidden inside one monolithic workflow.
 
-\textit{Diagram placeholder: five-DAG orchestration sequence from environment preparation to raw loading and curated transformation.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_5/fig_5_9_dag_sequence.tex}
+    \caption{Five-DAG orchestration sequence from environment preparation to raw loading and curated transformation.}
+    \label{fig:chapter5-dag-sequence}
+\end{figure}
 \FloatBarrier
 
 \section{Conclusion}

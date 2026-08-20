@@ -1,27 +1,32 @@
 \chapter{Discussion and Critical Analysis}
 
 \section{Introduction}
-This chapter provides a critical interpretation of the implemented work. Its purpose is to move beyond pure description and explain what the project achieves well, where its trade-offs appear, what it contributes academically and industrially, and which boundaries must remain explicit in a serious jury defense.
+This chapter provides a critical interpretation of the implemented work. Its purpose is to move beyond pure description and explain what the project achieves well, where its trade-offs appear, what it contributes academically and industrially, and which boundaries must remain explicit in a serious jury defense. The discussion therefore reconnects the final implementation with the reference ideas of distributed data-intensive systems and modern lakehouse-oriented engineering \cite{kleppmann2017ddia,armbrust2021lakehouse}.
 
 \section{Strengths of the Final Architecture}
-The final architecture presents several important strengths.
+The final architecture presents several important strengths. Many of them correspond directly to the architectural qualities discussed in the literature on distributed data-intensive systems and on lakehouse-oriented analytics platforms \cite{kleppmann2017ddia,armbrust2021lakehouse}.
 
 First, it is \textbf{modular}. Ingestion, bronze storage, processing, metadata governance, SQL exposure, transformation, validation, orchestration, monitoring, and security are clearly separated. This makes the platform easier to reason about and strengthens the quality of the report because each layer has a clear responsibility.
 
-Second, it is \textbf{truly distributed}. Kafka, HDFS, Spark, and Trino are all deployed across more than one virtual machine, and the architecture does not depend on a single overloaded “fake cluster” node for every important function.
+Second, it is \textbf{truly distributed}. Kafka, HDFS, Spark, and Trino are all deployed across more than one virtual machine, and the architecture does not depend on a single overloaded ``fake cluster'' node for every important function \cite{apache_kafka_docs,apache_hadoop_docs,apache_spark_docs,trino_docs}.
 
-Third, it is \textbf{governance-oriented}. The project does not stop at moving data. It introduces shared metadata, structured modeling, data-quality validation, orchestration logic, and observability. This is a major strength because it positions the work as a serious data engineering platform rather than a simple ingestion pipeline.
+Third, it is \textbf{governance-oriented}. The project does not stop at moving data. It introduces shared metadata, structured modeling, data-quality validation, orchestration logic, and observability. This is a major strength because it positions the work as a serious data engineering platform rather than a simple ingestion pipeline \cite{apache_hive_docs,dbt_docs,great_expectations_docs,prometheus_docs}.
 
-Fourth, it includes \textbf{meaningful security integration}. The security controls are not limited to a conceptual recommendation. Kerberos, SPNEGO, TLS, authenticated gateways, encrypted runtime storage support, and secured remote orchestration were actually integrated into the deployment logic.
+Fourth, it includes \textbf{meaningful security integration}. The security controls are not limited to a conceptual recommendation. Kerberos, SPNEGO, TLS, authenticated gateways, encrypted runtime storage support, and secured remote orchestration were actually integrated into the deployment logic \cite{mit_kerberos_docs,apache_hadoop_docs,openssh_docs,cryptsetup_docs}.
 
-\textit{Diagram placeholder: synthesis view of the architectural strengths of the final platform.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_9/fig_9_1_architecture_strengths.tex}
+    \caption{Synthesis view of the main architectural strengths of the final platform.}
+    \label{fig:chapter9-architecture-strengths}
+\end{figure}
 
 \section{Trade-Offs and Constraints}
 The architecture also reflects real constraints and trade-offs.
 
 The first major constraint is the \textbf{limited infrastructure capacity} of the academic environment. The cluster is distributed, but it is built on lightweight virtual machines with limited memory, storage, and compute capacity. This makes the deployment realistic enough for distributed proof, but it also imposes stricter discipline in dataset sizing, runtime cleanup, and service tuning.
 
-The second trade-off is \textbf{integration complexity}. A platform combining Kafka, HDFS, Spark, Hive Metastore, Trino, dbt-spark, Great Expectations, Airflow, and multiple security controls is inherently more complex than a monolithic pipeline. That complexity is justified by the learning and platform value, but it also increases debugging effort and operational sensitivity.
+The second trade-off is \textbf{integration complexity}. A platform combining Kafka, HDFS, Spark, Hive Metastore, Trino, dbt-spark, Great Expectations, Airflow, and multiple security controls is inherently more complex than a monolithic pipeline. That complexity is justified by the learning and platform value, but it also increases debugging effort and operational sensitivity \cite{kleppmann2017ddia}.
 
 The third trade-off is \textbf{security overhead}. Once Kerberos, SPNEGO, TLS, and encrypted runtime storage are introduced, the project becomes much stronger architecturally, but also harder to configure, restart, and validate. This is not a flaw of the work; it is the natural consequence of moving from an open demo cluster to a more realistic protected environment.
 
@@ -60,7 +65,7 @@ The project has strong academic value because it combines several disciplines th
     \item and infrastructure security.
 \end{itemize}
 
-This interdisciplinary nature makes the project more than a stack assembly exercise. It demonstrates how theoretical principles such as separation of concerns, distributed coordination, schema management, replayability, and secure service exposure can be translated into an operational platform.
+This interdisciplinary nature makes the project more than a stack assembly exercise. It demonstrates how theoretical principles such as separation of concerns, distributed coordination, schema management, replayability, and secure service exposure can be translated into an operational platform \cite{kleppmann2017ddia,armbrust2021lakehouse,marz2015bigdata}.
 
 It also provides academic honesty in scope. The report does not confuse foundational customer-data engineering with the final AI layer. Instead, it positions the work as the technical basis that future segmentation, churn, value-prediction, or personalization modules could consume. This is a stronger academic position than claiming prematurely that the AI product itself is already complete.
 
@@ -77,8 +82,6 @@ In that context, AdOptimizer CDP contributes industrially by:
 \end{itemize}
 
 This means the project is not an isolated academic prototype, but an engineering foundation aligned with a larger company vision.
-
-\textit{Diagram placeholder: positioning of AdOptimizer CDP as the data foundation layer within the broader AdOptimizer AI roadmap.}
 
 \section{Critical Limits}
 The final report must still distinguish clearly between implemented work and downstream possibilities.

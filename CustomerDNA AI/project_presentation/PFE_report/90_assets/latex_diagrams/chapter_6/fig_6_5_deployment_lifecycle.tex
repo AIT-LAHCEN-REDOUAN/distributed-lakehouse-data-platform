@@ -1,0 +1,16 @@
+\begin{tikzpicture}[node distance=0.55cm]
+    \node[ado box=adograyfill, text width=10.2cm] (bundle)
+    {\adoboxcontent{Bundle preparation}{node-specific deployment content + synchronized configuration}};
+    \node[ado box=adobluefill, text width=10.2cm, below=of bundle] (preflight)
+    {\adoboxcontent{Preflight verification}{ports + peer reachability + dependency checks}};
+    \node[ado box=adotealfill, text width=10.2cm, below=of preflight] (vm2)
+    {\adoboxcontent{Priority startup of VM2}{coordination-heavy services launched first}};
+    \node[ado box=adoorangefill, text width=10.2cm, below=of vm2] (workers)
+    {\adoboxcontent{Cluster extension}{VM1 and VM3 add storage, broker, and worker capacity}};
+    \node[ado box=adopurplefill, text width=10.2cm, below=of workers] (cp)
+    {\adoboxcontent{Control-plane activation}{Airflow + monitoring + access services start after cluster stability}};
+    \draw[ado arrow] (bundle) -- (preflight);
+    \draw[ado arrow] (preflight) -- (vm2);
+    \draw[ado arrow] (vm2) -- (workers);
+    \draw[ado arrow] (workers) -- (cp);
+\end{tikzpicture}

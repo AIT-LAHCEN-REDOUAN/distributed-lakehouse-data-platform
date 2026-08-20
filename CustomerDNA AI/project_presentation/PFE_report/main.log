@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.8.18)  20 AUG 2026 17:07
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.8.18)  20 AUG 2026 22:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1069,17 +1069,17 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [5
 
 ]
-[6] [7])
+[6])
 \tf@toc=\write4
 \openout4 = `main.toc'.
 
- [8] (main.lof)
+ [7] (main.lof [8
+
+])
 \tf@lof=\write5
 \openout5 = `main.lof'.
 
- [9
-
-] (main.lot)
+ [9] (main.lot)
 \tf@lot=\write6
 \openout6 = `main.lot'.
 
@@ -1091,7 +1091,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 ]) (02_chapter_1_general_project_context/chapter.tex
 Chapter I.
-<90_assets/logos/SAT_logos/SAT_logo.png, id=416, 1106.1325pt x 489.83pt>
+<90_assets/logos/SAT_logos/SAT_logo.png, id=360, 1106.1325pt x 489.83pt>
 File: 90_assets/logos/SAT_logos/SAT_logo.png Graphic file (type png)
 <use 90_assets/logos/SAT_logos/SAT_logo.png>
 Package pdftex.def Info: 90_assets/logos/SAT_logos/SAT_logo.png  used on input 
@@ -1102,7 +1102,7 @@ line 12.
 
 
 ]
-<90_assets/logos/SAT_logos/SAT_values.png, id=421, 1027.84pt x 1027.84pt>
+<90_assets/logos/SAT_logos/SAT_values.png, id=365, 1027.84pt x 1027.84pt>
 File: 90_assets/logos/SAT_logos/SAT_values.png Graphic file (type png)
 <use 90_assets/logos/SAT_logos/SAT_values.png>
 Package pdftex.def Info: 90_assets/logos/SAT_logos/SAT_values.png  used on inpu
@@ -1120,73 +1120,74 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 Chapter II.
 [7
 
-] (90_assets/latex_diagrams/chapter_2/fig_2_1_centralized_vs_distributed.tex) [
-8] [9{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program File
-s/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/Program Files/MiKTeX/fonts/enc/dvips/
-lm/lm-mathsy.enc}] [10] [11] [12]
-(90_assets/latex_diagrams/chapter_2/fig_2_3_spark_execution_model.tex) [13]
-[14] (90_assets/latex_diagrams/chapter_2/fig_2_2_event_log_processing.tex)
-[15] [16] [17] [18]) (04_chapter_3_technology_watch/chapter.tex [19]
+] (90_assets/latex_diagrams/chapter_2/fig_2_1_centralized_architecture.tex)
+(90_assets/latex_diagrams/chapter_2/fig_2_2_distributed_data_platform.tex)
+[8] [9] [10{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Progra
+m Files/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/Program Files/MiKTeX/fonts/enc/
+dvips/lm/lm-mathsy.enc}] [11] [12] [13] [14]
+(90_assets/latex_diagrams/chapter_2/fig_2_3_spark_execution_model.tex) [15]
+[16] (90_assets/latex_diagrams/chapter_2/fig_2_4_hybrid_processing_logic.tex)
+[17] [18] [19] [20]) (04_chapter_3_technology_watch/chapter.tex [21]
 Chapter III.
-<90_assets/logos/Tech_logos/apache_kafka.png, id=523, 1204.5pt x 1204.5pt>
+<90_assets/logos/Tech_logos/apache_kafka.png, id=488, 1204.5pt x 1204.5pt>
 File: 90_assets/logos/Tech_logos/apache_kafka.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/apache_kafka.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/apache_kafka.png  used on i
 nput line 18.
 (pdftex.def)             Requested size: 81.9406pt x 81.93431pt.
-[20
+[22
 
 ]
-<90_assets/logos/Tech_logos/hadoop_hdfs.png, id=530, 2065.7175pt x 974.64125pt>
+<90_assets/logos/Tech_logos/hadoop_hdfs.png, id=494, 2065.7175pt x 974.64125pt>
 
 File: 90_assets/logos/Tech_logos/hadoop_hdfs.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/hadoop_hdfs.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/hadoop_hdfs.png  used on in
 put line 32.
 (pdftex.def)             Requested size: 81.9406pt x 38.65182pt.
-<90_assets/logos/Tech_logos/Apache_Iceberg.png, id=532, 803.0pt x 218.8175pt>
+<90_assets/logos/Tech_logos/Apache_Iceberg.png, id=496, 803.0pt x 218.8175pt>
 File: 90_assets/logos/Tech_logos/Apache_Iceberg.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Iceberg.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Iceberg.png  used on
  input line 49.
 (pdftex.def)             Requested size: 81.9406pt x 22.32709pt.
-<90_assets/logos/Tech_logos/Apache_Hive.png, id=534, 1003.75pt x 903.375pt>
+<90_assets/logos/Tech_logos/Apache_Hive.png, id=498, 1003.75pt x 903.375pt>
 File: 90_assets/logos/Tech_logos/Apache_Hive.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Hive.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Hive.png  used on in
 put line 50.
 (pdftex.def)             Requested size: 81.9406pt x 73.7464pt.
- [21 <./90_assets/logos/Tech_logos/apache_kafka.png> <./90_assets/logos/Tech_lo
+ [23 <./90_assets/logos/Tech_logos/apache_kafka.png> <./90_assets/logos/Tech_lo
 gos/hadoop_hdfs.png>]
-<90_assets/logos/Tech_logos/spark.png, id=547, 831.105pt x 389.455pt>
+<90_assets/logos/Tech_logos/spark.png, id=511, 831.105pt x 389.455pt>
 File: 90_assets/logos/Tech_logos/spark.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/spark.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/spark.png  used on input li
 ne 66.
 (pdftex.def)             Requested size: 81.9406pt x 38.39511pt.
-<90_assets/logos/Tech_logos/trino.png, id=549, 803.0pt x 361.35pt>
+<90_assets/logos/Tech_logos/trino.png, id=513, 803.0pt x 361.35pt>
 File: 90_assets/logos/Tech_logos/trino.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/trino.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/trino.png  used on input li
 ne 80.
 (pdftex.def)             Requested size: 81.9406pt x 36.87044pt.
- [22 <./90_assets/logos/Tech_logos/Apache_Iceberg.png> <./90_assets/logos/Tech_
+ [24 <./90_assets/logos/Tech_logos/Apache_Iceberg.png> <./90_assets/logos/Tech_
 logos/Apache_Hive.png> <./90_assets/logos/Tech_logos/spark.png> <./90_assets/lo
 gos/Tech_logos/trino.png>]
-<90_assets/logos/Tech_logos/data_build_tool.png, id=560, 1204.5pt x 602.25pt>
+<90_assets/logos/Tech_logos/data_build_tool.png, id=524, 1204.5pt x 602.25pt>
 File: 90_assets/logos/Tech_logos/data_build_tool.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/data_build_tool.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/data_build_tool.png  used o
 n input line 97.
 (pdftex.def)             Requested size: 81.9406pt x 40.96715pt.
-<90_assets/logos/Tech_logos/Apache_Parquet.png, id=561, 166.6225pt x 90.3375pt>
+<90_assets/logos/Tech_logos/Apache_Parquet.png, id=525, 166.6225pt x 90.3375pt>
 
 File: 90_assets/logos/Tech_logos/Apache_Parquet.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Parquet.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Parquet.png  used on
  input line 98.
 (pdftex.def)             Requested size: 81.9406pt x 44.42564pt.
-<90_assets/logos/Tech_logos/great_expectations.png, id=564, 971.63pt x 258.9675
+<90_assets/logos/Tech_logos/great_expectations.png, id=528, 971.63pt x 258.9675
 pt>
 File: 90_assets/logos/Tech_logos/great_expectations.png Graphic file (type png)
 
@@ -1194,78 +1195,1426 @@ File: 90_assets/logos/Tech_logos/great_expectations.png Graphic file (type png)
 Package pdftex.def Info: 90_assets/logos/Tech_logos/great_expectations.png  use
 d on input line 115.
 (pdftex.def)             Requested size: 86.49748pt x 23.05316pt.
- [23 <./90_assets/logos/Tech_logos/data_build_tool.png> <./90_assets/logos/Tech
+ [25 <./90_assets/logos/Tech_logos/data_build_tool.png> <./90_assets/logos/Tech
 _logos/Apache_Parquet.png> <./90_assets/logos/Tech_logos/great_expectations.png
 >]
-<90_assets/logos/Tech_logos/Airflow.png, id=577, 166.6225pt x 90.3375pt>
+<90_assets/logos/Tech_logos/Airflow.png, id=541, 166.6225pt x 90.3375pt>
 File: 90_assets/logos/Tech_logos/Airflow.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Airflow.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Airflow.png  used on input 
 line 129.
 (pdftex.def)             Requested size: 86.49748pt x 46.89719pt.
-<90_assets/logos/Tech_logos/Prometheus.png, id=579, 774.895pt x 405.515pt>
+<90_assets/logos/Tech_logos/Prometheus.png, id=543, 774.895pt x 405.515pt>
 File: 90_assets/logos/Tech_logos/Prometheus.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Prometheus.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Prometheus.png  used on inp
 ut line 146.
 (pdftex.def)             Requested size: 81.9406pt x 42.88042pt.
-<90_assets/logos/Tech_logos/Grafana.png, id=580, 1204.5pt x 602.25pt>
+<90_assets/logos/Tech_logos/Grafana.png, id=544, 1204.5pt x 602.25pt>
 File: 90_assets/logos/Tech_logos/Grafana.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Grafana.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Grafana.png  used on input 
 line 147.
 (pdftex.def)             Requested size: 81.9406pt x 40.96715pt.
-<90_assets/logos/Tech_logos/docker.png, id=583, 963.6pt x 796.9775pt>
+<90_assets/logos/Tech_logos/docker.png, id=547, 963.6pt x 796.9775pt>
 File: 90_assets/logos/Tech_logos/docker.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/docker.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/docker.png  used on input l
 ine 163.
 (pdftex.def)             Requested size: 81.9406pt x 67.76042pt.
- [24 <./90_assets/logos/Tech_logos/Airflow.png> <./90_assets/logos/Tech_logos/P
+ [26 <./90_assets/logos/Tech_logos/Airflow.png> <./90_assets/logos/Tech_logos/P
 rometheus.png> <./90_assets/logos/Tech_logos/Grafana.png>])
-(05_chapter_4_requirements_analysis_and_system_design/chapter.tex [25 <./90_ass
-ets/logos/Tech_logos/docker.png>] [26]
+(05_chapter_4_requirements_analysis_and_system_design/chapter.tex [27 <./90_ass
+ets/logos/Tech_logos/docker.png>] [28]
 Chapter IV.
-[27
+[29
 
-] [28] [29] [30] [31] [32])
+] [30] [31]
+(90_assets/latex_diagrams/chapter_4/fig_4_1_logical_architecture.tex) [32]
+(90_assets/latex_diagrams/chapter_4/fig_4_2_physical_architecture.tex) [33]
+(90_assets/latex_diagrams/chapter_4/fig_4_3_end_to_end_flow.tex) [34] [35]
+[36])
 (06_chapter_5_implementation_of_the_distributed_lakehouse_platform/chapter.tex
-[33]
+[37]
 Chapter V.
-[34
+(90_assets/latex_diagrams/chapter_5/fig_5_1_dataset_families.tex) [38
 
-] [35] [36] [37] [38] [39])
+] [39]
+(90_assets/latex_diagrams/chapter_5/fig_5_2_kafka_ingestion.tex) [40]
+(90_assets/latex_diagrams/chapter_5/fig_5_3_hdfs_bronze.tex
+Overfull \hbox (5.20036pt too wide) in paragraph at lines 5--5
+ [][]\T1/lmr/bx/n/14.4 (-20) DataNode 
+ []
+
+
+Overfull \hbox (5.20036pt too wide) in paragraph at lines 9--9
+ [][]\T1/lmr/bx/n/14.4 (-20) DataNode 
+ []
+
+
+Overfull \hbox (5.20036pt too wide) in paragraph at lines 13--13
+ [][]\T1/lmr/bx/n/14.4 (-20) DataNode 
+ []
+
+) [41] (90_assets/latex_diagrams/chapter_5/fig_5_4_spark_raw_load.tex) [42]
+(90_assets/latex_diagrams/chapter_5/fig_5_5_metadata_governance.tex)
+(90_assets/latex_diagrams/chapter_5/fig_5_6_trino_access.tex) [43]
+(90_assets/latex_diagrams/chapter_5/fig_5_7_dbt_layers.tex) [44]
+(90_assets/latex_diagrams/chapter_5/fig_5_8_validation_checkpoints.tex)
+[45] (90_assets/latex_diagrams/chapter_5/fig_5_9_dag_sequence.tex) [46])
 (07_chapter_6_deployment_strategy_and_distributed_execution/chapter.tex
-[40]
+[47]
 Chapter VI.
-[41
+(90_assets/latex_diagrams/chapter_6/fig_6_1_control_vs_data_plane.tex
 
-] [42] [43] [44])
-(08_chapter_7_security_architecture_and_hardening/chapter.tex [45]
+! Package xcolor Error: Undefined color `dograyfill'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...orchestration + monitoring + supervision}};
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! Package pgf Error: Unsupported color model `'. Sorry.
+
+See the pgf package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...orchestration + monitoring + supervision}};
+                                                  
+This error message was generated by an \errmessage
+command, so I can't give any explicit help.
+Pretend that you're Hercule Poirot: Examine all clues,
+and deduce the truth by order and method.
+
+
+! Package xcolor Error: Undefined color `dograyfill'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...orchestration + monitoring + supervision}};
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \let 
+l.3 ...orchestration + monitoring + supervision}};
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+)
+! Incomplete \ifx; all text was ignored after line 3.
+<inserted text> 
+                \fi 
+l.39 ...apter_6/fig_6_1_control_vs_data_plane.tex}
+                                                  
+The file ended while I was skipping conditional text.
+This kind of error happens when you say `\if...' and forget
+the matching `\fi'. I've inserted a `\fi'; this might work.
+
+)
+! Incomplete \ifx; all text was ignored after line 3.
+<inserted text> 
+                \fi 
+l.35 ...egy_and_distributed_execution/chapter.tex}
+                                                  
+The file ended while I was skipping conditional text.
+This kind of error happens when you say `\if...' and forget
+the matching `\fi'. I've inserted a `\fi'; this might work.
+
+(08_chapter_7_security_architecture_and_hardening/chapter.tex
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Security Architecture and Hardening}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
 Chapter VII.
-[46
 
-] [47] [48] [49] [50])
-(09_chapter_8_validation_testing_and_results/chapter.tex [51] [52]
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.16 \begin{table}[!htbp]
+                         
+You've lost some text.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+(90_assets/latex_diagrams/chapter_7/fig_7_1_kerberos_identity_flow.tex
+
+! Package xcolor Error: Undefined color `dotealfill'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...icket issuing + principal administration}};
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! Package pgf Error: Unsupported color model `'. Sorry.
+
+See the pgf package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...icket issuing + principal administration}};
+                                                  
+(That was another \errmessage.)
+
+
+! Package xcolor Error: Undefined color `dotealfill'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...icket issuing + principal administration}};
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \let 
+l.3 ...icket issuing + principal administration}};
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+)
+! Incomplete \ifx; all text was ignored after line 3.
+<inserted text> 
+                \fi 
+l.59 ...pter_7/fig_7_1_kerberos_identity_flow.tex}
+                                                  
+The file ended while I was skipping conditional text.
+This kind of error happens when you say `\if...' and forget
+the matching `\fi'. I've inserted a `\fi'; this might work.
+
+)
+! Incomplete \ifx; all text was ignored after line 3.
+<inserted text> 
+                \fi 
+l.36 ...ty_architecture_and_hardening/chapter.tex}
+                                                  
+The file ended while I was skipping conditional text.
+This kind of error happens when you say `\if...' and forget
+the matching `\fi'. I've inserted a `\fi'; this might work.
+
+(09_chapter_8_validation_testing_and_results/chapter.tex
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Validation, Testing, and Results}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
 Chapter VIII.
-[53
 
-] [54] [55] [56] [57])
-(10_chapter_9_discussion_and_critical_analysis/chapter.tex [58] [59]
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.16 \begin{table}[!htbp]
+                         
+You've lost some text.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+(90_assets/latex_diagrams/chapter_8/fig_8_1_infrastructure_validation_map.tex
+
+! Package xcolor Error: Undefined color `dobluefill'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ... + Spark + Trino + security + monitoring}};
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! Package pgf Error: Unsupported color model `'. Sorry.
+
+See the pgf package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ... + Spark + Trino + security + monitoring}};
+                                                  
+(That was another \errmessage.)
+
+
+! Package xcolor Error: Undefined color `dobluefill'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ... + Spark + Trino + security + monitoring}};
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \let 
+l.3 ... + Spark + Trino + security + monitoring}};
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+)
+! Incomplete \ifx; all text was ignored after line 3.
+<inserted text> 
+                \fi 
+l.63 ...fig_8_1_infrastructure_validation_map.tex}
+                                                  
+The file ended while I was skipping conditional text.
+This kind of error happens when you say `\if...' and forget
+the matching `\fi'. I've inserted a `\fi'; this might work.
+
+)
+! Incomplete \ifx; all text was ignored after line 3.
+<inserted text> 
+                \fi 
+l.37 ...alidation_testing_and_results/chapter.tex}
+                                                  
+The file ended while I was skipping conditional text.
+This kind of error happens when you say `\if...' and forget
+the matching `\fi'. I've inserted a `\fi'; this might work.
+
+(10_chapter_9_discussion_and_critical_analysis/chapter.tex
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {Discussion and Critical Analysis}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
 Chapter IX.
-[60
+(90_assets/latex_diagrams/chapter_9/fig_9_1_architecture_strengths.tex
 
-] [61] [62]) (11_chapter_10_general_conclusion_and_perspectives/chapter.tex
-[63] [64]
+! Package xcolor Error: Undefined color `dograyfill'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...buted customer-data lakehouse foundation}};
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! Package pgf Error: Unsupported color model `'. Sorry.
+
+See the pgf package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...buted customer-data lakehouse foundation}};
+                                                  
+(That was another \errmessage.)
+
+
+! Package xcolor Error: Undefined color `dograyfill'.
+
+See the xcolor package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...buted customer-data lakehouse foundation}};
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+! Missing \endcsname inserted.
+<to be read again> 
+                   \let 
+l.3 ...buted customer-data lakehouse foundation}};
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+)
+! Incomplete \ifx; all text was ignored after line 3.
+<inserted text> 
+                \fi 
+l.19 ...pter_9/fig_9_1_architecture_strengths.tex}
+                                                  
+The file ended while I was skipping conditional text.
+This kind of error happens when you say `\if...' and forget
+the matching `\fi'. I've inserted a `\fi'; this might work.
+
+)
+! Incomplete \ifx; all text was ignored after line 3.
+<inserted text> 
+                \fi 
+l.38 ...cussion_and_critical_analysis/chapter.tex}
+                                                  
+The file ended while I was skipping conditional text.
+This kind of error happens when you say `\if...' and forget
+the matching `\fi'. I've inserted a `\fi'; this might work.
+
+(11_chapter_10_general_conclusion_and_perspectives/chapter.tex
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing \endgroup inserted.
+<inserted text> 
+                \endgroup 
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.1 \chapter
+            {General Conclusion and Perspectives}
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
 Chapter X.
-[65
-
-]) [66] (main.bbl [67
-
-
-]
+) (main.bbl
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 8
-0.
+5.
  (C:\Program Files\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -1274,36 +2623,64 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 )
-(13_appendices/appendices_overview.tex [68]
+(13_appendices/appendices_overview.tex
 Appendix A.
-[69
+)
 
-]) [70] (main.aux)
+! LaTeX Error: \begin{tikzpicture} on input line 1 ended by \end{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.49 \end{document}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+(main.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-07-20>
  ***********
- ) 
-Here is how much of TeX's memory you used:
- 29623 strings out of 467501
- 555968 string characters out of 5418659
- 993338 words of memory out of 5000000
- 57677 multiletter control sequences out of 15000+600000
- 724120 words of font info for 248 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 97i,12n,97p,1003b,931s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Program Files/M
-iKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/pub
-lic/lm/lmbx8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx9.pfb><C:/P
-rogram Files/MiKTeX/fonts/type1/public/lm/lmmi12.pfb><C:/Program Files/MiKTeX/f
-onts/type1/public/lm/lmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/l
-mr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr8.pfb><C:/Program Fi
-les/MiKTeX/fonts/type1/public/lm/lmr9.pfb><C:/Program Files/MiKTeX/fonts/type1/
-public/lm/lmri12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy10.pfb>
-<C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (81 pages, 3002807 bytes).
-PDF statistics:
- 1356 PDF objects out of 1440 (max. 8388607)
- 293 named destinations out of 1000 (max. 500000)
- 52984 words of extra memory for PDF output out of 61914 (max. 10000000)
 
+! You can't use `\end' in internal vertical mode.
+\enddocument ...cument/end}\deadcycles \z@ \@@end 
+                                                  
+l.49 \end{document}
+                   
+Sorry, but I'm not programmed to handle this case;
+I'll just pretend that you didn't ask for it.
+If you're in the wrong mode, you might be able to
+return to the right one by typing `I}' or `I$' or `I\par'.
+
+
+! LaTeX Error: \begin{tikzpicture} on input line 1 ended by \end{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.49 \end{document}
+                   
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+)
+! Emergency stop.
+<*> ./main.tex
+              
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 29971 strings out of 467501
+ 569347 string characters out of 5418659
+ 1021873 words of memory out of 5000000
+ 58043 multiletter control sequences out of 15000+600000
+ 719466 words of font info for 233 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 97i,14n,97p,1003b,1677s stack positions out of 10000i,1000n,20000p,200000b,200000s
+!  ==> Fatal error occurred, no output PDF file produced!

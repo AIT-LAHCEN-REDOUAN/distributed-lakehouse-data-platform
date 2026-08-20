@@ -1,0 +1,18 @@
+\begin{tikzpicture}[node distance=0.65cm and 0.7cm]
+    \node[ado box=adotealfill, text width=5.0cm] (master)
+    {\adoboxcontent{Spark master on VM2}{cluster coordination + application scheduling}};
+    \node[ado box=adoorangefill, text width=2.8cm, below left=0.9cm and 0.2cm of master.south] (w1)
+    {\adoboxcontent{Worker 1}{VM1\\executor capacity}};
+    \node[ado box=adoorangefill, text width=2.8cm, below=0.9cm of master] (w2)
+    {\adoboxcontent{Worker 2}{VM2\\executor capacity}};
+    \node[ado box=adoorangefill, text width=2.8cm, below right=0.9cm and 0.2cm of master.south] (w3)
+    {\adoboxcontent{Worker 3}{VM3\\executor capacity}};
+    \node[ado box=adopurplefill, text width=10.0cm, below=0.95cm of w2] (result)
+    {\adoboxcontent{Distributed execution result}{applications can allocate work across several nodes during cluster processing}};
+    \draw[ado arrow] (master) -- (w1);
+    \draw[ado arrow] (master) -- (w2);
+    \draw[ado arrow] (master) -- (w3);
+    \draw[ado dashed arrow] (w1) -- (result);
+    \draw[ado dashed arrow] (w2) -- (result);
+    \draw[ado dashed arrow] (w3) -- (result);
+\end{tikzpicture}

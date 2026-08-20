@@ -1,0 +1,16 @@
+\begin{tikzpicture}[node distance=0.7cm and 0.7cm]
+    \node[ado box=adograyfill, text width=5.0cm] (core)
+    {\adoboxcontent{AdOptimizer CDP}{distributed customer-data lakehouse foundation}};
+    \node[ado box=adobluefill, text width=3.2cm, above left=1.0cm and 0.8cm of core] (mod)
+    {\adoboxcontent{Modular}{clear responsibility layers}};
+    \node[ado box=adotealfill, text width=3.2cm, above right=1.0cm and 0.8cm of core] (dist)
+    {\adoboxcontent{Distributed}{multi-node storage and compute}};
+    \node[ado box=adoorangefill, text width=3.2cm, below left=1.0cm and 0.8cm of core] (gov)
+    {\adoboxcontent{Governed}{metadata + quality + orchestration}};
+    \node[ado box=adopurplefill, text width=3.2cm, below right=1.0cm and 0.8cm of core] (sec)
+    {\adoboxcontent{Security-aware}{identity + protected access}};
+    \draw[ado dashed arrow] (mod) -- (core);
+    \draw[ado dashed arrow] (dist) -- (core);
+    \draw[ado dashed arrow] (gov) -- (core);
+    \draw[ado dashed arrow] (sec) -- (core);
+\end{tikzpicture}

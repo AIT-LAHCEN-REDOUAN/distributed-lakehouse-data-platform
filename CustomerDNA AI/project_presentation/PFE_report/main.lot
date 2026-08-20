@@ -1,26 +1,14 @@
 \babel@toc {english}{}\relax 
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {II.1}{\ignorespaces Comparison between centralized and distributed architectural logic}}{10}{table.caption.10}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {IV.1}{\ignorespaces Primary functional requirements of the platform, part 1}}{28}{table.caption.21}%
-\contentsline {table}{\numberline {IV.2}{\ignorespaces Primary functional requirements of the platform, part 2}}{28}{table.caption.22}%
-\contentsline {table}{\numberline {IV.3}{\ignorespaces Main non-functional requirements of the platform}}{29}{table.caption.23}%
-\contentsline {table}{\numberline {IV.4}{\ignorespaces Physical node distribution of the final deployment}}{30}{table.caption.24}%
-\contentsline {table}{\numberline {IV.5}{\ignorespaces Security controls integrated into the system design}}{32}{table.caption.25}%
+\contentsline {table}{\numberline {IV.1}{\ignorespaces Primary functional requirements of the platform, part 1}}{30}{table.caption.23}%
+\contentsline {table}{\numberline {IV.2}{\ignorespaces Primary functional requirements of the platform, part 2}}{30}{table.caption.24}%
+\contentsline {table}{\numberline {IV.3}{\ignorespaces Main non-functional requirements of the platform}}{31}{table.caption.25}%
+\contentsline {table}{\numberline {IV.4}{\ignorespaces Physical node distribution of the final deployment}}{33}{table.caption.27}%
+\contentsline {table}{\numberline {IV.5}{\ignorespaces Security controls integrated into the system design}}{36}{table.caption.30}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {V.1}{\ignorespaces Active datasets retained in the implemented platform}}{35}{table.caption.26}%
-\contentsline {table}{\numberline {V.2}{\ignorespaces Implemented orchestration flow of the platform}}{39}{table.caption.27}%
-\addvspace {10\p@ }
-\contentsline {table}{\numberline {VI.1}{\ignorespaces Main responsibilities of the local control plane}}{42}{table.caption.28}%
-\contentsline {table}{\numberline {VI.2}{\ignorespaces VM-level service allocation in the distributed deployment}}{42}{table.caption.29}%
-\contentsline {table}{\numberline {VI.3}{\ignorespaces Operational deployment artifacts used in the project}}{45}{table.caption.30}%
-\addvspace {10\p@ }
-\contentsline {table}{\numberline {VII.1}{\ignorespaces Main security objectives and corresponding implementation controls}}{47}{table.caption.31}%
-\addvspace {10\p@ }
-\contentsline {table}{\numberline {VIII.1}{\ignorespaces Validation strategy adopted for the deployed platform}}{54}{table.caption.32}%
-\contentsline {table}{\numberline {VIII.2}{\ignorespaces Operational meaning of the core DAG validations}}{56}{table.caption.33}%
-\addvspace {10\p@ }
-\contentsline {table}{\numberline {IX.1}{\ignorespaces Main constraints and the corresponding design responses}}{61}{table.caption.34}%
-\addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {table}{\numberline {V.1}{\ignorespaces Active datasets retained in the implemented platform}}{39}{table.caption.31}%
+\contentsline {table}{\numberline {V.2}{\ignorespaces Implemented orchestration flow of the platform}}{46}{table.caption.40}%

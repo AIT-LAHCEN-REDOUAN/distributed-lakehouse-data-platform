@@ -1,0 +1,25 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={5.0cm}{adopurplefill}, minimum height=1.3cm] (nn) at (0,0)
+    {\adoboxcontentwide{NameNode on VM2}{namespace authority and bronze path coordination}};
+  \node[ado box={2.3cm}{adobluefill}, minimum height=1.8cm] (dn1) at (-3.2,-2.8)
+    {\textbf{\large DataNode 1}\\
+     VM1\\
+     distributed blocks};
+  \node[ado box={2.3cm}{adoorangefill}, minimum height=1.8cm] (dn2) at (0,-2.8)
+    {\textbf{\large DataNode 2}\\
+     VM2\\
+     distributed blocks};
+  \node[ado box={2.3cm}{adotealfill}, minimum height=1.8cm] (dn3) at (3.2,-2.8)
+    {\textbf{\large DataNode 3}\\
+     VM3\\
+     distributed blocks};
+  \node[ado box={7.2cm}{adograyfill}, minimum height=1.45cm] (bronze) at (0,-5.7)
+    {\adoboxcontentwide{Bronze organization}{client and dataset aware folders containing immutable raw batches for replay}};
+
+  \draw[ado arrow] (nn) -- (dn1);
+  \draw[ado arrow] (nn) -- (dn2);
+  \draw[ado arrow] (nn) -- (dn3);
+  \draw[ado arrow] (dn1.south) |- ($(bronze.north)+(-2.0,0)$);
+  \draw[ado arrow] (dn2.south) -- (bronze.north);
+  \draw[ado arrow] (dn3.south) |- ($(bronze.north)+(2.0,0)$);
+\end{tikzpicture}

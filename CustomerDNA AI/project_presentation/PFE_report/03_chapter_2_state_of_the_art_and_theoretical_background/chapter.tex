@@ -10,18 +10,55 @@ The discussion draws on the broader literature on distributed and data-intensive
 \subsection{From Centralized Systems to Distributed Data Platforms}
 Traditional information systems were largely organized around centralized databases and a relatively small number of application servers. This model remains effective when data volume is moderate, operational contexts are stable, and the number of consumers remains limited. However, once organizations begin collecting heterogeneous data from multiple channels, centralized architectures become difficult to sustain. Storage pressure increases, computational workloads become more varied, and the system becomes more sensitive to single-node bottlenecks.
 
-Distributed data platforms emerged as a response to these limits. Their role is not only to increase capacity, but also to separate responsibilities such as ingestion, storage, compute, metadata, and analytical access. This decomposition allows each concern to evolve with the technical model best suited to it.
-
 The centralized model is simple to deploy, but it concentrates ingestion, storage, processing, metadata, and access on the same execution point. As workloads grow, this concentration creates bottlenecks, single points of failure, and clear scalability limits.
 
 \begin{figure}[H]
   \centering
-  \input{90_assets/latex_diagrams/chapter_2/fig_2_1_centralized_vs_distributed.tex}
-  \caption{Conceptual evolution from centralized architectures to distributed data platforms.}
-  \label{fig:centralized-vs-distributed}
+  \input{90_assets/latex_diagrams/chapter_2/fig_2_1_centralized_architecture.tex}
+  \caption{Centralized architecture as a concentration of ingestion, storage, processing, and access on one execution point.}
+  \label{fig:centralized-architecture}
 \end{figure}
 
-By contrast, the distributed platform separates responsibilities according to operational role. This supports modular growth, parallel execution, better resilience, and clearer alignment between storage and processing patterns. The comparison shown in Figure~\ref{fig:centralized-vs-distributed} also prepares the discussion on horizontal scaling, reliability, and maintainability \cite{kleppmann2017ddia}.
+Figure~\ref{fig:centralized-architecture} highlights why centralized designs become fragile under heterogeneous analytical growth: all responsibilities compete on the same machine boundary, and operational evolution is constrained by the limits of that boundary.
+
+Distributed data platforms emerged as a response to these limits. Their role is not only to increase capacity, but also to separate responsibilities such as ingestion, storage, compute, metadata, and analytical access. This decomposition allows each concern to evolve with the technical model best suited to it \cite{kleppmann2017ddia}.
+
+\begin{figure}[H]
+  \centering
+  \input{90_assets/latex_diagrams/chapter_2/fig_2_2_distributed_data_platform.tex}
+  \caption{Distributed data platform as a layered decomposition of storage, compute, metadata, and analytical access responsibilities.}
+  \label{fig:distributed-data-platform}
+\end{figure}
+
+By contrast, the distributed platform separates responsibilities according to operational role. This supports modular growth, parallel execution, better resilience, and clearer alignment between storage and processing patterns. Figure~\ref{fig:distributed-data-platform} therefore prepares the discussion on horizontal scaling, reliability, and maintainability.
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.25}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{3.0cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Criterion}} & \textcolor{white}{\textbf{Centralized architecture}} & \textcolor{white}{\textbf{Distributed data platform}} \\
+        \hline
+        Node organization & Core responsibilities remain concentrated on one primary execution point. & Responsibilities are distributed across several coordinated layers or nodes. \\
+        \hline
+        Scaling model & Capacity growth depends mainly on strengthening one machine. & Capacity growth is achieved by adding or specializing nodes and services. \\
+        \hline
+        Failure exposure & One overloaded or failed node can degrade the whole platform quickly. & Failure impact is more localized when replication and layered separation are used. \\
+        \hline
+        Data-processing logic & Ingestion, storage, processing, and access remain tightly coupled. & Ingestion, storage, compute, metadata, and access can evolve with different rhythms. \\
+        \hline
+        Governance evolution & Metadata and traceability are harder to extend cleanly as workloads diversify. & Governance can be attached explicitly to catalog, storage, and analytical layers. \\
+        \hline
+        Long-term suitability & More suitable for moderate and stable workloads. & More suitable for heterogeneous, growing, and multi-consumer analytical workloads. \\
+        \hline
+    \end{tabularx}
+    \caption{Comparison between centralized and distributed architectural logic}
+    \label{tab:centralized-vs-distributed}
+\end{table}
 
 \subsection{Vertical Scaling vs Horizontal Scaling}
 One of the first decisions in large-scale systems concerns how growth should be absorbed. Vertical scaling strengthens a machine by increasing CPU, memory, or storage capacity. It is often simpler in the short term because the system does not need to be partitioned immediately. Nevertheless, it has two major limits: physical growth is finite, and dependence on a small number of powerful machines weakens resilience.
@@ -152,24 +189,24 @@ Kappa architecture reduces the conceptual duplication of Lambda by emphasizing a
 
 This model is attractive when event logs are rich and replay can serve as the main recomputation mechanism. However, many analytical platforms still require clearly governed historical layers and structured table abstractions. Kappa is therefore instructive, but not automatically sufficient for every customer-data use case.
 
-\begin{figure}[H]
-    \centering
-    \input{90_assets/latex_diagrams/chapter_2/fig_2_2_event_log_processing.tex}
-    \caption{Single-path event-log processing logic associated with Kappa-style reasoning.}
-    \label{fig:event-log-processing}
-\end{figure}
-
-Figure~\ref{fig:event-log-processing} makes this reasoning explicit: the durable log supports replay, the processing path remains unique, and the serving layer is fed by reproducible recomputation rather than by a permanently duplicated analytical stack.
-
 \subsection{Comparative Analysis of These Architectures}
 The historical movement from warehouses to lakes, from lakes to lakehouses, and from isolated reporting toward event-aware architectures reflects a broader shift in priorities. Early architectures privileged control and stable relational semantics. Later architectures privileged ingestion flexibility and scale. Contemporary platforms increasingly seek a hybrid answer that preserves raw fidelity, enables distributed processing, and still produces governed analytical products.
 
 For \projectname, the lakehouse model is the most suitable. It supports raw bronze persistence, distributed storage, structured analytical tables, metadata-driven reuse, and downstream SQL exploration. The selected architecture is therefore a reasoned synthesis of the state of the art.
 
+More precisely, the implemented project combines both Lambda-style and Kappa-style reasoning without reproducing either model in a pure textbook form. It remains Kappa-inspired because replayable incoming records and durable raw history are treated as operational assets rather than disposable transit. At the same time, it remains close to Lambda-style discipline because the main analytical semantics are stabilized through batch-oriented refinement over preserved historical data. The resulting architecture is therefore best understood as a governed hybrid lakehouse model: event-aware at ingestion time, but structurally batch-oriented when producing trusted analytical layers \cite{marz2015bigdata,kreps2014questioning,armbrust2021lakehouse}.
+
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_2/fig_2_4_hybrid_processing_logic.tex}
+    \caption{Conceptual positioning of the implemented project between replay-oriented ingestion logic and batch-structured analytical refinement.}
+    \label{fig:hybrid-processing-logic}
+\end{figure}
+
 \section{Foundational Concepts for Governance and Trust in Data Platforms}
 
 \subsection{Metadata, Cataloging, and Data Discovery}
-Metadata gives meaning to stored data by describing structure, origin, semantics, and technical location. Without metadata, even accessible data can remain practically unusable. Cataloging extends this principle by making datasets discoverable and interpretable by different actors.
+Metadata gives meaning to stored data by describing structure, origin, semantics, and technical location. Without metadata, even accessible data can remain practically unusable. Cataloging extends this principle by making datasets discoverable and interpretable by different actors \cite{kleppmann2017ddia}.
 
 In a distributed customer-data platform, metadata is especially important because the architecture spans several services and layers. Governance cannot depend on informal memory alone. A defensible platform must therefore treat schema registration and dataset discovery as explicit capabilities.
 
@@ -192,14 +229,14 @@ For example, a simple completeness metric can be written as:
 Even such a basic ratio is valuable in practice because it transforms a qualitative concern into a measurable control signal that can be monitored over time.
 
 \subsection{Observability in Distributed Data Systems}
-Observability is the capacity to infer the internal state of a system through emitted evidence such as metrics, logs, traces, health checks, and runtime indicators. In distributed environments, observability is crucial because failures often emerge from the interaction between components rather than from one isolated service.
+Observability is the capacity to infer the internal state of a system through emitted evidence such as metrics, logs, traces, health checks, and runtime indicators. In distributed environments, observability is crucial because failures often emerge from the interaction between components rather than from one isolated service \cite{prometheus_docs}.
 
 For data engineering, observability is tightly linked to platform trust. If the system cannot show whether ingestion succeeded, whether storage is healthy, whether services are reachable, or whether transformations produced expected results, its outputs become difficult to defend.
 
 \section{Security Foundations for Distributed Data Platforms}
 
 \subsection{Authentication in Distributed Systems}
-Authentication establishes who a user or service is. In distributed environments, it becomes critical because communication crosses process, host, and network boundaries. Storage services, metadata layers, and query endpoints must be able to distinguish legitimate principals from unauthorized ones.
+Authentication establishes who a user or service is. In distributed environments, it becomes critical because communication crosses process, host, and network boundaries. Storage services, metadata layers, and query endpoints must be able to distinguish legitimate principals from unauthorized ones \cite{mit_kerberos_docs}.
 
 Without strong authentication, a distributed platform depends on implicit trust between components. Authentication is therefore a structural foundation of secure distributed data engineering.
 
@@ -209,12 +246,12 @@ Once identity is established, the system must determine which actions are permit
 In data platforms, authorization cannot be limited to end-user interfaces alone. It also applies to service-to-service calls, operational scripts, metadata access, and internal gateways.
 
 \subsection{Encryption in Transit and Encryption at Rest}
-Encryption in transit protects data while it moves between nodes, services, or users. It reduces exposure to interception and helps preserve confidentiality across the network. Encryption at rest protects persisted data on storage media and reduces exposure if storage devices or mounted runtime paths are accessed outside intended controls.
+Encryption in transit protects data while it moves between nodes, services, or users. It reduces exposure to interception and helps preserve confidentiality across the network. Encryption at rest protects persisted data on storage media and reduces exposure if storage devices or mounted runtime paths are accessed outside intended controls \cite{cryptsetup_docs}.
 
 These two mechanisms answer different threat surfaces and must be treated as complementary. In a multi-service lakehouse platform, data moves through ingestion, orchestration, query, and monitoring channels, so both forms of protection are necessary.
 
 \subsection{Secure Service Exposure in Multi-Node Environments}
-Distributed platforms expose numerous service endpoints: orchestration UIs, query interfaces, storage consoles, monitoring dashboards, and service APIs. If these are exposed without proxying, credential checks, and transport protection, the system accumulates a wide attack surface.
+Distributed platforms expose numerous service endpoints: orchestration UIs, query interfaces, storage consoles, monitoring dashboards, and service APIs. If these are exposed without proxying, credential checks, and transport protection, the system accumulates a wide attack surface \cite{openssh_docs,prometheus_docs}.
 
 Secure exposure therefore requires deliberate control of entry points, certificates, internal-versus-external interfaces, and service-access boundaries.
 

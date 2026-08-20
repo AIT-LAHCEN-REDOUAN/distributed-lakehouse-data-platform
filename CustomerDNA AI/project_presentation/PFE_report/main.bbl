@@ -41,6 +41,11 @@ Michael Armbrust, Ali Ghodsi, Reynold Xin, and Matei Zaharia.
   warehousing and advanced analytics.
 \newblock In {\em Conference on Innovative Data Systems Research (CIDR)}, 2021.
 
+\bibitem{cryptsetup_docs}
+{cryptsetup Project}.
+\newblock cryptsetup and luks documentation, 2026.
+\newblock Accessed for technical reference.
+
 \bibitem{dbt_docs}
 {dbt Labs}.
 \newblock dbt developer hub documentation, 2026.
@@ -91,6 +96,16 @@ Nathan Marz and James Warren.
 \newblock {\em Big Data: Principles and Best Practices of Scalable Realtime
   Data Systems}.
 \newblock Manning Publications, 2015.
+
+\bibitem{mit_kerberos_docs}
+{Massachusetts Institute of Technology}.
+\newblock Mit kerberos documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{openssh_docs}
+{OpenSSH Project}.
+\newblock Openssh documentation, 2026.
+\newblock Accessed for technical reference.
 
 \bibitem{prometheus_docs}
 {Prometheus Authors}.

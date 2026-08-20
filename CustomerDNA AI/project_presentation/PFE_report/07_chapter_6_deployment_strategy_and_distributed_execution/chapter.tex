@@ -1,7 +1,7 @@
 \chapter{Deployment Strategy and Distributed Execution}
 
 \section{Introduction}
-This chapter explains how \projectname{} is physically deployed and how its distributed character is demonstrated in practice. The objective is not only to say that several machines are used, but to clarify why services were separated the way they were, how data and control move across the environment, and how the final deployment remains reproducible and defensible in an academic setting.
+This chapter explains how \projectname{} is physically deployed and how its distributed character is demonstrated in practice. The objective is not only to say that several machines are used, but to clarify why services were separated the way they were, how data and control move across the environment, and how the final deployment remains reproducible and defensible in an academic setting. The deployment approach combines distributed-service reasoning with containerized packaging and reproducible operational startup logic \cite{docker_docs,apache_spark_docs,apache_hadoop_docs}.
 
 \section{Control Plane Responsibilities}
 The project adopts a deployment strategy based on a clear separation between a \textbf{local control plane} and a \textbf{distributed data plane}. The control plane is hosted on the local workstation, while the heavy data services are distributed across the three Linux virtual machines.
@@ -34,7 +34,12 @@ The project adopts a deployment strategy based on a clear separation between a \
 
 This separation is important for two reasons. First, it prevents the virtual machines from being overloaded by orchestration and monitoring services that do not need to participate directly in distributed storage or processing. Second, it makes the architecture easier to explain: the control plane governs, observes, and triggers, while the data plane stores, computes, and exposes data services.
 
-\textit{Diagram placeholder: separation between the local control plane and the distributed Linux data plane.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_6/fig_6_1_control_vs_data_plane.tex}
+    \caption{Separation between the local control plane and the distributed Linux data plane.}
+    \label{fig:chapter6-control-vs-data-plane}
+\end{figure}
 \FloatBarrier
 
 \section{VM-Level Service Separation}
@@ -66,7 +71,12 @@ This service distribution supports clearer operational reasoning. VM2 concentrat
 
 From an academic perspective, this separation is stronger than a pseudo-distributed demonstration in which all important services still run on the same node. Here, the deployment logic itself becomes part of the engineering contribution.
 
-\textit{Diagram placeholder: service placement map across VM1, VM2, and VM3.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_6/fig_6_2_vm_service_map.tex}
+    \caption{Service placement map across VM1, VM2, and VM3.}
+    \label{fig:chapter6-vm-service-map}
+\end{figure}
 \FloatBarrier
 
 \section{Data Flow Across Machines}
@@ -93,14 +103,19 @@ The actual machine-to-machine flow follows a layered path:
 
 This flow is important because it proves that the platform is not a single-machine ETL disguised as a distributed system. Data transport, persistence, metadata governance, processing, and analytical access cross different services and different machines with explicit operational boundaries between them.
 
-\textit{Diagram placeholder: end-to-end machine-level data flow from local source handling to distributed analytical exposure.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_6/fig_6_3_machine_data_flow.tex}
+    \caption{Machine-level data flow from local source handling to distributed analytical exposure.}
+    \label{fig:chapter6-machine-data-flow}
+\end{figure}
 
 \section{Distributed Processing Proof}
 The strongest practical proof of distributed execution in the project comes from the Spark cluster behavior. The Spark master is hosted on VM2, but executor resources are distributed across multiple workers on VM1, VM2, and VM3. This means processing capacity is not bound to a single machine.
 
 In operational demonstrations, the Spark master interface shows several registered workers, and applications allocate executors across the available nodes depending on the execution context. This is the key difference between a truly distributed execution environment and a local-only demonstration: processing tasks can be scheduled beyond the coordinator node itself.
 
-The deployment also includes a Spark Thrift Server and a remote Spark submission helper on VM2. These components reinforce the distributed logic of the environment:
+The deployment also includes a Spark Thrift Server and a remote Spark submission helper on VM2. These components reinforce the distributed logic of the environment and remain consistent with the Spark separation between cluster coordination and executor-side execution \cite{apache_spark_docs}:
 \begin{itemize}
     \item raw Spark jobs can be launched into the cluster from the control plane through a remote submission path;
     \item transformation-oriented SQL access can target the distributed Spark environment through the Thrift interface;
@@ -109,10 +124,15 @@ The deployment also includes a Spark Thrift Server and a remote Spark submission
 
 VM3 may sometimes appear idle during lighter workloads, which is normal in a small academic cluster. Distributed execution does not require that all workers always consume identical resources at the same time. What matters is that the cluster is capable of allocating work across multiple nodes and that the platform is engineered to support that behavior.
 
-\textit{Diagram placeholder: Spark master and worker collaboration across VM1, VM2, and VM3 during distributed execution.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_6/fig_6_4_distributed_spark_execution.tex}
+    \caption{Spark master and worker collaboration across VM1, VM2, and VM3 during distributed execution.}
+    \label{fig:chapter6-distributed-spark-execution}
+\end{figure}
 
 \section{Operational Packaging and Deployment Bundles}
-The deployment is supported by explicit operational packaging rather than undocumented manual steps. Each node has its own deployment bundle, startup logic, reset logic, and preflight checks. This is a major part of the project’s reproducibility value.
+The deployment is supported by explicit operational packaging rather than undocumented manual steps. Each node has its own deployment bundle, startup logic, reset logic, and preflight checks. This is a major part of the project's reproducibility value and reflects the same infrastructure-as-documentation discipline encouraged by container-based operational practice \cite{docker_docs}.
 
 \begin{table}[!htbp]
     \centering
@@ -142,7 +162,12 @@ The deployment is supported by explicit operational packaging rather than undocu
 
 The startup order is also intentional: VM2 is started first because it hosts the coordination-heavy services, then VM1 and VM3 are started to extend the cluster, and finally the local control plane is brought up after the distributed data plane is stable. This sequence reflects a real dependency-aware deployment strategy rather than arbitrary service launching.
 
-\textit{Diagram placeholder: deployment lifecycle from bundle preparation to preflight, startup order, and control-plane activation.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_6/fig_6_5_deployment_lifecycle.tex}
+    \caption{Deployment lifecycle from bundle preparation to preflight, startup order, and control-plane activation.}
+    \label{fig:chapter6-deployment-lifecycle}
+\end{figure}
 \FloatBarrier
 
 \section{Conclusion}

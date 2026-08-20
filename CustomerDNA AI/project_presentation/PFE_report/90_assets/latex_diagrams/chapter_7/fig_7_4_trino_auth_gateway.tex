@@ -1,0 +1,13 @@
+\begin{tikzpicture}[node distance=0.65cm]
+    \node[ado box=adograyfill, text width=9.8cm] (user)
+    {\adoboxcontent{Analytical users}{browser login through protected entry point}};
+    \node[ado box=adotealfill, text width=9.8cm, below=of user] (gateway)
+    {\adoboxcontent{Authenticated gateway}{credential check + controlled external access path}};
+    \node[ado box=adopurplefill, text width=9.8cm, below=of gateway] (coord)
+    {\adoboxcontent{Trino coordinator on VM2}{query planning + worker coordination}};
+    \node[ado box=adoorangefill, text width=9.8cm, below=of coord] (workers)
+    {\adoboxcontent{Distributed workers}{query fragments executed on VM1 and VM3}};
+    \draw[ado arrow] (user) -- (gateway);
+    \draw[ado arrow] (gateway) -- (coord);
+    \draw[ado arrow] (coord) -- (workers);
+\end{tikzpicture}

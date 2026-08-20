@@ -1,0 +1,16 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={2.8cm}{adoorangefill}, minimum height=1.55cm] (spark) at (-3.2,0)
+    {\adoboxcontentwide{Spark writers}{create and update lakehouse tables}};
+  \node[ado box={3.3cm}{adopurplefill}, minimum height=1.95cm] (hms) at (0,0)
+    {\textbf{\large Hive Metastore}\\[2pt]
+     shared table definitions\\
+     central catalog logic};
+  \node[ado box={2.8cm}{adotealfill}, minimum height=1.55cm] (trino) at (3.2,0)
+    {\adoboxcontentwide{Trino readers}{discover and query the same governed objects}};
+  \node[ado small box={2.8cm}{adograyfill}, minimum height=0.82cm] (pg) at (0,-2.4)
+    {\small PostgreSQL metastore backing store};
+
+  \draw[ado arrow] (spark.east) -- (hms.west);
+  \draw[ado arrow] (hms.east) -- (trino.west);
+  \draw[ado arrow] (hms.south) -- (pg.north);
+\end{tikzpicture}

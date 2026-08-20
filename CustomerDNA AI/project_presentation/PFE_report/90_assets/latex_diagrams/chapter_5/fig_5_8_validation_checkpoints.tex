@@ -1,0 +1,17 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={2.2cm}{adograyfill}, minimum height=1.1cm] (bronze) at (-3.2,0)
+    {\adoboxcontentwide{Bronze}{raw landing}};
+  \node[ado box={2.2cm}{adopurplefill}, minimum height=1.1cm] (raw) at (0,0)
+    {\adoboxcontentwide{Raw}{governed tables}};
+  \node[ado box={2.2cm}{adobluefill}, minimum height=1.1cm] (staging) at (3.2,0)
+    {\adoboxcontentwide{Staging}{normalized views}};
+  \node[ado box={2.4cm}{adoorangefill}, minimum height=1.1cm] (analytics) at (0,-2.3)
+    {\adoboxcontentwide{Analytics}{curated outputs}};
+  \node[ado box={5.8cm}{adotealfill}, minimum height=1.25cm] (gx) at (0,-4.7)
+    {\adoboxcontentwide{Great Expectations checkpoints}{structural and semantic validation with persisted evidence artifacts}};
+
+  \draw[ado arrow] (bronze.south) |- ($(gx.north)+(-2.3,0)$);
+  \draw[ado arrow] (raw.south) -- ($(gx.north)+(0,0)$);
+  \draw[ado arrow] (staging.south) |- ($(gx.north)+(2.3,0)$);
+  \draw[ado arrow] (analytics) -- (gx);
+\end{tikzpicture}

@@ -1,0 +1,16 @@
+\begin{tikzpicture}[node distance=0.6cm]
+    \node[ado box=adograyfill, text width=10.4cm] (sources)
+    {\adoboxcontent{Local control and dataset preparation}{source handling + orchestration trigger}};
+    \node[ado box=adotealfill, text width=10.4cm, below=of sources] (kafka)
+    {\adoboxcontent{Three-node transport layer}{Kafka brokers on VM1 + VM2 + VM3}};
+    \node[ado box=adobluefill, text width=10.4cm, below=of kafka] (hdfs)
+    {\adoboxcontent{Distributed bronze persistence}{HDFS namespace on VM2 + DataNodes on VM1 / VM2 / VM3}};
+    \node[ado box=adoorangefill, text width=10.4cm, below=of hdfs] (spark)
+    {\adoboxcontent{Distributed compute}{remote submission to VM2 + workers across the cluster}};
+    \node[ado box=adopurplefill, text width=10.4cm, below=of spark] (lakehouse)
+    {\adoboxcontent{Governed lakehouse exposure}{Iceberg tables + Hive Metastore + Trino analytical access}};
+    \draw[ado arrow] (sources) -- (kafka);
+    \draw[ado arrow] (kafka) -- (hdfs);
+    \draw[ado arrow] (hdfs) -- (spark);
+    \draw[ado arrow] (spark) -- (lakehouse);
+\end{tikzpicture}

@@ -1,0 +1,27 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={8.8cm}{adobluefill}, minimum height=1.05cm] (ingest) at (0,0)
+    {\adoboxcontentwide{Ingestion layer}{controlled dataset publication and topic-based transport}};
+  \node[ado box={8.8cm}{adotealfill}, minimum height=1.05cm] (bronze) at (0,-2.0)
+    {\adoboxcontentwide{Bronze persistence layer}{distributed raw storage for replay and traceability}};
+  \node[ado box={8.8cm}{adoorangefill}, minimum height=1.05cm] (raw) at (0,-4.0)
+    {\adoboxcontentwide{Raw lakehouse layer}{structured raw tables prepared from distributed bronze inputs}};
+  \node[ado box={4.0cm}{adopurplefill}, minimum height=1.0cm] (meta) at (-2.45,-6.1)
+    {\adoboxcontentwide{Metadata layer}{shared catalog authority}};
+  \node[ado box={4.0cm}{adograyfill}, minimum height=1.0cm] (access) at (2.45,-6.1)
+    {\adoboxcontentwide{Analytical access layer}{interactive governed SQL exposure}};
+  \node[ado box={8.8cm}{adoorangefill}, minimum height=1.05cm] (transform) at (0,-8.2)
+    {\adoboxcontentwide{Transformation layer}{modeled refinement from raw structures to business-ready outputs}};
+  \node[ado box={8.8cm}{adotealfill}, minimum height=1.05cm] (validate) at (0,-10.2)
+    {\adoboxcontentwide{Validation layer}{quality control and persisted evidence}};
+  \node[ado box={8.8cm}{adopurplefill}, minimum height=1.05cm] (orchestrate) at (0,-12.2)
+    {\adoboxcontentwide{Orchestration and observability}{run coordination, service supervision, and monitoring}};
+
+  \draw[ado arrow] (ingest) -- (bronze);
+  \draw[ado arrow] (bronze) -- (raw);
+  \draw[ado arrow] (raw) -- (meta);
+  \draw[ado arrow] (raw) -- (access);
+  \draw[ado arrow] (meta.south) |- ($(transform.north)+(-2.2,0)$);
+  \draw[ado arrow] (access.south) |- ($(transform.north)+(2.2,0)$);
+  \draw[ado arrow] (transform) -- (validate);
+  \draw[ado arrow] (validate) -- (orchestrate);
+\end{tikzpicture}

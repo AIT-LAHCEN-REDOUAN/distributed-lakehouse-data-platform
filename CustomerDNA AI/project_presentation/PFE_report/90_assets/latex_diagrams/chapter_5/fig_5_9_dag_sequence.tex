@@ -1,0 +1,17 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={7.8cm}{adograyfill}, minimum height=0.95cm] (reset) at (0,0)
+    {\adoboxcontentwide{1. Environment reset pipeline}{clean previous Kafka, bronze, and lakehouse runtime state}};
+  \node[ado box={7.8cm}{adobluefill}, minimum height=0.95cm] (setup) at (0,-1.75)
+    {\adoboxcontentwide{2. Lakehouse setup pipeline}{prepare structural prerequisites and technical storage state}};
+  \node[ado box={7.8cm}{adotealfill}, minimum height=0.95cm] (ready) at (0,-3.5)
+    {\adoboxcontentwide{3. Lakehouse readiness pipeline}{verify HDFS, Hive, Spark, and Trino availability}};
+  \node[ado box={7.8cm}{adoorangefill}, minimum height=0.95cm] (raw) at (0,-5.25)
+    {\adoboxcontentwide{4. Kafka--HDFS--Spark pipeline}{publish, persist, and load the raw distributed lakehouse foundation}};
+  \node[ado box={7.8cm}{adopurplefill}, minimum height=0.95cm] (dbt) at (0,-7.0)
+    {\adoboxcontentwide{5. dbt-spark pipeline}{transform, validate, and expose curated analytical outputs}};
+
+  \draw[ado arrow] (reset) -- (setup);
+  \draw[ado arrow] (setup) -- (ready);
+  \draw[ado arrow] (ready) -- (raw);
+  \draw[ado arrow] (raw) -- (dbt);
+\end{tikzpicture}

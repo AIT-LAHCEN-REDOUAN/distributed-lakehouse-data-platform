@@ -1,0 +1,12 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={6.6cm}{adotealfill}, minimum height=1.2cm] (bronze) at (0,0)
+    {\adoboxcontentwide{HDFS bronze files}{distributed replayable JSONL batches stored across the cluster}};
+  \node[ado box={7.9cm}{adoorangefill}, minimum height=2.0cm] (spark) at (0,-2.6)
+    {\textbf{\large Spark processing cluster}\\[2pt]
+     master on VM2 coordinating workers on VM1, VM2, and VM3};
+  \node[ado box={6.8cm}{adopurplefill}, minimum height=1.3cm] (raw) at (0,-5.3)
+    {\adoboxcontentwide{Iceberg raw tables}{structured lakehouse objects produced from bronze ingestion outputs}};
+
+  \draw[ado arrow] (bronze) -- (spark);
+  \draw[ado arrow] (spark) -- (raw);
+\end{tikzpicture}

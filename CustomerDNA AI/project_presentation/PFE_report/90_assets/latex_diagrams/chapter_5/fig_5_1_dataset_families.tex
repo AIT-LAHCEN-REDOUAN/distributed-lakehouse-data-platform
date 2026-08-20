@@ -1,0 +1,24 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={2.65cm}{adobluefill}, minimum height=2.2cm] (bank) at (-3.2,0)
+    {\textbf{\large Bank Marketing}\\[2pt]
+     profile traits\\
+     campaign exposure\\
+     response outcome};
+  \node[ado box={2.65cm}{adotealfill}, minimum height=2.2cm] (retail) at (0,0)
+    {\textbf{\large Online Retail II}\\[2pt]
+     invoices\\
+     products\\
+     purchasing history};
+  \node[ado box={2.85cm}{adoorangefill}, minimum height=2.2cm] (shoppers) at (3.25,0)
+    {\textbf{\large Online Shoppers}\\[2pt]
+     session behavior\\
+     navigation signals\\
+     purchase intent};
+
+  \node[ado box={6.8cm}{adopurplefill}, minimum height=1.35cm] (foundation) at (0,-3.2)
+    {\adoboxcontentwide{Customer-oriented analytical foundation}{complementary signals for profile, behavior, and transaction analysis}};
+
+  \draw[ado arrow] (bank.south) -- ($(foundation.north)+(-2.25,0)$);
+  \draw[ado arrow] (retail.south) -- (foundation.north);
+  \draw[ado arrow] (shoppers.south) -- ($(foundation.north)+(2.25,0)$);
+\end{tikzpicture}

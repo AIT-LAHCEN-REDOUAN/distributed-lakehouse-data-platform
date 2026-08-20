@@ -1,0 +1,10 @@
+\begin{tikzpicture}[node distance=0.7cm and 0.7cm]
+    \node[ado box=adotealfill, text width=4.7cm] (hdfs)
+    {\adoboxcontent{HDFS secure zone}{HTTPS browser access for NameNode / DataNode interfaces}};
+    \node[ado box=adopurplefill, text width=4.7cm, right=of hdfs] (trino)
+    {\adoboxcontent{Trino secure zone}{authenticated gateway over protected analytical access}};
+    \node[ado box=adograyfill, text width=10.4cm, below=0.9cm of $(hdfs)!0.5!(trino)$] (cp)
+    {\adoboxcontent{Local control-plane secure zone}{TLS-protected access to Airflow, Grafana, Prometheus, and Kafka UI}};
+    \draw[ado dashed arrow] (hdfs) -- (cp);
+    \draw[ado dashed arrow] (trino) -- (cp);
+\end{tikzpicture}

@@ -1,0 +1,18 @@
+\begin{tikzpicture}[node distance=0.6cm and 0.6cm]
+    \node[ado box=adograyfill, text width=10.6cm, minimum height=1.4cm] (cp)
+    {\adoboxcontent{Local control plane}{orchestration + monitoring + supervision}};
+
+    \node[ado box=adobluefill, text width=2.7cm, below left=1.0cm and -0.1cm of cp.south] (vm1)
+    {\adoboxcontent{VM1}{broker 1\\DataNode 1\\Spark worker 1\\Trino worker 1}};
+    \node[ado box=adotealfill, text width=3.2cm, below=1.0cm of cp.south] (vm2)
+    {\adoboxcontent{VM2}{broker 2\\NameNode\\Hive Metastore\\Spark master\\Trino coordinator}};
+    \node[ado box=adopurplefill, text width=2.7cm, below right=1.0cm and -0.1cm of cp.south] (vm3)
+    {\adoboxcontent{VM3}{broker 3\\DataNode 3\\Spark worker 3\\Trino worker 2}};
+
+    \node[ado group=adoborder, fit=(vm1)(vm2)(vm3), inner sep=0.35cm, label={[ado label]north:Distributed Linux data plane}] (plane) {};
+
+    \draw[ado arrow] (cp.south) -- (plane.north);
+    \draw[ado dashed arrow] (cp.south west) .. controls +(down:0.9cm) and +(up:0.6cm) .. (vm1.north);
+    \draw[ado dashed arrow] (cp.south) -- (vm2.north);
+    \draw[ado dashed arrow] (cp.south east) .. controls +(down:0.9cm) and +(up:0.6cm) .. (vm3.north);
+\end{tikzpicture}

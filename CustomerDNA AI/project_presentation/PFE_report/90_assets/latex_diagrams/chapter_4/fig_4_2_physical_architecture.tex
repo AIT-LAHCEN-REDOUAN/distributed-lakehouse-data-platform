@@ -1,0 +1,41 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={4.8cm}{adopurplefill}, minimum height=2.5cm] (cp) at (0,0)
+    {\textbf{\large Local control plane}\\[2pt]
+     Airflow\\
+     Prometheus + Grafana\\
+     Kafka UI + exporters};
+
+  \node[ado group, minimum width=10.7cm, minimum height=6.3cm, anchor=north] (dp) at (0,-2.0) {};
+  \node[ado label] at ($(dp.north)+(0,-0.45)$) {Distributed Linux data plane};
+
+  \node[ado box={2.65cm}{adobluefill}, minimum height=3.7cm] (vm1) at (-3.55,-5.25)
+    {\textbf{\large VM1}\\
+     broker 1\\
+     DataNode 1\\
+     Spark worker 1\\
+     Trino worker 1\\
+     cAdvisor};
+
+  \node[ado box={2.95cm}{adoorangefill}, minimum height=4.35cm] (vm2) at (0,-5.25)
+    {\textbf{\large VM2}\\
+     broker 2\\
+     NameNode + DataNode 2\\
+     Hive Metastore\\
+     Spark master + worker 2\\
+     Spark Thrift\\
+     Trino coordinator\\
+     secure gateway};
+
+  \node[ado box={2.65cm}{adotealfill}, minimum height=3.7cm] (vm3) at (3.55,-5.25)
+    {\textbf{\large VM3}\\
+     broker 3\\
+     DataNode 3\\
+     Spark worker 3\\
+     Trino worker 2\\
+     cAdvisor};
+
+  \draw[ado arrow] (cp.south) -- ($(dp.north)+(0,0.1)$);
+  \draw[ado arrow] ($(dp.north)+(0,-0.8)$) |- (vm1.north);
+  \draw[ado arrow] ($(dp.north)+(0,-0.8)$) -- (vm2.north);
+  \draw[ado arrow] ($(dp.north)+(0,-0.8)$) |- (vm3.north);
+\end{tikzpicture}

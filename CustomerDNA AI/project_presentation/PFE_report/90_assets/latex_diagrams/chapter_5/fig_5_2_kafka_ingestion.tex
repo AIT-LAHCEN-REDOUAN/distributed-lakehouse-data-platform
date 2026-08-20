@@ -1,0 +1,20 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={3.2cm}{adopurplefill}, minimum height=1.65cm] (cp) at (0,0)
+    {\adoboxcontentwide{Control plane}{triggers publication and reset logic}};
+  \node[ado box={8.7cm}{adobluefill}, minimum height=2.0cm] (cluster) at (0,-2.6)
+    {\textbf{\large Three-broker Kafka cluster}\\[2pt]
+     client-specific topics hold the transport boundary before bronze persistence};
+
+  \node[ado small box={2.05cm}{blue!15}, minimum height=0.8cm] at (-3.0,-2.6) {\small Broker 1\\[-1pt]\small VM1};
+  \node[ado small box={2.05cm}{blue!15}, minimum height=0.8cm] at (0,-2.6) {\small Broker 2\\[-1pt]\small VM2};
+  \node[ado small box={2.05cm}{blue!15}, minimum height=0.8cm] at (3.0,-2.6) {\small Broker 3\\[-1pt]\small VM3};
+
+  \node[ado box={6.3cm}{adotealfill}, minimum height=1.25cm] (topics) at (0,-5.1)
+    {\adoboxcontentwide{Topic families}{independent publication paths for each retained dataset}};
+  \node[ado box={6.3cm}{adoorangefill}, minimum height=1.25cm] (bronze) at (0,-7.4)
+    {\adoboxcontentwide{Bronze consumers}{persist distributed raw batches into HDFS}};
+
+  \draw[ado arrow] (cp) -- (cluster);
+  \draw[ado arrow] (cluster) -- (topics);
+  \draw[ado arrow] (topics) -- (bronze);
+\end{tikzpicture}

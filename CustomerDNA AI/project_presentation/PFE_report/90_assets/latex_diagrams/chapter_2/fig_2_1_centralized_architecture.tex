@@ -1,0 +1,32 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=11.2cm, minimum height=11.2cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\Large] at ($(panel.north)+(0,-0.72)$) {Centralized architecture};
+
+  \node[ado small box={2.45cm}{adograyfill}, minimum height=0.98cm] (src1) at (-3.35,-2.05)
+    {\textbf{\small Campaign}\\[-1pt]\small data};
+  \node[ado small box={2.45cm}{adograyfill}, minimum height=0.98cm] (src2) at (0,-2.05)
+    {\textbf{\small Behavioral}\\[-1pt]\small data};
+  \node[ado small box={2.45cm}{adograyfill}, minimum height=0.98cm] (src3) at (3.35,-2.05)
+    {\textbf{\small Transaction}\\[-1pt]\small data};
+
+  \node[ado box={7.85cm}{adobluefill}, minimum height=5.95cm, inner sep=10pt] (core) at (0,-5.95) {};
+
+  \node[ado small box={5.65cm}{blue!18}, minimum height=0.66cm, inner sep=3pt] at (0,-4.15) {\small Ingestion};
+  \node[ado small box={5.65cm}{blue!18}, minimum height=0.66cm, inner sep=3pt] at (0,-5.00) {\small Storage};
+  \node[font=\bfseries\Large, align=center] at (0,-6.02) {Single execution\\point};
+  \node[ado small box={5.65cm}{blue!18}, minimum height=0.66cm, inner sep=3pt] at (0,-7.02) {\small Processing};
+  \node[ado small box={5.65cm}{blue!18}, minimum height=0.66cm, inner sep=3pt] at (0,-7.87) {\small Metadata and access};
+
+  \node[ado small box={2.25cm}{adograyfill}, minimum height=0.82cm] (consumer1) at (-2.90,-9.42) {\small Analysts};
+  \node[ado small box={2.55cm}{adograyfill}, minimum height=0.82cm] (consumer2) at (2.90,-9.42) {\small Applications};
+
+  \node[ado box={4.10cm}{adoorangefill}, minimum height=1.95cm, inner sep=7pt] (limits) at (0,-10.82)
+    {\textbf{\normalsize Main limits}\\[-1pt]\small bottleneck\\[-1pt]\small limited scaling\\[-1pt]\small strong coupling};
+
+  \draw[ado arrow] (src1.south) -- ++(0,-0.22) -| ($(core.north)+(-1.95,0)$);
+  \draw[ado arrow] (src2.south) -- ++(0,-0.22) -- ($(core.north)+(0,0)$);
+  \draw[ado arrow] (src3.south) -- ++(0,-0.22) -| ($(core.north)+(1.95,0)$);
+  \draw[ado arrow] ($(core.south)+(-1.55,0)$) |- (consumer1.north);
+  \draw[ado arrow] ($(core.south)+(1.55,0)$) |- (consumer2.north);
+  \draw[ado arrow] (core.south) -- (limits.north);
+\end{tikzpicture}

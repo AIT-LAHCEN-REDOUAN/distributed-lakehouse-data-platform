@@ -3,25 +3,32 @@
 \contentsline {figure}{\numberline {I.1}{\ignorespaces SMART AUTOMATION TECHNOLOGIES visual identity}}{2}{figure.caption.6}%
 \contentsline {figure}{\numberline {I.2}{\ignorespaces Core values of SMART AUTOMATION TECHNOLOGIES}}{2}{figure.caption.7}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {II.1}{\ignorespaces Conceptual evolution from centralized architectures to distributed data platforms.}}{8}{figure.caption.8}%
-\contentsline {figure}{\numberline {II.2}{\ignorespaces Conceptual view of distributed execution in a Spark-style compute model.}}{14}{figure.caption.9}%
-\contentsline {figure}{\numberline {II.3}{\ignorespaces Single-path event-log processing logic associated with Kappa-style reasoning.}}{16}{figure.caption.10}%
+\contentsline {figure}{\numberline {II.1}{\ignorespaces Centralized architecture as a concentration of ingestion, storage, processing, and access on one execution point.}}{8}{figure.caption.8}%
+\contentsline {figure}{\numberline {II.2}{\ignorespaces Distributed data platform as a layered decomposition of storage, compute, metadata, and analytical access responsibilities.}}{9}{figure.caption.9}%
+\contentsline {figure}{\numberline {II.3}{\ignorespaces Conceptual view of distributed execution in a Spark-style compute model.}}{15}{figure.caption.11}%
+\contentsline {figure}{\numberline {II.4}{\ignorespaces Conceptual positioning of the implemented project between replay-oriented ingestion logic and batch-structured analytical refinement.}}{18}{figure.caption.12}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {III.1}{\ignorespaces Technology retained for event ingestion and topic-based transport}}{21}{figure.caption.11}%
-\contentsline {figure}{\numberline {III.2}{\ignorespaces Technology retained for distributed bronze-layer storage}}{21}{figure.caption.12}%
-\contentsline {figure}{\numberline {III.3}{\ignorespaces Technologies retained for governed lakehouse tables and metadata management}}{22}{figure.caption.13}%
-\contentsline {figure}{\numberline {III.4}{\ignorespaces Technology retained for distributed processing and analytical loading}}{22}{figure.caption.14}%
-\contentsline {figure}{\numberline {III.5}{\ignorespaces Technology retained for interactive SQL access}}{22}{figure.caption.15}%
-\contentsline {figure}{\numberline {III.6}{\ignorespaces Technologies retained for model-driven transformations and analytical storage format support}}{23}{figure.caption.16}%
-\contentsline {figure}{\numberline {III.7}{\ignorespaces Technology retained for explicit data quality validation}}{23}{figure.caption.17}%
-\contentsline {figure}{\numberline {III.8}{\ignorespaces Technology retained for workflow orchestration}}{24}{figure.caption.18}%
-\contentsline {figure}{\numberline {III.9}{\ignorespaces Technologies retained for observability and dashboarding}}{24}{figure.caption.19}%
-\contentsline {figure}{\numberline {III.10}{\ignorespaces Technology retained for service isolation and reproducible deployment}}{25}{figure.caption.20}%
+\contentsline {figure}{\numberline {III.1}{\ignorespaces Technology retained for event ingestion and topic-based transport}}{23}{figure.caption.13}%
+\contentsline {figure}{\numberline {III.2}{\ignorespaces Technology retained for distributed bronze-layer storage}}{23}{figure.caption.14}%
+\contentsline {figure}{\numberline {III.3}{\ignorespaces Technologies retained for governed lakehouse tables and metadata management}}{24}{figure.caption.15}%
+\contentsline {figure}{\numberline {III.4}{\ignorespaces Technology retained for distributed processing and analytical loading}}{24}{figure.caption.16}%
+\contentsline {figure}{\numberline {III.5}{\ignorespaces Technology retained for interactive SQL access}}{24}{figure.caption.17}%
+\contentsline {figure}{\numberline {III.6}{\ignorespaces Technologies retained for model-driven transformations and analytical storage format support}}{25}{figure.caption.18}%
+\contentsline {figure}{\numberline {III.7}{\ignorespaces Technology retained for explicit data quality validation}}{25}{figure.caption.19}%
+\contentsline {figure}{\numberline {III.8}{\ignorespaces Technology retained for workflow orchestration}}{26}{figure.caption.20}%
+\contentsline {figure}{\numberline {III.9}{\ignorespaces Technologies retained for observability and dashboarding}}{26}{figure.caption.21}%
+\contentsline {figure}{\numberline {III.10}{\ignorespaces Technology retained for service isolation and reproducible deployment}}{27}{figure.caption.22}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {IV.1}{\ignorespaces Global logical architecture of the platform from ingestion to analytical access, validation, and orchestration.}}{32}{figure.caption.26}%
+\contentsline {figure}{\numberline {IV.2}{\ignorespaces Physical multi-node architecture showing the local control plane and the service placement across VM1, VM2, and VM3.}}{34}{figure.caption.28}%
+\contentsline {figure}{\numberline {IV.3}{\ignorespaces End-to-end flow from heterogeneous source datasets to validated analytical outputs.}}{35}{figure.caption.29}%
 \addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {V.1}{\ignorespaces Active dataset families and their complementary contribution to the customer-oriented analytical scope of the platform.}}{39}{figure.caption.32}%
+\contentsline {figure}{\numberline {V.2}{\ignorespaces Dataset publication flow from the control plane to the three-broker Kafka cluster and toward bronze persistence.}}{40}{figure.caption.33}%
+\contentsline {figure}{\numberline {V.3}{\ignorespaces Bronze storage organization in HDFS, with NameNode coordination on VM2 and DataNode distribution across VM1, VM2, and VM3.}}{41}{figure.caption.34}%
+\contentsline {figure}{\numberline {V.4}{\ignorespaces Distributed Spark raw-load path from replayable bronze batches to governed raw lakehouse tables.}}{42}{figure.caption.35}%
+\contentsline {figure}{\numberline {V.5}{\ignorespaces Shared metadata governance through Hive Metastore between distributed writers and analytical readers.}}{43}{figure.caption.36}%
+\contentsline {figure}{\numberline {V.6}{\ignorespaces Protected Trino analytical access path from secure entry point to coordinator and distributed workers.}}{44}{figure.caption.37}%
+\contentsline {figure}{\numberline {V.7}{\ignorespaces Layered dbt transformation flow from raw tables to staging, intermediate, and analytical outputs.}}{45}{figure.caption.38}%
+\contentsline {figure}{\numberline {V.8}{\ignorespaces Validation checkpoints over the lakehouse layers and the persistence of validation evidence.}}{46}{figure.caption.39}%
+\contentsline {figure}{\numberline {V.9}{\ignorespaces Five-DAG orchestration sequence from environment preparation to raw loading and curated transformation.}}{47}{figure.caption.41}%

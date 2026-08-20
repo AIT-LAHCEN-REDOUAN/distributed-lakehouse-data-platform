@@ -1,0 +1,13 @@
+\begin{tikzpicture}[node distance=0.6cm]
+    \node[ado box=adotealfill, text width=10.2cm] (identity)
+    {\adoboxcontent{Identity protection}{Kerberos-secured service authentication}};
+    \node[ado box=adobluefill, text width=10.2cm, below=of identity] (browser)
+    {\adoboxcontent{Browser access protection}{SPNEGO and authenticated web entry paths}};
+    \node[ado box=adopurplefill, text width=10.2cm, below=of browser] (traffic)
+    {\adoboxcontent{Traffic protection}{TLS over exposed HDFS, Trino, and control-plane interfaces}};
+    \node[ado box=adoorangefill, text width=10.2cm, below=of traffic] (rest)
+    {\adoboxcontent{Data-at-rest protection}{encrypted runtime storage support on Linux nodes}};
+    \draw[ado arrow] (identity) -- (browser);
+    \draw[ado arrow] (browser) -- (traffic);
+    \draw[ado arrow] (traffic) -- (rest);
+\end{tikzpicture}

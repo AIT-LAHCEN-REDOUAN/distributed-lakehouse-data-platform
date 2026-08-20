@@ -1,0 +1,7 @@
+\begin{tikzpicture}[node distance=0.7cm and 0.8cm]
+    \node[ado box=adotealfill, text width=4.8cm] (implemented)
+    {\adoboxcontent{Implemented baseline}{Kerberos + SPNEGO + TLS + SSH bridge + encrypted runtime storage}};
+    \node[ado box=adograyfill, text width=4.8cm, right=of implemented] (future)
+    {\adoboxcontent{Future enterprise hardening}{PKI lifecycle + secret vault + fine-grained federation + SIEM-level controls}};
+    \draw[ado note arrow] (implemented.east) -- node[above, font=\footnotesize\itshape, text=adotextsoft] {scope boundary} (future.west);
+\end{tikzpicture}

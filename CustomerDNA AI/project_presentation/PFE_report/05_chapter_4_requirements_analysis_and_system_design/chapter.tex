@@ -1,7 +1,7 @@
 \chapter{Requirements Analysis and System Design}
 
 \section{Introduction}
-This chapter translates the business framing and technical choices established in the previous chapters into a structured design baseline for \projectname. Its purpose is to identify what the platform must do, which constraints it must respect, who will interact with it, and how the final multi-layer architecture answers those needs. Unlike Chapter 3, which focused on tool selection, this chapter focuses on requirement formalization and on the architectural organization of the implemented solution.
+This chapter translates the business framing and technical choices established in the previous chapters into a structured design baseline for \projectname. Its purpose is to identify what the platform must do, which constraints it must respect, who will interact with it, and how the final multi-layer architecture answers those needs. Unlike Chapter 3, which focused on tool selection, this chapter focuses on requirement formalization and on the architectural organization of the implemented solution. In practice, the design logic follows the same principles emphasized in modern data-intensive system engineering: clear separation of concerns, explicit data movement boundaries, and layered coordination between storage, compute, and access services \cite{kleppmann2017ddia,armbrust2021lakehouse}.
 
 \section{Requirement Elicitation Context}
 The requirements of \projectname{} were derived from three complementary sources:
@@ -70,7 +70,7 @@ The functional scope of the platform is centered on the end-to-end lifecycle of 
 \FloatBarrier
 
 \section{Non-Functional Requirements}
-Beyond functional behavior, the platform must also satisfy a set of quality constraints related to performance, modularity, traceability, security, and demonstration readiness. These requirements are summarized in Table~\ref{tab:chapter4-nonfunctional}.
+Beyond functional behavior, the platform must also satisfy a set of quality constraints related to performance, modularity, traceability, security, and demonstration readiness. These requirements are summarized in Table~\ref{tab:chapter4-nonfunctional}. Their importance is consistent with the broader literature on reliable and maintainable distributed systems, in which reproducibility, observability, and controlled failure handling are treated as architectural qualities rather than optional conveniences \cite{kleppmann2017ddia}.
 
 \begin{table}[!htbp]
     \centering
@@ -102,7 +102,7 @@ Beyond functional behavior, the platform must also satisfy a set of quality cons
 \FloatBarrier
 
 \section{Global Logical Architecture}
-At the logical level, \projectname{} is organized as a layered customer-data platform rather than as a monolithic data pipeline. Each layer has a precise responsibility in the end-to-end flow:
+At the logical level, \projectname{} is organized as a layered customer-data platform rather than as a monolithic data pipeline. This organization is aligned with lakehouse thinking, where raw persistence, structured table layers, metadata governance, and analytical access are coordinated but not collapsed into one opaque runtime block \cite{armbrust2021lakehouse}. Each layer has a precise responsibility in the end-to-end flow:
 \begin{itemize}
     \item \textbf{Ingestion layer:} receives and transports the raw input datasets through Kafka.
     \item \textbf{Bronze persistence layer:} stores replayable raw artifacts in HDFS.
@@ -114,7 +114,12 @@ At the logical level, \projectname{} is organized as a layered customer-data pla
     \item \textbf{Orchestration and observability layer:} coordinates and supervises the full process through Airflow, Prometheus, and Grafana.
 \end{itemize}
 
-\textit{Diagram placeholder: global logical architecture of the platform from ingestion to analytical access and validation.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_4/fig_4_1_logical_architecture.tex}
+    \caption{Global logical architecture of the platform from ingestion to analytical access, validation, and orchestration.}
+    \label{fig:chapter4-logical-architecture}
+\end{figure}
 
 This logical decomposition is important because it explains the system as a coordinated architecture rather than as a sequence of unrelated tools. It also clarifies why the same dataset may pass through different representations before becoming a trusted analytical asset.
 
@@ -146,7 +151,12 @@ At the physical level, the final design is distributed across one control plane 
 \end{table}
 \FloatBarrier
 
-\textit{Diagram placeholder: physical multi-node architecture showing the control plane, VM1, VM2, VM3, and the major service placements.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_4/fig_4_2_physical_architecture.tex}
+    \caption{Physical multi-node architecture showing the local control plane and the service placement across VM1, VM2, and VM3.}
+    \label{fig:chapter4-physical-architecture}
+\end{figure}
 
 \section{End-to-End Data Flow}
 The end-to-end operational flow of the platform can be summarized in the following sequence:
@@ -163,12 +173,17 @@ The end-to-end operational flow of the platform can be summarized in the followi
     \item Prometheus and Grafana expose the monitoring evidence.
 \end{enumerate}
 
-\textit{Diagram placeholder: end-to-end data flow from source datasets to validated analytical outputs.}
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_4/fig_4_3_end_to_end_flow.tex}
+    \caption{End-to-end flow from heterogeneous source datasets to validated analytical outputs.}
+    \label{fig:chapter4-end-to-end-flow}
+\end{figure}
 
 This sequence is especially important for the report because it gives the jury a simple operational story to follow when moving from requirements to implementation and later to validation.
 
 \section{Security-by-Design Integration}
-Security is not positioned as an external afterthought. It is integrated into the design of the platform through explicit controls attached to core layers. Table~\ref{tab:chapter4-security-controls} summarizes this logic.
+Security is not positioned as an external afterthought. It is integrated into the design of the platform through explicit controls attached to core layers. This follows the same engineering rationale as the rest of the architecture: identity, traffic protection, and protected storage boundaries are treated as part of the system design itself, not as a late operational patch \cite{apache_hadoop_docs,mit_kerberos_docs,cryptsetup_docs}. Table~\ref{tab:chapter4-security-controls} summarizes this logic.
 
 \begin{table}[!htbp]
     \centering
