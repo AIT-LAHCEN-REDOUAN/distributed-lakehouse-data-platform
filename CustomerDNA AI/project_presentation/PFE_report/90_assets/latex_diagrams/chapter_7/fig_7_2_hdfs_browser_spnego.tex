@@ -1,9 +1,9 @@
 \begin{tikzpicture}[node distance=0.6cm]
-    \node[ado box=adograyfill, text width=10.4cm] (client)
+    \node[ado box={10.4cm}{adograyfill}] (client)
     {\adoboxcontent{Windows client}{Kerberos ticket + Firefox SPNEGO configuration}};
-    \node[ado box=adotealfill, text width=10.4cm, below=of client] (https)
+    \node[ado box={10.4cm}{adotealfill}, below=of client] (https)
     {\adoboxcontent{HTTPS HDFS browser endpoint}{SPNEGO-protected NameNode / DataNode web path}};
-    \node[ado box=adobluefill, text width=10.4cm, below=of https] (hdfs)
+    \node[ado box={10.4cm}{adobluefill}, below=of https] (hdfs)
     {\adoboxcontent{Secured Hadoop web services}{authenticated browsing of distributed file-system interfaces}};
     \draw[ado arrow] (client) -- (https);
     \draw[ado arrow] (https) -- (hdfs);

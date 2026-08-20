@@ -32,3 +32,27 @@
 \contentsline {figure}{\numberline {V.7}{\ignorespaces Layered dbt transformation flow from raw tables to staging, intermediate, and analytical outputs.}}{45}{figure.caption.38}%
 \contentsline {figure}{\numberline {V.8}{\ignorespaces Validation checkpoints over the lakehouse layers and the persistence of validation evidence.}}{46}{figure.caption.39}%
 \contentsline {figure}{\numberline {V.9}{\ignorespaces Five-DAG orchestration sequence from environment preparation to raw loading and curated transformation.}}{47}{figure.caption.41}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {VI.1}{\ignorespaces Separation between the local control plane and the distributed Linux data plane.}}{49}{figure.caption.43}%
+\contentsline {figure}{\numberline {VI.2}{\ignorespaces Service placement map across VM1, VM2, and VM3.}}{50}{figure.caption.45}%
+\contentsline {figure}{\numberline {VI.3}{\ignorespaces Machine-level data flow from local source handling to distributed analytical exposure.}}{52}{figure.caption.46}%
+\contentsline {figure}{\numberline {VI.4}{\ignorespaces Spark master and worker collaboration across VM1, VM2, and VM3 during distributed execution.}}{53}{figure.caption.47}%
+\contentsline {figure}{\numberline {VI.5}{\ignorespaces Deployment lifecycle from bundle preparation to preflight, startup order, and control-plane activation.}}{54}{figure.caption.49}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {VII.1}{\ignorespaces Kerberos-centered identity flow between the KDC and the protected Hadoop service layer.}}{58}{figure.caption.51}%
+\contentsline {figure}{\numberline {VII.2}{\ignorespaces Secure HDFS browser path from Windows Kerberos ticket to SPNEGO-authenticated HTTPS endpoint.}}{59}{figure.caption.52}%
+\contentsline {figure}{\numberline {VII.3}{\ignorespaces TLS-protected service exposure zones for HDFS, Trino, and the local control plane interfaces.}}{60}{figure.caption.53}%
+\contentsline {figure}{\numberline {VII.4}{\ignorespaces Authenticated Trino gateway in front of coordinator and worker execution.}}{61}{figure.caption.54}%
+\contentsline {figure}{\numberline {VII.5}{\ignorespaces Secured control-plane-to-VM2 remote Spark submission path over SSH.}}{62}{figure.caption.55}%
+\contentsline {figure}{\numberline {VII.6}{\ignorespaces Security coverage map distinguishing identity, browser access, traffic encryption, and encrypted runtime storage.}}{63}{figure.caption.56}%
+\contentsline {figure}{\numberline {VII.7}{\ignorespaces Implemented security boundary versus out-of-scope future enterprise hardening controls.}}{64}{figure.caption.57}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {VIII.1}{\ignorespaces Infrastructure validation map linking each core service family to its verification checkpoints.}}{67}{figure.caption.59}%
+\contentsline {figure}{\numberline {VIII.2}{\ignorespaces Five-DAG validation sequence with evidence checkpoints across the operational lifecycle.}}{68}{figure.caption.61}%
+\contentsline {figure}{\numberline {VIII.3}{\ignorespaces Validation evidence of multi-node participation across Spark, HDFS, Kafka, and Trino.}}{69}{figure.caption.62}%
+\contentsline {figure}{\numberline {VIII.4}{\ignorespaces Validated security access paths for HDFS browsing, protected analytical exposure, and secured orchestration.}}{70}{figure.caption.63}%
+\contentsline {figure}{\numberline {VIII.5}{\ignorespaces Observability stack linking Prometheus, Grafana, cAdvisor, and pipeline evidence sources.}}{71}{figure.caption.64}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {IX.1}{\ignorespaces Synthesis view of the main architectural strengths of the final platform.}}{74}{figure.caption.65}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }

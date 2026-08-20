@@ -1,11 +1,11 @@
 \begin{tikzpicture}[node distance=0.65cm]
-    \node[ado box=adograyfill, text width=10.0cm] (cp)
+    \node[ado box={10.0cm}{adograyfill}] (cp)
     {\adoboxcontent{Local control plane}{Airflow task issues remote execution request}};
-    \node[ado box=adotealfill, text width=10.0cm, below=of cp] (ssh)
+    \node[ado box={10.0cm}{adotealfill}, below=of cp] (ssh)
     {\adoboxcontent{SSH-secured operational bridge}{authenticated remote submission path to VM2}};
-    \node[ado box=adobluefill, text width=10.0cm, below=of ssh] (submit)
+    \node[ado box={10.0cm}{adobluefill}, below=of ssh] (submit)
     {\adoboxcontent{Spark submission host on VM2}{spark-submit helper + cluster entry point}};
-    \node[ado box=adoorangefill, text width=10.0cm, below=of submit] (cluster)
+    \node[ado box={10.0cm}{adoorangefill}, below=of submit] (cluster)
     {\adoboxcontent{Spark cluster execution}{master schedules work across VM1 / VM2 / VM3 workers}};
     \draw[ado arrow] (cp) -- (ssh);
     \draw[ado arrow] (ssh) -- (submit);

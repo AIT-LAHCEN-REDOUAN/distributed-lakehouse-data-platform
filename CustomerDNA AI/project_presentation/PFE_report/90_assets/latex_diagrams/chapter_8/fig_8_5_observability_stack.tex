@@ -1,9 +1,9 @@
 \begin{tikzpicture}[node distance=0.65cm and 0.7cm]
-    \node[ado box=adobluefill, text width=4.7cm] (sources)
+    \node[ado box={4.7cm}{adobluefill}] (sources)
     {\adoboxcontent{Evidence sources}{cAdvisor + exporters + Airflow run history}};
-    \node[ado box=adotealfill, text width=4.7cm, right=of sources] (prom)
+    \node[ado box={4.7cm}{adotealfill}, right=of sources] (prom)
     {\adoboxcontent{Prometheus collection}{centralized metric scraping and retention}};
-    \node[ado box=adopurplefill, text width=10.2cm, below=0.9cm of $(sources)!0.5!(prom)$] (grafana)
+    \node[ado box={10.2cm}{adopurplefill}, below=0.9cm of $(sources)!0.5!(prom)$] (grafana)
     {\adoboxcontent{Operational visibility}{Grafana dashboards expose readiness, resource use, and pipeline evidence}};
     \draw[ado arrow] (sources) -- (prom);
     \draw[ado dashed arrow] (sources.south) -- (grafana.north west);

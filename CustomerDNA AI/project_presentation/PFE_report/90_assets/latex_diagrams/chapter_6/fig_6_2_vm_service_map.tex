@@ -1,8 +1,8 @@
 \begin{tikzpicture}[node distance=0.55cm]
-    \node[ado box=adobluefill, text width=10.8cm] (vm1)
+    \node[ado box={10.8cm}{adobluefill}] (vm1)
     {\adoboxcontent{VM1}{broker 1 + DataNode 1 + Spark worker 1 + Trino worker 1 + cAdvisor}};
-    \node[ado box=adotealfill, text width=10.8cm, below=of vm1] (vm2)
+    \node[ado box={10.8cm}{adotealfill}, below=of vm1] (vm2)
     {\adoboxcontent{VM2}{broker 2 + Kerberos KDC + NameNode + DataNode 2 + Hive Metastore + Spark master + Spark submit helper + Spark Thrift + Trino coordinator + secure gateway}};
-    \node[ado box=adopurplefill, text width=10.8cm, below=of vm2] (vm3)
+    \node[ado box={10.8cm}{adopurplefill}, below=of vm2] (vm3)
     {\adoboxcontent{VM3}{broker 3 + DataNode 3 + Spark worker 3 + Trino worker 2 + cAdvisor}};
 \end{tikzpicture}

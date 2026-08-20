@@ -1,11 +1,11 @@
 \begin{tikzpicture}[node distance=0.7cm and 0.7cm]
-    \node[ado box=adotealfill, text width=4.6cm] (spark)
+    \node[ado box={4.6cm}{adotealfill}] (spark)
     {\adoboxcontent{Spark evidence}{master sees workers across several VMs}};
-    \node[ado box=adobluefill, text width=4.6cm, right=of spark] (hdfs)
+    \node[ado box={4.6cm}{adobluefill}, right=of spark] (hdfs)
     {\adoboxcontent{HDFS evidence}{NameNode + live DataNodes across the cluster}};
-    \node[ado box=adoorangefill, text width=4.6cm, below left=0.9cm and 0.1cm of hdfs.south west] (kafka)
+    \node[ado box={4.6cm}{adoorangefill}, below left=0.9cm and 0.1cm of hdfs.south west] (kafka)
     {\adoboxcontent{Kafka evidence}{three-broker transport layer}};
-    \node[ado box=adopurplefill, text width=4.6cm, below right=0.9cm and 0.1cm of spark.south east] (trino)
+    \node[ado box={4.6cm}{adopurplefill}, below right=0.9cm and 0.1cm of spark.south east] (trino)
     {\adoboxcontent{Trino evidence}{coordinator / worker separation across nodes}};
     \draw[ado note arrow] (spark) -- (hdfs);
     \draw[ado note arrow] (spark) -- (kafka);

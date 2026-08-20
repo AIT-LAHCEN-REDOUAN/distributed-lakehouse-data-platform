@@ -12,3 +12,16 @@
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {V.1}{\ignorespaces Active datasets retained in the implemented platform}}{39}{table.caption.31}%
 \contentsline {table}{\numberline {V.2}{\ignorespaces Implemented orchestration flow of the platform}}{46}{table.caption.40}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {VI.1}{\ignorespaces Main responsibilities of the local control plane}}{49}{table.caption.42}%
+\contentsline {table}{\numberline {VI.2}{\ignorespaces VM-level service allocation in the distributed deployment}}{49}{table.caption.44}%
+\contentsline {table}{\numberline {VI.3}{\ignorespaces Operational deployment artifacts used in the project}}{54}{table.caption.48}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {VII.1}{\ignorespaces Main security objectives and corresponding implementation controls}}{57}{table.caption.50}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {VIII.1}{\ignorespaces Validation strategy adopted for the deployed platform}}{66}{table.caption.58}%
+\contentsline {table}{\numberline {VIII.2}{\ignorespaces Operational meaning of the core DAG validations}}{68}{table.caption.60}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {IX.1}{\ignorespaces Main constraints and the corresponding design responses}}{75}{table.caption.66}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }

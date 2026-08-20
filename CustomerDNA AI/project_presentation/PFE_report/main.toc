@@ -3,7 +3,7 @@
 \contentsline {chapter}{Acknowledgements}{ii}{chapter*.2}%
 \contentsline {chapter}{Abstract}{iii}{section*.3}%
 \contentsline {chapter}{R\'esum\'e}{iv}{section*.4}%
-\contentsline {chapter}{List of Acronyms and Abbreviations}{xi}{chapter*.5}%
+\contentsline {chapter}{List of Acronyms and Abbreviations}{xiii}{chapter*.5}%
 \contentsline {chapter}{\numberline {I}General Project Context}{1}{chapter.1}%
 \contentsline {section}{\numberline {I.1}Introduction}{1}{section.1.1}%
 \contentsline {section}{\numberline {I.2}Host Organization and Project Environment}{1}{section.1.2}%
@@ -93,3 +93,45 @@
 \contentsline {section}{\numberline {V.9}Great Expectations Validation Layer}{45}{section.5.9}%
 \contentsline {section}{\numberline {V.10}Airflow Orchestration Layer}{46}{section.5.10}%
 \contentsline {section}{\numberline {V.11}Conclusion}{47}{section.5.11}%
+\contentsline {chapter}{\numberline {VI}Deployment Strategy and Distributed Execution}{48}{chapter.6}%
+\contentsline {section}{\numberline {VI.1}Introduction}{48}{section.6.1}%
+\contentsline {section}{\numberline {VI.2}Control Plane Responsibilities}{48}{section.6.2}%
+\contentsline {section}{\numberline {VI.3}VM-Level Service Separation}{49}{section.6.3}%
+\contentsline {section}{\numberline {VI.4}Data Flow Across Machines}{50}{section.6.4}%
+\contentsline {section}{\numberline {VI.5}Distributed Processing Proof}{52}{section.6.5}%
+\contentsline {section}{\numberline {VI.6}Operational Packaging and Deployment Bundles}{53}{section.6.6}%
+\contentsline {section}{\numberline {VI.7}Conclusion}{55}{section.6.7}%
+\contentsline {chapter}{\numberline {VII}Security Architecture and Hardening}{56}{chapter.7}%
+\contentsline {section}{\numberline {VII.1}Introduction}{56}{section.7.1}%
+\contentsline {section}{\numberline {VII.2}Security Objectives}{56}{section.7.2}%
+\contentsline {section}{\numberline {VII.3}Kerberos-Secured Hadoop Services}{57}{section.7.3}%
+\contentsline {section}{\numberline {VII.4}SPNEGO-Protected HDFS Browser Access}{58}{section.7.4}%
+\contentsline {section}{\numberline {VII.5}TLS-Protected Interfaces}{59}{section.7.5}%
+\contentsline {section}{\numberline {VII.6}Authenticated Trino Access}{60}{section.7.6}%
+\contentsline {section}{\numberline {VII.7}SSH-Based Remote Spark Submission}{61}{section.7.7}%
+\contentsline {section}{\numberline {VII.8}Encrypted Runtime Storage Support}{62}{section.7.8}%
+\contentsline {section}{\numberline {VII.9}Security Boundaries and Remaining Limits}{63}{section.7.9}%
+\contentsline {section}{\numberline {VII.10}Conclusion}{64}{section.7.10}%
+\contentsline {chapter}{\numberline {VIII}Validation, Testing, and Results}{65}{chapter.8}%
+\contentsline {section}{\numberline {VIII.1}Introduction}{65}{section.8.1}%
+\contentsline {section}{\numberline {VIII.2}Validation Strategy}{65}{section.8.2}%
+\contentsline {section}{\numberline {VIII.3}Infrastructure Validation}{66}{section.8.3}%
+\contentsline {section}{\numberline {VIII.4}Pipeline Validation}{67}{section.8.4}%
+\contentsline {section}{\numberline {VIII.5}Distributed Execution Validation}{69}{section.8.5}%
+\contentsline {section}{\numberline {VIII.6}Security Validation}{69}{section.8.6}%
+\contentsline {section}{\numberline {VIII.7}Observability and Monitoring Validation}{70}{section.8.7}%
+\contentsline {section}{\numberline {VIII.8}Main Results}{71}{section.8.8}%
+\contentsline {section}{\numberline {VIII.9}Conclusion}{72}{section.8.9}%
+\contentsline {chapter}{\numberline {IX}Discussion and Critical Analysis}{73}{chapter.9}%
+\contentsline {section}{\numberline {IX.1}Introduction}{73}{section.9.1}%
+\contentsline {section}{\numberline {IX.2}Strengths of the Final Architecture}{73}{section.9.2}%
+\contentsline {section}{\numberline {IX.3}Trade-Offs and Constraints}{74}{section.9.3}%
+\contentsline {section}{\numberline {IX.4}Academic Value}{75}{section.9.4}%
+\contentsline {section}{\numberline {IX.5}Industrial Value}{76}{section.9.5}%
+\contentsline {section}{\numberline {IX.6}Critical Limits}{76}{section.9.6}%
+\contentsline {section}{\numberline {IX.7}Conclusion}{77}{section.9.7}%
+\contentsline {chapter}{\numberline {X}General Conclusion and Perspectives}{78}{chapter.10}%
+\contentsline {section}{\numberline {X.1}General Conclusion}{78}{section.10.1}%
+\contentsline {section}{\numberline {X.2}Main Achievements}{78}{section.10.2}%
+\contentsline {section}{\numberline {X.3}Future Perspectives}{79}{section.10.3}%
+\contentsline {chapter}{\numberline {A}Appendices}{82}{appendix.A}%
