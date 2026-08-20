@@ -1,50 +1,48 @@
 This is BibTeX, Version 0.99e
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
-The top-level auxiliary file: main.aux
+The top-level auxiliary file: D:/github/Master_PFE_Project/CustomerDNA AI/project_presentation/PFE_report/main.aux
 Reallocating 'name_of_file' (item size: 1) to 6 items.
 The style file: plain.bst
 Reallocating 'name_of_file' (item size: 1) to 25 items.
-I found no \citation commands---while reading file main.aux
 Database file #1: 12_references/references.bib
-You've used 0 entries,
+You've used 19 entries,
             2118 wiz_defined-function locations,
-            497 strings with 4005 characters,
-and the built_in function-call counts, 18 in all, are:
-= -- 0
-> -- 0
+            565 strings with 5805 characters,
+and the built_in function-call counts, 4281 in all, are:
+= -- 398
+> -- 167
 < -- 0
-+ -- 0
-- -- 0
-* -- 2
-:= -- 7
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
++ -- 69
+- -- 50
+* -- 165
+:= -- 731
+add.period$ -- 59
+call.type$ -- 19
+change.case$ -- 82
 chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 1
-format.name$ -- 0
-if$ -- 1
+cite$ -- 19
+duplicate$ -- 155
+empty$ -- 421
+format.name$ -- 50
+if$ -- 916
 int.to.chr$ -- 0
-int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 3
-num.names$ -- 0
-pop$ -- 0
+int.to.str$ -- 19
+missing$ -- 6
+newline$ -- 100
+num.names$ -- 38
+pop$ -- 158
 preamble$ -- 1
-purify$ -- 0
+purify$ -- 63
 quote$ -- 0
-skip$ -- 1
+skip$ -- 130
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
+substring$ -- 114
+swap$ -- 19
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
+type$ -- 72
 warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 2
-(There was 1 error message)
+while$ -- 40
+width$ -- 21
+write$ -- 199

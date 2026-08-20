@@ -22,6 +22,8 @@
 \usepackage{hyperref}
 \usepackage{bookmark}
 \usepackage{tocloft}
+\usepackage{tikz}
+\usepackage{pdflscape}
 
 \onehalfspacing
 \setlength{\parskip}{0.5em}
@@ -46,6 +48,7 @@
 \fancyhead[L]{AdOptimizer CDP}
 \fancyhead[R]{\nouppercase{\leftmark}}
 \fancyfoot[C]{\thepage}
+\setlength{\headheight}{14.5pt}
 \renewcommand{\thechapter}{\Roman{chapter}}
 \newcommand{\tocnumgap}{\hspace{0.7em}}
 \renewcommand{\cftchapaftersnum}{\tocnumgap}
@@ -59,8 +62,8 @@
 \newlength{\tocfignumlen}
 \newlength{\toctabnumlen}
 \newlength{\toctitlecol}
-\settowidth{\tocchapnumlen}{\bfseries VIII\tocnumgap}
-\settowidth{\tocsecnumlen}{VIII.9\tocnumgap}
+\settowidth{\tocchapnumlen}{\bfseries VIII\tocnumgap\hspace{0.45em}}
+\settowidth{\tocsecnumlen}{VIII.10\tocnumgap}
 \settowidth{\tocsubsecnumlen}{II.8.3\tocnumgap}
 \settowidth{\tocfignumlen}{III.10\tocnumgap}
 \settowidth{\toctabnumlen}{VIII.2\tocnumgap}
@@ -94,3 +97,5 @@
 \newcommand{\schoolname}{Ecole Normale Superieure of Tetouan}
 \newcommand{\universityurl}{https://www.uae.ac.ma/}
 \newcommand{\schoolurl}{https://ens.uae.ac.ma/}
+
+\input{90_assets/latex_diagrams/shared/tikz_styles.tex}

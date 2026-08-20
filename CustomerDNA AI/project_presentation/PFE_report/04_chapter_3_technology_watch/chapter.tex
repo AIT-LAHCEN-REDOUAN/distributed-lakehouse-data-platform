@@ -21,7 +21,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} Apache Kafka acts as the ingestion backbone between dataset producers and downstream storage services.
+    \item \textbf{Role in the platform:} Apache Kafka acts as the ingestion backbone between dataset producers and downstream storage services \cite{apache_kafka_docs}.
     \item \textbf{Reason for selection:} it structures raw data transport through explicit topics and allows controlled replay when a stage must be re-executed.
     \item \textbf{Value for the project:} Kafka makes ingestion observable, modular, and better aligned with modern event-driven data engineering practices than direct one-shot file transfers.
 \end{itemize}
@@ -35,7 +35,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} HDFS stores the bronze data generated from Kafka consumption.
+    \item \textbf{Role in the platform:} HDFS stores the bronze data generated from Kafka consumption \cite{apache_hadoop_docs}.
     \item \textbf{Reason for selection:} it offers distributed persistence, replication, and strong compatibility with the surrounding Hadoop and Spark ecosystem.
     \item \textbf{Value for the project:} HDFS gives the platform a real distributed storage layer instead of a local folder-based approximation, which strengthens the realism of the deployment.
 \end{itemize}
@@ -55,7 +55,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} Iceberg supports curated table layers, while Hive Metastore centralizes their metadata.
+    \item \textbf{Role in the platform:} Iceberg supports curated table layers, while Hive Metastore centralizes their metadata \cite{apache_iceberg_docs,apache_hive_docs}.
     \item \textbf{Reason for selection:} Iceberg provides a modern table abstraction suited to structured analytics, and Hive Metastore remains a practical catalog layer understood by several engines.
     \item \textbf{Value for the project:} together they transform simple file persistence into a genuine lakehouse organization where curated data can be queried, documented, and evolved more cleanly.
 \end{itemize}
@@ -69,7 +69,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} Spark is the main distributed compute engine used for transformation and loading tasks.
+    \item \textbf{Role in the platform:} Spark is the main distributed compute engine used for transformation and loading tasks \cite{apache_spark_docs}.
     \item \textbf{Reason for selection:} it integrates naturally with HDFS, Iceberg, and the cluster deployment model, while remaining academically recognizable as a standard big-data processing engine.
     \item \textbf{Value for the project:} Spark gives the platform real parallel computation capabilities and serves as the backbone for both the raw-to-curated flow and the lakehouse loading logic.
 \end{itemize}
@@ -83,7 +83,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} Trino exposes the analytical tables through an SQL query interface.
+    \item \textbf{Role in the platform:} Trino exposes the analytical tables through an SQL query interface \cite{trino_docs}.
     \item \textbf{Reason for selection:} it separates interactive exploration from heavy transformation workloads and provides a clean querying layer for validation and analysis.
     \item \textbf{Value for the project:} Trino improves usability, supports manual verification through SQL clients, and reinforces the idea that a lakehouse must serve both engineering and analytical access needs.
 \end{itemize}
@@ -103,9 +103,9 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} dbt structures the staging, intermediate, and analytics transformations as explicit models.
+    \item \textbf{Role in the platform:} dbt structures the staging, intermediate, and analytics transformations as explicit models \cite{dbt_docs}.
     \item \textbf{Reason for selection:} it brings readability, dependency management, and reproducibility to the transformation layer.
-    \item \textbf{Why Parquet is mentioned with it:} Parquet remains an efficient columnar analytical format that naturally complements curated transformation outputs.
+    \item \textbf{Why Parquet is mentioned with it:} Parquet remains an efficient columnar analytical format that naturally complements curated transformation outputs \cite{apache_parquet_docs}.
     \item \textbf{Value for the project:} dbt turns transformations into governed assets rather than ad hoc scripts, which makes the platform easier to explain, validate, and maintain.
 \end{itemize}
 
@@ -118,7 +118,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} Great Expectations formalizes validation checks on important data assets.
+    \item \textbf{Role in the platform:} Great Expectations formalizes validation checks on important data assets \cite{great_expectations_docs}.
     \item \textbf{Reason for selection:} it helps transform quality from an implicit assumption into a visible engineering control.
     \item \textbf{Value for the project:} the tool provides auditable validation artifacts and strengthens the trustworthiness of the resulting data products.
 \end{itemize}
@@ -132,7 +132,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} Airflow orchestrates the ordered execution of reset, ingestion, transformation, validation, and lakehouse readiness workflows.
+    \item \textbf{Role in the platform:} Airflow orchestrates the ordered execution of reset, ingestion, transformation, validation, and lakehouse readiness workflows \cite{apache_airflow_docs}.
     \item \textbf{Reason for selection:} it provides explicit DAG-based orchestration, retries, scheduling, and operational visibility.
     \item \textbf{Value for the project:} Airflow transforms the platform from a collection of scripts into a controlled execution system with traceable runs and clear dependencies.
 \end{itemize}
@@ -152,7 +152,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} Prometheus collects technical metrics, while Grafana displays them through operational dashboards.
+    \item \textbf{Role in the platform:} Prometheus collects technical metrics, while Grafana displays them through operational dashboards \cite{prometheus_docs,grafana_docs}.
     \item \textbf{Reason for selection:} the pair is widely used, easy to justify academically, and especially useful in distributed environments where service state must remain visible.
     \item \textbf{Value for the project:} observability improves the platform's credibility by making resource health, service exposure, and pipeline behavior measurable rather than assumed.
 \end{itemize}
@@ -166,7 +166,7 @@ Chapter 2 established the conceptual logic behind distributed data platforms. Th
 \end{figure}
 
 \begin{itemize}
-    \item \textbf{Role in the platform:} Docker isolates services and makes the deployment reproducible across the control plane and VM nodes.
+    \item \textbf{Role in the platform:} Docker isolates services and makes the deployment reproducible across the control plane and VM nodes \cite{docker_docs}.
     \item \textbf{Reason for selection:} it simplifies service packaging, environment consistency, and deployment repetition.
     \item \textbf{Value for the project:} containerization makes the platform easier to rebuild, demonstrate, and stabilize, which is especially important in an academic distributed setup.
 \end{itemize}

@@ -33,7 +33,7 @@ Within the broader \initiative{} vision, the present PFE project must be positio
 
 The broader initiative is concerned with future intelligent marketing and advertising capabilities. Such capabilities may later include customer segmentation, conversion analysis, lifetime value analysis, churn-related reasoning, personalization, campaign optimization, and recommendation-oriented decision support. Nevertheless, these downstream intelligent functions are not the main implemented contribution of the present work. The actual contribution of the PFE is the design and implementation of the distributed and secure data platform that makes such future services possible and trustworthy.
 
-This positioning is important because it prevents conceptual confusion during the defense. The project should not be described as a finished machine learning product, nor as a simple business intelligence dashboard. It must instead be defended as a Data Engineering and Big Data platform that delivers the foundational infrastructure necessary to sustain future Customer 360 and AI-driven use cases.
+This positioning is important because it prevents conceptual confusion during the defense. The project is not a finished machine learning product, nor is it a simple business intelligence dashboard. It is a Data Engineering and Big Data platform that delivers the foundational infrastructure necessary to sustain future Customer 360 and AI-driven use cases.
 
 \section{Target Project Presentation}
 \subsection{Problem Statement}
@@ -52,7 +52,7 @@ The adoption of a distributed lakehouse architecture is motivated by both techni
 
 The distributed lakehouse model is particularly appropriate because it allows the platform to keep raw data in distributed storage, process it with distributed compute resources, and expose curated analytical tables without forcing all data to be transformed immediately into a rigid warehouse-only model. It also supports separation of concerns between ingestion, storage, processing, transformation, validation, orchestration, and monitoring. This makes the architecture both more scalable and more defensible in front of a jury evaluating the project as a Data Engineering system rather than as a set of scripts.
 
-\subsection{Project Positioning}
+\subsection{Platform Identity and Academic Framing}
 The final implemented platform is best described as a \textbf{secure distributed customer-data engineering platform}. Its role is to establish the technical conditions under which customer-related data can be treated as a governed and reusable organizational asset. In this sense, the project integrates ingestion, distributed storage, distributed processing, lakehouse management, analytical querying, transformation governance, validation, orchestration, monitoring, and baseline infrastructure security into one operational foundation.
 
 This positioning creates a strong academic identity for the report. The project is simultaneously:
@@ -75,7 +75,7 @@ The current implemented scope focuses on a customer-oriented multi-source bundle
 At the same time, it is important to state the project's boundaries clearly. The present work does not implement the final downstream machine learning modules such as dynamic segmentation, churn prediction, lifetime value prediction, persona generation, or recommendation engines. Instead, it implements the distributed and secure data foundation required for such future capabilities. This distinction strengthens the rigor of the report because it prevents exaggerated claims and keeps the academic focus on the actual engineering contribution.
 
 \subsection{Expected Results and Academic Contribution}
-The expected outcome of the project is a reproducible end-to-end data platform in which heterogeneous customer-related datasets can be ingested, stored, processed, transformed, queried, validated, orchestrated, monitored, and secured. Concretely, the platform should produce replayable bronze persistence in distributed storage, trusted analytical tables available through SQL, validation evidence usable in the final defense, and a distributed runtime architecture that demonstrates collaboration across multiple nodes.
+The implemented outcome of the project is a reproducible end-to-end data platform in which heterogeneous customer-related datasets are ingested, stored, processed, transformed, queried, validated, orchestrated, monitored, and secured. Concretely, the platform produces replayable bronze persistence in distributed storage, trusted analytical tables available through SQL, validation evidence usable in the final defense, and a distributed runtime architecture that demonstrates collaboration across multiple nodes.
 
 From an academic perspective, the project contributes by showing how a modern customer-data platform can be designed as a coherent integration of event transport, distributed storage, distributed computation, metadata governance, analytical access, transformation control, quality assurance, orchestration, observability, and security hardening. The originality of the work does not lie in inventing new algorithms, but in engineering a defensible distributed platform architecture that connects these concerns into one consistent implementation.
 

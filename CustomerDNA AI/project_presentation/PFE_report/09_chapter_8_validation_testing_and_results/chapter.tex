@@ -103,7 +103,7 @@ The environment reset and lakehouse readiness phases are especially important be
         dbt-spark pipeline & proves modeled transformation logic can operate on the distributed lakehouse foundation & model execution traces, curated outputs, validation coupling \\
         \hline
     \end{tabularx}
-    \caption{Operational meaning of the main DAG validations}
+    \caption{Operational meaning of the core DAG validations}
     \label{tab:chapter8-dag-validation}
 \end{table}
 
@@ -137,7 +137,7 @@ The main validated points are:
     \item the control plane interfaces were exposed through secured local entry points.
 \end{itemize}
 
-One especially important result is the final browser-based HDFS validation. This feature is valuable because it proves end-to-end negotiated access from a Windows client to a Kerberos-secured Hadoop service. At the same time, the report must remain honest: this path is sensitive to exact client-side configuration and should be defended as validated but configuration-dependent, not as universally frictionless.
+One especially important result is the final browser-based HDFS validation. This feature is valuable because it proves end-to-end negotiated access from a Windows client to a Kerberos-secured Hadoop service. At the same time, the report must remain honest: this path is sensitive to exact client-side configuration and is therefore presented as validated but configuration-dependent, not as universally frictionless.
 
 \textit{Diagram placeholder: validated security access paths for HDFS browsing, protected analytical exposure, and secured orchestration.}
 

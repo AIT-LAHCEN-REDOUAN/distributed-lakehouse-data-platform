@@ -1,0 +1,27 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
+  \node[ado box={2.45cm}{adoorangefill}, minimum height=0.98cm, inner sep=5pt] (driver) at (-2.70,1.25)
+    {\textbf{\small Driver}\\[-1pt]\scriptsize DAG and task scheduler};
+  \node[ado box={2.95cm}{adotealfill}, minimum height=1.05cm, inner sep=5pt] (manager) at (2.20,1.25)
+    {\textbf{\small Cluster manager}\\[-1pt]\scriptsize allocates executors\\[-1pt]\scriptsize (Standalone / YARN / K8s)};
+
+  \node[ado box={1.90cm}{adoorangefill}, minimum height=0.90cm, inner sep=5pt] (exec1) at (-4.00,-1.00)
+    {\textbf{\small Executor 1}\\[-1pt]\scriptsize tasks and cache};
+  \node[ado box={1.90cm}{adoorangefill}, minimum height=0.90cm, inner sep=5pt] (exec2) at (0,-1.00)
+    {\textbf{\small Executor 2}\\[-1pt]\scriptsize tasks and cache};
+  \node[ado box={1.90cm}{adoorangefill}, minimum height=0.90cm, inner sep=5pt] (exec3) at (4.00,-1.00)
+    {\textbf{\small Executor 3}\\[-1pt]\scriptsize tasks and cache};
+
+  \node[ado box={6.00cm}{adopurplefill}, minimum height=1.05cm, inner sep=5pt] (sqlengine) at (0,-3.55)
+    {\textbf{\small Spark SQL engine}\\[-1pt]\scriptsize SQL parser, Catalyst optimizer, and physical plan execution};
+
+  \draw[ado arrow] (driver.east) -- node[ado annotation, above] {submit} (manager.west);
+  \draw[ado arrow] ($(manager.south)+(-1.05,0)$) -- ($(exec1.north)+(0.20,0)$);
+  \draw[ado arrow] (manager.south) -- (exec2.north);
+  \draw[ado arrow] ($(manager.south)+(1.05,0)$) -- ($(exec3.north)+(-0.20,0)$);
+
+  \draw[ado dashed arrow] (exec1.south east) .. controls (-3.00,-2.20) and (-2.15,-2.65) .. ($(sqlengine.north west)+(0.75,0)$);
+  \draw[ado dashed arrow] (exec2.south) -- ($(sqlengine.north)+(0,0)$);
+  \draw[ado dashed arrow] (exec3.south west) .. controls (3.00,-2.20) and (2.15,-2.65) .. ($(sqlengine.north east)+(-0.75,0)$);
+
+  \node[ado annotation] at (0,-2.55) {shuffle exchange};
+\end{tikzpicture}

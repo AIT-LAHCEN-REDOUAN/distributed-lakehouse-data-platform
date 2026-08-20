@@ -1,20 +1,24 @@
-\chapter*{Abstract}
+\clearpage
+\phantomsection
 \addcontentsline{toc}{chapter}{Abstract}
 \thispagestyle{plain}
+\vspace*{-0.55cm}
+{\Huge\bfseries Abstract\par}
+\vspace{0.65cm}
 
-Modern organizations increasingly rely on data produced from multiple heterogeneous sources, including transactional systems, e-commerce platforms, behavioral event streams, and customer profile datasets. However, transforming these raw inputs into reliable, governed, and analytics-ready data products requires a structured data engineering platform capable of ingestion, storage, distributed processing, validation, orchestration, and monitoring.
+Modern organizations produce large volumes of customer-related data through heterogeneous and fragmented operational environments. Campaign records, behavioral traces, commercial transactions, and profile attributes are often generated in different formats, at different rhythms, and under different semantic assumptions. When these sources remain isolated, the organization faces a structural difficulty: customer information becomes hard to trust, hard to reconcile, hard to replay, and hard to transform into stable analytical assets. Decision-making is therefore slowed down, cross-source understanding remains partial, and future intelligent services lack a sufficiently reliable data foundation.
 
-This final year project presents the design and implementation of \projectname, a distributed customer data lakehouse platform developed under the broader \initiative{} initiative at \companyname. The platform focuses on building a scalable data engineering foundation for multi-source customer data. It integrates Apache Kafka for ingestion, Hadoop HDFS for distributed storage, Apache Spark for distributed processing, Apache Iceberg and Hive Metastore for lakehouse table management, Trino for SQL exploration, dbt-spark for transformation modeling, Great Expectations for data quality validation, Apache Airflow for orchestration, and Prometheus with Grafana for observability.
+This final year project addresses that problematic through the design and implementation of \projectname, a distributed customer data lakehouse platform developed within the broader \initiative{} initiative at \companyname. The objective is not to deliver a final artificial intelligence product, but to establish the engineering foundation required to make future analytics and AI-oriented use cases technically credible. The work therefore focuses on structuring the complete lifecycle of customer-related data, from multi-source ingestion and durable raw persistence to distributed processing, curated analytical organization, quality control, orchestration, observability, and controlled access.
 
-The project demonstrates an end-to-end architecture that transforms raw customer-related datasets into structured lakehouse layers and trusted analytical data products. The implemented solution emphasizes modularity, reproducibility, scalability, data quality, observability, security, and readiness for future analytics and machine learning use cases.
+The contribution of the project lies in building a coherent end-to-end platform able to convert heterogeneous raw datasets into governed and reusable data products within a distributed environment. The implemented architecture is designed to improve reproducibility, scalability, traceability, and operational reliability while preserving the flexibility required by evolving customer-data use cases. Beyond the technical implementation, the project demonstrates how a modern data engineering platform can serve as the essential foundation for trusted analytics, future Customer 360 capabilities, and subsequent machine learning developments.
 
-\vspace{1.2cm}
+\vspace{0.18cm}
 \noindent\rule{\textwidth}{0.4pt}
 
-\vspace{0.6cm}
-\noindent\textbf{Keywords :} Big Data, Data Engineering, Distributed Systems, Data Lakehouse, Apache Kafka, HDFS, Apache Spark, Apache Iceberg, Trino, dbt-spark, Data Quality, Observability, Security.
+\vspace{0.08cm}
+{\fontsize{9}{10.2}\selectfont\noindent\textbf{Keywords: }Big Data, Data Engineering, Distributed Systems, Data Lakehouse, Customer Data Platform, Data Governance, Data Quality, Observability, Security, Customer 360.\par}
 
-\vspace{0.6cm}
+\vspace{0.08cm}
 \noindent\rule{\textwidth}{0.4pt}
 
 \clearpage

@@ -3,17 +3,20 @@
 \contentsline {figure}{\numberline {I.1}{\ignorespaces SMART AUTOMATION TECHNOLOGIES visual identity}}{2}{figure.caption.6}%
 \contentsline {figure}{\numberline {I.2}{\ignorespaces Core values of SMART AUTOMATION TECHNOLOGIES}}{2}{figure.caption.7}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {II.1}{\ignorespaces Conceptual evolution from centralized architectures to distributed data platforms.}}{8}{figure.caption.8}%
+\contentsline {figure}{\numberline {II.2}{\ignorespaces Conceptual view of distributed execution in a Spark-style compute model.}}{14}{figure.caption.9}%
+\contentsline {figure}{\numberline {II.3}{\ignorespaces Single-path event-log processing logic associated with Kappa-style reasoning.}}{16}{figure.caption.10}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {III.1}{\ignorespaces Technology retained for event ingestion and topic-based transport}}{20}{figure.caption.8}%
-\contentsline {figure}{\numberline {III.2}{\ignorespaces Technology retained for distributed bronze-layer storage}}{20}{figure.caption.9}%
-\contentsline {figure}{\numberline {III.3}{\ignorespaces Technologies retained for governed lakehouse tables and metadata management}}{21}{figure.caption.10}%
-\contentsline {figure}{\numberline {III.4}{\ignorespaces Technology retained for distributed processing and analytical loading}}{21}{figure.caption.11}%
-\contentsline {figure}{\numberline {III.5}{\ignorespaces Technology retained for interactive SQL access}}{21}{figure.caption.12}%
-\contentsline {figure}{\numberline {III.6}{\ignorespaces Technologies retained for model-driven transformations and analytical storage format support}}{22}{figure.caption.13}%
-\contentsline {figure}{\numberline {III.7}{\ignorespaces Technology retained for explicit data quality validation}}{22}{figure.caption.14}%
-\contentsline {figure}{\numberline {III.8}{\ignorespaces Technology retained for workflow orchestration}}{23}{figure.caption.15}%
-\contentsline {figure}{\numberline {III.9}{\ignorespaces Technologies retained for observability and dashboarding}}{23}{figure.caption.16}%
-\contentsline {figure}{\numberline {III.10}{\ignorespaces Technology retained for service isolation and reproducible deployment}}{24}{figure.caption.17}%
+\contentsline {figure}{\numberline {III.1}{\ignorespaces Technology retained for event ingestion and topic-based transport}}{21}{figure.caption.11}%
+\contentsline {figure}{\numberline {III.2}{\ignorespaces Technology retained for distributed bronze-layer storage}}{21}{figure.caption.12}%
+\contentsline {figure}{\numberline {III.3}{\ignorespaces Technologies retained for governed lakehouse tables and metadata management}}{22}{figure.caption.13}%
+\contentsline {figure}{\numberline {III.4}{\ignorespaces Technology retained for distributed processing and analytical loading}}{22}{figure.caption.14}%
+\contentsline {figure}{\numberline {III.5}{\ignorespaces Technology retained for interactive SQL access}}{22}{figure.caption.15}%
+\contentsline {figure}{\numberline {III.6}{\ignorespaces Technologies retained for model-driven transformations and analytical storage format support}}{23}{figure.caption.16}%
+\contentsline {figure}{\numberline {III.7}{\ignorespaces Technology retained for explicit data quality validation}}{23}{figure.caption.17}%
+\contentsline {figure}{\numberline {III.8}{\ignorespaces Technology retained for workflow orchestration}}{24}{figure.caption.18}%
+\contentsline {figure}{\numberline {III.9}{\ignorespaces Technologies retained for observability and dashboarding}}{24}{figure.caption.19}%
+\contentsline {figure}{\numberline {III.10}{\ignorespaces Technology retained for service isolation and reproducible deployment}}{25}{figure.caption.20}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

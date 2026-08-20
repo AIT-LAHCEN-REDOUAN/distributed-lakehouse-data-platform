@@ -127,18 +127,18 @@ At the physical level, the final design is distributed across one control plane 
     \renewcommand{\arraystretch}{1.16}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{1.5cm}|L{1.8cm}|L{3.2cm}|Y|Y|}
+    \begin{tabularx}{\textwidth}{|L{1.45cm}|L{2.15cm}|L{3.0cm}|Y|Y|}
         \hline
         \rowcolor{tableheaderblue}
         \textcolor{white}{\textbf{Node}} & \textcolor{white}{\textbf{IP / Type}} & \textcolor{white}{\textbf{VM specifications}} & \textcolor{white}{\textbf{Main services}} & \textcolor{white}{\textbf{Architectural role}} \\
         \hline
         Control plane & Local workstation & Not applicable, because this node is not part of the Linux VM fleet. & Airflow, Prometheus, Grafana, Kafka UI, metrics exporter, local TLS gateway, remote orchestration runtime & Supervises, orchestrates, monitors, and drives the distributed data plane. \\
         \hline
-        VM1 & 10.10.252.11 & Ubuntu 22.04.5 LTS, QEMU virtual CPU (2 sockets $\times$ 2 cores), 3.8 GiB RAM, 26 GB disk, no dedicated GPU. & Kafka broker 1, HDFS DataNode 1, Spark worker 1, Trino worker 1, cAdvisor & Worker node dedicated to distributed storage, processing, and query participation. \\
+        VM1 & 10.10.252.11 & Ubuntu 22.04.5 LTS;\newline QEMU virtual CPU (2 sockets $\times$ 2 cores);\newline 3.8 GiB RAM; 26 GB disk;\newline no dedicated GPU. & Kafka broker 1, HDFS DataNode 1,\newline Spark worker 1, Trino worker 1,\newline cAdvisor & Worker node dedicated to distributed storage,\newline processing, and query participation. \\
         \hline
-        VM2 & 10.10.252.12 & Ubuntu 22.04.5 LTS, QEMU virtual CPU (2 sockets $\times$ 2 cores), 3.8 GiB RAM, 26 GB disk, no dedicated GPU. & Kafka broker 2, Kerberos KDC, NameNode, DataNode 2, Hive Metastore, Spark master, Spark submit helper, Spark worker 2, Spark Thrift Server, Trino coordinator, HTTPS Trino gateway, cAdvisor & Leader node of the data plane and central coordination point for protected cluster services. \\
+        VM2 & 10.10.252.12 & Ubuntu 22.04.5 LTS;\newline QEMU virtual CPU (2 sockets $\times$ 2 cores);\newline 3.8 GiB RAM; 26 GB disk;\newline no dedicated GPU. & Kafka broker 2, Kerberos KDC,\newline NameNode, DataNode 2,\newline Hive Metastore, Spark master,\newline Spark submit helper, Spark worker 2,\newline Spark Thrift Server, Trino coordinator,\newline HTTPS Trino gateway, cAdvisor & Leader node of the data plane and central coordination point\newline for protected cluster services. \\
         \hline
-        VM3 & 10.10.252.13 & Ubuntu 22.04.5 LTS, QEMU virtual CPU (2 sockets $\times$ 2 cores), 3.8 GiB RAM, 26 GB disk, no dedicated GPU. & Kafka broker 3, HDFS DataNode 3, Spark worker 3, Trino worker 2, cAdvisor & Additional worker node reinforcing distributed storage, compute, and query execution. \\
+        VM3 & 10.10.252.13 & Ubuntu 22.04.5 LTS;\newline QEMU virtual CPU (2 sockets $\times$ 2 cores);\newline 3.8 GiB RAM; 26 GB disk;\newline no dedicated GPU. & Kafka broker 3, HDFS DataNode 3,\newline Spark worker 3, Trino worker 2,\newline cAdvisor & Additional worker node reinforcing distributed storage,\newline compute, and query execution. \\
         \hline
     \end{tabularx}
     \caption{Physical node distribution of the final deployment}

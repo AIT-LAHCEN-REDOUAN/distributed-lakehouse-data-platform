@@ -1,3 +1,105 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{10}
+
+\bibitem{apache_airflow_docs}
+{Apache Software Foundation}.
+\newblock Apache airflow documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{apache_hadoop_docs}
+{Apache Software Foundation}.
+\newblock Apache hadoop documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{apache_hive_docs}
+{Apache Software Foundation}.
+\newblock Apache hive documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{apache_iceberg_docs}
+{Apache Software Foundation}.
+\newblock Apache iceberg documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{apache_kafka_docs}
+{Apache Software Foundation}.
+\newblock Apache kafka documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{apache_parquet_docs}
+{Apache Software Foundation}.
+\newblock Apache parquet documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{apache_spark_docs}
+{Apache Software Foundation}.
+\newblock Apache spark documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{armbrust2021lakehouse}
+Michael Armbrust, Ali Ghodsi, Reynold Xin, and Matei Zaharia.
+\newblock Lakehouse: A new generation of open platforms that unify data
+  warehousing and advanced analytics.
+\newblock In {\em Conference on Innovative Data Systems Research (CIDR)}, 2021.
+
+\bibitem{dbt_docs}
+{dbt Labs}.
+\newblock dbt developer hub documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{docker_docs}
+{Docker, Inc.}
+\newblock Docker documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{gilbert2002brewer}
+Seth Gilbert and Nancy Lynch.
+\newblock Brewer's conjecture and the feasibility of consistent, available,
+  partition-tolerant web services.
+\newblock {\em ACM SIGACT News}, 33(2):51--59, 2002.
+
+\bibitem{grafana_docs}
+{Grafana Labs}.
+\newblock Grafana documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{great_expectations_docs}
+{Great Expectations}.
+\newblock Great expectations documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{kleppmann2017ddia}
+Martin Kleppmann and Chris Riccomini.
+\newblock {\em Designing Data-Intensive Applications}.
+\newblock O'Reilly Media, Inc., 2 edition, 2026.
+\newblock 2nd edition.
+
+\bibitem{kreps2014questioning}
+Jay Kreps.
+\newblock Questioning the lambda architecture.
+\newblock
+  \url{https://www.confluent.io/blog/questioning-the-lambda-architecture/},
+  2014.
+\newblock Accessed on August 20, 2026.
+
+\bibitem{laney2001three}
+Doug Laney.
+\newblock 3d data management: Controlling data volume, velocity, and variety.
+\newblock Technical report, META Group, 2001.
+
+\bibitem{marz2015bigdata}
+Nathan Marz and James Warren.
+\newblock {\em Big Data: Principles and Best Practices of Scalable Realtime
+  Data Systems}.
+\newblock Manning Publications, 2015.
+
+\bibitem{prometheus_docs}
+{Prometheus Authors}.
+\newblock Prometheus documentation, 2026.
+\newblock Accessed for technical reference.
+
+\bibitem{trino_docs}
+{Trino Software Foundation}.
+\newblock Trino documentation, 2026.
+\newblock Accessed for technical reference.
 
 \end{thebibliography}

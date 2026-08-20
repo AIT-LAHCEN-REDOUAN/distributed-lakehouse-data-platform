@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.8.18)  18 AUG 2026 18:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.8.18)  20 AUG 2026 17:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -602,18 +602,304 @@ Package tocloft Info: The document has chapter divisions on input line 51.
 \cfttabindent=\skip110
 \cfttabnumwidth=\skip111
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 42.
+(C:\Program Files\MiKTeX\tex/latex/pgf/frontendlayer\tikz.sty
+(C:\Program Files\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+(C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgfrcs.sty
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfutil-common.tex
+\pgfutil@everybye=\toks35
+\pgfutil@tempdima=\dimen262
+\pgfutil@tempdimb=\dimen263
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfutil-latex.def
+\pgfutil@abb=\box66
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfrcs.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+Package: pgfrcs 2026-08-01 v3.1.12 (3.1.12)
+))
+Package: pgf 2026-08-01 v3.1.12 (3.1.12)
+
+(C:\Program Files\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.sty
+(C:\Program Files\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.sty
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys.code.tex
+Package: pgfsys 2026-08-01 v3.1.12 (3.1.12)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks36
+\pgfkeys@temptoks=\toks37
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfkeyslibraryfiltered.code.
+tex
+\pgfkeys@tmptoks=\toks38
+))
+\pgf@x=\dimen264
+\pgf@y=\dimen265
+\pgf@xa=\dimen266
+\pgf@ya=\dimen267
+\pgf@xb=\dimen268
+\pgf@yb=\dimen269
+\pgf@xc=\dimen270
+\pgf@yc=\dimen271
+\pgf@xd=\dimen272
+\pgf@yd=\dimen273
+\w@pgf@writea=\write3
+\r@pgf@reada=\read3
+\c@pgf@counta=\count338
+\c@pgf@countb=\count339
+\c@pgf@countc=\count340
+\c@pgf@countd=\count341
+\t@pgf@toka=\toks39
+\t@pgf@tokb=\toks40
+\t@pgf@tokc=\toks41
+\pgf@sys@id@count=\count342
+ (C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgf.cfg
+File: pgf.cfg 2026-08-01 v3.1.12 (3.1.12)
+)
+Driver file for pgf: pgfsys-pdftex.def
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-pdftex.def
+File: pgfsys-pdftex.def 2026-08-01 v3.1.12 (3.1.12)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsys-common-pdf.def
+File: pgfsys-common-pdf.def 2026-08-01 v3.1.12 (3.1.12)
+)))
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsyssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgfsyssoftpath@smallbuffer@items=\count343
+\pgfsyssoftpath@bigbuffer@items=\count344
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/systemlayer\pgfsysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2026-08-01 v3.1.12 (3.1.12)
+))
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcore.code.tex
+Package: pgfcore 2026-08-01 v3.1.12 (3.1.12)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathutil.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathparser.code.tex
+\pgfmath@dimen=\dimen274
+\pgfmath@count=\count345
+\pgfmath@box=\box67
+\pgfmath@toks=\toks42
+\pgfmath@stack@operand=\toks43
+\pgfmath@stack@operation=\toks44
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.basic.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.trigonometric.co
+de.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.random.code.tex)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.comparison.code.
+tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.base.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.round.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.misc.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfunctions.integerarithmeti
+cs.code.tex) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathcalc.code.tex
+) (C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmathfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count346
+))
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfint.code.tex)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepoints.code.tex
+File: pgfcorepoints.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgf@picminx=\dimen275
+\pgf@picmaxx=\dimen276
+\pgf@picminy=\dimen277
+\pgf@picmaxy=\dimen278
+\pgf@pathminx=\dimen279
+\pgf@pathmaxx=\dimen280
+\pgf@pathminy=\dimen281
+\pgf@pathmaxy=\dimen282
+\pgf@xx=\dimen283
+\pgf@xy=\dimen284
+\pgf@yx=\dimen285
+\pgf@yy=\dimen286
+\pgf@zx=\dimen287
+\pgf@zy=\dimen288
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathconstruct.code.t
+ex
+File: pgfcorepathconstruct.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgf@path@lastx=\dimen289
+\pgf@path@lasty=\dimen290
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathusage.code.tex
+File: pgfcorepathusage.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgf@shorten@end@additional=\dimen291
+\pgf@shorten@start@additional=\dimen292
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorescopes.code.tex
+File: pgfcorescopes.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgfpic=\box68
+\pgf@hbox=\box69
+\pgf@layerbox@main=\box70
+\pgf@picture@serial@count=\count347
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoregraphicstate.code.te
+x
+File: pgfcoregraphicstate.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgflinewidth=\dimen293
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransformations.code
+.tex
+File: pgfcoretransformations.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgf@pt@x=\dimen294
+\pgf@pt@y=\dimen295
+\pgf@pt@temp=\dimen296
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2026-08-01 v3.1.12 (3.1.12)
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreobjects.code.tex
+File: pgfcoreobjects.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepathprocessing.code.
+tex
+File: pgfcorepathprocessing.code.tex 2026-08-01 v3.1.12 (3.1.12)
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorearrows.code.tex
+File: pgfcorearrows.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgfarrowsep=\dimen297
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgf@max=\dimen298
+\pgf@sys@shading@range@num=\count348
+\pgf@shadingcount=\count349
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoreexternal.code.tex
+File: pgfcoreexternal.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgfexternal@startupbox=\box71
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorelayers.code.tex
+File: pgfcorelayers.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcoretransparency.code.te
+x
+File: pgfcoretransparency.code.tex 2026-08-01 v3.1.12 (3.1.12)
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorepatterns.code.tex
+File: pgfcorepatterns.code.tex 2026-08-01 v3.1.12 (3.1.12)
+) (C:\Program Files\MiKTeX\tex/generic/pgf/basiclayer\pgfcorerdf.code.tex
+File: pgfcorerdf.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)))
+(C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgfnodeparttextbox=\box72
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)
+(C:\Program Files\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-0-65.sty
+Package: pgfcomp-version-0-65 2026-08-01 v3.1.12 (3.1.12)
+\pgf@nodesepstart=\dimen299
+\pgf@nodesepend=\dimen300
+)
+(C:\Program Files\MiKTeX\tex/latex/pgf/compatibility\pgfcomp-version-1-18.sty
+Package: pgfcomp-version-1-18 2026-08-01 v3.1.12 (3.1.12)
+)) (C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgffor.sty
+(C:\Program Files\MiKTeX\tex/latex/pgf/utilities\pgfkeys.sty
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgfkeys.code.tex))
+(C:\Program Files\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Program Files\MiKTeX\tex/generic/pgf/math\pgfmath.code.tex))
+(C:\Program Files\MiKTeX\tex/generic/pgf/utilities\pgffor.code.tex
+Package: pgffor 2026-08-01 v3.1.12 (3.1.12)
+\pgffor@iter=\dimen301
+\pgffor@skip=\dimen302
+\pgffor@stack=\toks45
+\pgffor@toks=\toks46
+))
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz\tikz.code.tex
+Package: tikz 2026-08-01 v3.1.12 (3.1.12)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryplothandlers.code.
+tex
+File: pgflibraryplothandlers.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgf@plot@mark@count=\count350
+\pgfplotmarksize=\dimen303
+)
+\tikz@lastx=\dimen304
+\tikz@lasty=\dimen305
+\tikz@lastxsaved=\dimen306
+\tikz@lastysaved=\dimen307
+\tikz@lastmovetox=\dimen308
+\tikz@lastmovetoy=\dimen309
+\tikzleveldistance=\dimen310
+\tikzsiblingdistance=\dimen311
+\tikz@figbox=\box73
+\tikz@figbox@bg=\box74
+\tikz@tempbox=\box75
+\tikz@tempbox@bg=\box76
+\tikztreelevel=\count351
+\tikznumberofchildren=\count352
+\tikznumberofcurrentchild=\count353
+\tikz@fig@count=\count354
+ (C:\Program Files\MiKTeX\tex/generic/pgf/modules\pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgfmatrixcurrentrow=\count355
+\pgfmatrixcurrentcolumn=\count356
+\pgf@matrix@numberofcolumns=\count357
+)
+\tikz@expandcount=\count358
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+rytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)))
+(C:\Users\aitlh\AppData\Roaming\MiKTeX\tex/latex/pdflscape\pdflscape.sty
+Package: pdflscape 2022-10-27 v0.13 Display of landscape pages in PDF
+
+(C:\Users\aitlh\AppData\Roaming\MiKTeX\tex/latex/pdflscape\pdflscape-nometadata
+.sty
+Package: pdflscape-nometadata 2022-10-28 v0.13 Display of landscape pages in PD
+F (HO)
+ (C:\Program Files\MiKTeX\tex/latex/graphics\lscape.sty
+Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
+))
+Package hyperref Info: Option `colorlinks' set `true' on input line 44.
 \tocchapnumlen=\skip112
 \tocsecnumlen=\skip113
 \tocsubsecnumlen=\skip114
 \tocfignumlen=\skip115
 \toctabnumlen=\skip116
 \toctitlecol=\skip117
+
+(90_assets/latex_diagrams/shared/tikz_styles.tex
+(C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryarrows.meta.code.t
+ex
+File: pgflibraryarrows.meta.code.tex 2026-08-01 v3.1.12 (3.1.12)
+\pgfarrowinset=\dimen312
+\pgfarrowlength=\dimen313
+\pgfarrowwidth=\dimen314
+\pgfarrowlinewidth=\dimen315
 )
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+rycalc.code.tex
+File: tikzlibrarycalc.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+ryfit.code.tex
+File: tikzlibraryfit.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+rypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+ryshadows.code.tex
+File: tikzlibraryshadows.code.tex 2026-08-01 v3.1.12 (3.1.12)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/frontendlayer/tikz/libraries\tikzlibra
+ryfadings.code.tex
+File: tikzlibraryfadings.code.tex 2026-08-01 v3.1.12 (3.1.12)
+
+(C:\Program Files\MiKTeX\tex/generic/pgf/libraries\pgflibraryfadings.code.tex
+File: pgflibraryfadings.code.tex 2026-08-01 v3.1.12 (3.1.12)
+)))))
 LaTeX Font Info:    Trying to load font information for T1+lmr on input line 5.
 
-
-(C:\Program Files\MiKTeX\tex/latex/lm\t1lmr.fd
+ (C:\Program Files\MiKTeX\tex/latex/lm\t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (main.aux)
 \openout1 = `main.aux'.
@@ -654,7 +940,7 @@ LaTeX Font Info:    ... okay on input line 5.
 * \oddsidemargin=-1.1381pt
 * \evensidemargin=-1.1381pt
 * \topmargin=-38.1381pt
-* \headheight=12.0pt
+* \headheight=14.5pt
 * \headsep=25.0pt
 * \topskip=12.0pt
 * \footskip=30.0pt
@@ -694,17 +980,17 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 )
 (C:\Program Files\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count338
-\scratchdimen=\dimen262
-\scratchbox=\box66
-\nofMPsegments=\count339
-\nofMParguments=\count340
-\everyMPshowfont=\toks35
-\MPscratchCnt=\count341
-\MPscratchDim=\dimen263
-\MPnumerator=\count342
-\makeMPintoPDFobject=\count343
-\everyMPtoPDFconversion=\toks36
+\scratchcounter=\count359
+\scratchdimen=\dimen316
+\scratchbox=\box77
+\nofMPsegments=\count360
+\nofMParguments=\count361
+\everyMPshowfont=\toks47
+\MPscratchCnt=\count362
+\MPscratchDim=\dimen317
+\MPnumerator=\count363
+\makeMPintoPDFobject=\count364
+\everyMPtoPDFconversion=\toks48
 ) (C:\Program Files\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -783,62 +1069,29 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [5
 
 ]
+[6] [7])
+\tf@toc=\write4
+\openout4 = `main.toc'.
 
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[6]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[7]
-Overfull \hbox (1.31927pt too wide) detected at line 115
-\T1/lmr/m/n/12 VII.10  
- []
-
-
-Overfull \hbox (4.02737pt too wide) detected at line 116
-\T1/lmr/bx/n/12 VIII  
- []
-
-)
-\tf@toc=\write3
-\openout3 = `main.toc'.
-
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[8] (main.lof)
-\tf@lof=\write4
-\openout4 = `main.lof'.
+ [8] (main.lof)
+\tf@lof=\write5
+\openout5 = `main.lof'.
 
  [9
 
 ] (main.lot)
-\tf@lot=\write5
-\openout5 = `main.lot'.
+\tf@lot=\write6
+\openout6 = `main.lot'.
 
  [10
 
-] (01_front_matter/acronyms.tex [11
+] (01_front_matter/acronyms.tex
+[11
 
 
-])
-(02_chapter_1_general_project_context/chapter.tex
+]) (02_chapter_1_general_project_context/chapter.tex
 Chapter I.
-<90_assets/logos/SAT_logos/SAT_logo.png, id=383, 1106.1325pt x 489.83pt>
+<90_assets/logos/SAT_logos/SAT_logo.png, id=416, 1106.1325pt x 489.83pt>
 File: 90_assets/logos/SAT_logos/SAT_logo.png Graphic file (type png)
 <use 90_assets/logos/SAT_logos/SAT_logo.png>
 Package pdftex.def Info: 90_assets/logos/SAT_logos/SAT_logo.png  used on input 
@@ -849,230 +1102,91 @@ line 12.
 
 
 ]
-<90_assets/logos/SAT_logos/SAT_values.png, id=388, 1027.84pt x 1027.84pt>
+<90_assets/logos/SAT_logos/SAT_values.png, id=421, 1027.84pt x 1027.84pt>
 File: 90_assets/logos/SAT_logos/SAT_values.png Graphic file (type png)
 <use 90_assets/logos/SAT_logos/SAT_values.png>
 Package pdftex.def Info: 90_assets/logos/SAT_logos/SAT_values.png  used on inpu
 t line 24.
 (pdftex.def)             Requested size: 236.72888pt x 236.72758pt.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[2 <./90_assets/logos/SAT_logos/SAT_logo.png> <./90_assets/logos/SAT_logos/SAT_
-values.png (PNG copy)>]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[3]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[4]
+ [2 <./90_assets/logos/SAT_logos/SAT_logo.png> <./90_assets/logos/SAT_logos/SAT
+_values.png (PNG copy)>] [3] [4]
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 6
 0.
- (C:\Program Files\MiKTeX\tex/latex/lm\ts1lmr.fd
+
+(C:\Program Files\MiKTeX\tex/latex/lm\ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[5{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}])
-(03_chapter_2_state_of_the_art_and_theoretical_background/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[6]
+) [5{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}])
+(03_chapter_2_state_of_the_art_and_theoretical_background/chapter.tex [6]
 Chapter II.
 [7
 
-]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[8]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[9{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program Files/M
-iKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/
-lm-mathsy.enc}]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[10]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[11]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[12]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[13]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[14]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[15]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[16]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[17]) (04_chapter_3_technology_watch/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[18]
+] (90_assets/latex_diagrams/chapter_2/fig_2_1_centralized_vs_distributed.tex) [
+8] [9{C:/Program Files/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Program File
+s/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/Program Files/MiKTeX/fonts/enc/dvips/
+lm/lm-mathsy.enc}] [10] [11] [12]
+(90_assets/latex_diagrams/chapter_2/fig_2_3_spark_execution_model.tex) [13]
+[14] (90_assets/latex_diagrams/chapter_2/fig_2_2_event_log_processing.tex)
+[15] [16] [17] [18]) (04_chapter_3_technology_watch/chapter.tex [19]
 Chapter III.
-<90_assets/logos/Tech_logos/apache_kafka.png, id=467, 1204.5pt x 1204.5pt>
+<90_assets/logos/Tech_logos/apache_kafka.png, id=523, 1204.5pt x 1204.5pt>
 File: 90_assets/logos/Tech_logos/apache_kafka.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/apache_kafka.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/apache_kafka.png  used on i
 nput line 18.
 (pdftex.def)             Requested size: 81.9406pt x 81.93431pt.
-[19
+[20
 
 ]
-<90_assets/logos/Tech_logos/hadoop_hdfs.png, id=472, 2065.7175pt x 974.64125pt>
+<90_assets/logos/Tech_logos/hadoop_hdfs.png, id=530, 2065.7175pt x 974.64125pt>
 
 File: 90_assets/logos/Tech_logos/hadoop_hdfs.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/hadoop_hdfs.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/hadoop_hdfs.png  used on in
 put line 32.
 (pdftex.def)             Requested size: 81.9406pt x 38.65182pt.
-<90_assets/logos/Tech_logos/Apache_Iceberg.png, id=473, 803.0pt x 218.8175pt>
+<90_assets/logos/Tech_logos/Apache_Iceberg.png, id=532, 803.0pt x 218.8175pt>
 File: 90_assets/logos/Tech_logos/Apache_Iceberg.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Iceberg.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Iceberg.png  used on
  input line 49.
 (pdftex.def)             Requested size: 81.9406pt x 22.32709pt.
-<90_assets/logos/Tech_logos/Apache_Hive.png, id=475, 1003.75pt x 903.375pt>
+<90_assets/logos/Tech_logos/Apache_Hive.png, id=534, 1003.75pt x 903.375pt>
 File: 90_assets/logos/Tech_logos/Apache_Hive.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Hive.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Hive.png  used on in
 put line 50.
 (pdftex.def)             Requested size: 81.9406pt x 73.7464pt.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[20 <./90_assets/logos/Tech_logos/apache_kafka.png> <./90_assets/logos/Tech_log
-os/hadoop_hdfs.png>]
-<90_assets/logos/Tech_logos/spark.png, id=483, 831.105pt x 389.455pt>
+ [21 <./90_assets/logos/Tech_logos/apache_kafka.png> <./90_assets/logos/Tech_lo
+gos/hadoop_hdfs.png>]
+<90_assets/logos/Tech_logos/spark.png, id=547, 831.105pt x 389.455pt>
 File: 90_assets/logos/Tech_logos/spark.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/spark.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/spark.png  used on input li
 ne 66.
 (pdftex.def)             Requested size: 81.9406pt x 38.39511pt.
-<90_assets/logos/Tech_logos/trino.png, id=484, 803.0pt x 361.35pt>
+<90_assets/logos/Tech_logos/trino.png, id=549, 803.0pt x 361.35pt>
 File: 90_assets/logos/Tech_logos/trino.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/trino.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/trino.png  used on input li
 ne 80.
 (pdftex.def)             Requested size: 81.9406pt x 36.87044pt.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[21 <./90_assets/logos/Tech_logos/Apache_Iceberg.png> <./90_assets/logos/Tech_l
-ogos/Apache_Hive.png> <./90_assets/logos/Tech_logos/spark.png> <./90_assets/log
-os/Tech_logos/trino.png>]
-<90_assets/logos/Tech_logos/data_build_tool.png, id=493, 1204.5pt x 602.25pt>
+ [22 <./90_assets/logos/Tech_logos/Apache_Iceberg.png> <./90_assets/logos/Tech_
+logos/Apache_Hive.png> <./90_assets/logos/Tech_logos/spark.png> <./90_assets/lo
+gos/Tech_logos/trino.png>]
+<90_assets/logos/Tech_logos/data_build_tool.png, id=560, 1204.5pt x 602.25pt>
 File: 90_assets/logos/Tech_logos/data_build_tool.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/data_build_tool.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/data_build_tool.png  used o
 n input line 97.
 (pdftex.def)             Requested size: 81.9406pt x 40.96715pt.
-<90_assets/logos/Tech_logos/Apache_Parquet.png, id=494, 166.6225pt x 90.3375pt>
+<90_assets/logos/Tech_logos/Apache_Parquet.png, id=561, 166.6225pt x 90.3375pt>
 
 File: 90_assets/logos/Tech_logos/Apache_Parquet.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Parquet.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Parquet.png  used on
  input line 98.
 (pdftex.def)             Requested size: 81.9406pt x 44.42564pt.
-<90_assets/logos/Tech_logos/great_expectations.png, id=495, 971.63pt x 258.9675
+<90_assets/logos/Tech_logos/great_expectations.png, id=564, 971.63pt x 258.9675
 pt>
 File: 90_assets/logos/Tech_logos/great_expectations.png Graphic file (type png)
 
@@ -1080,426 +1194,116 @@ File: 90_assets/logos/Tech_logos/great_expectations.png Graphic file (type png)
 Package pdftex.def Info: 90_assets/logos/Tech_logos/great_expectations.png  use
 d on input line 115.
 (pdftex.def)             Requested size: 86.49748pt x 23.05316pt.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[22 <./90_assets/logos/Tech_logos/data_build_tool.png> <./90_assets/logos/Tech_
-logos/Apache_Parquet.png> <./90_assets/logos/Tech_logos/great_expectations.png>
-]
-<90_assets/logos/Tech_logos/Airflow.png, id=503, 166.6225pt x 90.3375pt>
+ [23 <./90_assets/logos/Tech_logos/data_build_tool.png> <./90_assets/logos/Tech
+_logos/Apache_Parquet.png> <./90_assets/logos/Tech_logos/great_expectations.png
+>]
+<90_assets/logos/Tech_logos/Airflow.png, id=577, 166.6225pt x 90.3375pt>
 File: 90_assets/logos/Tech_logos/Airflow.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Airflow.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Airflow.png  used on input 
 line 129.
 (pdftex.def)             Requested size: 86.49748pt x 46.89719pt.
-<90_assets/logos/Tech_logos/Prometheus.png, id=504, 774.895pt x 405.515pt>
+<90_assets/logos/Tech_logos/Prometheus.png, id=579, 774.895pt x 405.515pt>
 File: 90_assets/logos/Tech_logos/Prometheus.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Prometheus.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Prometheus.png  used on inp
 ut line 146.
 (pdftex.def)             Requested size: 81.9406pt x 42.88042pt.
-<90_assets/logos/Tech_logos/Grafana.png, id=505, 1204.5pt x 602.25pt>
+<90_assets/logos/Tech_logos/Grafana.png, id=580, 1204.5pt x 602.25pt>
 File: 90_assets/logos/Tech_logos/Grafana.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Grafana.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Grafana.png  used on input 
 line 147.
 (pdftex.def)             Requested size: 81.9406pt x 40.96715pt.
-<90_assets/logos/Tech_logos/docker.png, id=506, 963.6pt x 796.9775pt>
+<90_assets/logos/Tech_logos/docker.png, id=583, 963.6pt x 796.9775pt>
 File: 90_assets/logos/Tech_logos/docker.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/docker.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/docker.png  used on input l
 ine 163.
 (pdftex.def)             Requested size: 81.9406pt x 67.76042pt.
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[23 <./90_assets/logos/Tech_logos/Airflow.png> <./90_assets/logos/Tech_logos/Pr
-ometheus.png> <./90_assets/logos/Tech_logos/Grafana.png>])
-(05_chapter_4_requirements_analysis_and_system_design/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[24 <./90_assets/logos/Tech_logos/docker.png>]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[25]
+ [24 <./90_assets/logos/Tech_logos/Airflow.png> <./90_assets/logos/Tech_logos/P
+rometheus.png> <./90_assets/logos/Tech_logos/Grafana.png>])
+(05_chapter_4_requirements_analysis_and_system_design/chapter.tex [25 <./90_ass
+ets/logos/Tech_logos/docker.png>] [26]
 Chapter IV.
-[26
+[27
 
-]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[27]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[28]
-Overfull \hbox (1.0515pt too wide) in paragraph at lines 143--143
-[]|\T1/lmr/m/n/10 (-20) 10.10.252.11|  
- []
-
-
-Overfull \hbox (1.0515pt too wide) in paragraph at lines 143--143
-[]|\T1/lmr/m/n/10 (-20) 10.10.252.12|  
- []
-
-
-Overfull \hbox (1.0515pt too wide) in paragraph at lines 143--143
-[]|\T1/lmr/m/n/10 (-20) 10.10.252.13|  
- []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[29]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[30])
+] [28] [29] [30] [31] [32])
 (06_chapter_5_implementation_of_the_distributed_lakehouse_platform/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[31]
-Chapter V.
-[32
-
-]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
 [33]
+Chapter V.
+[34
 
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[34]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[35]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[36]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[37]) (07_chapter_6_deployment_strategy_and_distributed_execution/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[38]
-Chapter VI.
-[39
-
-]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
+] [35] [36] [37] [38] [39])
+(07_chapter_6_deployment_strategy_and_distributed_execution/chapter.tex
 [40]
+Chapter VI.
+[41
 
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[41]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[42]) (08_chapter_7_security_architecture_and_hardening/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[43]
+] [42] [43] [44])
+(08_chapter_7_security_architecture_and_hardening/chapter.tex [45]
 Chapter VII.
-[44
+[46
 
-]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[45]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[46]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[47]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[48]) (09_chapter_8_validation_testing_and_results/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[49]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[50]
+] [47] [48] [49] [50])
+(09_chapter_8_validation_testing_and_results/chapter.tex [51] [52]
 Chapter VIII.
-[51
+[53
 
-]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[52]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[53]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[54]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[55]) (10_chapter_9_discussion_and_critical_analysis/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[56]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[57]
+] [54] [55] [56] [57])
+(10_chapter_9_discussion_and_critical_analysis/chapter.tex [58] [59]
 Chapter IX.
-[58
+[60
 
-]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[59]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[60]) (11_chapter_10_general_conclusion_and_perspectives/chapter.tex
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[61]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[62]
+] [61] [62]) (11_chapter_10_general_conclusion_and_perspectives/chapter.tex
+[63] [64]
 Chapter X.
-[63
+[65
 
-])
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[64]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[65] (main.bbl
-
-LaTeX Warning: Empty `thebibliography' environment on input line 3.
-
-) (13_appendices/appendices_overview.tex [66
+]) [66] (main.bbl [67
 
 
 ]
-Appendix A.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 8
 0.
-(C:\Program Files\MiKTeX\tex/latex/lm\t1lmtt.fd
+ (C:\Program Files\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
- [67
+)
+(13_appendices/appendices_overview.tex [68]
+Appendix A.
+[69
 
-])
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[68] (main.aux)
+]) [70] (main.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-07-20>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 18364 strings out of 467501
- 304562 string characters out of 5418659
- 777421 words of memory out of 5000000
- 46737 multiletter control sequences out of 15000+600000
- 713265 words of font info for 223 fonts, out of 8000000 for 9000
+ 29623 strings out of 467501
+ 555968 string characters out of 5418659
+ 993338 words of memory out of 5000000
+ 57677 multiletter control sequences out of 15000+600000
+ 724120 words of font info for 248 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,12n,86p,1089b,654s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 97i,12n,97p,1003b,931s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Program Files/M
 iKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/pub
-lic/lm/lmmi12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/
-Program Files/MiKTeX/fonts/type1/public/lm/lmr12.pfb><C:/Program Files/MiKTeX/f
-onts/type1/public/lm/lmr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lm
-ri12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Program 
-Files/MiKTeX/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (79 pages, 2875544 bytes).
+lic/lm/lmbx8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx9.pfb><C:/P
+rogram Files/MiKTeX/fonts/type1/public/lm/lmmi12.pfb><C:/Program Files/MiKTeX/f
+onts/type1/public/lm/lmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/l
+mr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr8.pfb><C:/Program Fi
+les/MiKTeX/fonts/type1/public/lm/lmr9.pfb><C:/Program Files/MiKTeX/fonts/type1/
+public/lm/lmri12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy10.pfb>
+<C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtt12.pfb>
+Output written on main.pdf (81 pages, 3002807 bytes).
 PDF statistics:
- 1258 PDF objects out of 1440 (max. 8388607)
- 271 named destinations out of 1000 (max. 500000)
- 46748 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 1356 PDF objects out of 1440 (max. 8388607)
+ 293 named destinations out of 1000 (max. 500000)
+ 52984 words of extra memory for PDF output out of 61914 (max. 10000000)
 

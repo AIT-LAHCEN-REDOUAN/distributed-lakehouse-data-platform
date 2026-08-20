@@ -1,20 +1,30 @@
-\chapter*{R\'esum\'e}
+\clearpage
+\phantomsection
 \addcontentsline{toc}{chapter}{R\'esum\'e}
 \thispagestyle{plain}
+\vspace*{-0.55cm}
+{\Huge\bfseries R\'esum\'e\par}
+\vspace{0.65cm}
 
-Les organisations modernes exploitent des donn\'ees issues de sources h\'et\'erog\`enes telles que les syst\`emes transactionnels, les plateformes e-commerce, les \'ev\'enements comportementaux et les donn\'ees de profil client. Cependant, la transformation de ces donn\'ees brutes en produits de donn\'ees fiables, gouvern\'es et exploitables n\'ecessite une plateforme d'ing\'enierie de donn\'ees structur\'ee, capable d'assurer l'ingestion, le stockage, le traitement distribu\'e, la validation, l'orchestration et la supervision.
+\begingroup
+\small
+\emergencystretch=4em
 
-Ce projet de fin d'\'etudes pr\'esente la conception et la mise en oeuvre de \projectname, une plateforme lakehouse de donn\'ees client distribu\'ee r\'ealis\'ee dans le cadre de l'initiative plus large \initiative{} chez \companyname. Le projet se concentre sur la construction d'une fondation d'ing\'enierie de donn\'ees scalable pour des donn\'ees client multi-sources. L'architecture int\`egre Apache Kafka pour l'ingestion, Hadoop HDFS pour le stockage distribu\'e, Apache Spark pour le traitement distribu\'e, Apache Iceberg et Hive Metastore pour la gestion des tables lakehouse, Trino pour l'exploration SQL, dbt-spark pour les transformations, Great Expectations pour la qualit\'e des donn\'ees, Apache Airflow pour l'orchestration, ainsi que Prometheus et Grafana pour l'observabilit\'e.
+Les organisations modernes produisent des volumes importants de donn\'ees client dans des environnements op\'erationnels h\'et\'erog\`enes et fragment\'es. Les donn\'ees de campagne, les traces comportementales, les transactions commerciales et les attributs de profil sont souvent g\'en\'er\'es dans des formats diff\'erents, selon des rythmes distincts et avec des hypoth\`eses s\'emantiques non homog\`enes. Lorsque ces sources restent isol\'ees, une difficult\'e structurelle appara\^\i t : l'information devient difficile \`a fiabiliser, \`a r\'econcilier, \`a rejouer et \`a transformer en actifs analytiques coh\'erents. Les processus de d\'ecision se ralentissent, la vision client demeure partielle et les futurs services intelligents ne disposent pas d'un socle de donn\'ees suffisamment fiable.
 
-La solution r\'ealis\'ee illustre une cha\^\i ne de traitement compl\`ete permettant de convertir des donn\'ees client brutes en couches lakehouse structur\'ees et en produits de donn\'ees analytiques fiables. Elle met l'accent sur la modularit\'e, la reproductibilit\'e, la scalabilit\'e, la qualit\'e des donn\'ees, l'observabilit\'e, la s\'ecurit\'e et la pr\'eparation de futurs cas d'usage analytiques et machine learning.
+Ce projet de fin d'\'etudes r\'epond \`a cette probl\'ematique par la conception et la mise en oeuvre de \projectname, une plateforme distribu\'ee de type lakehouse pour les donn\'ees client, d\'evelopp\'ee dans le cadre de l'initiative plus large \initiative{} au sein de \companyname. L'objectif n'est pas de livrer un produit d'intelligence artificielle finalis\'e, mais d'\'etablir la fondation d'ing\'enierie n\'ecessaire pour rendre cr\'edibles de futurs cas d'usage analytiques et orient\'es IA. Le travail porte ainsi sur l'organisation du cycle de vie complet des donn\'ees client, depuis l'ingestion multi-source et la persistance durable des donn\'ees brutes jusqu'au traitement distribu\'e, \`a la structuration analytique gouvern\'ee, au contr\^ole qualit\'e, \`a l'orchestration, \`a l'observabilit\'e et \`a l'acc\`es ma\^\i tris\'e.
 
-\vspace{1.2cm}
+La contribution principale du projet consiste \`a construire une plateforme coh\'erente de bout en bout capable de transformer des jeux de donn\'ees h\'et\'erog\`enes en produits de donn\'ees gouvern\'es et r\'eutilisables dans un environnement distribu\'e. L'architecture mise en oeuvre vise \`a renforcer la reproductibilit\'e, la scalabilit\'e, la tra\c{c}abilit\'e et la fiabilit\'e op\'erationnelle, tout en conservant la flexibilit\'e n\'ecessaire \`a l'\'evolution de futurs usages centr\'es sur la donn\'ee client. Au-del\`a de l'impl\'ementation technique, ce projet montre comment une plateforme moderne d'ing\'enierie de donn\'ees peut constituer le socle indispensable d'analyses fiables, de futures capacit\'es Customer 360 et de d\'eveloppements ult\'erieurs en machine learning.
+
+\vspace{0.18cm}
 \noindent\rule{\textwidth}{0.4pt}
 
-\vspace{0.6cm}
-\noindent\textbf{Mots-cl\'es :} Big Data, Ing\'enierie des donn\'ees, Syst\`emes distribu\'es, Data Lakehouse, Apache Kafka, HDFS, Apache Spark, Apache Iceberg, Trino, dbt-spark, Qualit\'e des donn\'ees, Observabilit\'e, S\'ecurit\'e.
+\vspace{0.08cm}
+{\fontsize{9}{10.2}\selectfont\noindent\textbf{Mots-cl\'es: }Big Data, Ing\'enierie des donn\'ees, Syst\`emes distribu\'es, Data Lakehouse, Plateforme de donn\'ees client, Gouvernance des donn\'ees, Qualit\'e des donn\'ees, Observabilit\'e, S\'ecurit\'e, Customer 360.\par}
 
-\vspace{0.6cm}
+\vspace{0.08cm}
 \noindent\rule{\textwidth}{0.4pt}
+
+\endgroup
 
 \clearpage
