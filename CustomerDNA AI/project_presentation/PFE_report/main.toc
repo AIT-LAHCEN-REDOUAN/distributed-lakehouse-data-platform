@@ -116,22 +116,22 @@
 \contentsline {section}{\numberline {VIII.1}Introduction}{65}{section.8.1}%
 \contentsline {section}{\numberline {VIII.2}Validation Strategy}{65}{section.8.2}%
 \contentsline {section}{\numberline {VIII.3}Infrastructure Validation}{66}{section.8.3}%
-\contentsline {section}{\numberline {VIII.4}Pipeline Validation}{67}{section.8.4}%
-\contentsline {section}{\numberline {VIII.5}Distributed Execution Validation}{68}{section.8.5}%
-\contentsline {section}{\numberline {VIII.6}Security Validation}{69}{section.8.6}%
-\contentsline {section}{\numberline {VIII.7}Observability and Monitoring Validation}{69}{section.8.7}%
-\contentsline {section}{\numberline {VIII.8}Main Results}{70}{section.8.8}%
-\contentsline {section}{\numberline {VIII.9}Conclusion}{71}{section.8.9}%
-\contentsline {chapter}{\numberline {IX}Discussion and Critical Analysis}{72}{chapter.9}%
-\contentsline {section}{\numberline {IX.1}Introduction}{72}{section.9.1}%
-\contentsline {section}{\numberline {IX.2}Strengths of the Final Architecture}{72}{section.9.2}%
-\contentsline {section}{\numberline {IX.3}Trade-Offs and Constraints}{73}{section.9.3}%
-\contentsline {section}{\numberline {IX.4}Academic Value}{74}{section.9.4}%
-\contentsline {section}{\numberline {IX.5}Industrial Value}{74}{section.9.5}%
-\contentsline {section}{\numberline {IX.6}Critical Limits}{75}{section.9.6}%
-\contentsline {section}{\numberline {IX.7}Conclusion}{75}{section.9.7}%
-\contentsline {chapter}{\numberline {X}General Conclusion and Perspectives}{77}{chapter.10}%
-\contentsline {section}{\numberline {X.1}General Conclusion}{77}{section.10.1}%
-\contentsline {section}{\numberline {X.2}Main Achievements}{77}{section.10.2}%
-\contentsline {section}{\numberline {X.3}Future Perspectives}{78}{section.10.3}%
-\contentsline {chapter}{\numberline {A}Appendices}{81}{appendix.A}%
+\contentsline {section}{\numberline {VIII.4}Pipeline Validation}{68}{section.8.4}%
+\contentsline {section}{\numberline {VIII.5}Distributed Execution Validation}{71}{section.8.5}%
+\contentsline {section}{\numberline {VIII.6}Security Validation}{72}{section.8.6}%
+\contentsline {section}{\numberline {VIII.7}Observability and Monitoring Validation}{73}{section.8.7}%
+\contentsline {section}{\numberline {VIII.8}Main Results}{75}{section.8.8}%
+\contentsline {section}{\numberline {VIII.9}Conclusion}{76}{section.8.9}%
+\contentsline {chapter}{\numberline {IX}Discussion and Critical Analysis}{77}{chapter.9}%
+\contentsline {section}{\numberline {IX.1}Introduction}{77}{section.9.1}%
+\contentsline {section}{\numberline {IX.2}Strengths of the Final Architecture}{77}{section.9.2}%
+\contentsline {section}{\numberline {IX.3}Trade-Offs and Constraints}{78}{section.9.3}%
+\contentsline {section}{\numberline {IX.4}Academic Value}{79}{section.9.4}%
+\contentsline {section}{\numberline {IX.5}Industrial Value}{79}{section.9.5}%
+\contentsline {section}{\numberline {IX.6}Critical Limits}{80}{section.9.6}%
+\contentsline {section}{\numberline {IX.7}Conclusion}{80}{section.9.7}%
+\contentsline {chapter}{\numberline {X}General Conclusion and Perspectives}{82}{chapter.10}%
+\contentsline {section}{\numberline {X.1}General Conclusion}{82}{section.10.1}%
+\contentsline {section}{\numberline {X.2}Main Achievements}{82}{section.10.2}%
+\contentsline {section}{\numberline {X.3}Future Perspectives}{83}{section.10.3}%
+\contentsline {chapter}{\numberline {A}Appendices}{86}{appendix.A}%

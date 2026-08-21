@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.8.18)  21 AUG 2026 00:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.8.18)  21 AUG 2026 16:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1091,7 +1091,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 
 ]) (02_chapter_1_general_project_context/chapter.tex
 Chapter I.
-<90_assets/logos/SAT_logos/SAT_logo.png, id=495, 1106.1325pt x 489.83pt>
+<90_assets/logos/SAT_logos/SAT_logo.png, id=515, 1106.1325pt x 489.83pt>
 File: 90_assets/logos/SAT_logos/SAT_logo.png Graphic file (type png)
 <use 90_assets/logos/SAT_logos/SAT_logo.png>
 Package pdftex.def Info: 90_assets/logos/SAT_logos/SAT_logo.png  used on input 
@@ -1102,7 +1102,7 @@ line 12.
 
 
 ]
-<90_assets/logos/SAT_logos/SAT_values.png, id=501, 1027.84pt x 1027.84pt>
+<90_assets/logos/SAT_logos/SAT_values.png, id=521, 1027.84pt x 1027.84pt>
 File: 90_assets/logos/SAT_logos/SAT_values.png Graphic file (type png)
 <use 90_assets/logos/SAT_logos/SAT_values.png>
 Package pdftex.def Info: 90_assets/logos/SAT_logos/SAT_values.png  used on inpu
@@ -1129,7 +1129,7 @@ dvips/lm/lm-mathsy.enc}] [11] [12] [13] [14]
 [16] (90_assets/latex_diagrams/chapter_2/fig_2_4_hybrid_processing_logic.tex)
 [17] [18] [19] [20]) (04_chapter_3_technology_watch/chapter.tex [21]
 Chapter III.
-<90_assets/logos/Tech_logos/apache_kafka.png, id=623, 1204.5pt x 1204.5pt>
+<90_assets/logos/Tech_logos/apache_kafka.png, id=643, 1204.5pt x 1204.5pt>
 File: 90_assets/logos/Tech_logos/apache_kafka.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/apache_kafka.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/apache_kafka.png  used on i
@@ -1138,20 +1138,20 @@ nput line 18.
 [22
 
 ]
-<90_assets/logos/Tech_logos/hadoop_hdfs.png, id=629, 2065.7175pt x 974.64125pt>
+<90_assets/logos/Tech_logos/hadoop_hdfs.png, id=649, 2065.7175pt x 974.64125pt>
 
 File: 90_assets/logos/Tech_logos/hadoop_hdfs.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/hadoop_hdfs.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/hadoop_hdfs.png  used on in
 put line 32.
 (pdftex.def)             Requested size: 81.9406pt x 38.65182pt.
-<90_assets/logos/Tech_logos/Apache_Iceberg.png, id=631, 803.0pt x 218.8175pt>
+<90_assets/logos/Tech_logos/Apache_Iceberg.png, id=651, 803.0pt x 218.8175pt>
 File: 90_assets/logos/Tech_logos/Apache_Iceberg.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Iceberg.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Iceberg.png  used on
  input line 49.
 (pdftex.def)             Requested size: 81.9406pt x 22.32709pt.
-<90_assets/logos/Tech_logos/Apache_Hive.png, id=633, 1003.75pt x 903.375pt>
+<90_assets/logos/Tech_logos/Apache_Hive.png, id=653, 1003.75pt x 903.375pt>
 File: 90_assets/logos/Tech_logos/Apache_Hive.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Hive.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Hive.png  used on in
@@ -1159,13 +1159,13 @@ put line 50.
 (pdftex.def)             Requested size: 81.9406pt x 73.7464pt.
  [23 <./90_assets/logos/Tech_logos/apache_kafka.png> <./90_assets/logos/Tech_lo
 gos/hadoop_hdfs.png>]
-<90_assets/logos/Tech_logos/spark.png, id=646, 831.105pt x 389.455pt>
+<90_assets/logos/Tech_logos/spark.png, id=666, 831.105pt x 389.455pt>
 File: 90_assets/logos/Tech_logos/spark.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/spark.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/spark.png  used on input li
 ne 66.
 (pdftex.def)             Requested size: 81.9406pt x 38.39511pt.
-<90_assets/logos/Tech_logos/trino.png, id=648, 803.0pt x 361.35pt>
+<90_assets/logos/Tech_logos/trino.png, id=668, 803.0pt x 361.35pt>
 File: 90_assets/logos/Tech_logos/trino.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/trino.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/trino.png  used on input li
@@ -1174,20 +1174,20 @@ ne 80.
  [24 <./90_assets/logos/Tech_logos/Apache_Iceberg.png> <./90_assets/logos/Tech_
 logos/Apache_Hive.png> <./90_assets/logos/Tech_logos/spark.png> <./90_assets/lo
 gos/Tech_logos/trino.png>]
-<90_assets/logos/Tech_logos/data_build_tool.png, id=659, 1204.5pt x 602.25pt>
+<90_assets/logos/Tech_logos/data_build_tool.png, id=679, 1204.5pt x 602.25pt>
 File: 90_assets/logos/Tech_logos/data_build_tool.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/data_build_tool.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/data_build_tool.png  used o
 n input line 97.
 (pdftex.def)             Requested size: 81.9406pt x 40.96715pt.
-<90_assets/logos/Tech_logos/Apache_Parquet.png, id=660, 166.6225pt x 90.3375pt>
+<90_assets/logos/Tech_logos/Apache_Parquet.png, id=680, 166.6225pt x 90.3375pt>
 
 File: 90_assets/logos/Tech_logos/Apache_Parquet.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Apache_Parquet.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Apache_Parquet.png  used on
  input line 98.
 (pdftex.def)             Requested size: 81.9406pt x 44.42564pt.
-<90_assets/logos/Tech_logos/great_expectations.png, id=663, 971.63pt x 258.9675
+<90_assets/logos/Tech_logos/great_expectations.png, id=683, 971.63pt x 258.9675
 pt>
 File: 90_assets/logos/Tech_logos/great_expectations.png Graphic file (type png)
 
@@ -1198,25 +1198,25 @@ d on input line 115.
  [25 <./90_assets/logos/Tech_logos/data_build_tool.png> <./90_assets/logos/Tech
 _logos/Apache_Parquet.png> <./90_assets/logos/Tech_logos/great_expectations.png
 >]
-<90_assets/logos/Tech_logos/Airflow.png, id=677, 166.6225pt x 90.3375pt>
+<90_assets/logos/Tech_logos/Airflow.png, id=697, 166.6225pt x 90.3375pt>
 File: 90_assets/logos/Tech_logos/Airflow.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Airflow.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Airflow.png  used on input 
 line 129.
 (pdftex.def)             Requested size: 86.49748pt x 46.89719pt.
-<90_assets/logos/Tech_logos/Prometheus.png, id=679, 774.895pt x 405.515pt>
+<90_assets/logos/Tech_logos/Prometheus.png, id=699, 774.895pt x 405.515pt>
 File: 90_assets/logos/Tech_logos/Prometheus.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Prometheus.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Prometheus.png  used on inp
 ut line 146.
 (pdftex.def)             Requested size: 81.9406pt x 42.88042pt.
-<90_assets/logos/Tech_logos/Grafana.png, id=680, 1204.5pt x 602.25pt>
+<90_assets/logos/Tech_logos/Grafana.png, id=700, 1204.5pt x 602.25pt>
 File: 90_assets/logos/Tech_logos/Grafana.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/Grafana.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/Grafana.png  used on input 
 line 147.
 (pdftex.def)             Requested size: 81.9406pt x 40.96715pt.
-<90_assets/logos/Tech_logos/docker.png, id=683, 963.6pt x 796.9775pt>
+<90_assets/logos/Tech_logos/docker.png, id=703, 963.6pt x 796.9775pt>
 File: 90_assets/logos/Tech_logos/docker.png Graphic file (type png)
 <use 90_assets/logos/Tech_logos/docker.png>
 Package pdftex.def Info: 90_assets/logos/Tech_logos/docker.png  used on input l
@@ -1274,22 +1274,9 @@ Chapter VII.
 Chapter VIII.
 [65
 
-] [66] [67] [68] [69] [70])
-(10_chapter_9_discussion_and_critical_analysis/chapter.tex [71]
-Chapter IX.
-[72
-
-] [73] [74] [75])
-(11_chapter_10_general_conclusion_and_perspectives/chapter.tex [76]
-Chapter X.
-[77
-
-]) [78] (main.bbl [79
-
-
-]
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 8
-5.
+] [66]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 6
+1.
  (C:\Program Files\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -1297,25 +1284,67 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `lmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-)
-(13_appendices/appendices_overview.tex [80]
-Appendix A.
-[81
 
-]) [82] (main.aux)
+Overfull \hbox (3.78183pt too wide) in paragraph at lines 122--122
+\T1/lmtt/m/n/10 online_shoppers_intention|  
+ []
+
+[67] [68]
+Overfull \hbox (100.37474pt too wide) in paragraph at lines 176--176
+[]|\T1/lmtt/m/n/10 customerdna_client1_environment_reset_pipeline|  
+ []
+
+
+Overfull \hbox (89.87477pt too wide) in paragraph at lines 176--176
+[]|\T1/lmtt/m/n/10 customerdna_client1_lakehouse_setup_pipeline|  
+ []
+
+
+Overfull \hbox (110.87471pt too wide) in paragraph at lines 176--176
+[]|\T1/lmtt/m/n/10 customerdna_client1_lakehouse_readiness_pipeline|  
+ []
+
+
+Overfull \hbox (147.6246pt too wide) in paragraph at lines 176--176
+[]|\T1/lmtt/m/n/10 customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline|  
+ []
+
+
+Overfull \hbox (110.87471pt too wide) in paragraph at lines 176--176
+[]|\T1/lmtt/m/n/10 customerdna_client1_dbt_spark_lakehouse_pipeline|  
+ []
+
+[69] [70] [71] [72] [73] [74] [75])
+(10_chapter_9_discussion_and_critical_analysis/chapter.tex [76]
+Chapter IX.
+[77
+
+] [78] [79] [80])
+(11_chapter_10_general_conclusion_and_perspectives/chapter.tex [81]
+Chapter X.
+[82
+
+]) [83] (main.bbl [84
+
+
+]) (13_appendices/appendices_overview.tex [85]
+Appendix A.
+[86
+
+]) [87] (main.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-07-20>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 30366 strings out of 467501
- 578098 string characters out of 5418659
- 998557 words of memory out of 5000000
- 58295 multiletter control sequences out of 15000+600000
- 724952 words of font info for 247 fonts, out of 8000000 for 9000
+ 30398 strings out of 467501
+ 578686 string characters out of 5418659
+ 1001726 words of memory out of 5000000
+ 58305 multiletter control sequences out of 15000+600000
+ 725611 words of font info for 252 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 97i,12n,97p,1003b,934s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 97i,12n,97p,1024b,934s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Program Files/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><C:/Program Files/M
 iKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Program Files/MiKTeX/fonts/type1/pub
 lic/lm/lmbx9.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmmi12.pfb><C:/
@@ -1324,10 +1353,11 @@ onts/type1/public/lm/lmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/l
 mr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmr9.pfb><C:/Program Fil
 es/MiKTeX/fonts/type1/public/lm/lmri10.pfb><C:/Program Files/MiKTeX/fonts/type1
 /public/lm/lmri12.pfb><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmsy10.pfb
-><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtt12.pfb>
-Output written on main.pdf (94 pages, 3077926 bytes).
+><C:/Program Files/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Program Files/Mi
+KTeX/fonts/type1/public/lm/lmtt12.pfb>
+Output written on main.pdf (99 pages, 3134841 bytes).
 PDF statistics:
- 1593 PDF objects out of 1728 (max. 8388607)
- 337 named destinations out of 1000 (max. 500000)
- 52984 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 1641 PDF objects out of 1728 (max. 8388607)
+ 350 named destinations out of 1000 (max. 500000)
+ 53496 words of extra memory for PDF output out of 61914 (max. 10000000)
 
