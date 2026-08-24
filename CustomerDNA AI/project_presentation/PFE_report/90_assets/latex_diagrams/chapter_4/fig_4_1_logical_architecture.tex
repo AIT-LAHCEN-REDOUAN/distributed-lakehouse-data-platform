@@ -1,27 +1,29 @@
 \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
-  \node[ado box={8.8cm}{adobluefill}, minimum height=1.05cm] (ingest) at (0,0)
-    {\adoboxcontentwide{Ingestion layer}{controlled dataset publication and topic-based transport}};
-  \node[ado box={8.8cm}{adotealfill}, minimum height=1.05cm] (bronze) at (0,-2.0)
-    {\adoboxcontentwide{Bronze persistence layer}{distributed raw storage for replay and traceability}};
-  \node[ado box={8.8cm}{adoorangefill}, minimum height=1.05cm] (raw) at (0,-4.0)
-    {\adoboxcontentwide{Raw lakehouse layer}{structured raw tables prepared from distributed bronze inputs}};
-  \node[ado box={4.0cm}{adopurplefill}, minimum height=1.0cm] (meta) at (-2.45,-6.1)
-    {\adoboxcontentwide{Metadata layer}{shared catalog authority}};
-  \node[ado box={4.0cm}{adograyfill}, minimum height=1.0cm] (access) at (2.45,-6.1)
-    {\adoboxcontentwide{Analytical access layer}{interactive governed SQL exposure}};
-  \node[ado box={8.8cm}{adoorangefill}, minimum height=1.05cm] (transform) at (0,-8.2)
-    {\adoboxcontentwide{Transformation layer}{modeled refinement from raw structures to business-ready outputs}};
-  \node[ado box={8.8cm}{adotealfill}, minimum height=1.05cm] (validate) at (0,-10.2)
-    {\adoboxcontentwide{Validation layer}{quality control and persisted evidence}};
-  \node[ado box={8.8cm}{adopurplefill}, minimum height=1.05cm] (orchestrate) at (0,-12.2)
-    {\adoboxcontentwide{Orchestration and observability}{run coordination, service supervision, and monitoring}};
+  \node[ado group, minimum width=14.4cm, minimum height=7.35cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\Large] at ($(panel.north)+(0,-0.58)$) {Global logical architecture};
 
-  \draw[ado arrow] (ingest) -- (bronze);
-  \draw[ado arrow] (bronze) -- (raw);
-  \draw[ado arrow] (raw) -- (meta);
-  \draw[ado arrow] (raw) -- (access);
-  \draw[ado arrow] (meta.south) |- ($(transform.north)+(-2.2,0)$);
-  \draw[ado arrow] (access.south) |- ($(transform.north)+(2.2,0)$);
-  \draw[ado arrow] (transform) -- (validate);
-  \draw[ado arrow] (validate) -- (orchestrate);
+  \node[ado box={3.65cm}{adobluefill}, minimum height=1.30cm, inner sep=4pt] (ingest) at (-4.60,-1.85)
+    {\textbf{\small Ingestion}\\[-1pt]\footnotesize governed Kafka intake};
+  \node[ado box={3.65cm}{adotealfill}, minimum height=1.30cm, inner sep=4pt] (bronze) at (0,-1.85)
+    {\textbf{\small Bronze storage}\\[-1pt]\footnotesize durable replay landing};
+  \node[ado box={3.65cm}{adoorangefill}, minimum height=1.30cm, inner sep=4pt] (raw) at (4.60,-1.85)
+    {\textbf{\small Raw lakehouse}\\[-1pt]\footnotesize schema-aligned tables};
+
+  \node[ado box={3.65cm}{adograyfill}, minimum height=1.30cm, inner sep=4pt] (access) at (-4.60,-3.65)
+    {\textbf{\small Analytical access}\\[-1pt]\footnotesize governed Trino SQL};
+  \node[ado box={3.65cm}{adoorangefill}, minimum height=1.30cm, inner sep=4pt] (transform) at (0,-3.65)
+    {\textbf{\small Transformation}\\[-1pt]\footnotesize dbt models + tests};
+  \node[ado box={3.65cm}{adotealfill}, minimum height=1.30cm, inner sep=4pt] (validate) at (4.60,-3.65)
+    {\textbf{\small Raw validation}\\[-1pt]\footnotesize embedded checks + evidence};
+
+  \node[ado box={12.80cm}{adopurplefill}, minimum height=0.85cm, inner sep=4pt] (meta) at (0,-5.05)
+    {\textbf{\small Cross-cutting metadata and catalog governance}\\[-1pt]\footnotesize shared schemas, table authority, discovery, and traceability};
+  \node[ado box={12.80cm}{adobluefill}, minimum height=0.85cm, inner sep=4pt] (orchestrate) at (0,-6.35)
+    {\textbf{\small Cross-cutting orchestration and observability}\\[-1pt]\footnotesize workflow coordination, service monitoring, and operational evidence};
+
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (ingest.east) -- (bronze.west);
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (bronze.east) -- (raw.west);
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (raw.south) -- (validate.north);
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (validate.west) -- (transform.east);
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (transform.west) -- (access.east);
 \end{tikzpicture}

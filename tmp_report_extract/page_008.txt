@@ -1,0 +1,39 @@
+AdOptimizer CDP Contents
+VI.2 Control Plane Responsibilities . . . . . . . . . . . . . . . . . . . . . . . 48
+VI.3 VM-Level Service Separation . . . . . . . . . . . . . . . . . . . . . . . . 49
+VI.4 Data Flow Across Machines . . . . . . . . . . . . . . . . . . . . . . . . . 50
+VI.5 Distributed Spark Execution . . . . . . . . . . . . . . . . . . . . . . . . 52
+VI.6 Operational Packaging and Deployment Bundles . . . . . . . . . . . . . 53
+VI.7 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 54
+VII Security Architecture and Hardening 55
+VII.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 55
+VII.2 Security Objectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 55
+VII.3 Kerberos-Secured Hadoop Services . . . . . . . . . . . . . . . . . . . . . 56
+VII.4 SPNEGO-Protected HDFS Browser Access . . . . . . . . . . . . . . . . 57
+VII.5 TLS-Protected Interfaces . . . . . . . . . . . . . . . . . . . . . . . . . . 58
+VII.6 Authenticated Trino Access . . . . . . . . . . . . . . . . . . . . . . . . . 59
+VII.7 SSH-Based Remote Spark Submission . . . . . . . . . . . . . . . . . . . 60
+VII.8 Encrypted Runtime Storage Support . . . . . . . . . . . . . . . . . . . . 61
+VII.9 Security Boundaries and Remaining Limits . . . . . . . . . . . . . . . . 62
+VII.10 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 63
+VIII Validation, Testing, and Results 64
+VIII.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 64
+VIII.2 Validation Strategy . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 64
+VIII.3 Infrastructure Validation . . . . . . . . . . . . . . . . . . . . . . . . . . 65
+VIII.4 Pipeline, Transformation, and Quality Validation . . . . . . . . . . . . . 66
+VIII.5 Distributed Execution Validation . . . . . . . . . . . . . . . . . . . . . . 68
+VIII.6 Security Validation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 69
+VIII.7 Observability and Analytical Access Validation . . . . . . . . . . . . . . 69
+VIII.8 Main Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 70
+VIII.9 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 71
+IX Discussion and Critical Analysis 72
+IX.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 72
+IX.2 Critical Assessment of the Architectural Decisions . . . . . . . . . . . . 72
+IX.3 Strengths Supported by the Implementation . . . . . . . . . . . . . . . . 73
+IX.3.1 End-to-End Coherence . . . . . . . . . . . . . . . . . . . . . . . 73
+IX.3.2 Distributed Execution with Shared Governance . . . . . . . . . 74
+IX.3.3 Reproducibility and Evidence . . . . . . . . . . . . . . . . . . . 74
+IX.3.4 Security-Aware Operational Design . . . . . . . . . . . . . . . . 74
+IX.4 Trade-Offs and Operational Constraints . . . . . . . . . . . . . . . . . . 74
+IX.4.1 Resource Capacity versus Architectural Breadth . . . . . . . . . 74
+viii

@@ -1,0 +1,27 @@
+Chapter X
+General Conclusion and Perspectives
+X.1 General Conclusion
+Customer-related information is frequently fragmented across campaign systems, digital
+interaction channels, and transactional applications. This fragmentation weakens replaya-
+bility, governance, analytical trust, and the ability to prepare reliable inputs for advanced
+customer-oriented services. The central problem addressed by this project was therefore to
+determine how heterogeneous customer data could be integrated through a distributed,
+governed, observable, and protected engineering platform rather than through isolated
+scripts or a single local database.
+To answer this problem, the project designed, implemented, deployed, and validated
+AdOptimizer CDP within the broader AdOptimizer AI initiative at SMART AUTOMA-
+TION TECHNOLOGIES. The resulting platform connects Kafka ingestion, HDFS bronze
+persistence, Spark processing, Iceberg table management, Hive Metastore governance,
+Trino analytical access, dbt-spark transformations, Great Expectations validation, Airflow
+orchestration, and Prometheus/Grafana observability. These capabilities operate across a
+local control plane and a three-VM Linux data plane, with security controls integrated
+into the deployed access and execution paths.
+The implementation demonstrates that campaign-response, digital-behavior, and retail-
+transaction datasets can follow one reproducible lifecycle: source publication, replayable raw
+landing, distributed loading, integrated raw-data validation, governed transformation and
+testing, and external SQL consumption. The five-workflow orchestration sequence—reset,
+setup, readiness, raw loading with embedded quality tasks, and dbt transformation—
+together with retained validation artifacts and monitoring evidence shows that the result
+is an operational platform rather than a collection of independently demonstrated tech-
+nologies.
+79

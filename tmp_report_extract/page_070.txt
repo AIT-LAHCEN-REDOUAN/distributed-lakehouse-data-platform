@@ -1,0 +1,30 @@
+AdOptimizer CDP Chapter VII. Security Architecture and Hardening
+Windows client and Firefox
+valid Kerberos credentials and
+SPNEGO-enabled browser configuration
+SPNEGO negotiation over HTTPS
+browser and server exchange HTTP Negotiate authentication headers
+1. HTTPS request 2. 401 Negotiate 3. service token
+Protected HDFS browser interfaces
+NameNode HTTPS UI
+SPNEGO-protected administration
+DataNode HTTPS UIs
+authenticated filesystem browsing
+TLS protects transport; SPNEGO authenticates the browser identity
+authenticated session
+Figure VII.2:SPNEGO-authenticated HTTPS access to HDFS browser interfaces.
+VII.5 TLS-Protected Interfaces
+TLS is used to protect the main browser-facing interfaces of the platform. The objective is
+not to wrap every internal port indiscriminately, but to secure the access paths used for
+administration, monitoring, and analytical interaction. Transport protection complements
+identity protection rather than replacing it [3, 30].
+Two main exposure zones are protected:
+•the HDFS browser interfaces through HTTPS;
+•the Trino analytical access gateway through HTTPS.
+Thelocalcontrol-planeinterfacesarealsoexposedthroughalocalTLSgateway,establishing
+a consistent protected entry path for Airflow, Grafana, Prometheus, and Kafka UI.
+The deployment uses internal or self-signed trust paths rather than a public enterprise
+certificate chain. Browser warnings may therefore appear until the local certificate authority
+is trusted on the client machine. This limitation affects certificate trust management, not
+the presence of encrypted transport.
+58

@@ -1,25 +1,40 @@
 \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
-  \node[ado box={5.0cm}{adopurplefill}, minimum height=1.3cm] (nn) at (0,0)
-    {\adoboxcontentwide{NameNode on VM2}{namespace authority and bronze path coordination}};
-  \node[ado box={2.6cm}{adobluefill}, minimum height=1.8cm] (dn1) at (-3.4,-2.8)
-    {\textbf{\large DataNode 1}\\
-     VM1\\
-     distributed blocks};
-  \node[ado box={2.6cm}{adoorangefill}, minimum height=1.8cm] (dn2) at (0,-2.8)
-    {\textbf{\large DataNode 2}\\
-     VM2\\
-     distributed blocks};
-  \node[ado box={2.6cm}{adotealfill}, minimum height=1.8cm] (dn3) at (3.4,-2.8)
-    {\textbf{\large DataNode 3}\\
-     VM3\\
-     distributed blocks};
-  \node[ado box={7.2cm}{adograyfill}, minimum height=1.45cm] (bronze) at (0,-5.7)
-    {\adoboxcontentwide{Bronze organization}{client and dataset aware folders containing immutable raw batches for replay}};
+  \node[ado group, minimum width=14.60cm, minimum height=7.55cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\large] at ($(panel.north)+(0,-0.38)$)
+    {HDFS bronze write and storage model};
 
-  \draw[ado arrow] (nn) -- (dn1);
-  \draw[ado arrow] (nn) -- (dn2);
-  \draw[ado arrow] (nn) -- (dn3);
-  \draw[ado arrow] (dn1.south) |- ($(bronze.north)+(-2.0,0)$);
-  \draw[ado arrow] (dn2.south) -- (bronze.north);
-  \draw[ado arrow] (dn3.south) |- ($(bronze.north)+(2.0,0)$);
+  \node[ado box={4.65cm}{adoorangefill}, minimum height=1.15cm, inner sep=4pt] (client) at (-3.65,-1.55)
+    {\textbf{\small Bronze writer}\\[-1pt]
+     \footnotesize HDFS client\\[-1pt]
+     \footnotesize immutable JSONL batches};
+  \node[ado box={4.65cm}{adopurplefill}, minimum height=1.15cm, inner sep=4pt] (namenode) at (3.65,-1.55)
+    {\textbf{\small NameNode on VM2}\\[-1pt]
+     \footnotesize namespace and block-location metadata};
+
+  \node[ado group, minimum width=13.35cm, minimum height=2.90cm, anchor=north] (storage) at (0,-3.00) {};
+  \node[ado label, font=\bfseries\normalsize] at ($(storage.north)+(0,-0.38)$)
+    {Distributed DataNode storage};
+
+  \node[ado small box={3.25cm}{adobluefill}, minimum height=1.00cm] (dn1) at (-4.20,-4.35)
+    {\textbf{\small DataNode 1}\\[-1pt]\scriptsize VM1 $\cdot$ HDFS blocks};
+  \node[ado small box={3.25cm}{adoorangefill}, minimum height=1.00cm] (dn2) at (0,-4.35)
+    {\textbf{\small DataNode 2}\\[-1pt]\scriptsize VM2 $\cdot$ HDFS blocks};
+  \node[ado small box={3.25cm}{adotealfill}, minimum height=1.00cm] (dn3) at (4.20,-4.35)
+    {\textbf{\small DataNode 3}\\[-1pt]\scriptsize VM3 $\cdot$ HDFS blocks};
+
+  \node[ado annotation, font=\footnotesize] at (0,-5.35)
+    {replicated HDFS block copies distributed across the three nodes};
+
+  \node[ado box={12.80cm}{adograyfill}, minimum height=0.95cm, inner sep=4pt] (namespace) at (0,-6.65)
+    {\textbf{\small Logical bronze namespace}\\[-1pt]
+     \footnotesize client- and dataset-aware folders containing replayable raw batches};
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (client.east) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, above] {metadata lookup} (namenode.west);
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (client.south) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, left] {block stream}
+    ($(storage.north)+(-3.65,0)$);
+  \draw[ado dashed arrow, draw=black!55, line width=0.85pt]
+    (namenode.south) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, right] {block locations}
+    ($(storage.north)+(3.65,0)$);
 \end{tikzpicture}

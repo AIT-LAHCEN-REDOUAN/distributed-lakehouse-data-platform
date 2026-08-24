@@ -1,0 +1,31 @@
+AdOptimizer CDP Chapter II. State of the Art and Theoretical Background
+II.5 Evolution of Analytical Data Architectures
+II.5.1 Traditional Data Warehouse Architecture
+The traditional data warehouse is organized around structured, curated, and strongly
+modeled analytical data. It is highly effective for stable reporting, dimensional modeling,
+and SQL-based decision support. Its main strength is semantic control.
+Its limitation appears when heterogeneous or semi-structured data must be ingested rapidly
+and preserved before full normalization. In such contexts, the warehouse-only model can
+become too rigid because it expects analytical structure too early in the lifecycle.
+II.5.2 Data Lake Architecture
+The data lake emerged as a response to the rigidity of traditional warehouses. It enables
+large quantities of raw and semi-structured data to be stored before full modeling. This
+increases ingestion flexibility and supports exploratory reuse across different downstream
+consumers.
+However, data lakes also introduced a risk: if metadata, naming discipline, and validation
+remain weak, the platform can degrade into an opaque storage zone with low analytical
+trust. The lake model solves flexibility problems but can create governance problems.
+II.5.3 Data Lakehouse Architecture
+The data lakehouse seeks to combine the flexibility of the lake with the transactional and
+governance discipline associated with warehouses. It preserves distributed and replayable
+storage logic while adding stronger table semantics, better schema evolution control, and
+improved analytical exposure [11].
+This model is particularly well adapted to projects such as AdOptimizer CDP. It allows
+raw datasets to be preserved in distributed storage while curated datasets are exposed
+through governed tables suitable for transformation frameworks and SQL query engines.
+II.5.4 Lambda Architecture
+Lambda architecture organizes processing through two paths: a batch path for full historical
+recomputation and a speed layer for low-latency updates. Its objective is to reconcile
+correctness and freshness. The model was influential because it formalized the difficulty of
+satisfying both needs through a single pipeline.
+15

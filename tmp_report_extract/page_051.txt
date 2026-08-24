@@ -1,0 +1,71 @@
+AdOptimizer CDP Chapter V. Implementation of the Distributed Lakehouse Platform
+Dataset and source
+file
+Analytical role Customer signal
+covered
+Implementation
+contribution
+Bank Marketing
+bank-additional-full.
+csv
+campaign and response
+analysis
+contact history,
+subscription outcome,
+profile attributes
+provides customer
+profile and
+campaign-oriented raw
+inputs
+Online Retail II
+online_retail_2.xlsx
+transactional and
+commercial behavior
+analysis
+invoices, products,
+quantities, revenue,
+countries
+provides purchase
+history and product
+interaction facts
+Online Shoppers
+Purchasing Intention
+online_shoppers_
+intention.csv
+digital behavioral
+analysis
+session behavior,
+navigation, purchase
+intention
+provides pre-purchase
+intent and online
+behavior indicators
+Table V.1:Active datasets retained in the implemented platform
+Complementary dataset families
+Bank Marketing
+profile signals and
+campaign response
+Online Retail II
+transaction and product
+interaction signals
+Online Shoppers
+Purchasing Intention
+session behavior and
+purchase-intent signals
+Source identity preserved
+separate Kafka topics, bronze artifacts, and raw table families
+Complementary analytical scope
+curated models use profile, behavioral, and transactional perspectives
+Figure V.1:Complementary dataset families and their later use in curated analytical models.
+V.3 Kafka-Based Ingestion Layer
+Kafka is used as the transport backbone of the ingestion layer. The implementation does
+not load datasets directly into storage or processing services; instead, each source is first
+published through a topic-oriented flow that decouples dataset reading from downstream
+persistence. This approach improves control, replayability, and operational clarity, which is
+consistent with both the Kafka event-log model and broader stream-oriented architectural
+reasoning [7, 23].
+The Kafka cluster is distributed across the three virtual machines:
+•broker 1 on VM1;
+•broker 2 on VM2;
+•broker 3 on VM3.
+39

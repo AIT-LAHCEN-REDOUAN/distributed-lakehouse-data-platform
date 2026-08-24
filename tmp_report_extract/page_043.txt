@@ -1,0 +1,52 @@
+AdOptimizer CDP Chapter IV. Requirements Analysis and System Design
+IV.5 Non-Functional Requirements
+Beyond functional behavior, the platform was designed around quality constraints related
+to scalability, modularity, traceability, security, operational inspectability, and resource
+feasibility. These requirements are summarized in Table IV.4. Their importance is consistent
+with the broader literature on reliable and maintainable distributed systems, in which
+reproducibility, observability, and controlled failure handling are architectural qualities
+rather than optional conveniences [22].
+ID Non-functional requirement Design implication
+NFR-1 Horizontal evolution of the principal
+data-plane roles.
+Storage, compute, and query
+responsibilities are distributed so that
+capacity can be extended without
+concentrating all workloads on one node.
+NFR-2 Modularity and separation of concerns. Ingestion, storage, processing, metadata,
+validation, orchestration, monitoring, and
+security are implemented as distinct layers.
+NFR-3 Reproducibility of ingestion and
+transformation flows.
+The platform preserves replayable bronze
+data, versioned transformation logic, and
+explicit orchestration sequences.
+NFR-4 Observability of service and pipeline
+behavior.
+Health checks, metrics, dashboards, and
+orchestration logs must make failures
+visible and diagnosable.
+NFR-5 Baseline security for access, movement, and
+persisted runtime data.
+Authentication, protected service exposure,
+secure remote submission, and encrypted
+storage are integrated according to the
+deployed scope.
+NFR-6 Operational inspectability and evidence
+retention.
+Metrics, dashboards, task logs, run history,
+validation results, and execution artifacts
+make behavior and failures traceable.
+NFR-7 Feasibility within constrained
+infrastructure.
+Service placement, startup order, and
+workload execution must remain compatible
+with the available three-VM resource
+envelope.
+Table IV.4:Main non-functional requirements of the platform
+IV.6 System Architecture Overview
+The global architecture consolidates the implemented AdOptimizer CDP platform into a
+single system-level view. It connects ingestion, distributed storage and processing, lakehouse
+governance, orchestration, validation, observability, and the secured multi-node deployment
+before the following sections examine each design dimension separately.
+31

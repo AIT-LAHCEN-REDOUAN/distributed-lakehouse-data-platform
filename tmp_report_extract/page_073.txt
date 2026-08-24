@@ -1,0 +1,36 @@
+AdOptimizer CDP Chapter VII. Security Architecture and Hardening
+Local Airflow control plane
+creates a controlled remote Spark execution request
+SSH-secured operational bridge
+dedicated key material and documented VM2 access preparation
+remote request and task status
+local workstation / Linux data plane
+Spark submit client — VM2
+receives the remote command and launches the cluster application
+authenticated command / response
+Distributed Spark execution zone
+Spark master — VM2
+coordinates the application and schedules executor tasks
+Registered worker pool
+VM1, VM2, and VM3 capacity; active allocation depends on workload
+cluster submission and exit status
+tasks and execution status
+Figure VII.5:SSH-secured Spark submission from the local control plane to VM2.
+Operational Identity and Credential Separation
+The deployment separates non-interactive service identities from human-operated admin-
+istration and demonstration identities. Kerberos principals and keytabs are assigned to
+protected Hadoop services, while browser credentials, gateway credentials, and SSH key
+material are scoped to their operational environments. This reduces uncontrolled credential
+sharing and clarifies which identity is used at each access boundary.
+The implemented separation is a baseline control rather than a centralized secret-
+management system. Automated secret rotation, enterprise vault integration, and
+organization-wide identity federation remain outside the current scope.
+VII.8 Encrypted Runtime Storage Support
+The project also implements optional support for encrypted runtime storage through LUKS
+on the Linux virtual machines. This measure targetsdata at restrather than service
+authentication or traffic encryption [13].
+When enabled, this control protects runtime directories used by Kafka, HDFS, Hive, Spark,
+and Trino on VM1, VM2, and VM3. It complements the controls applied to service identity,
+browser access, and network transport.
+The implemented logic therefore complements the other controls:
+61

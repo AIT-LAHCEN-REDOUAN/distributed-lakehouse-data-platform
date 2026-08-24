@@ -1,12 +1,9 @@
 # Appendices
 
-Use this folder for material that is useful but too operational or too detailed for the main narrative.
+The report includes three concise appendices after the bibliography:
 
-Typical appendix content includes:
+- Appendix A maps functional and non-functional requirements to implemented evidence.
+- Appendix B summarizes the four supplied Docker Compose definitions without retaining secret values.
+- Appendix C presents the selected validation screenshots stored in `91_evidence/`.
 
-- deployment commands,
-- environment variables,
-- access notes,
-- long technical tables,
-- supplementary validation outputs,
-- and additional screenshots.
+`appendices_overview.tex` is the appendix entry point included by `main.tex`.

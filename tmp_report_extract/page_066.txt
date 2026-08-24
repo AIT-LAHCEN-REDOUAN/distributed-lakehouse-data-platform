@@ -1,0 +1,24 @@
+AdOptimizer CDP Chapter VI. Deployment Strategy and Distributed Execution
+Step 1 — Prepare deployment bundles
+node-specific content and synchronized configuration
+Step 2 — Run preflight verification
+validate ports, peer reachability, dependencies, and critical endpoints
+Step 3 — Start VM2 first
+launch the coordination-heavy services before extending the cluster
+Step 4 — Extend the cluster with VM1 and VM3
+add storage, Kafka, Spark, and Trino worker capacity
+Step 5 — Activate the local control plane
+start Airflow, monitoring, and operational access services
+readiness confirmed
+Figure VI.5:Dependency-aware deployment lifecycle and startup order.
+VI.7 Conclusion
+This chapter clarified that the deployment of AdOptimizer CDP is intentionally distributed
+at both the service level and the machine level. The local control plane supervises the
+environment without collapsing it into a single node, VM2 plays the role of coordination
+leader, and VM1 and VM3 extend storage, compute, and worker capacity. Data movement,
+processing, and analytical access therefore take place across explicit multi-node boundaries.
+The deployment is reproducible through node-specific bundles, reset logic, startup scripts,
+and preflight checks. It therefore constitutes an implemented operational topology rather
+than only a conceptual design. Chapter VII examines the security controls that harden
+this deployment and protect its critical access paths.
+54

@@ -1,4 +1,4 @@
-# CustomerDNA AI - Business Rules & Project Specification
+# AdOptimizer CDP - Business Rules & Project Specification
 
 > **Global Project Document** | Version 17.5
 > Status: Distributed customer-data lakehouse baseline aligned with the secured Client 1 deployment using Kafka, HDFS, Spark, Hive Metastore, Iceberg, Trino, dbt-spark, Airflow, Great Expectations, Prometheus, and Grafana
@@ -8,7 +8,7 @@
 
 ## 1. Document Purpose
 
-This document is the main business-rules and technical-specification reference for the implemented **CustomerDNA AI** customer-data platform.
+This document is the main business-rules and technical-specification reference for the implemented **AdOptimizer CDP** customer-data platform. **CustomerDNA AI** is retained only as the repository name.
 
 It defines:
 
@@ -94,14 +94,14 @@ If any referenced compose/env/config file is missing or ambiguous, deployment mu
 ## 2. Project Identity
 
 ### 2.1 Official Project Name
-**CustomerDNA AI**
+**AdOptimizer CDP**
 
 ### 2.2 Relationship to the broader academic vision
 The platform must be understood as the **data-engineering foundation** of a broader Customer 360 and future AI/ML roadmap.
 
 In this relationship:
 
-- **CustomerDNA AI** is the implemented distributed customer-data platform.
+- **AdOptimizer CDP** is the implemented distributed customer-data platform.
 - the current implementation is responsible for collecting, standardizing, governing, storing, validating, securing, and exposing customer-related data products.
 - analytics and future AI/ML capabilities depend on this platform, but they are not the primary identity of the current implementation.
 
@@ -225,7 +225,7 @@ initialize HDFS bronze + Hive/Iceberg namespaces + Trino validation
   -> write raw Iceberg tables and register them in Hive Metastore
   -> run dbt-spark staging/intermediate/analytics models over the lakehouse
   -> expose SQL access through Trino
-  -> validate raw and transformed lakehouse quality through Great Expectations
+  -> validate raw-lakehouse quality through Great Expectations and curated transformations through dbt tests
   -> monitor infrastructure and pipeline health with Prometheus + Grafana
 ```
 

@@ -1,0 +1,48 @@
+AdOptimizer CDP Chapter VII. Security Architecture and Hardening
+Security objective Implemented mechanism Protected scope
+Distributed identity control Kerberos-secured Hadoop
+runtime
+Hadoop services and related
+secure interactions
+Protected web access SPNEGO + HTTPS for HDFS
+browser endpoints
+NameNode and DataNode
+administrative web paths
+Secured analytical exposure authenticated Trino gateway
+over TLS
+browser-based SQL access path
+Protected orchestration path SSH-based remote Spark
+submission
+control-plane to VM2
+operational execution
+Operational identity separation distinct service, administration,
+and demonstration identities
+with environment-scoped
+credentials
+non-interactive services and
+human-operated access paths
+Encrypted persisted runtime
+data
+optional LUKS-backed runtime
+storage support
+service data at rest on the
+Linux nodes when enabled
+Table VII.1:Main security objectives and corresponding implementation controls
+VII.3 Kerberos-Secured Hadoop Services
+Kerberos is the core identity mechanism used to secure the Hadoop side of the platform.
+In a distributed environment, services such as the NameNode and DataNodes should not
+trust requests only because they originate from another cluster component. They must
+validate the identity of the caller explicitly [26, 3].
+In the implementation, the Kerberos KDC and administration service are hosted on VM2,
+which is already the coordination-heavy node of the data plane. This is consistent with
+the overall architecture: the node that centralizes namespace and metadata authority also
+centralizes identity management for the secure Hadoop runtime.
+The practical contribution of Kerberos in this project is threefold:
+• service principals and keytabs provide authenticated identities for non-interactive
+Hadoop services;
+•it allows secure service-to-service interactions in the distributed cluster;
+• it provides the foundation for browser-based negotiated authentication through SP-
+NEGO.
+The Hadoop runtime therefore uses explicit authentication rather than relying only on
+open internal trust between cluster components.
+56

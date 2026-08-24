@@ -1,0 +1,46 @@
+AdOptimizer CDP Chapter IV. Requirements Analysis and System Design
+Localcontrolplane
+Airflow·Prometheus·Grafana·Kafka UI·metrics exporters
+local TLS access·remote orchestration runtime
+Distributed Linux data plane
+VM1
+Worker node
+broker 1·DataNode 1
+Spark worker 1
+Trino worker 1
+cAdvisor
+VM2
+Leader and entry node
+broker 2·Kerberos KDC
+NameNode·DataNode 2
+Hive Metastore
+Spark master·worker 2
+submit helper·Spark Thrift
+Trino coordinator
+HTTPS gateway
+cAdvisor
+VM3
+Worker node
+broker 3·DataNode 3
+Spark worker 3
+Trino worker 2
+cAdvisor
+orchestrates and monitors
+Figure IV.3:Physical topology of the local control plane and three-node distributed data plane.
+IV.9 End-to-End Data Flow
+The end-to-end operational flow of the platform can be summarized as follows:
+1. Airflow initiates the five implemented workflows for environment reset, lakehouse
+setup, service readiness, integrated raw ingestion/loading and validation, and dbt
+transformation;
+2. source datasets are prepared and published through the configured ingestion path;
+3. Kafka receives the records and distributes topic partitions across the broker cluster;
+4. bronze consumers persist replayable raw artifacts in HDFS through NameN-
+ode/DataNode coordination;
+5. Spark reads the bronze zone and loads Iceberg raw tables through distributed execu-
+tion, with Hive Metastore registering the shared table definitions;
+6. within the same Kafka–HDFS–Spark workflow, Great Expectations assets are boot-
+strapped and the raw lakehouse tables are validated, producing JSON results and
+HTML Data Docs;
+7. dbt-spark creates staging, intermediate, and analytics models and applies its declared
+transformation tests;
+35

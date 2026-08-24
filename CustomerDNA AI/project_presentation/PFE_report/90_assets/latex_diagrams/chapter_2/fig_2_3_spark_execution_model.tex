@@ -1,27 +1,43 @@
-\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
-  \node[ado box={2.45cm}{adoorangefill}, minimum height=0.98cm, inner sep=5pt] (driver) at (-2.70,1.25)
-    {\textbf{\small Driver}\\[-1pt]\scriptsize DAG and task scheduler};
-  \node[ado box={2.95cm}{adotealfill}, minimum height=1.05cm, inner sep=5pt] (manager) at (2.20,1.25)
-    {\textbf{\small Cluster manager}\\[-1pt]\scriptsize allocates executors\\[-1pt]\scriptsize (Standalone / YARN / K8s)};
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=14.5cm, minimum height=8.4cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\Large] at ($(panel.north)+(0,-0.55)$)
+    {Spark distributed execution model};
 
-  \node[ado box={1.90cm}{adoorangefill}, minimum height=0.90cm, inner sep=5pt] (exec1) at (-4.00,-1.00)
-    {\textbf{\small Executor 1}\\[-1pt]\scriptsize tasks and cache};
-  \node[ado box={1.90cm}{adoorangefill}, minimum height=0.90cm, inner sep=5pt] (exec2) at (0,-1.00)
-    {\textbf{\small Executor 2}\\[-1pt]\scriptsize tasks and cache};
-  \node[ado box={1.90cm}{adoorangefill}, minimum height=0.90cm, inner sep=5pt] (exec3) at (4.00,-1.00)
-    {\textbf{\small Executor 3}\\[-1pt]\scriptsize tasks and cache};
+  \node[ado box={6.35cm}{adobluefill}, minimum height=1.55cm, inner sep=5pt] (driver) at (-3.25,-2.00)
+    {\textbf{\small Driver process}\\[-1pt]
+     \footnotesize Spark SQL: parse, optimize, and plan\\[-1pt]
+     \footnotesize DAG and task scheduling};
 
-  \node[ado box={6.00cm}{adopurplefill}, minimum height=1.05cm, inner sep=5pt] (sqlengine) at (0,-3.55)
-    {\textbf{\small Spark SQL engine}\\[-1pt]\scriptsize SQL parser, Catalyst optimizer, and physical plan execution};
+  \node[ado box={3.85cm}{adotealfill}, minimum height=1.55cm, inner sep=5pt] (manager) at (4.35,-2.00)
+    {\textbf{\small Cluster manager}\\[-1pt]
+     \footnotesize resource allocation\\[-1pt]
+     \footnotesize Standalone, YARN, K8s};
 
-  \draw[ado arrow] (driver.east) -- node[ado annotation, above] {submit} (manager.west);
-  \draw[ado arrow] ($(manager.south)+(-1.05,0)$) -- ($(exec1.north)+(0.20,0)$);
-  \draw[ado arrow] (manager.south) -- (exec2.north);
-  \draw[ado arrow] ($(manager.south)+(1.05,0)$) -- ($(exec3.north)+(-0.20,0)$);
+  \node[ado group, minimum width=13.35cm, minimum height=3.25cm] (pool) at (0,-6.10) {};
+  \node[ado label, font=\bfseries\small] at ($(pool.north)+(0,-0.42)$)
+    {Executor processes};
 
-  \draw[ado dashed arrow] (exec1.south east) .. controls (-3.00,-2.20) and (-2.15,-2.65) .. ($(sqlengine.north west)+(0.75,0)$);
-  \draw[ado dashed arrow] (exec2.south) -- ($(sqlengine.north)+(0,0)$);
-  \draw[ado dashed arrow] (exec3.south west) .. controls (3.00,-2.20) and (2.15,-2.65) .. ($(sqlengine.north east)+(-0.75,0)$);
+  \node[ado box={2.70cm}{adoorangefill}, minimum height=1.25cm, inner sep=4pt] (exec1) at (-4.35,-6.10)
+    {\textbf{\small Executor 1}\\[-1pt]\footnotesize tasks and cache};
+  \node[ado box={2.70cm}{adoorangefill}, minimum height=1.25cm, inner sep=4pt] (exec2) at (0,-6.10)
+    {\textbf{\small Executor 2}\\[-1pt]\footnotesize tasks and cache};
+  \node[ado box={2.70cm}{adoorangefill}, minimum height=1.25cm, inner sep=4pt] (exec3) at (4.35,-6.10)
+    {\textbf{\small Executor 3}\\[-1pt]\footnotesize tasks and cache};
 
-  \node[ado annotation] at (0,-2.55) {shuffle exchange};
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (driver.east) -- node[ado annotation, above] {submit} (manager.west);
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (driver.south) -- node[ado annotation, left] {task dispatch}
+    ($(pool.north)+(-3.25,0)$);
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (manager.south) -- node[ado annotation, right] {resource allocation}
+    ($(pool.north)+(4.35,0)$);
+
+  \draw[<->, >=Latex, dashed, draw=black!55, line width=0.8pt]
+    (exec1.east) -- (exec2.west);
+  \draw[<->, >=Latex, dashed, draw=black!55, line width=0.8pt]
+    (exec2.east) -- (exec3.west);
+  \node[ado annotation, font=\footnotesize] at (0,-7.35)
+    {dashed links: peer-to-peer shuffle exchange};
 \end{tikzpicture}

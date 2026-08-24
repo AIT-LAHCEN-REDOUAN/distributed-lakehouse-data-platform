@@ -1,0 +1,50 @@
+List of Acronyms and Abbreviations
+Abbr. Meaning
+ACID Atomicity, Consistency, Isolation,
+and Durability
+AI Artificial Intelligence
+BASE Basically Available, Soft State,
+and Eventual Consistency
+BI Business Intelligence
+CAP Consistency, Availability, and
+Partition Tolerance
+CDP Customer Data Platform
+CPU Central Processing Unit
+DAG Directed Acyclic Graph
+dbt Data Build Tool
+DFS Distributed File System
+ETL Extract, Transform, Load
+GPU Graphics Processing Unit
+HDFS Hadoop Distributed File System
+HTML Hypertext Markup Language
+HTTPS Hypertext Transfer Protocol
+Secure
+IAM Identity and Access Management
+IP Internet Protocol
+JDBC Java Database Connectivity
+JSON JavaScript Object Notation
+Abbr. Meaning
+JSONL JSON Lines
+KDC Key Distribution Center
+LTS Long-Term Support
+LUKS Linux Unified Key Setup
+ML Machine Learning
+ODBC Open Database Connectivity
+PFE Projet de Fin d’Études
+PKI Public Key Infrastructure
+QEMU Quick Emulator
+RAM Random-Access Memory
+SIEM Security Information and Event
+Management
+SPNEGO Simple and Protected Generic
+Security Service Application
+Program Interface Negotiation
+Mechanism
+SQL Structured Query Language
+SSH Secure Shell
+TLS Transport Layer Security
+UI User Interface
+VM Virtual Machine
+YARN Yet Another Resource
+Negotiator
+xii

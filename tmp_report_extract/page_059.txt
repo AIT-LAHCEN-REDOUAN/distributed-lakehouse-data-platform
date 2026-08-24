@@ -1,0 +1,32 @@
+AdOptimizer CDP Chapter V. Implementation of the Distributed Lakehouse Platform
+fourth workflow. Failures can therefore be localized either to a workflow boundary or, for
+raw-quality validation, to its explicit task boundary inside the raw pipeline.
+Five-DAG orchestration sequence
+1. Environment reset
+clear Kafka, bronze, and lakehouse runtime state
+2. Lakehouse setup
+initialize bronze storage and required lakehouse structures
+3. Lakehouse readiness
+verify HDFS, Hive, Spark, Spark Thrift, and Trino availability
+4. Kafka–HDFS–Spark raw pipeline
+publish, persist, load Iceberg raw tables, then run embedded raw-quality tasks
+5. dbt-spark transformation
+build and test staged, intermediate, and analytical models
+Figure V.9:Five-DAG orchestration sequence from reset and setup to readiness, integrated raw
+loading and validation, and curated transformation.
+V.11 Observability Integration
+Operational visibility is integrated from the local control plane. Prometheus collects
+service, exporter, container, and pipeline metrics, while Grafana presents infrastructure
+and execution dashboards. Kafka UI, the Spark user interface and history server, and
+Airflow logs complement these centralized views. Together, they relate workflow status to
+service health, node activity, and processing behavior; the resulting validation evidence is
+examined in Chapter VIII.
+V.12 Conclusion
+This chapter demonstrated the implemented engineering chain: Kafka publication, HDFS
+bronze persistence, distributed Spark processing, Iceberg tables governed through Hive
+Metastore, integrated Great Expectations raw validation, dbt-spark transformations and
+tests, Trino access, Airflow orchestration, and Prometheus/Grafana supervision. These
+integrated layers form a distributed lakehouse with explicit operational and data-movement
+boundaries. Chapter VI examines its physical deployment and operation across the final
+multi-node environment.
+47

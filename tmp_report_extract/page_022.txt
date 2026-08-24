@@ -1,0 +1,32 @@
+AdOptimizer CDP Chapter II. State of the Art and Theoretical Background
+additional nodes can still increase total capacity when the workload is partitionable.
+II.2.3 Reliability, Scalability, and Maintainability
+The literature on distributed systems frequently emphasizes three central qualities: reli-
+ability, scalability, and maintainability [22]. Reliability refers to the system’s ability to
+continue providing correct service despite component failures, abnormal workloads, or
+operational disturbances. Scalability refers to the platform’s capacity to grow without dis-
+proportionate degradation or redesign. Maintainability refers to the ability to understand,
+operate, extend, and debug the system over time.
+These qualities are fundamental for a platform such as AdOptimizer CDP. An unreliable
+platform cannot support trusted analytical reuse. A non-scalable platform cannot absorb
+new datasets or future use cases. A non-maintainable platform becomes fragile and difficult
+to operate. These qualities are therefore direct evaluation criteria for the engineering
+relevance of the project.
+II.2.4 Data-Intensive Systems as a Distinct Engineering Problem
+Data-intensive systems differ from ordinary software systems because data movement,
+storage, replayability, and consistency become first-class engineering concerns. In such
+systems, correctness is not defined only by the logic of business functions. It also depends
+on whether data is durably persisted, whether transformations are reproducible, whether
+schemas remain interpretable over time, and whether the system can explain the origin
+and lifecycle of the information it exposes.
+This distinction is important for the positioning of the present work. AdOptimizer CDP is
+not simply an application with a database behind it. It is a distributed data engineering
+platform whose value lies in organizing the lifecycle of heterogeneous customer-related
+data in a reliable, observable, and governable way.
+II.3 Core Theoretical Trade-offs in Distributed Data
+Engineering
+II.3.1 The CAP Theorem and Consistency Trade-offs
+The CAP theorem formalizes a specific constraint: when a network partition prevents nodes
+from communicating, a distributed system cannot guarantee both linearizable consistency
+and availability for every request [18]. Partition tolerance is not a freely selectable option
+10

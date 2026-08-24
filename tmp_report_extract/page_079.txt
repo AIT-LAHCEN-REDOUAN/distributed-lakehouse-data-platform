@@ -1,0 +1,59 @@
+AdOptimizer CDP Chapter VIII. Validation, Testing, and Results
+This decomposition validates lifecycle control without relying on one monolithic workflow.
+Reset returns the platform to a controlled baseline, setup initializes the required storage
+and lakehouse structures, readiness prevents deeper execution against unavailable services,
+the Kafka–HDFS–Spark workflow materializes the distributed raw foundation and executes
+its embedded Great Expectations tasks, and the dbt workflow builds and tests the governed
+models [1].
+Validated workflow Retained result Evidence retained
+customerdna_client1_environment_reset_
+pipeline
+successful controlled reset Airflow task history and clean-state
+checks for Kafka, bronze storage, and
+lakehouse state
+customerdna_client1_lakehouse_setup_
+pipeline
+successful lakehouse
+initialization
+creation and verification of the bronze
+namespace and required lakehouse
+structures
+customerdna_client1_lakehouse_readiness_
+pipeline
+successful readiness
+validation
+positive checks for HDFS, Hive, Spark,
+Spark Thrift, and Trino
+customerdna_client1_kafka_hdfs_spark_
+lakehouse_pipeline
+successful raw loading and
+integrated quality
+validation
+Kafka activity, bronze.jsonlfiles,
+Spark applications, raw Iceberg tables,
+validation JSON, and Data Docs
+customerdna_client1_dbt_spark_lakehouse_
+pipeline
+successful model execution dbt build/test traces and materialized
+staging, intermediate, and analytics
+tables
+Table VIII.4:Retained validation evidence for the five operational workflows
+The retained Airflow history demonstrates repeatable, dependency-aware execution rather
+than a one-time manual sequence. Each lifecycle stage can be diagnosed and rerun at its
+workflow boundary, while the raw-quality checks remain separately inspectable as named
+tasks within the fourth workflow.
+Transformation and Data-Quality Evidence
+Transformation validation confirmed that the raw Iceberg tables could be converted into
+the implemented staging, intermediate, and analytics model layers through dbt-spark.
+The retained execution traces included model builds and dbt tests, while Trino inspection
+confirmed that the resulting governed tables were queryable.
+Great Expectations validated the three raw-lakehouse source families through the active
+checkpoint definitions shown in Table VIII.5. The fourth DAG exposes two explicit quality-
+task boundaries:
+•bootstrap_raw_lakehouse_quality_assets;
+•validate_raw_lakehouse_quality.
+Each execution produced machine-readable validation JSON and HTML Data Docs,
+separating quality evidence from Airflow task status alone [21, 15].
+The retained dashboard state also reported three refreshed raw outputs with no skipped
+or partial incremental outputs. Across the three datasets, approximately 1.12 million raw
+67

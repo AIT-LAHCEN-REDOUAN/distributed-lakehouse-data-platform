@@ -1,0 +1,42 @@
+AdOptimizer CDP Chapter VIII. Validation, Testing, and Results
+Monitoring indicator Observed metric or state
+Prometheus target health 6 healthy targets
+Observed host capacity 12 CPU cores and 11.46 GiB memory
+Hive Metastore PostgreSQL available, 11.4 MiB database size, 44 active connections at
+capture time
+Pipeline status retained workflow and quality indicators reported
+successful completion
+Latest visible raw volume approximately 1.12 million records across the three
+retained datasets
+Raw load outcomes 3 refreshed outputs, 0 skipped, and 0 partial incremental
+outputs
+Great Expectations evidence successful source-specific checkpoint artifacts retained for
+the raw lakehouse
+Table VIII.8:Observed monitoring evidence supporting operational visibility
+Analytical-access indicator Observed runtime result
+Trino version and environment version 435, environmentDISTRIBUTED_DEMO
+Coordinator uptime 6.74 days at capture time
+Distributed query roles coordinator on VM2; dedicated workers on VM1 and VM3
+Query state external SQL query completed with stateFinished
+Query throughput snapshot 89.0 rows/s and 242K bytes/s
+Query target lakehouse.raw_data.online_retail_2, limited to 200 rows
+Consumption result governed lakehouse tables were browsable from an external
+SQL client
+Table VIII.9:Runtime evidence that the distributed analytical-access layer was usable
+VIII.8 Main Results
+The validation campaign confirmed the delivery of a distributed, orchestrated, governed,
+observable, and security-aware customer-data lakehouse platform under the AdOptimizer
+CDP scope.
+The principal result is the demonstrated continuity of the implemented data path. The
+retained datasets were transported through Kafka, persisted in the HDFS bronze zone,
+materialized as governed Iceberg tables, transformed through the dbt model layers, and
+consumed externally through Trino. Consequently, the analytical-access result was not
+produced by an isolated demonstration dataset; it depended on the same storage, metadata,
+processing, and orchestration chain validated throughout the chapter.
+Completion was also established through complementary forms of evidence. Airflow histo-
+ries confirmed workflow order and task state, cluster interfaces exposed the participating
+distributed services, persisted files and tables demonstrated durable outputs, Great Ex-
+pectations retained independently inspectable validation artifacts, and Trino supplied a
+consumer-side query result. This triangulation reduces the risk of interpreting a successful
+task status or an available endpoint as sufficient proof of end-to-end platform behavior.
+70

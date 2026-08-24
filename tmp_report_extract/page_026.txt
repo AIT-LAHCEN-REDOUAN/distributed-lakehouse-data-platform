@@ -1,0 +1,36 @@
+AdOptimizer CDP Chapter II. State of the Art and Theoretical Background
+This separation has strong methodological value. When raw data is durably preserved,
+pipelines become replayable and easier to audit. Transformations can be rerun without
+repeatedly depending on the original upstream source.
+II.4.4 Distributed Compute Principles
+Distributed compute allows processing tasks to be decomposed and executed across several
+nodes. Instead of one machine reading and transforming an entire dataset, work is split
+according to partitions, files, or execution stages. This can reduce total execution time
+and align compute more closely with distributed storage [22].
+However, distributed compute is beneficial only when the workload justifies it. Scheduling,
+serialization, dependency management, network transfer, and cluster readiness introduce
+overhead. Parallel execution is therefore most useful when the work can be partitioned
+effectively and its computational or data-movement cost exceeds the coordination overhead.
+Spark distributed execution model
+Driver process
+Spark SQL: parse, optimize, and plan
+DAG and task scheduling
+Cluster manager
+resource allocation
+Standalone, YARN, K8s
+Executor processes
+Executor 1
+tasks and cache
+Executor 2
+tasks and cache
+Executor 3
+tasks and cache
+submit
+task dispatch resource allocation
+dashed links: peer-to-peer shuffle exchange
+Figure II.3:Spark planning, resource allocation, task execution, and shuffle flow.
+Figure II.3 illustrates the operational logic behind this principle: a driver coordinates
+execution, a cluster manager allocates resources, executors process partitions in parallel,
+and the SQL engine materializes the physical plan that structures distributed analytical
+work.
+14

@@ -1,14 +1,29 @@
 \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
-  \node[ado box={7.2cm}{adopurplefill}, minimum height=1.0cm] (raw) at (0,0)
-    {\adoboxcontentwide{Raw layer}{direct lakehouse representation of source-level structures}};
-  \node[ado box={7.2cm}{adobluefill}, minimum height=1.0cm] (staging) at (0,-1.8)
-    {\adoboxcontentwide{Staging models}{standardization, typing, and naming alignment}};
-  \node[ado box={7.2cm}{adotealfill}, minimum height=1.0cm] (intermediate) at (0,-3.6)
-    {\adoboxcontentwide{Intermediate models}{reusable analytical preparation and join logic}};
-  \node[ado box={7.2cm}{adoorangefill}, minimum height=1.0cm] (analytics) at (0,-5.4)
-    {\adoboxcontentwide{Analytical models}{business-oriented tables ready for exploration and reporting}};
+  \node[ado group, minimum width=14.60cm, minimum height=6.65cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\large] at ($(panel.north)+(0,-0.38)$)
+    {Layered dbt transformation flow};
 
-  \draw[ado arrow] (raw) -- (staging);
-  \draw[ado arrow] (staging) -- (intermediate);
-  \draw[ado arrow] (intermediate) -- (analytics);
+  \node[ado box={2.70cm}{adopurplefill}, minimum height=1.85cm, inner sep=5pt] (raw) at (-5.15,-2.55)
+    {\textbf{\footnotesize 1. Raw layer}\\[-1pt]
+     \scriptsize source-aligned\\[-1pt]
+     \scriptsize raw tables};
+  \node[ado box={2.70cm}{adobluefill}, minimum height=1.85cm, inner sep=5pt] (staging) at (-1.72,-2.55)
+    {\textbf{\footnotesize 2. Staging}\\[-1pt]
+     \scriptsize types and names\\[-1pt]
+     \scriptsize standardized};
+  \node[ado box={2.70cm}{adotealfill}, minimum height=1.85cm, inner sep=5pt] (intermediate) at (1.72,-2.55)
+    {\textbf{\scriptsize 3. Intermediate}\\[-1pt]
+     \scriptsize reusable joins\\[-1pt]
+     \scriptsize shared logic};
+  \node[ado box={2.70cm}{adoorangefill}, minimum height=1.85cm, inner sep=5pt] (analytics) at (5.15,-2.55)
+    {\textbf{\footnotesize 4. Analytical}\\[-1pt]
+     \scriptsize curated tables\\[-1pt]
+     \scriptsize for exploration};
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (raw.east) -- (staging.west);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (staging.east) -- (intermediate.west);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (intermediate.east) -- (analytics.west);
+
+  \node[ado small box={12.20cm}{adograyfill}, minimum height=0.72cm] at (0,-5.20)
+    {\scriptsize source fidelity $\rightarrow$ standardization $\rightarrow$ reusable logic $\rightarrow$ analytical exposure};
 \end{tikzpicture}

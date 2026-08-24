@@ -1,0 +1,53 @@
+AdOptimizer CDP Chapter IV. Requirements Analysis and System Design
+The resulting requirements are therefore traceable to implemented capabilities, acceptance
+criteria, and the final distributed deployment model rather than being presented as abstract
+intentions.
+IV.3 Stakeholders and System Actors
+The platform exposes different interaction paths according to operational responsibility.
+Table IV.1 summarizes the principal roles considered in the design.
+Actor or
+stakeholder
+Primary interaction Expected outcome
+Platform
+administrator /
+operator
+Deploys services, manages
+configuration and security material,
+verifies readiness, and investigates
+runtime failures.
+A reproducible, observable, and
+protected distributed runtime.
+Data engineer Executes and maintains ingestion,
+processing, transformation,
+orchestration, and validation
+workflows.
+Governed data products with
+traceable execution and quality
+evidence.
+Data analyst Uses authenticated SQL access to
+inspect governed raw and curated
+lakehouse tables.
+Reliable analytical access without
+direct dependence on storage internals.
+Future data-science
+and AI consumers
+Consume curated customer-data
+products produced by the platform.
+Reusable inputs for future Customer
+360 and AI use cases; model
+development remains outside the PFE
+scope.
+Table IV.1:Principal stakeholders and interaction responsibilities
+IV.4 Functional Requirements
+The functional scope of the platform is centered on the end-to-end lifecycle of customer-
+related data, from ingestion to governed analytical access. The most important functional
+requirements are summarized in Table IV.2 and Table IV.3.
+The requirements were organized as a dependency-aware execution contract rather than
+as an independent list of features. FR-1 to FR-5 define the data foundation: source-aware
+ingestion, replayable Kafka transport, durable HDFS bronze persistence, distributed Spark
+loading, and shared metadata governance. FR-6 to FR-10 cover the controlled use and
+operation of that foundation through analytical querying, layered transformation, explicit
+quality validation, orchestration, and observability. This grouping reflects the implemented
+lifecycle because downstream capabilities are meaningful only after the preceding storage,
+processing, and catalog conditions have been satisfied.
+29

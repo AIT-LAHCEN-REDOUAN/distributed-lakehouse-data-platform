@@ -1,0 +1,31 @@
+AdOptimizer CDP Chapter IX. Discussion and Critical Analysis
+IX.3.2 Distributed Execution with Shared Governance
+The deployment demonstrates distribution in the areas where it is technically meaningful:
+Kafka brokers span the three virtual machines, HDFS stores data through three DataNodes,
+Spark registers workers on all three machines, and Trino separates its coordinator from
+two dedicated workers. At the same time, Hive Metastore and Iceberg provide a shared
+table interpretation across processing and query services. This combination is important
+because distribution without consistent metadata would only move computation across
+nodes; it would not create a governed analytical platform [4, 6].
+IX.3.3 Reproducibility and Evidence
+Readiness checks, ordered orchestration, dbt tests, Great Expectations artifacts, Airflow
+histories, and monitoring dashboards make execution outcomes inspectable. The platform
+therefore preserves evidence not only of resulting data, but also of the operational path that
+produced it. This strengthens reproducibility and separates a demonstrable engineering
+result from an implementation that can only be explained from source code or manual
+observation.
+IX.3.4 Security-Aware Operational Design
+Security was integrated into deployed paths rather than left as a conceptual recom-
+mendation. Kerberos-secured Hadoop interactions, SPNEGO/HTTPS browser access,
+authenticated gateways, SSH-based submission, and separated operational identities re-
+duce the openness of the baseline cluster. Their value lies in demonstrating how security
+affects service communication and deployment practice. The result remains infrastruc-
+ture hardening rather than a complete enterprise identity-governance system, but it is
+nevertheless part of the functioning architecture.
+IX.4 Trade-Offs and Operational Constraints
+IX.4.1 Resource Capacity versus Architectural Breadth
+The three virtual machines provide sufficient separation to demonstrate distributed be-
+havior, but their limited CPU, memory, and storage constrain concurrency and workload
+scale. The breadth of the stack also means that infrastructure resources are shared by
+storage, processing, query, metadata, security, and monitoring services. Consequently,
+74

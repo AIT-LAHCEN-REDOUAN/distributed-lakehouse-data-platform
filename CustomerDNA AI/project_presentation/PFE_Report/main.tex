@@ -17,9 +17,21 @@
 
 \tableofcontents
 \clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Figures}
+\begingroup
+\fontsize{9}{10.4}\selectfont
+\renewcommand{\addvspace}[1]{\vspace{1.5pt}}
 \listoffigures
+\endgroup
 \clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Tables}
+\begingroup
+\fontsize{9}{10.4}\selectfont
+\renewcommand{\addvspace}[1]{\vspace{1.5pt}}
 \listoftables
+\endgroup
 \clearpage
 \input{01_front_matter/acronyms.tex}
 
@@ -39,11 +51,14 @@
 \input{11_chapter_10_general_conclusion_and_perspectives/chapter.tex}
 
 \clearpage
+\begingroup
+\raggedright
 \bibliographystyle{plain}
 \bibliography{12_references/references}
+\endgroup
 
+\clearpage
 \appendix
-\renewcommand{\thechapter}{\Alph{chapter}}
 \input{13_appendices/appendices_overview.tex}
 
 \end{document}

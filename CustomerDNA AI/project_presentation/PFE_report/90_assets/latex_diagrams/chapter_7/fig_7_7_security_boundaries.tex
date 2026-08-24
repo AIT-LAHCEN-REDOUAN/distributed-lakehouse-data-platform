@@ -1,7 +1,37 @@
-\begin{tikzpicture}[node distance=0.7cm and 0.8cm]
-    \node[ado box={4.8cm}{adotealfill}] (implemented)
-    {\adoboxcontent{Implemented baseline}{Kerberos + SPNEGO + TLS + SSH bridge + encrypted runtime storage}};
-    \node[ado box={4.8cm}{adograyfill}, right=of implemented] (future)
-    {\adoboxcontent{Future enterprise hardening}{PKI lifecycle + secret vault + fine-grained federation + SIEM-level controls}};
-    \draw[ado note arrow] (implemented.east) -- node[above, font=\footnotesize\itshape, text=adotextsoft] {scope boundary} (future.west);
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=14.60cm, minimum height=6.10cm, anchor=north] (scope) at (0,0) {};
+  \node[ado label, font=\bfseries\large] at ($(scope.north)+(0,-0.38)$)
+    {Security scope boundary};
+
+  \node[ado box={5.85cm}{adotealfill}, minimum height=4.55cm, inner sep=7pt] (implemented) at (-3.55,-3.35)
+    {\textbf{\normalsize Implemented baseline}\\[-1pt]
+     \scriptsize completed project scope\\[6pt]
+     {\scriptsize
+     \renewcommand{\arraystretch}{1.18}
+     \begin{tabular}{@{}l@{}}
+       \(\bullet\) Kerberos principals and keytabs \\
+       \(\bullet\) SPNEGO + HTTPS for HDFS \\
+       \(\bullet\) TLS-protected browser gateways \\
+       \(\bullet\) Authenticated Trino gateway \\
+       \(\bullet\) SSH remote Spark submission \\
+       \(\bullet\) Role-separated identities \\
+       \(\bullet\) Optional LUKS storage support
+     \end{tabular}}};
+
+  \node[ado box={5.85cm}{adograyfill}, minimum height=4.55cm, inner sep=7pt] (future) at (3.55,-3.35)
+    {\textbf{\normalsize Future enterprise hardening}\\[-1pt]
+     \scriptsize outside the PFE scope\\[6pt]
+     {\footnotesize
+     \renewcommand{\arraystretch}{1.24}
+     \begin{tabular}{@{}l@{}}
+       \(\bullet\) PKI and certificate automation \\
+       \(\bullet\) Centralized secret management \\
+       \(\bullet\) Fine-grained authorization \\
+       \(\bullet\) Organization-wide federation \\
+       \(\bullet\) SIEM, auditing, and detection
+     \end{tabular}}};
+
+  \draw[draw=black!35, dashed, line width=0.8pt] (0,-1.05) -- (0,-5.65);
+  \node[font=\scriptsize, text=black!55, fill=white, inner sep=2pt, rotate=90] at (0,-3.35)
+    {scope boundary};
 \end{tikzpicture}

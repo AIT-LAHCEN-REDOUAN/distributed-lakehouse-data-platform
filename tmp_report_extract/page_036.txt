@@ -1,0 +1,97 @@
+AdOptimizer CDP Chapter III. Technology Watch
+Layer Alternatives
+considered
+Retained
+choice
+Decisive project rationale
+Ingestion RabbitMQ
+streams; Apache
+Pulsar
+Apache Kafka Partitioned topics, controlled replay,
+and a direct fit with the implemented
+three-broker ingestion design.
+Bronze storage Local/shared files;
+object storage
+Hadoop HDFS Explicit NameNode/DataNode
+behavior, block distribution, and
+replication provide visible proof of
+distributed raw persistence.
+Table and
+metadata
+management
+Delta Lake;
+Apache Hudi
+Apache Iceberg,
+Hive Metastore,
+and Parquet
+The combination gives Spark and
+Trino a shared open-table and
+catalog path while preserving
+efficient columnar files.
+Distributed
+processing
+Apache Flink;
+local Python
+processing
+Apache Spark The project is dominated by
+replayable batch loading and
+SQL-oriented transformations,
+matching Spark’s cluster execution
+and ecosystem integration.
+Analytical
+query
+Spark SQL alone;
+Hive-oriented
+querying
+Trino A separate coordinator/worker query
+plane avoids coupling interactive
+analytical access to transformation
+jobs.
+Transformation
+and quality
+Custom SQL and
+Python validation
+scripts
+dbt-spark and
+Great
+Expectations
+Declared model dependencies and
+persisted validation artifacts make
+transformation and quality controls
+explicit and auditable.
+Orchestration Shell scheduling;
+Prefect; Dagster
+Apache Airflow DAG dependencies, retries,
+scheduling, and run history match
+the implemented five-workflow
+operational sequence.
+Observability
+and deployment
+Service-specific
+logs; manual
+processes
+Prometheus,
+Grafana,
+cAdvisor, and
+Docker
+Central metrics and dashboards
+expose distributed behavior, while
+containerization keeps service
+packaging repeatable.
+Security
+baseline
+Application-only
+credentials;
+unprotected
+administrative
+endpoints
+Kerberos,
+SPNEGO, TLS
+gateways, SSH,
+and LUKS
+Layered controls protect service
+identity, browser access, remote
+execution, transport, and persisted
+runtime data.
+Table III.1:Comparative assessment of the principal technology choices
+24

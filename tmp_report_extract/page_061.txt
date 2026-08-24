@@ -1,0 +1,67 @@
+AdOptimizer CDP Chapter VI. Deployment Strategy and Distributed Execution
+Control-plane service Operational role Reason for local placement
+Airflow orchestration of reset, setup,
+readiness, integrated raw
+loading/quality, and dbt
+transformation DAGs
+avoids consuming VM resources
+for workflow control and keeps
+execution coordination
+centralized
+Prometheus collection of infrastructure and
+pipeline metrics
+centralizes observability and
+simplifies metric management
+Grafana dashboard-based monitoring of
+infrastructure and pipeline state
+provides one visual supervision
+point for the whole platform
+Kafka UI broker and topic inspection keeps operational visibility
+outside the distributed data
+services themselves
+Pipeline metrics exporter exposure of pipeline-specific
+operational metrics
+complements infrastructure
+metrics with workflow-level
+signals
+Local TLS gateway protected browser access to
+control-plane interfaces
+centralizes HTTPS exposure for
+Airflow, Grafana, Kafka UI, and
+Prometheus
+SSH submission path remote Spark submission to the
+entry point on VM2
+avoids local-driver networking
+constraints and centralizes
+cluster entry
+Table VI.1:Main responsibilities of the local control plane
+Local control plane
+orchestration·monitoring·supervision
+Distributed Linux data plane
+role summary; full service inventory is provided in Table VI.2
+VM1
+worker node
+Kafka broker 1
+DataNode 1
+Spark + Trino workers
+VM2
+coordination node
+NameNode + Hive Metastore
+Spark master
+Trino coordinator
+VM3
+worker node
+Kafka broker 3
+DataNode 3
+Spark + Trino workers
+orchestrate and observe
+Figure VI.1:Control-plane supervision of the distributed Linux data plane.
+VI.3 VM-Level Service Separation
+The data plane is not deployed as three identical generic machines. Instead, the services
+are deliberately separated according to their coordination role or worker role.
+This service distribution supports clear operational responsibility. VM2 concentrates
+services that require a central authority or coordination function, including Kerberos,
+the HDFS namespace, the shared catalog, Spark scheduling, application history, and
+distributed-query coordination. VM1 and VM3 provide horizontal extension through
+storage blocks, Spark execution resources, Kafka brokers, and Trino worker capacity.
+49

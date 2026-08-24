@@ -1,0 +1,52 @@
+AdOptimizer CDP Chapter X. General Conclusion and Perspectives
+customer domain. Incremental and streaming transformations could then reduce data
+freshness where business requirements justify lower latency.
+X.3.3 AdOptimizer AI Capabilities
+The third direction concerns the intelligent services of the broader AdOptimizer AI vision.
+Curated customer features can support segmentation, persona generation, churn-risk
+estimation, customer-lifetime-value modeling, conversion analysis, campaign optimization,
+recommendation, and personalization. These services should consume governed outputs
+rather than bypass the platform and rebuild source integrations independently.
+Moving from analytical features to operational AI would require a dedicated lifecycle
+for training, evaluation, versioning, deployment, monitoring, and retraining. Feature
+consistency, model drift, explainability, privacy, and decision traceability would become
+additional requirements. In this evolution, AdOptimizer CDP remains the trusted data
+foundation, while machine-learning and decision services form downstream products with
+their own validation responsibilities.
+Evolution
+direction
+Priority objectives Expected outcome
+Platform
+industrialization
+resilience, automated deployment,
+secrets and certificate lifecycles,
+recovery testing, and repeatable
+benchmarking
+a more scalable, recoverable, and
+operationally controlled platform
+Customer 360
+enrichment
+additional sources, identity resolution,
+semantic models, lineage, policies,
+and lower-latency processing where
+required
+a governed and increasingly unified
+customer-information domain
+AdOptimizer AI
+capabilities
+governed features, model lifecycle
+management, monitoring, and
+decision-service integration
+trustworthy intelligent marketing
+services consuming validated platform
+outputs
+Table X.2:Prioritized evolution path from the implemented platform to downstream intelligent
+services
+X.4 Closing Perspective
+AdOptimizer CDP demonstrates that trustworthy customer analytics depend on a durable,
+governed, observable, and protected data foundation. By integrating distributed execution,
+controlled transformation, explicit validation, and secured access, the completed platform
+gives SMART AUTOMATION TECHNOLOGIES a credible basis for extending AdOpti-
+mizer AI toward Customer 360 and future AI services while preserving reproducibility,
+governance, evidence, security, and scope discipline.
+82

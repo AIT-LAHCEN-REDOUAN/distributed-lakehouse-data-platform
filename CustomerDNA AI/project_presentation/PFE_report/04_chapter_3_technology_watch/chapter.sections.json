@@ -1,0 +1,92 @@
+[
+  {
+    "kind": "chapter",
+    "title": "Technology Watch",
+    "preview": "",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "Introduction",
+    "preview": "Chapter 2 established the conceptual logic behind distributed data platforms. This chapter moves to the concrete implementation layer by presenting the technologies retained for . The goal is not to produce exhaustive product documentation, but to explain why each selected tool deserves its place in the final platform and how the stack becomes coherent when these tools are assembled together.",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "Selection Criteria",
+    "preview": "the tool had to fit a multi-node platform rather than a local-only demonstration. each retained component had to answer a clear need in ingestion, storage, processing, governance, quality, orchestration, or observability. the stack had to remain technically consistent across services and interfaces. the selected technologies had to support reproducibility, monitoring, and service separation. the final choices had to ",
+    "preview2": "remain understandable and explainable in a final-year engineering report."
+  },
+  {
+    "kind": "section",
+    "title": "Apache Kafka",
+    "preview": "[!htbp] Apache Kafka acts as the ingestion backbone between dataset producers and downstream storage services . it structures raw data transport through explicit topics and allows controlled replay when a stage must be re-executed. Kafka makes ingestion observable, modular, and better aligned with modern event-driven data engineering practices than direct one-shot file transfers.",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "Hadoop HDFS",
+    "preview": "[!htbp] HDFS stores the bronze data generated from Kafka consumption . it offers distributed persistence, replication, and strong compatibility with the surrounding Hadoop and Spark ecosystem. HDFS gives the platform a real distributed storage layer instead of a local folder-based approximation, which strengthens the realism of the deployment.",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "Apache Iceberg and Hive Metastore",
+    "preview": "[!htbp] {22pt} {1.15} {cc} & \\\\ Iceberg & Hive Metastore Iceberg supports curated table layers, while Hive Metastore centralizes their metadata . Iceberg provides a modern table abstraction suited to structured analytics, and Hive Metastore remains a practical catalog layer understood by several engines. together they transform simple file persistence into a genuine lakehouse organization where curated data can be qu",
+    "preview2": "eried, documented, and evolved more cleanly."
+  },
+  {
+    "kind": "section",
+    "title": "Apache Spark",
+    "preview": "[!htbp] Spark is the main distributed compute engine used for transformation and loading tasks . it integrates naturally with HDFS, Iceberg, and the cluster deployment model, while remaining academically recognizable as a standard big-data processing engine. Spark gives the platform real parallel computation capabilities and serves as the backbone for both the raw-to-curated flow and the lakehouse loading logic.",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "Trino",
+    "preview": "[!htbp] Trino exposes the analytical tables through an SQL query interface . it separates interactive exploration from heavy transformation workloads and provides a clean querying layer for validation and analysis. Trino improves usability, supports manual verification through SQL clients, and reinforces the idea that a lakehouse must serve both engineering and analytical access needs.",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "dbt for Transformation Modeling",
+    "preview": "[!htbp] {22pt} {1.15} {cc} & \\\\ dbt & Parquet dbt structures the staging, intermediate, and analytics transformations as explicit models . it brings readability, dependency management, and reproducibility to the transformation layer. Parquet remains an efficient columnar analytical format that naturally complements curated transformation outputs . dbt turns transformations into governed assets rather than ad hoc scri",
+    "preview2": "pts, which makes the platform easier to explain, validate, and maintain."
+  },
+  {
+    "kind": "section",
+    "title": "Great Expectations",
+    "preview": "[!htbp] Great Expectations formalizes validation checks on important data assets . it helps transform quality from an implicit assumption into a visible engineering control. the tool provides auditable validation artifacts and strengthens the trustworthiness of the resulting data products.",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "Apache Airflow",
+    "preview": "[!htbp] Airflow orchestrates the ordered execution of reset, ingestion, transformation, validation, and lakehouse readiness workflows . it provides explicit DAG-based orchestration, retries, scheduling, and operational visibility. Airflow transforms the platform from a collection of scripts into a controlled execution system with traceable runs and clear dependencies.",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "Prometheus and Grafana",
+    "preview": "[!htbp] {22pt} {1.15} {cc} & \\\\ Prometheus & Grafana Prometheus collects technical metrics, while Grafana displays them through operational dashboards . the pair is widely used, easy to justify academically, and especially useful in distributed environments where service state must remain visible. observability improves the platform's credibility by making resource health, service exposure, and pipeline behavior meas",
+    "preview2": "urable rather than assumed."
+  },
+  {
+    "kind": "section",
+    "title": "Docker",
+    "preview": "[!htbp] Docker isolates services and makes the deployment reproducible across the control plane and VM nodes . it simplifies service packaging, environment consistency, and deployment repetition. containerization makes the platform easier to rebuild, demonstrate, and stabilize, which is especially important in an academic distributed setup.",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "Synthesis of the Final Stack",
+    "preview": "Kafka structures ingestion. HDFS persists the bronze layer in distributed storage. Iceberg and Hive Metastore organize the lakehouse tables and metadata. Spark executes the main distributed processing logic. Trino exposes interactive analytical querying. dbt governs transformations as explicit data models. Great Expectations formalizes data quality checks. Airflow orchestrates the end-to-end execution order. Promethe",
+    "preview2": "us and Grafana expose observability. Docker preserves deployment reproducibility and service isolation."
+  },
+  {
+    "kind": "section",
+    "title": "Conclusion",
+    "preview": "This chapter clarified the technological foundation of by structuring the stack around the concrete tools used in the implementation. Each retained component answers a precise role in the platform, and the value of the solution comes from the coherence of these roles rather than from the isolated adoption of popular technologies. With this technical watch now clarified, the report can move toward requirements analysi",
+    "preview2": "s and system design."
+  }
+]

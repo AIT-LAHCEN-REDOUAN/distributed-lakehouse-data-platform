@@ -1,0 +1,33 @@
+AdOptimizer CDP Chapter II. State of the Art and Theoretical Background
+Nevertheless, Lambda architecture is often criticized for operational duplication. Two
+processing logics must be maintained, monitored, and reconciled. Its academic relevance
+remains high because it helps explain why later architectures searched for simpler ways to
+preserve freshness without multiplying engineering burden.
+II.5.5 Kappa Architecture
+Kappa architecture reduces the conceptual duplication of Lambda by emphasizing a stream-
+centered approach in which the event log becomes the main source of truth. Reprocessing
+is achieved through replay rather than through a separate batch computation layer [23].
+This model is attractive when event logs are rich and replay can serve as the main recom-
+putation mechanism. However, many analytical platforms still require clearly governed
+historical layers and structured table abstractions. Kappa is therefore instructive, but not
+automatically sufficient for every customer-data use case.
+II.5.6 Comparative Analysis of These Architectures
+The historical movement from warehouses to lakes, from lakes to lakehouses, and from
+isolated reporting toward event-aware architectures reflects a broader shift in priorities.
+Early architectures privileged control and stable relational semantics. Later architectures
+privileged ingestion flexibility and scale. Contemporary platforms increasingly seek a
+hybrid answer that preserves raw fidelity, enables distributed processing, and still produces
+governed analytical products.
+For AdOptimizer CDP, the lakehouse model is the most suitable. It supports raw bronze
+persistence, distributed storage, structured analytical tables, metadata-driven reuse, and
+downstream SQL exploration. The selected architecture is therefore a reasoned synthesis
+of the state of the art.
+The implemented project does not reproduce either Lambda or Kappa architecture in a
+pure textbook form. It does not maintain a separate low-latency speed layer alongside
+a batch layer, as a strict Lambda design would require. Nor does it treat a streaming
+computation path as the sole mechanism for producing analytical state, as a strict Kappa
+design would suggest. Instead, it combines replayable event transport with durable raw
+history and batch-oriented refinement into governed analytical tables. The resulting model
+is therefore best described as an event-aware, batch-oriented lakehouse rather than as a
+complete Lambda or Kappa implementation [25, 23, 11].
+16

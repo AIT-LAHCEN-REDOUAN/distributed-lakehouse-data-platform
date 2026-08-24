@@ -1,0 +1,33 @@
+AdOptimizer CDP Chapter II. State of the Art and Theoretical Background
+channels, centralized architectures become difficult to sustain. Storage pressure increases,
+computational workloads become more varied, and the system becomes more sensitive to
+single-node bottlenecks.
+The centralized model is simple to deploy, but it concentrates ingestion, storage, processing,
+metadata, and access on the same execution point. As workloads grow, this concentration
+creates bottlenecks, single points of failure, and clear scalability limits.
+Centralized architecture
+Campaign
+data
+Behavioral
+data
+Transaction
+data
+Ingestion
+Storage
+Single execution point
+Processing
+Metadata and access
+Analysts Applications
+Main limits
+bottleneck
+limited scaling
+strong coupling
+Figure II.1:Centralized execution model and its main architectural limits.
+Figure II.1 highlights why centralized designs become fragile under heterogeneous analytical
+growth: all responsibilities compete on the same machine boundary, and operational
+evolution is constrained by the limits of that boundary.
+Distributed data platforms emerged as a response to these limits. Their role is not only to
+increase capacity, but also to separate responsibilities such as ingestion, storage, compute,
+metadata, and analytical access. This decomposition allows each concern to evolve with
+the technical model best suited to it [22].
+7

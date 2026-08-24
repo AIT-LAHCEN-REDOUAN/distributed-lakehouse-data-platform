@@ -1,4 +1,4 @@
-﻿import os
+import os
 pdf = r"D:\github\Master_PFE_Project\CustomerDNA AI\project_presentation\PFE_report\main.pdf"
 out = r"D:\github\Master_PFE_Project\CustomerDNA AI\project_presentation\PFE_report\_preview_ch2"
 os.makedirs(out, exist_ok=True)

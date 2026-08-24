@@ -1,27 +1,28 @@
-\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
-  \node[ado box={3.20cm}{adograyfill}, minimum height=0.95cm, inner sep=5pt] (sources) at (0,0.75)
-    {\textbf{\small Data sources}\\[-1pt]\scriptsize files, records, and event traces};
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=12.4cm, minimum height=9.6cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\Large] at ($(panel.north)+(0,-0.52)$) {Hybrid replay-and-refinement model};
 
-  \node[ado box={2.75cm}{adotealfill}, minimum height=0.95cm, inner sep=5pt] (events) at (-2.45,-1.10)
-    {\textbf{\small Event capture}\\[-1pt]\scriptsize replayable incoming flow};
-  \node[ado box={2.75cm}{adoorangefill}, minimum height=0.95cm, inner sep=5pt] (batch) at (2.45,-1.10)
-    {\textbf{\small Batch refinement}\\[-1pt]\scriptsize historical structuring};
+  \node[ado box={8.40cm}{adograyfill}, minimum height=1.05cm, inner sep=5pt] (sources) at (0,-1.60)
+    {\textbf{\normalsize Data sources}\\[-1pt]\small files, records, and event traces};
 
-  \node[ado box={2.85cm}{adobluefill}, minimum height=0.95cm, inner sep=5pt] (bronze) at (-2.45,-3.00)
-    {\textbf{\small Durable raw history}\\[-1pt]\scriptsize audit and recomputation};
-  \node[ado box={2.85cm}{adopurplefill}, minimum height=0.95cm, inner sep=5pt] (tables) at (2.45,-3.00)
-    {\textbf{\small Curated table layers}\\[-1pt]\scriptsize governed analytical state};
+  \node[ado box={8.40cm}{adotealfill}, minimum height=1.05cm, inner sep=5pt] (events) at (0,-3.00)
+    {\textbf{\normalsize Event capture}\\[-1pt]\small replayable incoming records};
 
-  \node[ado box={3.70cm}{adograyfill}, minimum height=0.95cm, inner sep=5pt] (access) at (0,-4.95)
-    {\textbf{\small Analytical access}\\[-1pt]\scriptsize trusted exploration, validation, and reuse};
+  \node[ado box={8.40cm}{adobluefill}, minimum height=1.05cm, inner sep=5pt] (bronze) at (0,-4.40)
+    {\textbf{\normalsize Durable raw history}\\[-1pt]\small audit, retention, and reprocessing};
 
-  \draw[ado arrow] (sources.south) -- ++(-0.85,-0.45) -- (events.north);
-  \draw[ado arrow] (sources.south) -- ++(0.85,-0.45) -- (batch.north);
-  \draw[ado arrow] (events.south) -- (bronze.north);
-  \draw[ado arrow] (batch.south) -- (tables.north);
-  \draw[ado arrow] (bronze.east) -- ++(1.10,0) |- ($(access.north)+(-0.75,0)$);
-  \draw[ado arrow] (tables.west) -- ++(-1.10,0) |- ($(access.north)+(0.75,0)$);
+  \node[ado box={8.40cm}{adoorangefill}, minimum height=1.05cm, inner sep=5pt] (batch) at (0,-5.80)
+    {\textbf{\normalsize Batch refinement}\\[-1pt]\small historical structuring};
 
-  \node[ado annotation, text width=8.4cm] at (0,-6.20)
-    {Replay supports recomputation, while batch refinement stabilizes governed analytical outputs.};
+  \node[ado box={8.40cm}{adopurplefill}, minimum height=1.05cm, inner sep=5pt] (tables) at (0,-7.20)
+    {\textbf{\normalsize Curated table layers}\\[-1pt]\small governed analytical state};
+
+  \node[ado box={8.40cm}{adograyfill}, minimum height=1.05cm, inner sep=5pt] (access) at (0,-8.60)
+    {\textbf{\normalsize Analytical access}\\[-1pt]\small trusted exploration, validation, and reuse};
+
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (sources.south) -- (events.north);
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (events.south) -- (bronze.north);
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (bronze.south) -- node[ado annotation, right, fill=white, inner sep=1pt, text=black!60] {replay / recompute} (batch.north);
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (batch.south) -- (tables.north);
+  \draw[ado arrow, draw=black!55, line width=0.95pt] (tables.south) -- (access.north);
 \end{tikzpicture}

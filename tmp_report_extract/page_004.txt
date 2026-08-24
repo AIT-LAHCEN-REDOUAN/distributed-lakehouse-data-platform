@@ -1,0 +1,31 @@
+Résumé
+Les organisations modernes génèrent d’importants volumes de données clients dans des
+environnements opérationnels hétérogènes et fragmentés. Les données de campagne, les
+traces comportementales, les transactions commerciales et les attributs de profil sont
+produits dans des formats différents, à des cadences variables et selon des hypothèses
+sémantiques non homogènes. Lorsque ces sources demeurent isolées, les informations clients
+deviennent difficiles à valider, à réconcilier, à rejouer et à transformer en actifs analytiques
+fiables. Cette fragmentation ralentit la prise de décision, empêche une vision client unifiée
+et prive les futurs services intelligents d’un socle de données suffisamment robuste.
+Ce projet de fin d’études répond à cette problématique par la conception et la mise en
+œuvre de AdOptimizer CDP, une plateforme lakehouse distribuée consacrée aux données
+clients et développée dans le cadre de l’initiative plus large AdOptimizer AI au sein de
+SMART AUTOMATION TECHNOLOGIES. La plateforme mise en œuvre combine une
+ingestion rejouable avec Kafka, un stockage bronze dans HDFS, des traitements distribués
+avec Spark, des tables Iceberg et Parquet gouvernées par Hive Metastore, ainsi qu’un accès
+analytique via Trino. dbt-spark structure les couches de transformation, Great Expectations
+conserve les preuves de validation, Airflow orchestre les workflows, Prometheus et Grafana
+assurent l’observabilité, tandis que des contrôles de sécurité en couches protègent l’identité
+des services, les accès, les communications et les données persistées.
+Déployée entre un plan de contrôle local et trois machines virtuelles Linux, la plateforme a
+èté validée au moyen de scénarios d’exécution de bout en bout couvrant l’ingestion, la persis-
+tance distribuée, la transformation, l’accès analytique inter-moteurs, les contrôles de qualité,
+l’orchestration, la supervision et les interactions sécurisées entre services. L’architecture
+obtenue renforce la reproductibilité, la scalabilité, la traçabilité, la fiabilité opérationnelle
+et l’extensibilité. Elle transforme des jeux de données brutes hétérogènes en produits de
+données gouvernés et réutilisables, tout en ètablissant le socle d’ingénierie nécessaire à des
+analyses fiables, à de futures capacités Customer 360 et à des développements ultérieurs
+en apprentissage automatique.
+Mots-clés :Big Data, Ingénierie des données, Systèmes distribués, Data Lakehouse, Plateforme de données client,
+Gouvernance des données, Qualité des données, Observabilité, Sécurité, Customer 360.
+iv

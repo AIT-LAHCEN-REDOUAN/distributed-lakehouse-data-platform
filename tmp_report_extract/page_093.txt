@@ -1,0 +1,33 @@
+AdOptimizer CDP Chapter X. General Conclusion and Perspectives
+governed analytical outputs, validation evidence, and controlled access.
+X.3 Future Perspectives
+The next developments should preserve the current architecture’s separation of concerns
+while increasing its availability, data coverage, governance maturity, and downstream
+business value. The perspectives can be organized into three successive directions.
+X.3.1 Platform Industrialization
+The first priority is to strengthen the operating foundation before expanding business
+functionality. Central coordinator and catalog responsibilities should be made more resilient,
+and the local control plane should evolve toward a managed deployment environment.
+Backup, restoration, failover, and node-loss scenarios should be tested explicitly rather
+than inferred from successful nominal execution.
+Deployment automation can also be extended through versioned environment configuration,
+infrastructure provisioning, compatibility checks, and repeatable certificate and service-
+identity initialization. Centralized secret management, automated certificate rotation,
+finer-grained access control, and encryption enabled consistently across persistent runtime
+storage would move the current security baseline closer to enterprise operation.
+Performance evaluation should become systematic. Repeated benchmarks over identical
+datasets and workflows can compare local and distributed execution, measure end-to-end
+duration and service-level throughput, and identify CPU, memory, storage, and network
+bottlenecks. Such measurements would guide capacity planning without replacing the
+functional evidence already established by the project.
+X.3.2 Customer 360 Enrichment
+The second direction is to broaden the customer-data foundation. Additional operational
+sources can extend the current campaign, behavioral, and transactional perspectives with
+support interactions, consent and preference data, product usage, and other company-
+relevantchannels.Eachnewsourceshouldretainthesameingestion,bronze,transformation,
+quality, and evidence contracts.
+A mature Customer 360 layer would also require canonical identifiers, controlled cross-
+source identity resolution, survivorship rules, and explicit handling of uncertain matches.
+Richer semantic marts, documented data contracts, lineage, retention rules, and access
+policies would turn the current analytical foundation into a more complete governed
+81

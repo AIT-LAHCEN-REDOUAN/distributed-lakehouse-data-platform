@@ -1,0 +1,11 @@
+Appendix C
+Selected Validation Evidence
+This appendix presents the eight retained interface captures supplied for the report.
+They were collected at different moments of the validation campaign rather than as one
+synchronized snapshot. Each figure supports only the indicators stated in its caption; the
+final architecture and validation boundaries remain those documented in Chapters VI–VIII.
+C.1 Orchestration and Quality Evidence
+Figure C.1:Airflow grid captured on August 18, 2026, showing successful latest runs for the
+five implemented workflows: environment reset, lakehouse setup, lakehouse readiness, Kafka–
+HDFS–Spark raw loading with integrated raw-quality tasks, and dbt-spark transformation.
+91

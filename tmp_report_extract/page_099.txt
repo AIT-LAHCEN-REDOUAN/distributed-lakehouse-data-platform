@@ -1,0 +1,84 @@
+AdOptimizer CDP Appendix A. Requirements-to-Evidence Traceability
+A.1 Functional Requirements
+ID Required capability Implemented response Principal retained
+evidence
+FR-1 Structured ingestion of
+heterogeneous customer data
+One dataset-aware ingestion path handles
+Bank Marketing, Online Shoppers Intention,
+and Online Retail II inputs.
+Dataset-specific Spark
+applications in Figure C.7
+and the raw-pipeline history
+in Figure C.1.
+FR-2 Reproducible topic-based
+transport
+A three-broker Kafka deployment provides
+the transport boundary used by the controlled
+ingestion workflow.
+Broker placement in
+Table B.2 and orchestration
+history in Figure C.1.
+FR-3 Distributed, replayable
+bronze persistence
+HDFS retains raw artifacts before governed
+lakehouse loading, with one DataNode on
+each Linux VM.
+Three live DataNodes and
+retained capacity in
+Figure C.6.
+FR-4 Governed raw lakehouse
+loading
+Spark converts bronze inputs into
+Iceberg/Parquet raw tables registered through
+the shared metadata layer.
+Completed raw-to-Iceberg
+jobs in Figure C.7.
+FR-5 Centralized analytical
+metadata
+Hive Metastore and its PostgreSQL repository
+provide shared table discovery for Spark and
+Trino.
+Metastore availability in
+Figure C.5 and service
+placement in Table B.2.
+FR-6 Interactive analytical SQL
+access
+Trino exposes governed lakehouse tables
+independently from the transformation
+runtime.
+Completed Online Retail II
+query in Figure C.8.
+FR-7 Layered governed
+transformations
+dbt-spark coordinates dependency-aware
+transformations after the raw lakehouse load.
+Successful dbt workflow
+state in Figures C.1
+and C.4.
+FR-8 Persistent data-quality
+validation
+Great Expectations runs as explicit bootstrap
+and validation tasks inside the
+Kafka–HDFS–Spark raw pipeline, recording
+validation results and HTML Data Docs.
+Three successful validation
+records in Figure C.2.
+FR-9 Observable workflow
+orchestration
+Airflow separates reset, setup, readiness,
+integrated raw loading/quality, and dbt
+transformation into five controlled workflows.
+Successful run history in
+Figure C.1; the
+authoritative final workflow
+set is documented in
+Chapter VIII.
+FR-10 Infrastructure and pipeline
+observability
+Prometheus collects platform signals while
+Grafana exposes infrastructure, metastore,
+and pipeline views.
+Figures C.3–C.4.
+Table A.1:Traceability from functional requirements to implemented and retained evidence
+87

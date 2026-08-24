@@ -1,0 +1,43 @@
+AdOptimizer CDP Chapter VIII. Validation, Testing, and Results
+Observed HDFS indicator Retained runtime result
+DataNode state 3 live nodes, 0 dead nodes
+Configured storage capacity 62.97 GB
+DFS used 918.83 MB (1.42%)
+DFS remaining 7.22 GB (11.46%)
+Filesystem objects 338 objects: 196 files/directories and 142 replicated blocks
+DataNode usage distribution minimum 1.19%, median 1.48%, maximum 1.61%,
+standard deviation 0.18%
+Replication health 0 under-replicated blocks and 0 pending deletions
+Storage type DISK across 3 nodes in service
+Table VIII.2:HDFS runtime indicators retained from the distributed deployment
+Configured capacity also includes host storage classified outside DFS. Consequently, DFS
+used and DFS remaining should not be interpreted as a direct arithmetic decomposition
+of the configured total.
+Observed path Observed objects Validation meaning
+/ /bronze,/warehouse separates replayable persistence
+from governed analytical storage
+/bronze/client_1 bank_marketing,
+online_retail_2,
+online_shoppers_intention
+confirms materialized bronze
+data for the three retained
+sources
+/warehouse/iceberg raw_data.db,staging.db,
+intermediate.db,
+analytics.db
+confirms the physical
+lakehouse-layer progression
+Table VIII.3:HDFS namespace evidence retained from the validated deployment state
+Together, the service and namespace observations establish that the storage layer was
+active, populated, distributed, and free from immediate replication anomalies during the
+retained capture.
+VIII.4 Pipeline, Transformation, and Quality Valida-
+tion
+Pipeline validation followed the five prioritized Airflow workflows implemented for the
+final platform:
+1.customerdna_client1_environment_reset_pipeline;
+2.customerdna_client1_lakehouse_setup_pipeline;
+3.customerdna_client1_lakehouse_readiness_pipeline;
+4.customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline;
+5.customerdna_client1_dbt_spark_lakehouse_pipeline.
+66

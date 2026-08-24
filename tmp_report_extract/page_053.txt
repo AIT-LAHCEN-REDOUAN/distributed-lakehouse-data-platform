@@ -1,0 +1,41 @@
+AdOptimizer CDP Chapter V. Implementation of the Distributed Lakehouse Platform
+In operational terms, this means the namespace authority remains centralized on VM2,
+while block storage is distributed across the three nodes. The implemented bronze organiza-
+tion is client-oriented and source-aware: each dataset is persisted under a controlled bronze
+structure rather than being mixed into one generic folder. This reinforces traceability and
+keeps the raw layer easy to inspect.
+The bronze layer also plays a strategic role in the whole project: it is the stable checkpoint
+between ingestion and compute. If a downstream Spark stage fails while valid bronze
+artifacts remain available, the affected processing stages can be rerun from HDFS without
+rereading the original local files or republishing the datasets through Kafka.
+HDFS bronze write and storage model
+Bronze writer
+HDFS client
+immutable JSONL batches
+NameNode on VM2
+namespace and block-
+location metadata
+Distributed DataNode storage
+DataNode 1
+VM1·HDFS blocks
+DataNode 2
+VM2·HDFS blocks
+DataNode 3
+VM3·HDFS blocks
+replicated HDFS block copies distributed across the three nodes
+Logical bronze namespace
+client- and dataset-aware folders containing replayable raw batches
+metadata lookup
+block stream block locations
+Figure V.3:HDFS bronze storage with NameNode control and distributed DataNodes.
+V.5 Spark Processing and Iceberg Loading
+Spark is the main distributed processing engine of the platform. Its implementation is
+aligned with the physical cluster design and with the lakehouse objective of turning
+replayable distributed files into governed analytical tables [10, 6, 11]:
+•the Spark master runs on VM2;
+•workers are distributed across VM1, VM2, and VM3;
+•the control plane submits jobs remotely to the Spark environment on VM2.
+This execution path is important. The final deployment does not rely on a heavy local
+Spark driver on the workstation. Instead, the control plane submits work to the distributed
+cluster, maintaining a clear separation between orchestration and compute.
+41

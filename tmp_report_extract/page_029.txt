@@ -1,0 +1,32 @@
+AdOptimizer CDP Chapter II. State of the Art and Theoretical Background
+Hybrid replay-and-refinement model
+Data sources
+files, records, and event traces
+Event capture
+replayable incoming records
+Durable raw history
+audit, retention, and reprocessing
+Batch refinement
+historical structuring
+Curated table layers
+governed analytical state
+Analytical access
+trusted exploration, validation, and reuse
+replay / recompute
+Figure II.4:Hybrid flow from replayable raw history to governed analytical tables.
+II.6 Foundational Concepts for Governance and Trust
+in Data Platforms
+II.6.1 Metadata, Cataloging, and Data Discovery
+Metadata gives meaning to stored data by describing structure, origin, semantics, and
+technical location. Without metadata, even accessible data can remain practically unusable.
+Cataloging extends this principle by making datasets discoverable and interpretable by
+different actors [22].
+In a distributed customer-data platform, metadata is especially important because the
+architecture spans several services and layers. Governance cannot depend on informal
+memory alone. Schema registration, cataloging, and dataset discovery must therefore be
+explicit platform capabilities.
+II.6.2 Data Lineage and Traceability
+Lineage refers to the ability to trace how data moved from source to output, which
+transformations were applied, and which downstream assets depend on which upstream
+artifacts. Traceability is essential for reproducibility, debugging, and auditability.
+17

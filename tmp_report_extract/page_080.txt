@@ -1,0 +1,42 @@
+AdOptimizer CDP Chapter VIII. Validation, Testing, and Results
+Source family Active checkpoint definition Retained evidence
+Bank Marketing raw_lakehouse_quality_checkpoint__bank_marketing.json validation JSON and
+Data Docs
+Online Shoppers
+Intention
+raw_lakehouse_quality_checkpoint__online_shoppers_
+intention.json
+validation JSON and
+Data Docs
+Online Retail II raw_lakehouse_quality_checkpoint__online_retail_2.json validation JSON and
+Data Docs
+Table VIII.5:Source-specific Great Expectations evidence retained by the integrated raw-
+pipeline validation tasks
+records were visible: about 41.2K bank-marketing rows, 1.07M online-retail rows, and
+12.3K online-shopping-session rows.
+VIII.5 Distributed Execution Validation
+Distributed execution was assessed through the runtime roles of Spark, HDFS, Kafka, and
+Trino. The Spark master registered workers on VM1, VM2, and VM3; HDFS stored blocks
+through DataNodes on all three machines; Kafka brokers were distributed across the same
+nodes; and Trino separated coordination on VM2 from query workers on VM1 and VM3.
+The retained Spark capture recorded three live workers, three total cores, 3.0 GiB of
+aggregate worker memory, an active Thrift service, and twelve completed applications
+associated with client-data loading and serving. Workload allocation was not identical
+across every worker, which is expected for light jobs; the relevant result is that executor
+capacity existed beyond the coordinator node [10].
+Distributed indicator Observed runtime result
+Registered Spark workers 3 alive workers on VM1, VM2, and VM3; 0 dead and 0
+decommissioned
+Spark capacity at capture time 3 total cores, 1 active core; 3.0 GiB total worker memory,
+512 MiB used
+Spark SQL service Thrift JDBC/ODBC Server active on the cluster
+Completed Spark applications 12 completed applications visible in the retained
+master/history views
+Raw-to-Iceberg jobs successful applications forbank_marketing,
+online_retail_2, andonline_shoppers_intention
+HDFS participation 3 live DataNodes with replicated blocks across the cluster
+Kafka participation one broker on each of VM1, VM2, and VM3
+Trino participation coordinator on VM2 and two dedicated workers on VM1 and
+VM3
+Table VIII.6:Runtime indicators of multi-node storage, transport, processing, and querying
+68

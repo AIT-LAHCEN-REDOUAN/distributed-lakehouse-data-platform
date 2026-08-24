@@ -1,27 +1,44 @@
 \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
-  \node[ado box={8.9cm}{adograyfill}, minimum height=0.95cm] (sources) at (0,0)
-    {\adoboxcontentwide{Source datasets}{profile, behavioral, and commercial records prepared for controlled ingestion}};
-  \node[ado box={8.9cm}{adobluefill}, minimum height=0.95cm] (kafka) at (0,-1.8)
-    {\adoboxcontentwide{Kafka transport}{topic-based publication and distributed broker coordination}};
-  \node[ado box={8.9cm}{adotealfill}, minimum height=0.95cm] (hdfs) at (0,-3.6)
-    {\adoboxcontentwide{HDFS bronze zone}{durable replayable raw files distributed across the data plane}};
-  \node[ado box={8.9cm}{adoorangefill}, minimum height=0.95cm] (spark) at (0,-5.4)
-    {\adoboxcontentwide{Spark loading}{distributed interpretation of bronze files and raw table creation}};
-  \node[ado box={4.15cm}{adopurplefill}, minimum height=0.95cm] (iceberg) at (-2.35,-7.3)
-    {\adoboxcontentwide{Lakehouse tables}{governed raw and curated layers}};
-  \node[ado box={4.15cm}{adotealfill}, minimum height=0.95cm] (hive) at (2.35,-7.3)
-    {\adoboxcontentwide{Shared catalog}{central metadata authority}};
-  \node[ado box={8.9cm}{adograyfill}, minimum height=0.95cm] (trino) at (0,-9.2)
-    {\adoboxcontentwide{Analytical access and transformation}{interactive SQL, modeled refinement, and validation}};
-  \node[ado box={8.9cm}{adopurplefill}, minimum height=0.95cm] (evidence) at (0,-11.0)
-    {\adoboxcontentwide{Trusted outputs}{validated analytical products, dashboards, and observable execution evidence}};
+  \node[ado group, minimum width=14.60cm, minimum height=8.80cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\Large] at ($(panel.north)+(0,-0.55)$)
+    {Implemented end-to-end data flow};
 
-  \draw[ado arrow] (sources) -- (kafka);
-  \draw[ado arrow] (kafka) -- (hdfs);
-  \draw[ado arrow] (hdfs) -- (spark);
-  \draw[ado arrow] (spark) -- (iceberg);
-  \draw[ado arrow] (spark) -- (hive);
-  \draw[ado arrow] (iceberg.south) |- ($(trino.north)+(-1.8,0)$);
-  \draw[ado arrow] (hive.south) |- ($(trino.north)+(1.8,0)$);
-  \draw[ado arrow] (trino) -- (evidence);
+  \node[ado box={2.95cm}{adograyfill}, minimum height=1.15cm, inner sep=4pt] (sources) at (-5.25,-1.65)
+    {\textbf{\footnotesize Source data}\\[-1pt]\scriptsize 3 customer datasets};
+  \node[ado box={2.95cm}{adobluefill}, minimum height=1.15cm, inner sep=4pt] (kafka) at (-1.75,-1.65)
+    {\textbf{\footnotesize Kafka}\\[-1pt]\scriptsize topic-based ingestion};
+  \node[ado box={2.95cm}{adotealfill}, minimum height=1.15cm, inner sep=4pt] (hdfs) at (1.75,-1.65)
+    {\textbf{\footnotesize HDFS bronze}\\[-1pt]\scriptsize replayable raw files};
+  \node[ado box={2.95cm}{adoorangefill}, minimum height=1.15cm, inner sep=4pt] (spark) at (5.25,-1.65)
+    {\textbf{\footnotesize Spark}\\[-1pt]\scriptsize raw-table loading};
+
+  \node[ado box={2.95cm}{adopurplefill}, minimum height=1.15cm, inner sep=4pt] (lakehouse) at (5.25,-3.55)
+    {\textbf{\footnotesize Iceberg + Hive}\\[-1pt]\scriptsize tables + shared catalog};
+  \node[ado box={2.95cm}{adotealfill}, minimum height=1.15cm, inner sep=4pt] (quality) at (1.75,-3.55)
+    {\textbf{\scriptsize Great Expectations}\\[-1pt]\scriptsize raw checks + Data Docs};
+  \node[ado box={2.95cm}{adoorangefill}, minimum height=1.15cm, inner sep=4pt] (dbt) at (-1.75,-3.55)
+    {\textbf{\footnotesize dbt-spark}\\[-1pt]\scriptsize curated model layers};
+  \node[ado box={2.95cm}{adograyfill}, minimum height=1.15cm, inner sep=4pt] (trino) at (-5.25,-3.55)
+    {\textbf{\footnotesize Trino}\\[-1pt]\scriptsize governed SQL access};
+
+  \node[ado box={12.80cm}{adopurplefill}, minimum height=0.95cm, inner sep=4pt] (outputs) at (0,-5.15)
+    {\textbf{\small Trusted analytical outputs}\\[-1pt]
+     \footnotesize validated curated tables, SQL-ready products, and quality evidence};
+
+  \node[ado box={12.80cm}{adobluefill}, minimum height=0.85cm, inner sep=4pt] (airflow) at (0,-6.55)
+    {\textbf{\small Cross-cutting Airflow orchestration}\\[-1pt]
+     \footnotesize coordinates reset, setup, readiness, raw loading/quality, and dbt workflows};
+  \node[ado box={12.80cm}{adotealfill}, minimum height=0.85cm, inner sep=4pt] (monitoring) at (0,-7.85)
+    {\textbf{\small Cross-cutting Prometheus and Grafana observability}\\[-1pt]
+     \footnotesize collects service metrics, dashboards, and distributed execution evidence};
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (sources.east) -- (kafka.west);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (kafka.east) -- (hdfs.west);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (hdfs.east) -- (spark.west);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (spark.south) -- (lakehouse.north);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (lakehouse.west) -- (quality.east);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (quality.west) -- (dbt.east);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (dbt.west) -- (trino.east);
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (trino.south) -- ($(outputs.north)+(-5.25,0)$);
 \end{tikzpicture}

@@ -1,0 +1,38 @@
+AdOptimizer CDP Chapter V. Implementation of the Distributed Lakehouse Platform
+In this design, dbt does not replace Spark. Instead, it builds on top of Spark Thrift access
+and uses the distributed lakehouse environment as its execution target. This distinction
+matters in the report because it shows that transformation governance is separated from
+raw compute mechanics: Spark provides the engine, while dbt provides the modeling
+discipline.
+Layered dbt transformation flow
+1. Raw layer
+source-aligned
+raw tables
+2. Staging
+types and names
+standardized
+3. Intermediate
+reusable joins
+shared logic
+4. Analytical
+curated tables
+for exploration
+source fidelity→standardization→reusable logic→analytical exposure
+Figure V.7:Layered dbt transformation flow from raw to analytical models.
+V.9 Great Expectations Validation Layer
+Great Expectations is implemented as the validation layer of the platform. Its role is not
+to perform generic visual checking, but to formalize trust conditions over the produced
+data and retain evidence of each validation run [21].
+The active raw-lakehouse validation checkpoints are:
+•raw_lakehouse_quality_checkpoint__bank_marketing.json;
+•raw_lakehouse_quality_checkpoint__online_shoppers_intention.json;
+•raw_lakehouse_quality_checkpoint__online_retail_2.json.
+These checkpoints evaluate structural and semantic expectations for the three implemented
+raw-lakehouse source families. They are executed insidecustomerdna_client1_kafka_
+hdfs_spark_lakehouse_pipeline, after Spark has materialized the raw Iceberg tables.
+In that DAG,bootstrap_raw_lakehouse_quality_assets prepares the validation assets
+and validate_raw_lakehouse_quality runs the checks. Their results are persisted as
+validation JSON and rendered through HTML Data Docs, providing traceable evidence
+that can be inspected independently of the Airflow task status. Curated-model validation
+remains the responsibility of the declared dbt tests in the following transformation DAG.
+45

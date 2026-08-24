@@ -1,0 +1,37 @@
+AdOptimizer CDP Chapter V. Implementation of the Distributed Lakehouse Platform
+From a data perspective, Spark reads the bronze files from HDFS, interprets their schemas,
+normalizes the raw structures, and writes the outputs into Iceberg-backed raw lakehouse
+tables. The implementation therefore transforms replayable raw artifacts into governed
+table objects while preserving distributed execution. The raw lakehouse layer is not yet
+the final curated business layer; it is the structured foundation that is validated within
+the same raw workflow before the following dbt workflow builds the curated models.
+Bronze-to-raw Spark loading path
+1·READ 2·PROCESS 3·PERSIST
+HDFS bronze
+replayable JSONL
+batches across all VMs
+Spark cluster
+schema normalization
+master VM2; workers VM1–3
+Iceberg raw
+governed raw objects
+for downstream layers
+load write
+Figure V.4:Spark loading path from HDFS bronze files to Iceberg raw tables.
+V.6 Hive Metastore and Catalog Governance
+Hive Metastore is implemented as the shared metadata authority of the lakehouse platform.
+It is deployed on VM2 together with its PostgreSQL backing store and acts as the central
+catalog reference for upper services such as Spark and Trino [4, 6].
+Its role in the implementation is essential: once Spark writes the raw Iceberg tables, their
+definitions must be discoverable through a common metadata layer. Without this shared
+governance service, each engine would have to manage table visibility independently,
+weakening consistency across the platform.
+In practical terms, Hive Metastore allows the platform to:
+•register the lakehouse tables created after Spark loading;
+•expose the same logical objects to different access engines;
+• preserve a governed catalog boundary between raw persistence and analytical con-
+sumption.
+This makes the metadata layer a real implementation component, not a theoretical addition.
+It is the reason the lakehouse can behave like a coordinated data platform rather than a
+simple collection of files.
+42

@@ -1,0 +1,31 @@
+AdOptimizer CDP Chapter II. State of the Art and Theoretical Background
+II.7.4 Secure Service Exposure in Multi-Node Environments
+Distributed platforms expose numerous service endpoints: orchestration UIs, query inter-
+faces, storage consoles, monitoring dashboards, and service APIs. If these are exposed
+without proxying, credential checks, and transport protection, the system accumulates a
+wide attack surface [27, 29].
+Secure exposure therefore requires deliberate control of entry points, certificates, internal-
+versus-external interfaces, and service-access boundaries.
+II.8 Positioning of the Present Work
+II.8.1 Alignment with Distributed Lakehouse Principles
+AdOptimizer CDP aligns with the theoretical principles developed in this chapter through
+explicit separation of ingestion, durable raw persistence, distributed computation, table
+management, metadata, analytical access, transformation, validation, orchestration, and
+observability. Replayable source history supports recovery and reproducibility, while
+governed analytical tables introduce schema discipline and shared semantics above the
+raw layer.
+The architecture also applies distribution selectively rather than treating it as an end in
+itself. Storage, processing, and querying use coordinated multi-node execution, whereas
+control-plane responsibilities remain centralized where centralized coordination improves
+operational clarity. This balance reflects the principle that distribution should follow
+service responsibilities, scalability needs, and failure boundaries.
+II.8.2 Data Engineering Foundation, Not a Final AI Product
+Thetheoreticalanalysisconfirmsthattheproject’sprimarycontributionliesindatalifecycle
+engineering. Reliability, replayability, metadata, lineage, quality controls, observability, and
+secure access are prerequisites for trustworthy downstream analytics. Predictive models
+cannot compensate for an unreliable or poorly governed data foundation.
+Consequently, the absence of final segmentation, churn, lifetime-value, or recommendation
+models is a deliberate scope boundary rather than an incomplete implementation. AdOp-
+timizer CDP provides the governed data products and operational platform on which such
+capabilities can later be developed.
+20

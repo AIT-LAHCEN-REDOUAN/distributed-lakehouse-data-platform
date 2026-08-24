@@ -1,0 +1,2 @@
+Figure IV.1:Global architecture of the implemented AdOptimizer CDP platform.
+32

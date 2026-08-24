@@ -1,0 +1,30 @@
+AdOptimizer CDP Contents
+IX.4.2 Distribution versus Centralization . . . . . . . . . . . . . . . . . 75
+IX.4.3 Specialized Components versus Integration Cost . . . . . . . . . 75
+IX.4.4 Controlled Batch Processing versus Real-Time Semantics . . . . 75
+IX.4.5 Hardening versus Operational Simplicity . . . . . . . . . . . . . 75
+IX.5 Engineering Lessons Learned . . . . . . . . . . . . . . . . . . . . . . . . 76
+IX.6 Academic and Industrial Contribution . . . . . . . . . . . . . . . . . . . 76
+IX.7 Limitations and Validity Boundaries . . . . . . . . . . . . . . . . . . . . 77
+IX.8 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 78
+X General Conclusion and Perspectives 79
+X.1 General Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 79
+X.2 Main Contributions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 80
+X.3 Future Perspectives . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 81
+X.3.1 Platform Industrialization . . . . . . . . . . . . . . . . . . . . . 81
+X.3.2 Customer 360 Enrichment . . . . . . . . . . . . . . . . . . . . . 81
+X.3.3 AdOptimizer AI Capabilities . . . . . . . . . . . . . . . . . . . . 82
+X.4 Closing Perspective . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82
+A Requirements-to-Evidence Traceability 86
+A.1 Functional Requirements . . . . . . . . . . . . . . . . . . . . . . . . . . 87
+A.2 Non-Functional Requirements . . . . . . . . . . . . . . . . . . . . . . . . 88
+B Implemented Deployment Reference 89
+B.1 Compose-to-Node Allocation . . . . . . . . . . . . . . . . . . . . . . . . 89
+B.2 Service Placement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 90
+B.3 Cross-Cutting Deployment Properties . . . . . . . . . . . . . . . . . . . 90
+C Selected Validation Evidence 91
+C.1 Orchestration and Quality Evidence . . . . . . . . . . . . . . . . . . . . 91
+C.2 Observability Evidence . . . . . . . . . . . . . . . . . . . . . . . . . . . 93
+C.3 Storage and Metadata Evidence . . . . . . . . . . . . . . . . . . . . . . 95
+C.4 Distributed Processing and Analytical Access . . . . . . . . . . . . . . . 97
+ix

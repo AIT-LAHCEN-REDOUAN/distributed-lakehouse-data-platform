@@ -1,0 +1,41 @@
+Appendix B
+Implemented Deployment Reference
+This appendix summarizes the four Docker Compose definitions supplied with the im-
+plemented platform. The objective is to document deployment responsibility and service
+placement, not to reproduce operational configuration verbatim. Passwords, key material,
+secret values, host-specific paths, and complete environment-variable contents are therefore
+intentionally excluded.
+B.1 Compose-to-Node Allocation
+Source definition Execution
+zone
+Architectural responsibility
+docker-compose.
+yml
+Local control
+plane
+Airflow and its PostgreSQL repository, Prometheus,
+Grafana, Kafka UI, monitoring exporters, and the TLS
+gateway used to expose control-plane interfaces.
+docker-compose_2.
+yml
+VM1 data-plane
+node
+Kafka broker 1, HDFS DataNode 1, Spark worker 1, Trino
+worker 1, and cAdvisor.
+docker-compose_3.
+yml
+VM2
+coordination
+node
+Kerberos KDC, Kafka broker 2, HDFS NameNode and
+DataNode 2, HDFS administration client, Hive Metastore
+and PostgreSQL, Spark coordination and serving services,
+Trino coordinator and gateway, and cAdvisor.
+docker-compose_4.
+yml
+VM3 data-plane
+node
+Kafka broker 3, HDFS DataNode 3, Spark worker 3, Trino
+worker 2, and cAdvisor.
+Table B.1:Allocation of the supplied Compose definitions to the deployed execution zones
+89

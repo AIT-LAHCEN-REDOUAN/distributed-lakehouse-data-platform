@@ -1,0 +1,23 @@
+Chapter III
+Technology Watch
+III.1 Introduction
+Chapter II established the conceptual foundations of distributed data platforms. This
+chapter moves from those foundations to the technological choices implemented in AdOpti-
+mizer CDP. Its purpose is not to reproduce product documentation or to present popular
+tools in isolation. It explains how the retained stack was evaluated against the project’s
+actual constraints, which alternatives were considered, and why the selected technologies
+form a coherent platform.
+The assessment is retrospective and implementation-based. The resulting platform is
+already deployed as a local control plane connected to a distributed data plane composed
+of three Linux virtual machines. Consequently, the selected technologies are evaluated
+according to their demonstrated contribution to ingestion, distributed storage, processing,
+lakehouse governance, analytical access, transformation, quality, orchestration, observabil-
+ity, deployment reproducibility, and security.
+III.2 Project Constraints and Selection Criteria
+The technology choices were guided by the implemented environment rather than by an
+abstract enterprise-scale target. The main constraints were the following:
+• Distributed execution:the core storage, processing, ingestion, and query services
+had to demonstrate real cooperation across VM1, VM2, and VM3.
+• Limited infrastructure:the deployment had to remain operable on three resource-
+constrained virtual machines without dedicated accelerators.
+22

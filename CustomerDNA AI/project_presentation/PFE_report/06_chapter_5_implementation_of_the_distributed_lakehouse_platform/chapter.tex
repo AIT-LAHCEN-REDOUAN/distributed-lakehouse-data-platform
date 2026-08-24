@@ -1,10 +1,10 @@
 \chapter{Implementation of the Distributed Lakehouse Platform}
 
 \section{Introduction}
-This chapter presents the concrete implementation of \projectname{} as an operational distributed lakehouse platform. While Chapter 4 defined the design baseline, the present chapter explains how that design was translated into working services, executable pipelines, governed data layers, and secured access paths. The objective is not to describe isolated tools separately, but to show how ingestion, storage, processing, metadata, querying, transformation, quality validation, and orchestration were assembled into one coherent engineering system.
+This chapter presents the concrete implementation of \projectname{} as an operational distributed lakehouse platform. While Chapter IV defined the design baseline, the present chapter explains how that design was translated into working services, executable pipelines, governed data layers, and secured access paths. The objective is not to describe isolated tools separately, but to show how ingestion, storage, processing, metadata, querying, transformation, quality validation, orchestration, and observability were assembled into one coherent engineering system.
 
 \section{Data Sources and Dataset Modeling}
-The implementation is based on a compact but representative dataset set selected to support the Customer 360 orientation of the platform while remaining compatible with the available academic infrastructure. Rather than using one oversized monolithic source, the project retains several complementary datasets, each contributing a different view of customer behavior.
+The implementation is based on a compact but representative three-source bundle selected to support the Customer 360 orientation of the platform while remaining compatible with the available infrastructure. Rather than using one oversized monolithic source, the project retains complementary datasets, each contributing a different view of customer behavior.
 
 \begin{table}[!htbp]
     \centering
@@ -15,25 +15,25 @@ The implementation is based on a compact but representative dataset set selected
     \begin{tabularx}{\textwidth}{|Y|Y|Y|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Dataset}} & \textcolor{white}{\textbf{Analytical role}} & \textcolor{white}{\textbf{Customer signal covered}} & \textcolor{white}{\textbf{Implementation contribution}} \\
+        \textcolor{white}{\textbf{Dataset and source file}} & \textcolor{white}{\textbf{Analytical role}} & \textcolor{white}{\textbf{Customer signal covered}} & \textcolor{white}{\textbf{Implementation contribution}} \\
         \hline
-        Bank Marketing & campaign and response analysis & contact history, subscription outcome, profile attributes & provides customer profile and campaign-oriented raw inputs \\
+        Bank Marketing\newline{\scriptsize\path{bank-additional-full.csv}} & campaign and response analysis & contact history, subscription outcome, profile attributes & provides customer profile and campaign-oriented raw inputs \\
         \hline
-        Online Retail II & transactional and commercial behavior analysis & invoices, products, quantities, revenue, countries & provides purchase history and product interaction facts \\
+        Online Retail II\newline{\scriptsize\path{online_retail_2.xlsx}} & transactional and commercial behavior analysis & invoices, products, quantities, revenue, countries & provides purchase history and product interaction facts \\
         \hline
-        Online Shoppers Purchasing Intention & digital behavioral analysis & session behavior, navigation, purchase intention & provides pre-purchase intent and online behavior indicators \\
+        Online Shoppers Purchasing Intention\newline{\scriptsize\path{online_shoppers_intention.csv}} & digital behavioral analysis & session behavior, navigation, purchase intention & provides pre-purchase intent and online behavior indicators \\
         \hline
     \end{tabularx}
     \caption{Active datasets retained in the implemented platform}
     \label{tab:chapter5-datasets}
 \end{table}
 
-Each dataset keeps its source identity during ingestion and bronze persistence. This choice is important because the platform is intended to preserve replayability and traceability before any normalization or business transformation is applied. In practice, the implementation therefore distinguishes between source-specific raw inputs and later converged analytical models. This allows the platform to defend both schema fidelity at the entry point and business-oriented integration in upper layers.
+Each dataset keeps its source identity during ingestion and bronze persistence. This choice preserves replayability and traceability before any normalization or business transformation is applied. In practice, the implementation therefore distinguishes between source-specific raw inputs and later converged analytical models, maintaining schema fidelity at the entry point while enabling business-oriented integration in the upper layers.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_1_dataset_families.tex}
-    \caption{Active dataset families and their complementary contribution to the customer-oriented analytical scope of the platform.}
+    \caption{Complementary dataset families and their later use in curated analytical models.}
     \label{fig:chapter5-dataset-families}
 \end{figure}
 \FloatBarrier
@@ -50,12 +50,12 @@ The Kafka cluster is distributed across the three virtual machines:
 
 At the implementation level, each source dataset is associated with its own topic family. This prevents unrelated sources from being merged too early and makes reset and replay operations more explicit. The control plane triggers the ingestion logic, producers publish the records, and downstream consumers persist the bronze output in HDFS. This means Kafka acts as the controlled transport boundary between local source preparation and distributed storage.
 
-The platform also implements topic reset logic within the orchestration flow. This is important for demonstrations and reproducible reruns, because it allows the environment reset pipeline to clean old ingestion traces before a fresh execution begins.
+The platform also implements topic reset logic within the orchestration flow. This supports reproducible reruns by allowing the environment-reset pipeline to remove previous ingestion state before a fresh execution begins.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_2_kafka_ingestion.tex}
-    \caption{Dataset publication flow from the control plane to the three-broker Kafka cluster and toward bronze persistence.}
+    \caption{Kafka publication, topic distribution, and HDFS bronze landing flow.}
     \label{fig:chapter5-kafka-ingestion}
 \end{figure}
 
@@ -70,12 +70,12 @@ The HDFS cluster is implemented with:
 
 In operational terms, this means the namespace authority remains centralized on VM2, while block storage is distributed across the three nodes. The implemented bronze organization is client-oriented and source-aware: each dataset is persisted under a controlled bronze structure rather than being mixed into one generic folder. This reinforces traceability and keeps the raw layer easy to inspect.
 
-The bronze layer also plays a strategic role in the whole project: it is the stable checkpoint between ingestion and compute. If a downstream Spark stage fails, the platform does not need to reread the original local files or republish the full datasets manually. It can simply restart from the bronze persistence already distributed in HDFS.
+The bronze layer also plays a strategic role in the whole project: it is the stable checkpoint between ingestion and compute. If a downstream Spark stage fails while valid bronze artifacts remain available, the affected processing stages can be rerun from HDFS without rereading the original local files or republishing the datasets through Kafka.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_3_hdfs_bronze.tex}
-    \caption{Bronze storage organization in HDFS, with NameNode coordination on VM2 and DataNode distribution across VM1, VM2, and VM3.}
+    \caption{HDFS bronze storage with NameNode control and distributed DataNodes.}
     \label{fig:chapter5-hdfs-bronze}
 \end{figure}
 
@@ -87,21 +87,21 @@ Spark is the main distributed processing engine of the platform. Its implementat
     \item the control plane submits jobs remotely to the Spark environment on VM2.
 \end{itemize}
 
-This execution path is important. The final deployment does not rely on a heavy local Spark driver on the workstation. Instead, the control plane orchestrates remote execution through the distributed cluster, which is closer to a production-style separation between orchestration and compute.
+This execution path is important. The final deployment does not rely on a heavy local Spark driver on the workstation. Instead, the control plane submits work to the distributed cluster, maintaining a clear separation between orchestration and compute.
 
-From a data perspective, Spark reads the bronze files from HDFS, interprets their schemas, normalizes the raw structures, and writes the outputs into Iceberg-backed raw lakehouse tables. The implementation therefore transforms replayable raw artifacts into governed table objects while preserving distributed execution. The raw lakehouse layer is not yet the final curated business layer; it is the structured foundation on top of which transformations and validations are later applied.
+From a data perspective, Spark reads the bronze files from HDFS, interprets their schemas, normalizes the raw structures, and writes the outputs into Iceberg-backed raw lakehouse tables. The implementation therefore transforms replayable raw artifacts into governed table objects while preserving distributed execution. The raw lakehouse layer is not yet the final curated business layer; it is the structured foundation that is validated within the same raw workflow before the following dbt workflow builds the curated models.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_4_spark_raw_load.tex}
-    \caption{Distributed Spark raw-load path from replayable bronze batches to governed raw lakehouse tables.}
+    \caption{Spark loading path from HDFS bronze files to Iceberg raw tables.}
     \label{fig:chapter5-spark-raw-load}
 \end{figure}
 
 \section{Hive Metastore and Catalog Governance}
 Hive Metastore is implemented as the shared metadata authority of the lakehouse platform. It is deployed on VM2 together with its PostgreSQL backing store and acts as the central catalog reference for upper services such as Spark and Trino \cite{apache_hive_docs,apache_iceberg_docs}.
 
-Its role in the implementation is essential: once Spark writes the raw Iceberg tables, their definitions must be discoverable through a common metadata layer. Without this shared governance service, each engine would have to manage table visibility independently, which would weaken consistency and make the architecture harder to defend.
+Its role in the implementation is essential: once Spark writes the raw Iceberg tables, their definitions must be discoverable through a common metadata layer. Without this shared governance service, each engine would have to manage table visibility independently, weakening consistency across the platform.
 
 In practical terms, Hive Metastore allows the platform to:
 \begin{itemize}
@@ -115,7 +115,7 @@ This makes the metadata layer a real implementation component, not a theoretical
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_5_metadata_governance.tex}
-    \caption{Shared metadata governance through Hive Metastore between distributed writers and analytical readers.}
+    \caption{Shared metadata governance through Hive Metastore.}
     \label{fig:chapter5-metadata-governance}
 \end{figure}
 
@@ -129,12 +129,12 @@ Trino provides the analytical SQL access layer of the platform. Its implementati
 
 This arrangement is important because it demonstrates that the query layer is also distributed, not only the storage or compute layer. Trino consumes the shared catalog definitions and exposes interactive SQL access over the Iceberg tables. In the project, this layer is used for readiness checks, lakehouse verification, dataset inspection, and analytical exploration.
 
-The query access path is also protected by an authenticated gateway. As a result, the Trino browser interface is not exposed as an uncontrolled plain endpoint. This reinforces the idea that access services in the final platform must remain demonstrable but still aligned with the security posture of the deployment.
+The query access path is also protected by an authenticated gateway. Consequently, the Trino browser interface is not exposed as an uncontrolled plain endpoint, and analytical access remains aligned with the security posture described in Chapter VII.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_6_trino_access.tex}
-    \caption{Protected Trino analytical access path from secure entry point to coordinator and distributed workers.}
+    \caption{Protected Trino access through the gateway and distributed query cluster.}
     \label{fig:chapter5-trino-access}
 \end{figure}
 
@@ -144,31 +144,62 @@ dbt-spark is used to organize transformations as declarative models rather than 
 The implemented transformation flow follows a layered modeling philosophy:
 \begin{itemize}
     \item raw lakehouse tables remain the direct output of the Spark loading stage;
-    \item staging models standardize and clean the raw structures;
-    \item intermediate models prepare reusable analytical logic;
+    \item staging models standardize the three source-specific raw structures;
+    \item intermediate models prepare reusable behavioral, commercial, campaign, and Customer 360 features;
     \item analytical models expose business-oriented outputs ready for exploration.
 \end{itemize}
+
+The implemented model inventory is summarized in Table~\ref{tab:chapter5-dbt-models}.
+
+\begin{table}[!htbp]
+    \centering
+    \scriptsize
+    \renewcommand{\arraystretch}{1.12}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{0.16\textwidth}|L{0.50\textwidth}|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Layer}} & \textcolor{white}{\textbf{Implemented models}} & \textcolor{white}{\textbf{Purpose}} \\
+        \hline
+        Staging & \texttt{stg\_bank\_marketing}, \texttt{stg\_online\_shoppers\_intention}, \texttt{stg\_online\_retail\_2} & standardize source-specific schemas and field semantics \\
+        \hline
+        Intermediate & \texttt{int\_bank\_marketing\_contacts}, \texttt{int\_online\_shopper\_sessions}, \texttt{int\_online\_retail\_customer\_sales}, \texttt{int\_customer\_360\_feature\_store} & build reusable subject-level and cross-source features \\
+        \hline
+        Analytics & \texttt{analytics\_customer360\_overview}, \texttt{analytics\_conversion\_performance}, \texttt{analytics\_sales\_performance} & expose governed analytical outputs for consumption \\
+        \hline
+    \end{tabularx}
+    \caption{Implemented dbt-spark model inventory}
+    \label{tab:chapter5-dbt-models}
+\end{table}
 
 In this design, dbt does not replace Spark. Instead, it builds on top of Spark Thrift access and uses the distributed lakehouse environment as its execution target. This distinction matters in the report because it shows that transformation governance is separated from raw compute mechanics: Spark provides the engine, while dbt provides the modeling discipline.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_7_dbt_layers.tex}
-    \caption{Layered dbt transformation flow from raw tables to staging, intermediate, and analytical outputs.}
+    \caption{Layered dbt transformation flow from raw to analytical models.}
     \label{fig:chapter5-dbt-layers}
 \end{figure}
 
 \section{Great Expectations Validation Layer}
-Great Expectations is implemented as the lightweight validation layer of the platform. Its role is not to perform generic visual checking, but to formalize trust conditions over the produced data. This is especially important in an academic lakehouse platform, where the project must prove that outputs are not only generated, but also controlled \cite{great_expectations_docs}.
+Great Expectations is implemented as the validation layer of the platform. Its role is not to perform generic visual checking, but to formalize trust conditions over the produced data and retain evidence of each validation run \cite{great_expectations_docs}.
 
-The implemented validation logic targets the structural and semantic integrity of selected lakehouse layers. In practice, the platform uses Great Expectations to check that the resulting data products remain consistent with expected shapes and business-level constraints. Validation artifacts are then persisted so that pipeline runs can be defended with observable evidence instead of informal claims.
+The active raw-lakehouse validation checkpoints are:
+\begin{itemize}
+    \item \path{raw_lakehouse_quality_checkpoint__bank_marketing.json};
+    \item \path{raw_lakehouse_quality_checkpoint__online_shoppers_intention.json};
+    \item \path{raw_lakehouse_quality_checkpoint__online_retail_2.json}.
+\end{itemize}
 
-This layer is therefore central to the governance dimension of the project. It strengthens the transition from ``data processed successfully'' to ``data can be considered trustworthy enough for analytical use.''
+These checkpoints evaluate structural and semantic expectations for the three implemented raw-lakehouse source families. They are executed inside \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline}, after Spark has materialized the raw Iceberg tables. In that DAG, \path{bootstrap_raw_lakehouse_quality_assets} prepares the validation assets and \path{validate_raw_lakehouse_quality} runs the checks. Their results are persisted as validation JSON and rendered through HTML Data Docs, providing traceable evidence that can be inspected independently of the Airflow task status. Curated-model validation remains the responsibility of the declared dbt tests in the following transformation DAG.
+
+This layer is therefore central to the governance dimension of the project. It strengthens the transition from ``data processed successfully'' to ``data satisfies the defined conditions for analytical use.''
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_8_validation_checkpoints.tex}
-    \caption{Validation checkpoints over the lakehouse layers and the persistence of validation evidence.}
+    \caption{Raw-lakehouse validation tasks integrated into the Kafka--HDFS--Spark workflow, with persisted evidence.}
     \label{fig:chapter5-validation-checkpoints}
 \end{figure}
 
@@ -177,41 +208,42 @@ Airflow orchestrates the platform from the local control plane. In the final imp
 
 \begin{table}[!htbp]
     \centering
-    \footnotesize
-    \renewcommand{\arraystretch}{1.16}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.13}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|Y|Y|Y|}
+    \begin{tabularx}{\textwidth}{|L{0.36\textwidth}|L{0.38\textwidth}|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{DAG}} & \textcolor{white}{\textbf{Operational role}} & \textcolor{white}{\textbf{Implementation value}} \\
+        \textcolor{white}{\textbf{Order and implemented DAG}} & \textcolor{white}{\textbf{Operational role}} & \textcolor{white}{\textbf{Main output or effect}} \\
         \hline
-        Environment reset pipeline & cleans Kafka, HDFS bronze traces, and lakehouse state & enables reproducible reruns from a controlled baseline \\
+        1. \path{customerdna_client1_environment_reset_pipeline} & clears previous Kafka, HDFS, Hive, and Trino state & controlled baseline for reproducible reruns \\
         \hline
-        Lakehouse setup pipeline & prepares technical structures and service prerequisites & ensures the catalog and storage environment are initialized consistently \\
+        2. \path{customerdna_client1_lakehouse_setup_pipeline} & initializes the bronze namespace and required lakehouse structures & prepared technical foundation for later checks and loading \\
         \hline
-        Lakehouse readiness pipeline & validates that the main services are reachable and usable & prevents execution from starting on an unstable cluster \\
+        3. \path{customerdna_client1_lakehouse_readiness_pipeline} & verifies HDFS, Hive, Spark, Spark Thrift, and Trino availability & positive readiness state before data execution \\
         \hline
-        Kafka--HDFS--Spark lakehouse pipeline & executes the raw ingestion and loading flow & materializes the raw distributed lakehouse foundation \\
+        4. \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline} & publishes source records, lands bronze files, loads raw Iceberg tables, and executes the integrated raw-quality tasks & distributed raw tables, validation JSON, and Data Docs \\
         \hline
-        dbt-spark lakehouse pipeline & runs modeled transformations and validation-oriented upper steps & produces curated analytical outputs on top of the raw layer \\
+        5. \path{customerdna_client1_dbt_spark_lakehouse_pipeline} & executes staging, intermediate, and analytical transformations with dbt tests & governed curated models and transformation-test results \\
         \hline
     \end{tabularx}
     \caption{Implemented orchestration flow of the platform}
     \label{tab:chapter5-dags}
 \end{table}
 
-This orchestration strategy is important because it matches the real operational logic of the project. The platform can be reset, checked, loaded, transformed, and validated in separate controlled stages. It also makes failures easier to diagnose, because a problem can be linked to a specific orchestration boundary instead of being hidden inside one monolithic workflow.
+This orchestration strategy matches the implemented operational logic of the project. The platform can be reset, initialized, checked, loaded and raw-validated, and then transformed through five controlled workflow boundaries. Great Expectations is not represented by a sixth or independent DAG: its asset-bootstrap and validation tasks belong to the fourth workflow. Failures can therefore be localized either to a workflow boundary or, for raw-quality validation, to its explicit task boundary inside the raw pipeline.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_5/fig_5_9_dag_sequence.tex}
-    \caption{Five-DAG orchestration sequence from environment preparation to raw loading and curated transformation.}
+    \caption{Five-DAG orchestration sequence from reset and setup to readiness, integrated raw loading and validation, and curated transformation.}
     \label{fig:chapter5-dag-sequence}
 \end{figure}
 \FloatBarrier
 
-\section{Conclusion}
-This chapter showed how the design baseline of the previous chapter was turned into a concrete distributed implementation. The platform now appears as a full engineering chain: heterogeneous customer datasets are published through Kafka, persisted in HDFS bronze storage, processed through Spark, structured into Iceberg tables, governed through Hive Metastore, queried through Trino, transformed through dbt-spark, validated through Great Expectations, and orchestrated through Airflow.
+\section{Observability Integration}
+Operational visibility is integrated from the local control plane. Prometheus collects service, exporter, container, and pipeline metrics, while Grafana presents infrastructure and execution dashboards. Kafka UI, the Spark user interface and history server, and Airflow logs complement these centralized views. Together, they relate workflow status to service health, node activity, and processing behavior; the resulting validation evidence is examined in Chapter VIII.
 
-The implementation therefore confirms that the project is not a simple tool collection. It is a layered, multi-service, distributed lakehouse platform with explicit operational logic and clear data movement boundaries. On this basis, the next chapter can focus on deployment strategy and distributed execution perspective, explaining how this implementation is physically organized and operated across the final multi-node environment.
+\section{Conclusion}
+This chapter demonstrated the implemented engineering chain: Kafka publication, HDFS bronze persistence, distributed Spark processing, Iceberg tables governed through Hive Metastore, integrated Great Expectations raw validation, dbt-spark transformations and tests, Trino access, Airflow orchestration, and Prometheus/Grafana supervision. These integrated layers form a distributed lakehouse with explicit operational and data-movement boundaries. Chapter VI examines its physical deployment and operation across the final multi-node environment.

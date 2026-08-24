@@ -2,119 +2,181 @@
 
 \bibitem{apache_airflow_docs}
 {Apache Software Foundation}.
-\newblock Apache airflow documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Apache Airflow} documentation.
+\newblock \url{https://airflow.apache.org/docs/}.
+\newblock Accessed August 23, 2026.
+
+\bibitem{apache_flink_docs}
+{Apache Software Foundation}.
+\newblock {Apache Flink} documentation.
+\newblock \url{https://nightlies.apache.org/flink/flink-docs-stable/}.
+\newblock Accessed August 23, 2026; used for distributed-processing comparison.
 
 \bibitem{apache_hadoop_docs}
 {Apache Software Foundation}.
-\newblock Apache hadoop documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Apache Hadoop} documentation.
+\newblock \url{https://hadoop.apache.org/docs/}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{apache_hive_docs}
 {Apache Software Foundation}.
-\newblock Apache hive documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Apache Hive} documentation.
+\newblock \url{https://hive.apache.org/docs/latest/}.
+\newblock Accessed August 23, 2026.
+
+\bibitem{apache_hudi_docs}
+{Apache Software Foundation}.
+\newblock {Apache Hudi} documentation.
+\newblock \url{https://hudi.apache.org/docs/}.
+\newblock Accessed August 23, 2026; used for lakehouse-table-format comparison.
 
 \bibitem{apache_iceberg_docs}
 {Apache Software Foundation}.
-\newblock Apache iceberg documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Apache Iceberg} documentation.
+\newblock \url{https://iceberg.apache.org/docs/latest/}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{apache_kafka_docs}
 {Apache Software Foundation}.
-\newblock Apache kafka documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Apache Kafka} documentation.
+\newblock \url{https://kafka.apache.org/documentation/}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{apache_parquet_docs}
 {Apache Software Foundation}.
-\newblock Apache parquet documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Apache Parquet} documentation.
+\newblock \url{https://parquet.apache.org/docs/}.
+\newblock Accessed August 23, 2026.
+
+\bibitem{apache_pulsar_docs}
+{Apache Software Foundation}.
+\newblock {Apache Pulsar} documentation.
+\newblock \url{https://pulsar.apache.org/docs/}.
+\newblock Accessed August 23, 2026; used for messaging-technology comparison.
 
 \bibitem{apache_spark_docs}
 {Apache Software Foundation}.
-\newblock Apache spark documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Apache Spark} documentation.
+\newblock \url{https://spark.apache.org/documentation.html}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{armbrust2021lakehouse}
 Michael Armbrust, Ali Ghodsi, Reynold Xin, and Matei Zaharia.
-\newblock Lakehouse: A new generation of open platforms that unify data
-  warehousing and advanced analytics.
-\newblock In {\em Conference on Innovative Data Systems Research (CIDR)}, 2021.
+\newblock Lakehouse: A new generation of open platforms that unify data warehousing and advanced analytics.
+\newblock In {\em 11th Annual Conference on Innovative Data Systems Research (CIDR '21)}, Online, January 2021.
+\newblock \url{https://www.cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf}.
+
+\bibitem{rabbitmq_docs}
+{Broadcom}.
+\newblock {RabbitMQ} documentation.
+\newblock \url{https://www.rabbitmq.com/docs}.
+\newblock Accessed August 23, 2026; used for messaging-technology comparison.
 
 \bibitem{cryptsetup_docs}
 {cryptsetup Project}.
-\newblock cryptsetup and luks documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {cryptsetup} and {LUKS} documentation.
+\newblock \url{https://gitlab.com/cryptsetup/cryptsetup/-/wikis/home}.
+\newblock Accessed August 23, 2026.
+
+\bibitem{dagster_docs}
+{Dagster Labs}.
+\newblock {Dagster} documentation.
+\newblock \url{https://docs.dagster.io/}.
+\newblock Accessed August 23, 2026; used for workflow-orchestration comparison.
 
 \bibitem{dbt_docs}
 {dbt Labs}.
-\newblock dbt developer hub documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {dbt} developer hub documentation.
+\newblock \url{https://docs.getdbt.com/}.
+\newblock Accessed August 23, 2026.
+
+\bibitem{delta_lake_docs}
+{Delta Lake Project}.
+\newblock {Delta Lake} documentation.
+\newblock \url{https://docs.delta.io/}.
+\newblock Accessed August 23, 2026; used for lakehouse-table-format comparison.
 
 \bibitem{docker_docs}
 {Docker, Inc.}
-\newblock Docker documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Docker} documentation.
+\newblock \url{https://docs.docker.com/}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{gilbert2002brewer}
 Seth Gilbert and Nancy Lynch.
-\newblock Brewer's conjecture and the feasibility of consistent, available,
-  partition-tolerant web services.
-\newblock {\em ACM SIGACT News}, 33(2):51--59, 2002.
+\newblock Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services.
+\newblock {\em ACM SIGACT News}, 33(2):51--59, June 2002.
+\newblock \url{https://doi.org/10.1145/564585.564601}.
+
+\bibitem{cadvisor_docs}
+{Google}.
+\newblock {cAdvisor} project documentation.
+\newblock \url{https://github.com/google/cadvisor}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{grafana_docs}
 {Grafana Labs}.
-\newblock Grafana documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Grafana} documentation.
+\newblock \url{https://grafana.com/docs/grafana/latest/}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{great_expectations_docs}
 {Great Expectations}.
-\newblock Great expectations documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Great Expectations} documentation.
+\newblock \url{https://docs.greatexpectations.io/}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{kleppmann2017ddia}
 Martin Kleppmann and Chris Riccomini.
-\newblock {\em Designing Data-Intensive Applications}.
-\newblock O'Reilly Media, Inc., 2 edition, 2026.
-\newblock 2nd edition.
+\newblock {\em Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems}.
+\newblock O'Reilly Media, Inc., 2nd edition, February 2026.
+\newblock ISBN 978-1-0981-1905-8.
 
 \bibitem{kreps2014questioning}
 Jay Kreps.
 \newblock Questioning the lambda architecture.
-\newblock
-  \url{https://www.confluent.io/blog/questioning-the-lambda-architecture/},
-  2014.
-\newblock Accessed on August 20, 2026.
+\newblock O'Reilly Radar, \url{https://www.oreilly.com/radar/questioning-the-lambda-architecture/}, July 2014.
+\newblock Accessed August 23, 2026.
 
 \bibitem{laney2001three}
 Doug Laney.
-\newblock 3d data management: Controlling data volume, velocity, and variety.
-\newblock Technical report, META Group, 2001.
+\newblock {3D} data management: Controlling data volume, velocity, and variety.
+\newblock Application Delivery Strategies 949, META Group, February 2001.
 
 \bibitem{marz2015bigdata}
 Nathan Marz and James Warren.
-\newblock {\em Big Data: Principles and Best Practices of Scalable Realtime
-  Data Systems}.
-\newblock Manning Publications, 2015.
+\newblock {\em Big Data: Principles and Best Practices of Scalable Realtime Data Systems}.
+\newblock Manning Publications, April 2015.
+\newblock ISBN 978-1-61729-034-3.
 
 \bibitem{mit_kerberos_docs}
 {Massachusetts Institute of Technology}.
-\newblock Mit kerberos documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {MIT Kerberos} documentation.
+\newblock \url{https://web.mit.edu/kerberos/krb5-latest/doc/}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{openssh_docs}
 {OpenSSH Project}.
-\newblock Openssh documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {OpenSSH} manual pages.
+\newblock \url{https://www.openssh.org/manual.html}.
+\newblock Accessed August 23, 2026.
+
+\bibitem{prefect_docs}
+{Prefect Technologies, Inc.}
+\newblock {Prefect} documentation.
+\newblock \url{https://docs.prefect.io/}.
+\newblock Accessed August 23, 2026; used for workflow-orchestration comparison.
 
 \bibitem{prometheus_docs}
 {Prometheus Authors}.
-\newblock Prometheus documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Prometheus} documentation.
+\newblock \url{https://prometheus.io/docs/introduction/overview/}.
+\newblock Accessed August 23, 2026.
 
 \bibitem{trino_docs}
 {Trino Software Foundation}.
-\newblock Trino documentation, 2026.
-\newblock Accessed for technical reference.
+\newblock {Trino} documentation.
+\newblock \url{https://trino.io/docs/current/}.
+\newblock Accessed August 23, 2026.
 
 \end{thebibliography}

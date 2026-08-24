@@ -1,9 +1,9 @@
 \chapter{State of the Art and Theoretical Background}
 
 \section{Introduction}
-This chapter establishes the theoretical foundation required to defend \projectname{} rigorously. The implemented platform is not merely a combination of tools; it is the result of architectural choices shaped by well-known constraints in distributed data engineering. For that reason, the chapter begins with general concepts and trade-offs before moving toward architectural models.
+This chapter establishes the theoretical foundation required to explain the architecture of \projectname{} rigorously. The implemented platform is not merely a combination of tools; it reflects architectural choices shaped by established constraints in distributed data engineering. The discussion therefore begins with general concepts and trade-offs before moving toward analytical architecture, governance, observability, and security.
 
-The discussion draws on the broader literature on distributed and data-intensive systems, including the design logic emphasized by Martin Kleppmann in \emph{Designing Data-Intensive Applications}, especially around reliability, scalability, maintainability, partitioning, replication, and consistency trade-offs \cite{kleppmann2017ddia}. The objective is not to review the entire field, but to retain the concepts that directly justify the architecture adopted in this project.
+The discussion draws on the broader literature on distributed and data-intensive systems, including the design logic emphasized by Martin Kleppmann in \emph{Designing Data-Intensive Applications}, especially around reliability, scalability, maintainability, partitioning, replication, and consistency trade-offs \cite{kleppmann2017ddia}. Its purpose is not to survey the entire field, but to retain the concepts that directly explain the design decisions made in the project.
 
 \section{Foundations of Modern Distributed Data Systems}
 
@@ -15,7 +15,7 @@ The centralized model is simple to deploy, but it concentrates ingestion, storag
 \begin{figure}[H]
   \centering
   \input{90_assets/latex_diagrams/chapter_2/fig_2_1_centralized_architecture.tex}
-  \caption{Centralized architecture as a concentration of ingestion, storage, processing, and access on one execution point.}
+  \caption{Centralized execution model and its main architectural limits.}
   \label{fig:centralized-architecture}
 \end{figure}
 
@@ -26,7 +26,7 @@ Distributed data platforms emerged as a response to these limits. Their role is 
 \begin{figure}[H]
   \centering
   \input{90_assets/latex_diagrams/chapter_2/fig_2_2_distributed_data_platform.tex}
-  \caption{Distributed data platform as a layered decomposition of storage, compute, metadata, and analytical access responsibilities.}
+  \caption{Layered organization of a distributed data platform.}
   \label{fig:distributed-data-platform}
 \end{figure}
 
@@ -65,16 +65,17 @@ One of the first decisions in large-scale systems concerns how growth should be 
 
 Horizontal scaling increases capacity by adding nodes. It is more complex because it requires workload distribution, coordination, and failure management. However, it offers better long-term elasticity and better alignment with modern data engineering workloads. For a distributed customer-data platform, horizontal scaling is therefore a structural architectural principle rather than a simple performance technique \cite{kleppmann2017ddia}.
 
-A simple way to express this intuition is:
+A simplified capacity model is:
 
 \[
-C_{\text{total}} = n \times C_{\text{node}}
+C_{\text{total}}(n) \approx n \times C_{\text{node}} \times \eta(n),
+\qquad 0 < \eta(n) \leq 1
 \]
 
-where $n$ is the number of participating nodes and $C_{\text{node}}$ is the average capacity provided by each node. The formula is deliberately simplified, because real systems include coordination overhead, but it captures the core architectural idea behind horizontal expansion.
+where $n$ is the number of participating nodes, $C_{\text{node}}$ is the average capacity of one node, and $\eta(n)$ is an efficiency factor accounting for coordination, serialization, network transfer, and workload imbalance. Horizontal capacity therefore rarely grows perfectly linearly, but additional nodes can still increase total capacity when the workload is partitionable.
 
 \subsection{Reliability, Scalability, and Maintainability}
-The literature on distributed systems frequently emphasizes three central qualities: reliability, scalability, and maintainability. Reliability refers to the system's ability to continue providing correct service despite component failures, abnormal workloads, or operational disturbances. Scalability refers to the platform's capacity to grow without disproportionate degradation or redesign. Maintainability refers to the ability to understand, operate, extend, and debug the system over time.
+The literature on distributed systems frequently emphasizes three central qualities: reliability, scalability, and maintainability \cite{kleppmann2017ddia}. Reliability refers to the system's ability to continue providing correct service despite component failures, abnormal workloads, or operational disturbances. Scalability refers to the platform's capacity to grow without disproportionate degradation or redesign. Maintainability refers to the ability to understand, operate, extend, and debug the system over time.
 
 These qualities are fundamental for a platform such as \projectname. An unreliable platform cannot support trusted analytical reuse. A non-scalable platform cannot absorb new datasets or future use cases. A non-maintainable platform becomes fragile and difficult to operate. These qualities are therefore direct evaluation criteria for the engineering relevance of the project.
 
@@ -86,14 +87,14 @@ This distinction is important for the positioning of the present work. \projectn
 \section{Core Theoretical Trade-offs in Distributed Data Engineering}
 
 \subsection{The CAP Theorem and Consistency Trade-offs}
-The CAP theorem remains one of the best-known conceptual references in distributed systems. It states that under network partition conditions, a distributed system cannot simultaneously provide both strong consistency and full availability \cite{gilbert2002brewer}. Although this statement is often simplified in practice, its educational importance is clear: once a system is distributed, architects must explicitly decide how consistency, availability, and failure tolerance are balanced.
+The CAP theorem formalizes a specific constraint: when a network partition prevents nodes from communicating, a distributed system cannot guarantee both linearizable consistency and availability for every request \cite{gilbert2002brewer}. Partition tolerance is not a freely selectable option once communication failures are possible; the practical decision is how each service behaves during such failures.
 
-For data platforms, this means that different layers may adopt different trade-offs. Event transport, distributed storage, metadata services, and analytical table layers are not expected to behave identically. The value of CAP in the present context is therefore to justify why a multi-layer architecture is necessary.
+Different layers of a data platform may therefore adopt different consistency and availability policies. Event transport, distributed storage, metadata services, and analytical table layers are not expected to behave identically. CAP does not prescribe one platform-wide choice; it explains why guarantees must be evaluated per service and per operation.
 
 \subsection{ACID vs BASE Models}
-ACID properties traditionally define the transactional expectations of strongly controlled database systems: atomicity, consistency, isolation, and durability. These properties are essential when every update must remain immediately and strictly correct. However, not every stage of a distributed data platform requires the same guarantees at the same time.
+ACID describes transactional guarantees: atomicity, consistency, isolation, and durability. These properties are important when a group of operations must be committed or rejected as one unit and concurrent updates must preserve defined invariants. However, not every stage of a distributed data platform requires the same transactional scope or isolation level.
 
-BASE, commonly summarized as Basically Available, Soft state, Eventual consistency, represents a different philosophy. It accepts temporary divergence when this improves distribution or availability. Many ingestion layers operate closer to BASE-like behavior, whereas curated analytical layers benefit from stronger ACID-like semantics.
+BASE, commonly summarized as Basically Available, Soft state, and Eventual consistency, is a design philosophy that accepts temporary divergence while replicas converge. ACID and BASE are not symmetric or mutually exclusive alternatives: one characterizes transaction guarantees, while the other describes a broader availability-oriented operating model. A modern data platform may combine eventual convergence in one service with ACID transactions in another, according to the responsibilities of each layer \cite{kleppmann2017ddia}.
 
 \subsection{Data Partitioning and Replication}
 Partitioning divides data into smaller units so that storage and computation can be distributed across multiple nodes. It is one of the foundational mechanisms behind modern large-scale platforms. Without partitioning, a single node becomes a natural bottleneck for read throughput, write throughput, fault recovery, and transformation execution.
@@ -134,9 +135,9 @@ This trade-off is central to modern lakehouse thinking. Raw layers benefit from 
 \section{Big Data Foundations}
 
 \subsection{The Five Vs of Big Data}
-Big Data is often introduced through five dimensions: volume, velocity, variety, veracity, and value. Volume refers to the quantity of data that must be managed. Velocity refers to the rate at which data is generated and moved. Variety refers to the diversity of formats, structures, and source semantics. Veracity concerns the reliability and quality of the data. Value concerns the usefulness that can be extracted from it for decision-making and future intelligent services.
+Big Data was classically characterized through volume, velocity, and variety \cite{laney2001three}. Contemporary discussions commonly extend this model with veracity and value. Volume refers to the quantity of data under management; velocity to the rate at which it is generated and moved; variety to differences in format, structure, and semantics; veracity to reliability and quality; and value to its usefulness for decisions and downstream services.
 
-These dimensions remain relevant because they show that data engineering complexity does not depend only on scale. Even when volume is moderate, strong variety, reuse pressure, and governance expectations can justify a distributed architecture \cite{laney2001three}.
+These dimensions show that data-engineering complexity does not depend on volume alone. In \projectname{}, variety, veracity, replayability, and reuse pressure are as important as raw scale, while distribution supports role separation, horizontal evolution, resilience, and explicit multi-node execution.
 
 \subsection{Heterogeneous Data Sources and Data Variety}
 Customer understanding rarely comes from a single operational system. It may involve campaign response datasets, online behavioral signals, e-commerce or retail transactions, session-level intent indicators, and profile-related attributes. Each source differs in format, cadence, completeness, and downstream meaning. This heterogeneity makes integration difficult because technical normalization is not sufficient; semantic reconciliation is also required.
@@ -151,12 +152,12 @@ This separation has strong methodological value. When raw data is durably preser
 \subsection{Distributed Compute Principles}
 Distributed compute allows processing tasks to be decomposed and executed across several nodes. Instead of one machine reading and transforming an entire dataset, work is split according to partitions, files, or execution stages. This can reduce total execution time and align compute more closely with distributed storage \cite{kleppmann2017ddia}.
 
-However, distributed compute is beneficial only when the workload justifies it. Scheduling, serialization, dependency management, and cluster readiness introduce overhead. A defensible platform must therefore show that distributed compute is used where parallel execution is genuinely meaningful.
+However, distributed compute is beneficial only when the workload justifies it. Scheduling, serialization, dependency management, network transfer, and cluster readiness introduce overhead. Parallel execution is therefore most useful when the work can be partitioned effectively and its computational or data-movement cost exceeds the coordination overhead.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_2/fig_2_3_spark_execution_model.tex}
-    \caption{Conceptual view of distributed execution in a Spark-style compute model.}
+    \caption{Spark planning, resource allocation, task execution, and shuffle flow.}
     \label{fig:spark-execution-model}
 \end{figure}
 
@@ -194,12 +195,12 @@ The historical movement from warehouses to lakes, from lakes to lakehouses, and 
 
 For \projectname, the lakehouse model is the most suitable. It supports raw bronze persistence, distributed storage, structured analytical tables, metadata-driven reuse, and downstream SQL exploration. The selected architecture is therefore a reasoned synthesis of the state of the art.
 
-More precisely, the implemented project combines both Lambda-style and Kappa-style reasoning without reproducing either model in a pure textbook form. It remains Kappa-inspired because replayable incoming records and durable raw history are treated as operational assets rather than disposable transit. At the same time, it remains close to Lambda-style discipline because the main analytical semantics are stabilized through batch-oriented refinement over preserved historical data. The resulting architecture is therefore best understood as a governed hybrid lakehouse model: event-aware at ingestion time, but structurally batch-oriented when producing trusted analytical layers \cite{marz2015bigdata,kreps2014questioning,armbrust2021lakehouse}.
+The implemented project does not reproduce either Lambda or Kappa architecture in a pure textbook form. It does not maintain a separate low-latency speed layer alongside a batch layer, as a strict Lambda design would require. Nor does it treat a streaming computation path as the sole mechanism for producing analytical state, as a strict Kappa design would suggest. Instead, it combines replayable event transport with durable raw history and batch-oriented refinement into governed analytical tables. The resulting model is therefore best described as an event-aware, batch-oriented lakehouse rather than as a complete Lambda or Kappa implementation \cite{marz2015bigdata,kreps2014questioning,armbrust2021lakehouse}.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_2/fig_2_4_hybrid_processing_logic.tex}
-    \caption{Conceptual positioning of the implemented project between replay-oriented ingestion logic and batch-structured analytical refinement.}
+    \caption{Hybrid flow from replayable raw history to governed analytical tables.}
     \label{fig:hybrid-processing-logic}
 \end{figure}
 
@@ -208,12 +209,12 @@ More precisely, the implemented project combines both Lambda-style and Kappa-sty
 \subsection{Metadata, Cataloging, and Data Discovery}
 Metadata gives meaning to stored data by describing structure, origin, semantics, and technical location. Without metadata, even accessible data can remain practically unusable. Cataloging extends this principle by making datasets discoverable and interpretable by different actors \cite{kleppmann2017ddia}.
 
-In a distributed customer-data platform, metadata is especially important because the architecture spans several services and layers. Governance cannot depend on informal memory alone. A defensible platform must therefore treat schema registration and dataset discovery as explicit capabilities.
+In a distributed customer-data platform, metadata is especially important because the architecture spans several services and layers. Governance cannot depend on informal memory alone. Schema registration, cataloging, and dataset discovery must therefore be explicit platform capabilities.
 
 \subsection{Data Lineage and Traceability}
 Lineage refers to the ability to trace how data moved from source to output, which transformations were applied, and which downstream assets depend on which upstream artifacts. Traceability is essential for reproducibility, debugging, and auditability.
 
-From an academic point of view, lineage helps distinguish a genuine data engineering platform from a simple collection of disconnected scripts. When lineage can be reconstructed, the platform becomes explainable and easier to defend.
+Lineage distinguishes an integrated data engineering platform from a collection of disconnected scripts. When dependencies and transformations can be reconstructed, the platform becomes more explainable, auditable, and maintainable.
 
 \subsection{Data Quality Dimensions}
 Data quality is multidimensional. Common dimensions include completeness, consistency, validity, accuracy, timeliness, and uniqueness. These dimensions are especially important in customer-data contexts because downstream segmentation, profiling, or future predictive analytics become weak when source data is inconsistent or poorly governed.
@@ -223,15 +224,17 @@ Modern platforms increasingly formalize quality as an explicit layer of the arch
 For example, a simple completeness metric can be written as:
 
 \[
-\text{Completeness} = \frac{\text{Valid records}}{\text{Expected records}}
+\text{Completeness} =
+\frac{\text{Observed non-missing required values}}
+{\text{Expected required values}}
 \]
 
-Even such a basic ratio is valuable in practice because it transforms a qualitative concern into a measurable control signal that can be monitored over time.
+This ratio intentionally measures presence rather than correctness: validity and accuracy require separate rules. Even a basic completeness measure is useful because it converts a qualitative concern into a control signal that can be monitored over time.
 
 \subsection{Observability in Distributed Data Systems}
 Observability is the capacity to infer the internal state of a system through emitted evidence such as metrics, logs, traces, health checks, and runtime indicators. In distributed environments, observability is crucial because failures often emerge from the interaction between components rather than from one isolated service \cite{prometheus_docs}.
 
-For data engineering, observability is tightly linked to platform trust. If the system cannot show whether ingestion succeeded, whether storage is healthy, whether services are reachable, or whether transformations produced expected results, its outputs become difficult to defend.
+For data engineering, observability is tightly linked to platform trust. If the system cannot show whether ingestion succeeded, whether storage is healthy, whether services are reachable, or whether transformations produced expected results, operators cannot diagnose failures or establish confidence in the resulting data products.
 
 \section{Security Foundations for Distributed Data Platforms}
 
@@ -248,14 +251,29 @@ In data platforms, authorization cannot be limited to end-user interfaces alone.
 \subsection{Encryption in Transit and Encryption at Rest}
 Encryption in transit protects data while it moves between nodes, services, or users. It reduces exposure to interception and helps preserve confidentiality across the network. Encryption at rest protects persisted data on storage media and reduces exposure if storage devices or mounted runtime paths are accessed outside intended controls \cite{cryptsetup_docs}.
 
-These two mechanisms answer different threat surfaces and must be treated as complementary. In a multi-service lakehouse platform, data moves through ingestion, orchestration, query, and monitoring channels, so both forms of protection are necessary.
+These mechanisms address different threat surfaces and are complementary. In a multi-service lakehouse platform, transport protection reduces network exposure, while at-rest encryption protects persisted runtime volumes when storage is accessed outside the intended execution path.
 
 \subsection{Secure Service Exposure in Multi-Node Environments}
 Distributed platforms expose numerous service endpoints: orchestration UIs, query interfaces, storage consoles, monitoring dashboards, and service APIs. If these are exposed without proxying, credential checks, and transport protection, the system accumulates a wide attack surface \cite{openssh_docs,prometheus_docs}.
 
 Secure exposure therefore requires deliberate control of entry points, certificates, internal-versus-external interfaces, and service-access boundaries.
 
+\section{Positioning of the Present Work}
+
+\subsection{Alignment with Distributed Lakehouse Principles}
+\projectname{} aligns with the theoretical principles developed in this chapter through explicit separation of ingestion, durable raw persistence, distributed computation, table management, metadata, analytical access, transformation, validation, orchestration, and observability. Replayable source history supports recovery and reproducibility, while governed analytical tables introduce schema discipline and shared semantics above the raw layer.
+
+The architecture also applies distribution selectively rather than treating it as an end in itself. Storage, processing, and querying use coordinated multi-node execution, whereas control-plane responsibilities remain centralized where centralized coordination improves operational clarity. This balance reflects the principle that distribution should follow service responsibilities, scalability needs, and failure boundaries.
+
+\subsection{Data Engineering Foundation, Not a Final AI Product}
+The theoretical analysis confirms that the project's primary contribution lies in data lifecycle engineering. Reliability, replayability, metadata, lineage, quality controls, observability, and secure access are prerequisites for trustworthy downstream analytics. Predictive models cannot compensate for an unreliable or poorly governed data foundation.
+
+Consequently, the absence of final segmentation, churn, lifetime-value, or recommendation models is a deliberate scope boundary rather than an incomplete implementation. \projectname{} provides the governed data products and operational platform on which such capabilities can later be developed.
+
+\subsection{Position Within AdOptimizer AI}
+Within the broader \initiative{} initiative at \companyname{}, \projectname{} occupies the customer-data foundation layer. The broader initiative defines the future intelligent marketing direction, while the PFE implements the distributed lakehouse platform required to make that direction technically credible. This relationship preserves a clear distinction between the completed Data Engineering contribution and its future analytical and AI consumers.
+
 \section{Conclusion}
 This chapter established the theoretical and architectural background that justifies the design of \projectname. It introduced the evolution of distributed data systems, the principal engineering trade-offs that shape them, the foundations of Big Data platforms, the comparative logic of modern analytical architectures, and the principles of governance, observability, and security in distributed environments.
 
-On this basis, the following chapters can now move from theory to requirements, design, and implementation. The platform can therefore be presented not as a collection of tools, but as a coherent response to well-identified distributed data engineering challenges.
+On this basis, the following chapters move from theory to technology selection, requirements, design, implementation, deployment, security, and validation. The platform is therefore presented not as a collection of tools, but as a coherent response to well-identified distributed data engineering challenges.

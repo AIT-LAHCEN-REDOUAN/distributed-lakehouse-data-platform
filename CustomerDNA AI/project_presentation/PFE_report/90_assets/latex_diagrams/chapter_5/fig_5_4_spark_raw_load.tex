@@ -1,12 +1,27 @@
 \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
-  \node[ado box={6.6cm}{adotealfill}, minimum height=1.2cm] (bronze) at (0,0)
-    {\adoboxcontentwide{HDFS bronze files}{distributed replayable JSONL batches stored across the cluster}};
-  \node[ado box={7.9cm}{adoorangefill}, minimum height=2.0cm] (spark) at (0,-2.6)
-    {\textbf{\large Spark processing cluster}\\[2pt]
-     master on VM2 coordinating workers on VM1, VM2, and VM3};
-  \node[ado box={6.8cm}{adopurplefill}, minimum height=1.3cm] (raw) at (0,-5.3)
-    {\adoboxcontentwide{Iceberg raw tables}{structured lakehouse objects produced from bronze ingestion outputs}};
+  \node[ado group, minimum width=14.60cm, minimum height=4.35cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\large] at ($(panel.north)+(0,-0.38)$)
+    {Bronze-to-raw Spark loading path};
 
-  \draw[ado arrow] (bronze) -- (spark);
-  \draw[ado arrow] (spark) -- (raw);
+  \node[ado annotation, font=\scriptsize\bfseries] at (-4.90,-1.05) {1 \textperiodcentered\ READ};
+  \node[ado annotation, font=\scriptsize\bfseries] at (0,-1.05) {2 \textperiodcentered\ PROCESS};
+  \node[ado annotation, font=\scriptsize\bfseries] at (4.90,-1.05) {3 \textperiodcentered\ PERSIST};
+
+  \node[ado box={3.45cm}{adotealfill}, minimum height=2.00cm, inner sep=5pt] (bronze) at (-4.90,-2.35)
+    {\textbf{\small HDFS bronze}\\[-1pt]
+     \scriptsize replayable JSONL\\[-1pt]
+     \scriptsize batches across all VMs};
+  \node[ado box={4.00cm}{adoorangefill}, minimum height=2.00cm, inner sep=5pt] (spark) at (0,-2.35)
+     {\textbf{\small Spark cluster}\\[-1pt]
+     \scriptsize schema normalization\\[-1pt]
+     \scriptsize master VM2; workers VM1--3};
+  \node[ado box={3.45cm}{adopurplefill}, minimum height=2.00cm, inner sep=5pt] (raw) at (4.90,-2.35)
+    {\textbf{\small Iceberg raw}\\[-1pt]
+     \scriptsize governed raw objects\\[-1pt]
+     \scriptsize for downstream layers};
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (bronze.east) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, above] {load} (spark.west);
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (spark.east) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, above] {write} (raw.west);
 \end{tikzpicture}

@@ -1,0 +1,33 @@
+AdOptimizer CDP Bibliography
+11th Annual Conference on Innovative Data Systems Research (CIDR ’21), Online,
+January 2021.
+https://www.cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf.
+[12] Broadcom. RabbitMQ documentation.https://www.rabbitmq.com/docs.
+Accessed August 23, 2026; used for messaging-technology comparison.
+[13] cryptsetup Project. cryptsetup and LUKS documentation.
+https://gitlab.com/cryptsetup/cryptsetup/-/wikis/home. Accessed August
+23, 2026.
+[14] Dagster Labs. Dagster documentation.https://docs.dagster.io/. Accessed
+August 23, 2026; used for workflow-orchestration comparison.
+[15] dbt Labs. dbt developer hub documentation.https://docs.getdbt.com/.
+Accessed August 23, 2026.
+[16] Delta Lake Project. Delta Lake documentation.https://docs.delta.io/.
+Accessed August 23, 2026; used for lakehouse-table-format comparison.
+[17] Docker, Inc. Docker documentation.https://docs.docker.com/. Accessed August
+23, 2026.
+[18] Seth Gilbert and Nancy Lynch. Brewer’s conjecture and the feasibility of consistent,
+available, partition-tolerant web services.ACM SIGACT News, 33(2):51–59, June
+2002.https://doi.org/10.1145/564585.564601.
+[19] Google. cAdvisor project documentation.https://github.com/google/cadvisor.
+Accessed August 23, 2026.
+[20] Grafana Labs. Grafana documentation.
+https://grafana.com/docs/grafana/latest/. Accessed August 23, 2026.
+[21] Great Expectations. Great Expectations documentation.
+https://docs.greatexpectations.io/. Accessed August 23, 2026.
+[22] Martin Kleppmann and Chris Riccomini.Designing Data-Intensive Applications: The
+Big Ideas Behind Reliable, Scalable, and Maintainable Systems. O’Reilly Media, Inc.,
+2nd edition, February 2026. ISBN 978-1-0981-1905-8.
+[23] Jay Kreps. Questioning the lambda architecture. O’Reilly Radar,
+https://www.oreilly.com/radar/questioning-the-lambda-architecture/,
+July 2014. Accessed August 23, 2026.
+84

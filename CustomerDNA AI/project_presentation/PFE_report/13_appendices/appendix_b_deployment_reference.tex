@@ -1,0 +1,91 @@
+\chapter{Implemented Deployment Reference}
+\label{app:deployment-reference}
+
+This appendix summarizes the four Docker Compose definitions supplied with the implemented platform. The objective is to document deployment responsibility and service placement, not to reproduce operational configuration verbatim. Passwords, key material, secret values, host-specific paths, and complete environment-variable contents are therefore intentionally excluded.
+
+\section{Compose-to-Node Allocation}
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.14}
+    \arrayrulecolor{tablelineblue}
+    \begin{tabularx}{\textwidth}{|L{3.3cm}|L{2.5cm}|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Source definition}} & \textcolor{white}{\textbf{Execution zone}} & \textcolor{white}{\textbf{Architectural responsibility}} \\
+        \hline
+        \path{docker-compose.yml} & Local control plane & Airflow and its PostgreSQL repository, Prometheus, Grafana, Kafka UI, monitoring exporters, and the TLS gateway used to expose control-plane interfaces. \\
+        \hline
+        \path{docker-compose_2.yml} & VM1 data-plane node & Kafka broker~1, HDFS DataNode~1, Spark worker~1, Trino worker~1, and cAdvisor. \\
+        \hline
+        \path{docker-compose_3.yml} & VM2 coordination node & Kerberos KDC, Kafka broker~2, HDFS NameNode and DataNode~2, HDFS administration client, Hive Metastore and PostgreSQL, Spark coordination and serving services, Trino coordinator and gateway, and cAdvisor. \\
+        \hline
+        \path{docker-compose_4.yml} & VM3 data-plane node & Kafka broker~3, HDFS DataNode~3, Spark worker~3, Trino worker~2, and cAdvisor. \\
+        \hline
+    \end{tabularx}
+    \caption{Allocation of the supplied Compose definitions to the deployed execution zones}
+    \label{tab:appendix-compose-files}
+\end{table}
+
+\section{Service Placement}
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \renewcommand{\arraystretch}{1.12}
+    \arrayrulecolor{tablelineblue}
+    \begin{tabularx}{\textwidth}{|L{2.3cm}|L{5.6cm}|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Node}} & \textcolor{white}{\textbf{Principal Compose services}} & \textcolor{white}{\textbf{Resulting role}} \\
+        \hline
+        Local control plane & \texttt{airflow-postgres}, \texttt{airflow-init}, \texttt{airflow-api-server}, \texttt{airflow-scheduler}, \texttt{airflow-dag-processor}, \texttt{airflow-triggerer} & Workflow definition, scheduling, execution-state persistence, task processing, and operator access. \\
+        \hline
+        Local control plane & \texttt{postgres-exporter}, \texttt{pipeline-metrics-exporter}, \texttt{prometheus}, \texttt{grafana}, \texttt{kafka-ui}, \texttt{tls-gateway} & Central monitoring, dashboarding, transport inspection, and protected browser-facing entry points. \\
+        \hline
+        VM1 & \texttt{broker-1}, \texttt{datanode-1}, \texttt{spark-worker-1}, \texttt{trino-worker-1}, \texttt{cadvisor} & First distributed worker node for transport, storage, processing, querying, and container metrics. \\
+        \hline
+        VM2: identity and storage & \texttt{kerberos-kdc}, \texttt{broker-2}, \texttt{namenode}, \texttt{datanode-2}, \texttt{hdfs-admin-client} & Central identity authority, HDFS namespace coordination, administrative access, and local participation in replicated storage. \\
+        \hline
+        VM2: metadata and compute & \texttt{hive-metastore-db}, \texttt{hive-metastore}, \texttt{spark-master}, \texttt{spark-submit-client}, \texttt{spark-worker-2}, \texttt{spark-history-server}, \texttt{spark-thrift-server} & Shared lakehouse metadata plus Spark coordination, submission, worker capacity, execution history, and SQL-serving support. \\
+        \hline
+        VM2: analytical access & \texttt{trino-coordinator}, \texttt{trino-gateway}, \texttt{cadvisor} & Distributed-query coordination, protected Trino entry, and node-level monitoring. \\
+        \hline
+        VM3 & \texttt{broker-3}, \texttt{datanode-3}, \texttt{spark-worker-3}, \texttt{trino-worker-2}, \texttt{cadvisor} & Third transport/storage/compute node and second dedicated Trino worker. \\
+        \hline
+    \end{tabularx}
+    \caption{Service placement extracted from the four Docker Compose definitions}
+    \label{tab:appendix-compose-placement}
+\end{table}
+\FloatBarrier
+
+\section{Cross-Cutting Deployment Properties}
+
+\begin{table}[H]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.14}
+    \arrayrulecolor{tablelineblue}
+    \begin{tabularx}{\textwidth}{|L{3.4cm}|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Property}} & \textcolor{white}{\textbf{Compose-derived implementation}} \\
+        \hline
+        Network organization & Data-plane services use host networking on the Linux VMs. The local control plane uses its Compose network, while a Caddy gateway publishes the selected Airflow, Prometheus, Grafana, and Kafka UI interfaces. \\
+        \hline
+        Persistent state & Named volumes retain control-plane PostgreSQL, Prometheus, Grafana, and gateway state. VM definitions mount dedicated runtime directories for Kafka, HDFS, Spark events, Hive PostgreSQL, Trino, Kerberos, and audit data. \\
+        \hline
+        Identity and protected access & VM definitions mount the Kerberos client configuration and service-specific keytab locations. HDFS mounts TLS configuration, while Caddy gateways protect the Trino and control-plane browser paths. \\
+        \hline
+        Startup dependencies and health & Compose dependencies establish key startup relationships around PostgreSQL, Kerberos, HDFS, Hive, Spark, Trino, Prometheus, and Airflow. Health checks are declared for critical stateful and entry-point services. \\
+        \hline
+        Observability & cAdvisor runs on VM1, VM2, and VM3. The local Prometheus and Grafana services consume infrastructure, PostgreSQL, and pipeline-exporter signals. \\
+        \hline
+        Controlled configuration & Images, versions, addresses, ports, runtime directories, and credentials are parameterized through environment variables. The report retains the architecture and role mapping while excluding secret values. \\
+        \hline
+    \end{tabularx}
+    \caption{Cross-cutting implementation properties extracted from the Compose definitions}
+    \label{tab:appendix-compose-properties}
+\end{table}
+\FloatBarrier

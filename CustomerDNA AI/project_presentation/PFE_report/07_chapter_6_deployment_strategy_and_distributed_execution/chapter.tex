@@ -1,7 +1,7 @@
 \chapter{Deployment Strategy and Distributed Execution}
 
 \section{Introduction}
-This chapter explains how \projectname{} is physically deployed and how its distributed character is demonstrated in practice. The objective is not only to say that several machines are used, but to clarify why services were separated the way they were, how data and control move across the environment, and how the final deployment remains reproducible and defensible in an academic setting. The deployment approach combines distributed-service reasoning with containerized packaging and reproducible operational startup logic \cite{docker_docs,apache_spark_docs,apache_hadoop_docs}.
+This chapter explains how \projectname{} is physically deployed and how its distributed execution is realized in practice. It clarifies the separation of services, the movement of data and control across the environment, and the operational mechanisms used to reproduce the deployment. The approach combines distributed-service reasoning, containerized packaging, dependency-aware startup logic, and remote execution paths \cite{docker_docs,apache_spark_docs,apache_hadoop_docs}.
 
 \section{Control Plane Responsibilities}
 The project adopts a deployment strategy based on a clear separation between a \textbf{local control plane} and a \textbf{distributed data plane}. The control plane is hosted on the local workstation, while the heavy data services are distributed across the three Linux virtual machines.
@@ -17,27 +17,31 @@ The project adopts a deployment strategy based on a clear separation between a \
         \rowcolor{tableheaderblue}
         \textcolor{white}{\textbf{Control-plane service}} & \textcolor{white}{\textbf{Operational role}} & \textcolor{white}{\textbf{Reason for local placement}} \\
         \hline
-        Airflow & orchestration of reset, readiness, loading, and transformation DAGs & avoids consuming VM resources for workflow control and keeps supervision centralized \\
+        Airflow & orchestration of reset, setup, readiness, integrated raw loading/quality, and dbt transformation DAGs & avoids consuming VM resources for workflow control and keeps execution coordination centralized \\
         \hline
         Prometheus & collection of infrastructure and pipeline metrics & centralizes observability and simplifies metric management \\
         \hline
-        Grafana & dashboard-based monitoring and demo evidence & provides one visual supervision point for the whole platform \\
+        Grafana & dashboard-based monitoring of infrastructure and pipeline state & provides one visual supervision point for the whole platform \\
         \hline
-        Kafka UI & broker and topic inspection & keeps operational visibility outside the production data services themselves \\
+        Kafka UI & broker and topic inspection & keeps operational visibility outside the distributed data services themselves \\
         \hline
-        Pipeline metrics exporter and helper runtimes & local operational support for reportable evidence and control tasks & reduces unnecessary service inflation on the Linux nodes \\
+        Pipeline metrics exporter & exposure of pipeline-specific operational metrics & complements infrastructure metrics with workflow-level signals \\
+        \hline
+        Local TLS gateway & protected browser access to control-plane interfaces & centralizes HTTPS exposure for Airflow, Grafana, Kafka UI, and Prometheus \\
+        \hline
+        SSH submission path & remote Spark submission to the entry point on VM2 & avoids local-driver networking constraints and centralizes cluster entry \\
         \hline
     \end{tabularx}
     \caption{Main responsibilities of the local control plane}
     \label{tab:chapter6-control-plane}
 \end{table}
 
-This separation is important for two reasons. First, it prevents the virtual machines from being overloaded by orchestration and monitoring services that do not need to participate directly in distributed storage or processing. Second, it makes the architecture easier to explain: the control plane governs, observes, and triggers, while the data plane stores, computes, and exposes data services.
+This separation prevents the virtual machines from being loaded with orchestration and monitoring services that do not participate directly in distributed storage or processing. It also establishes a clear responsibility boundary: the control plane orchestrates, supervises, and initiates remote work, while the data plane transports, stores, processes, governs, and serves data.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_6/fig_6_1_control_vs_data_plane.tex}
-    \caption{Separation between the local control plane and the distributed Linux data plane.}
+    \caption{Control-plane supervision of the distributed Linux data plane.}
     \label{fig:chapter6-control-vs-data-plane}
 \end{figure}
 \FloatBarrier
@@ -58,7 +62,7 @@ The data plane is not deployed as three identical generic machines. Instead, the
         \hline
         VM1 & Kafka broker 1, HDFS DataNode 1, Spark worker 1, Trino worker 1, cAdvisor & extends storage, compute, and query-worker capacity without carrying cluster leadership responsibilities \\
         \hline
-        VM2 & Kafka broker 2, Kerberos KDC, NameNode, DataNode 2, Hive Metastore, Spark master, Spark submit helper, Spark worker 2, Spark Thrift Server, Trino coordinator, HTTPS gateway, cAdvisor & acts as the leader node and integration point for coordination-heavy services \\
+        VM2 & Kafka broker 2, Kerberos KDC, NameNode, DataNode 2, Hive Metastore and PostgreSQL store, Spark master, Spark worker 2, Spark submit client, Spark Thrift Server, Spark History Server, Trino coordinator, Trino gateway, cAdvisor & acts as the leader node and integration point for coordination-heavy services \\
         \hline
         VM3 & Kafka broker 3, HDFS DataNode 3, Spark worker 3, Trino worker 2, cAdvisor & reinforces the cluster with additional worker capacity and distributed persistence \\
         \hline
@@ -67,72 +71,67 @@ The data plane is not deployed as three identical generic machines. Instead, the
     \label{tab:chapter6-vm-separation}
 \end{table}
 
-This service distribution supports clearer operational reasoning. VM2 concentrates the services that require a central authority or coordination function, such as Kerberos, the HDFS namespace, the shared catalog, and the query coordinator. VM1 and VM3 remain focused on horizontal extension: they add storage blocks, Spark execution resources, Kafka quorum members, and Trino worker capacity.
+This service distribution supports clear operational responsibility. VM2 concentrates services that require a central authority or coordination function, including Kerberos, the HDFS namespace, the shared catalog, Spark scheduling, application history, and distributed-query coordination. VM1 and VM3 provide horizontal extension through storage blocks, Spark execution resources, Kafka brokers, and Trino worker capacity.
 
-From an academic perspective, this separation is stronger than a pseudo-distributed demonstration in which all important services still run on the same node. Here, the deployment logic itself becomes part of the engineering contribution.
+Unlike a pseudo-distributed installation, the principal storage, processing, transport, and query responsibilities are materially distributed across separate machines. The deployment topology is therefore part of the implemented engineering contribution.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_6/fig_6_2_vm_service_map.tex}
-    \caption{Service placement map across VM1, VM2, and VM3.}
+    \caption{Service placement and node roles across VM1, VM2, and VM3.}
     \label{fig:chapter6-vm-service-map}
 \end{figure}
 \FloatBarrier
 
 \section{Data Flow Across Machines}
-The report should clearly explain the end-to-end movement of data:
-\begin{itemize}
-  \item source datasets to Kafka,
-  \item Kafka to HDFS bronze,
-  \item HDFS to Spark,
-  \item Spark to Iceberg,
-  \item Iceberg and Metastore to Trino,
-  \item transformations and validation to final analytical exposure.
-\end{itemize}
-
-The actual machine-to-machine flow follows a layered path:
-\begin{enumerate}
-    \item the control plane prepares or triggers the dataset ingestion process;
-    \item records are published into the three-node Kafka cluster across VM1, VM2, and VM3;
-    \item consumers persist the raw batches into the HDFS bronze zone governed by the NameNode on VM2 and distributed across the DataNodes on all three VMs;
-    \item Spark jobs are submitted remotely to VM2 and executed across the Spark workers available in the cluster;
-    \item Spark writes structured raw Iceberg tables and registers them through Hive Metastore on VM2;
-    \item Trino accesses the governed metadata and exposes SQL access through its coordinator/worker architecture;
-    \item dbt-spark and Great Expectations operate on top of the distributed environment from the control plane side, without collapsing the underlying data-plane separation.
+The implemented machine-to-machine flow follows an explicit sequence:
+\begin{enumerate}[leftmargin=*,itemsep=2pt,topsep=4pt]
+    \item Airflow initiates the relevant workflow from the local control plane;
+    \item local producers read the source datasets and publish records to Kafka;
+    \item topic partitions are hosted across the brokers on VM1, VM2, and VM3;
+    \item bronze consumers read the topics and write source-specific \texttt{.jsonl} batches to HDFS;
+    \item the NameNode on VM2 coordinates block persistence across the three DataNodes;
+    \item Spark jobs enter through the remote submission path on VM2, with executors allocated across registered workers;
+    \item Spark reads bronze data, writes raw Iceberg tables, and registers their metadata through Hive Metastore on VM2;
+    \item the embedded Great Expectations tasks validate the raw lakehouse tables and persist validation results and Data Docs on the control plane;
+    \item dbt-spark is initiated from the control plane while its transformation work executes through the Spark cluster;
+    \item the Trino coordinator on VM2 plans analytical queries whose fragments are executed by workers on VM1 and VM3;
+    \item Prometheus collects distributed service metrics and Grafana exposes centralized monitoring views.
 \end{enumerate}
 
-This flow is important because it proves that the platform is not a single-machine ETL disguised as a distributed system. Data transport, persistence, metadata governance, processing, and analytical access cross different services and different machines with explicit operational boundaries between them.
+The resulting path crosses explicit machine and service boundaries for transport, storage, processing, metadata governance, querying, transformation, validation, and supervision. The platform therefore does not collapse its data path into a single-machine ETL process.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_6/fig_6_3_machine_data_flow.tex}
-    \caption{Machine-level data flow from local source handling to distributed analytical exposure.}
+    \caption{Machine-level flow across the local control and three-node data planes.}
     \label{fig:chapter6-machine-data-flow}
 \end{figure}
 
-\section{Distributed Processing Proof}
-The strongest practical proof of distributed execution in the project comes from the Spark cluster behavior. The Spark master is hosted on VM2, but executor resources are distributed across multiple workers on VM1, VM2, and VM3. This means processing capacity is not bound to a single machine.
+\section{Distributed Spark Execution}
+Spark provides the principal distributed-processing mechanism of the platform. The Spark master is hosted on VM2, while executor capacity is registered through workers on VM1, VM2, and VM3. Processing capacity is therefore not bound to the coordination node.
 
-In operational demonstrations, the Spark master interface shows several registered workers, and applications allocate executors across the available nodes depending on the execution context. This is the key difference between a truly distributed execution environment and a local-only demonstration: processing tasks can be scheduled beyond the coordinator node itself.
+The Spark master interface exposes the registered worker pool, and applications allocate executors according to workload requirements and available capacity. Processing tasks can consequently be scheduled beyond the coordinator node itself; the corresponding runtime evidence is examined in Chapter VIII.
 
-The deployment also includes a Spark Thrift Server and a remote Spark submission helper on VM2. These components reinforce the distributed logic of the environment and remain consistent with the Spark separation between cluster coordination and executor-side execution \cite{apache_spark_docs}:
+The deployment also includes a Spark submit client, Spark Thrift Server, and Spark History Server on VM2. These components preserve the separation between cluster entry, SQL access, execution, and historical inspection \cite{apache_spark_docs}:
 \begin{itemize}
-    \item raw Spark jobs can be launched into the cluster from the control plane through a remote submission path;
-    \item transformation-oriented SQL access can target the distributed Spark environment through the Thrift interface;
-    \item execution is therefore coordinated centrally but materially carried out by multiple nodes.
+    \item Spark jobs are launched from the control plane through an SSH-based remote submission path to VM2;
+    \item transformation-oriented SQL access targets the distributed Spark environment through the Thrift interface;
+    \item application history is retained through the History Server for later inspection;
+    \item execution is coordinated centrally while tasks are carried out by workload-selected workers.
 \end{itemize}
 
-VM3 may sometimes appear idle during lighter workloads, which is normal in a small academic cluster. Distributed execution does not require that all workers always consume identical resources at the same time. What matters is that the cluster is capable of allocating work across multiple nodes and that the platform is engineered to support that behavior.
+Executor allocation is workload-dependent. A registered worker may receive no tasks during a light application, because distributed execution does not imply equal simultaneous utilization of every node. The relevant criterion is that the cluster can allocate work beyond VM2 when the workload and available resources require it.
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_6/fig_6_4_distributed_spark_execution.tex}
-    \caption{Spark master and worker collaboration across VM1, VM2, and VM3 during distributed execution.}
+    \caption{Workload-dependent Spark execution across VM1, VM2, and VM3.}
     \label{fig:chapter6-distributed-spark-execution}
 \end{figure}
 
 \section{Operational Packaging and Deployment Bundles}
-The deployment is supported by explicit operational packaging rather than undocumented manual steps. Each node has its own deployment bundle, startup logic, reset logic, and preflight checks. This is a major part of the project's reproducibility value and reflects the same infrastructure-as-documentation discipline encouraged by container-based operational practice \cite{docker_docs}.
+The deployment is supported by explicit operational packaging rather than undocumented manual steps. Node-specific bundles, startup logic, reset logic, and preflight checks capture the operational dependencies of the platform and support reproducible execution \cite{docker_docs}.
 
 \begin{table}[!htbp]
     \centering
@@ -143,29 +142,35 @@ The deployment is supported by explicit operational packaging rather than undocu
     \begin{tabularx}{\textwidth}{|Y|Y|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Deployment artifact type}} & \textcolor{white}{\textbf{Role in operations}} & \textcolor{white}{\textbf{Why it matters academically}} \\
+        \textcolor{white}{\textbf{Deployment artifact type}} & \textcolor{white}{\textbf{Role in operations}} & \textcolor{white}{\textbf{Operational benefit}} \\
         \hline
-        Bundle management scripts & prepare and synchronize node-specific deployment content & show that deployment is controlled and repeatable \\
+        Bundle management scripts & prepare and synchronize node-specific deployment content & maintain consistent configuration across repeated deployments \\
         \hline
-        Preflight checks & verify ports, dependencies, peer endpoints, and critical services & reduce ambiguous failure states before execution \\
+        Preflight checks & verify ports, dependencies, peer endpoints, and critical services & identify blocking conditions before service startup \\
         \hline
-        Reset scripts & clean previous runtime state and support reproducible reruns & make demonstrations and validation cycles consistent \\
+        Reset scripts & clean previous runtime state and support reproducible reruns & restore a controlled baseline for validation cycles \\
         \hline
         Startup scripts & launch services in the required sequence & formalize the operational lifecycle of the platform \\
         \hline
-        Access-point documentation & record URLs, ports, and secured entry paths & improves usability and defense clarity during demonstrations \\
+        Access-point documentation & record URLs, ports, and secured entry paths & preserves the traceability of operational interfaces \\
         \hline
     \end{tabularx}
     \caption{Operational deployment artifacts used in the project}
     \label{tab:chapter6-deployment-artifacts}
 \end{table}
 
-The startup order is also intentional: VM2 is started first because it hosts the coordination-heavy services, then VM1 and VM3 are started to extend the cluster, and finally the local control plane is brought up after the distributed data plane is stable. This sequence reflects a real dependency-aware deployment strategy rather than arbitrary service launching.
+The deployment bundles translate the architectural service map into machine-specific operational units. Each node receives the configuration, compose definitions, mounted service files, and startup logic required for its assigned role. Keeping these elements together reduces configuration drift between repeated deployments and makes the relationship between a service, its node, and its exposed interfaces explicit. Bundle preparation is therefore a reproducibility mechanism rather than a simple file-transfer step.
+
+Preflight verification acts as a gate before any distributed workflow is launched. It checks the conditions on which later services depend, including required ports, peer reachability, expected endpoints, deployment content, and critical prerequisites. Detecting these conditions before startup avoids partial cluster states in which a worker is running but cannot reach its coordinator, or an orchestration task begins while the storage, catalog, or execution layer is still unavailable. The checks also provide a clearer failure boundary because deployment problems can be separated from data-pipeline failures.
+
+The startup order is intentional. VM2 is started first because it hosts the coordination-heavy services: the Kerberos authority, HDFS NameNode, Hive Metastore, Spark master, and Trino coordinator establish identities, namespaces, metadata, scheduling, and query coordination for the rest of the platform. VM1 and VM3 are then started to register their storage, transport, compute, and query-worker capacity against those shared services. Finally, the local control plane is activated only after data-plane readiness has been confirmed, preventing Airflow and the monitoring stack from interpreting normal initialization delays as operational failures. This sequence follows service dependencies rather than an arbitrary launch order.
+
+\clearpage
 
 \begin{figure}[H]
     \centering
     \input{90_assets/latex_diagrams/chapter_6/fig_6_5_deployment_lifecycle.tex}
-    \caption{Deployment lifecycle from bundle preparation to preflight, startup order, and control-plane activation.}
+    \caption{Dependency-aware deployment lifecycle and startup order.}
     \label{fig:chapter6-deployment-lifecycle}
 \end{figure}
 \FloatBarrier
@@ -173,4 +178,4 @@ The startup order is also intentional: VM2 is started first because it hosts the
 \section{Conclusion}
 This chapter clarified that the deployment of \projectname{} is intentionally distributed at both the service level and the machine level. The local control plane supervises the environment without collapsing it into a single node, VM2 plays the role of coordination leader, and VM1 and VM3 extend storage, compute, and worker capacity. Data movement, processing, and analytical access therefore take place across explicit multi-node boundaries.
 
-The chapter also showed that the deployment is reproducible because it is supported by bundles, reset logic, startup scripts, and preflight checks. As a result, the distributed architecture can be defended not only as a conceptual design, but as an implemented and operational deployment strategy. The next chapter focuses on the security architecture that hardens this deployment and protects its critical access paths.
+The deployment is reproducible through node-specific bundles, reset logic, startup scripts, and preflight checks. It therefore constitutes an implemented operational topology rather than only a conceptual design. Chapter VII examines the security controls that harden this deployment and protect its critical access paths.

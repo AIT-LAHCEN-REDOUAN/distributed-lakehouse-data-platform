@@ -1,0 +1,32 @@
+AdOptimizer CDP Chapter I. General Project Context
+I.3.5 Implemented Scope and Boundaries
+The implemented scope covers the active Client 1 bundle composed of theBank Marketing,
+Online Shoppers Purchasing Intention, andOnline Retail IIdatasets. Together, these
+sources represent campaign and profile context, digital journey and purchase-intent behav-
+ior, and transactional retail activity. This combination provides a credible multi-source
+basis for future Customer 360 analysis while remaining compatible with the available
+infrastructure.
+The project does not implement downstream machine-learning modules such as dynamic
+segmentation, churn or lifetime-value prediction, persona generation, and recommenda-
+tion engines. It delivers the distributed and secured data foundation required for those
+capabilities, thereby keeping the report focused on the completed engineering contribution.
+I.3.6 Implemented Outcomes and Academic Contribution
+The completed outcome is a reproducible end-to-end platform in which heterogeneous
+customer datasets are ingested, persisted, processed, transformed, queried, validated,
+orchestrated, monitored, and secured. It provides replayable bronze artifacts in distributed
+storage, governed analytical tables accessible through SQL, persisted quality evidence,
+repeatable workflow execution, and observable collaboration across multiple nodes.
+The academic contribution lies in integrating event transport, distributed storage and
+computation, lakehouse table management, metadata governance, analytical access, trans-
+formation control, quality assurance, orchestration, observability, deployment, and security
+hardening into one consistent customer-data platform. Its originality is architectural and
+engineering-oriented: the work demonstrates how these concerns can be combined and
+operated coherently within a constrained multi-node environment.
+I.4 Conclusion
+This chapter established the organizational, business, and academic framing of AdOptimizer
+CDP. It clarified the role of SMART AUTOMATION TECHNOLOGIES, distinguished
+the project from the broader AdOptimizer AI vision, defined the engineering problem, and
+stated the implemented objectives, scope, boundaries, and contribution. Chapter II now
+develops the theoretical foundations that justify the distributed lakehouse architecture
+and its principal design choices.
+5

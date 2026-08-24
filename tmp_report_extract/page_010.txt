@@ -1,0 +1,43 @@
+List of Figures
+I.1 Visual identity of SMART AUTOMATION TECHNOLOGIES . . . . . . . . . . . . . . . . 1
+I.2 Core values of SMART AUTOMATION TECHNOLOGIES . . . . . . . . . . . . . . . . . . 2
+II.1 Centralized execution model and its main architectural limits. . . . . . . . . . . . . . . . . . 7
+II.2 Layered organization of a distributed data platform. . . . . . . . . . . . . . . . . . . . . . . 8
+II.3 Spark planning, resource allocation, task execution, and shuffle flow. . . . . . . . . . . . . . 14
+II.4 Hybrid flow from replayable raw history to governed analytical tables. . . . . . . . . . . . . 17
+IV.1 Global architecture of the implemented AdOptimizer CDP platform. . . . . . . . . . . . . . 32
+IV.2 Logical data lifecycle and cross-cutting platform controls. . . . . . . . . . . . . . . . . . . . 33
+IV.3 Physical topology of the local control plane and three-node distributed data plane. . . . . . 35
+IV.4 Implemented data flow from source ingestion to validated analytical outputs. . . . . . . . . 36
+V.1 Complementary dataset families and their later use in curated analytical models. . . . . . . 39
+V.2 Kafka publication, topic distribution, and HDFS bronze landing flow. . . . . . . . . . . . . . 40
+V.3 HDFS bronze storage with NameNode control and distributed DataNodes. . . . . . . . . . . 41
+V.4 Spark loading path from HDFS bronze files to Iceberg raw tables. . . . . . . . . . . . . . . . 42
+V.5 Shared metadata governance through Hive Metastore. . . . . . . . . . . . . . . . . . . . . . 43
+V.6 Protected Trino access through the gateway and distributed query cluster. . . . . . . . . . . 44
+V.7 Layered dbt transformation flow from raw to analytical models. . . . . . . . . . . . . . . . . 45
+V.8 Raw-lakehouse validation tasks integrated into the Kafka–HDFS–Spark workflow, with
+persisted evidence. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 46
+V.9 Five-DAG orchestration sequence from reset and setup to readiness, integrated raw loading
+and validation, and curated transformation. . . . . . . . . . . . . . . . . . . . . . . . . . . . 47
+VI.1 Control-plane supervision of the distributed Linux data plane. . . . . . . . . . . . . . . . . . 49
+VI.2 Service placement and node roles across VM1, VM2, and VM3. . . . . . . . . . . . . . . . . 50
+VI.3 Machine-level flow across the local control and three-node data planes. . . . . . . . . . . . . 51
+VI.4 Workload-dependent Spark execution across VM1, VM2, and VM3. . . . . . . . . . . . . . . 52
+VI.5 Dependency-aware deployment lifecycle and startup order. . . . . . . . . . . . . . . . . . . . 54
+VII.1 Kerberos ticket flow for authenticated Hadoop clients and services. . . . . . . . . . . . . . . 57
+VII.2 SPNEGO-authenticated HTTPS access to HDFS browser interfaces. . . . . . . . . . . . . . 58
+VII.3 TLS-protected exposure zones for data-plane and control-plane interfaces. . . . . . . . . . . 59
+VII.4 Authenticated Trino path from the VM2 gateway to distributed workers. . . . . . . . . . . . 60
+VII.5 SSH-secured Spark submission from the local control plane to VM2. . . . . . . . . . . . . . 61
+VII.6 Implemented security coverage across complementary protection dimensions. . . . . . . . . . 62
+VII.7 Implemented security baseline and enterprise controls outside the PFE scope. . . . . . . . . 63
+C.1 Airflow workflow execution evidence . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 91
+C.2 Great Expectations Data Docs evidence . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 92
+C.3 Grafana infrastructure monitoring evidence . . . . . . . . . . . . . . . . . . . . . . . . . . . 93
+C.4 Grafana pipeline-health evidence . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 94
+C.5 Grafana Hive Metastore monitoring evidence . . . . . . . . . . . . . . . . . . . . . . . . . . 95
+C.6 HDFS cluster-capacity and DataNode evidence . . . . . . . . . . . . . . . . . . . . . . . . . 96
+C.7 Spark worker and application evidence . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 97
+C.8 Trino cluster and completed-query evidence . . . . . . . . . . . . . . . . . . . . . . . . . . . 98
+x

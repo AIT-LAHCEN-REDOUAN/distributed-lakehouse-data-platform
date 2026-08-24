@@ -1,0 +1,26 @@
+[
+  {
+    "kind": "chapter",
+    "title": "General Conclusion and Perspectives",
+    "preview": "",
+    "preview2": ""
+  },
+  {
+    "kind": "section",
+    "title": "General Conclusion",
+    "preview": "delivers a distributed and secured customer-data lakehouse platform implemented within the broader initiative at . The project demonstrates that heterogeneous customer-oriented data can be ingested, transported, persisted, processed, transformed, validated, exposed, monitored, and protected through a coherent multi-node architecture. In academic terms, the work proves the feasibility of a modern Big Data Engineering ",
+    "preview2": "platform that combines distributed systems principles, lakehouse logic, orchestration, governance, observability, and baseline infrastructure security in one integrated implementation ."
+  },
+  {
+    "kind": "section",
+    "title": "Main Achievements",
+    "preview": "The project establishes a practical foundation that combines: distributed ingestion through Kafka, distributed bronze persistence through HDFS, distributed processing through Spark, governed metadata and lakehouse organization through Hive Metastore and Iceberg, analytical SQL exposure through Trino, transformation discipline through dbt-spark, data-quality validation through Great Expectations, explicit orchestratio",
+    "preview2": "n through Airflow, centralized observability through Prometheus and Grafana, and integrated security controls through Kerberos, SPNEGO, TLS, authenticated gateways, SSH-based remote execution, and encrypted runtime storage support. These achievements are important because they collectively position the project as a genuine platform contribution rather than a narrow pipeline demonstration. They show the practical conv"
+  },
+  {
+    "kind": "section",
+    "title": "Future Perspectives",
+    "preview": "The platform can later support: deeper Customer 360 consolidation across additional customer sources, richer curated marts and semantic business layers, customer segmentation and persona generation, churn prediction and early-warning models, lifetime value estimation, personalization and campaign optimization services, recommendation and decision-support modules under the broader AdOptimizer AI initiative. From an en",
+    "preview2": "gineering perspective, future work can also strengthen the platform itself by extending fine-grained access control, improving certificate and secret lifecycle management, expanding evidence automation, and scaling the deployment toward larger workloads."
+  }
+]

@@ -1,16 +1,28 @@
-\begin{tikzpicture}[node distance=0.55cm]
-    \node[ado box={10.2cm}{adograyfill}] (bundle)
-    {\adoboxcontent{Bundle preparation}{node-specific deployment content + synchronized configuration}};
-    \node[ado box={10.2cm}{adobluefill}, below=of bundle] (preflight)
-    {\adoboxcontent{Preflight verification}{ports + peer reachability + dependency checks}};
-    \node[ado box={10.2cm}{adotealfill}, below=of preflight] (vm2)
-    {\adoboxcontent{Priority startup of VM2}{coordination-heavy services launched first}};
-    \node[ado box={10.2cm}{adoorangefill}, below=of vm2] (workers)
-    {\adoboxcontent{Cluster extension}{VM1 and VM3 add storage, broker, and worker capacity}};
-    \node[ado box={10.2cm}{adopurplefill}, below=of workers] (cp)
-    {\adoboxcontent{Control-plane activation}{Airflow + monitoring + access services start after cluster stability}};
-    \draw[ado arrow] (bundle) -- (preflight);
-    \draw[ado arrow] (preflight) -- (vm2);
-    \draw[ado arrow] (vm2) -- (workers);
-    \draw[ado arrow] (workers) -- (cp);
+\begin{tikzpicture}[node distance=0.48cm,font=\small]
+  \node[ado box={12.80cm}{adograyfill}, minimum height=1.15cm, inner sep=5pt] (bundle)
+    {\textbf{\normalsize Step 1 --- Prepare deployment bundles}\\[-1pt]
+     \footnotesize node-specific content and synchronized configuration};
+
+  \node[ado box={12.80cm}{adobluefill}, minimum height=1.15cm, inner sep=5pt, below=of bundle] (preflight)
+    {\textbf{\normalsize Step 2 --- Run preflight verification}\\[-1pt]
+     \footnotesize validate ports, peer reachability, dependencies, and critical endpoints};
+
+  \node[ado box={12.80cm}{adotealfill}, minimum height=1.15cm, inner sep=5pt, below=of preflight] (vm2)
+    {\textbf{\normalsize Step 3 --- Start VM2 first}\\[-1pt]
+     \footnotesize launch the coordination-heavy services before extending the cluster};
+
+  \node[ado box={12.80cm}{adoorangefill}, minimum height=1.15cm, inner sep=5pt, below=of vm2] (workers)
+    {\textbf{\normalsize Step 4 --- Extend the cluster with VM1 and VM3}\\[-1pt]
+     \footnotesize add storage, Kafka, Spark, and Trino worker capacity};
+
+  \node[ado box={12.80cm}{adopurplefill}, minimum height=1.15cm, inner sep=5pt, below=0.68cm of workers] (control)
+    {\textbf{\normalsize Step 5 --- Activate the local control plane}\\[-1pt]
+     \footnotesize start Airflow, monitoring, and operational access services};
+
+  \draw[ado arrow, draw=black!60, line width=1.05pt] (bundle) -- (preflight);
+  \draw[ado arrow, draw=black!60, line width=1.05pt] (preflight) -- (vm2);
+  \draw[ado arrow, draw=black!60, line width=1.05pt] (vm2) -- (workers);
+  \draw[ado arrow, draw=black!60, line width=1.05pt]
+    (workers) -- node[font=\scriptsize, text=black!60, fill=white, inner sep=1pt, right=2pt]
+    {readiness confirmed} (control);
 \end{tikzpicture}

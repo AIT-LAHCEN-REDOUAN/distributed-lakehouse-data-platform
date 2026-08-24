@@ -1,0 +1,20 @@
+Chapter VI
+Deployment Strategy and Distributed
+Execution
+VI.1 Introduction
+This chapter explains how AdOptimizer CDP is physically deployed and how its distributed
+execution is realized in practice. It clarifies the separation of services, the movement of data
+and control across the environment, and the operational mechanisms used to reproduce the
+deployment. The approach combines distributed-service reasoning, containerized packaging,
+dependency-aware startup logic, and remote execution paths [17, 10, 3].
+VI.2 Control Plane Responsibilities
+The project adopts a deployment strategy based on a clear separation between alocal
+control planeand adistributed data plane. The control plane is hosted on the local
+workstation, while the heavy data services are distributed across the three Linux virtual
+machines.
+This separation prevents the virtual machines from being loaded with orchestration and
+monitoring services that do not participate directly in distributed storage or processing. It
+also establishes a clear responsibility boundary: the control plane orchestrates, supervises,
+and initiates remote work, while the data plane transports, stores, processes, governs, and
+serves data.
+48

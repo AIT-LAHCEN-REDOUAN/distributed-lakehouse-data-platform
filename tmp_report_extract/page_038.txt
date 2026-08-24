@@ -1,0 +1,35 @@
+AdOptimizer CDP Chapter III. Technology Watch
+introducing a second processing model that the project does not need.
+Trino provides a separate distributed SQL access layer over the Iceberg and Hive-governed
+lakehouse [30]. This separation prevents analytical exploration from being represented
+merely as another transformation job and gives the deployment an explicit coordina-
+tor/worker query architecture. dbt-spark then organizes staging, intermediate, and ana-
+lytics transformations as declared, dependency-aware models executed against the Spark
+environment [15]. Using dbt-spark rather than unstructured SQL scripts makes transfor-
+mation order, model ownership, and generated execution artifacts easier to inspect and
+reproduce.
+III.3.4 Quality, Orchestration, and Observability
+Great Expectations turns data quality into an explicit validation layer by applying
+documented expectations and persisting validation results and Data Docs evidence [21].
+Custom validation scripts could test individual rules, but they would require the project to
+recreate result storage, structured suites, and human-readable evidence. The retained tool
+therefore supports both operational checking and the report’s need for verifiable quality
+artifacts.
+Airflow orchestrates the implemented sequence of environment reset, lakehouse setup,
+service readiness, the integrated Kafka–HDFS–Spark raw-loading and raw-quality stage,
+and dbt-spark transformation [1]. Prefect and Dagster provide credible Python-oriented and
+asset-oriented orchestration models [28, 14]; however, Airflow’s explicit DAG representation,
+scheduling, retries, task logs, and run history already align with the project’s five-workflow
+execution contract.
+Prometheus collects platform and exporter metrics, Grafana presents them as operational
+dashboards, and cAdvisor contributes container-level visibility from the VM nodes [29,
+20, 19]. This arrangement is more defensible than relying on isolated service logs because
+it provides a centralized view of infrastructure health and pipeline behavior across the
+control and data planes.
+III.3.5 Deployment Reproducibility and Security Support
+Docker packages and isolates the services deployed on the control plane and VM nodes [17].
+Containerization does not make the platform distributed by itself; rather, it makes the
+already distributed service topology repeatable by preserving explicit service definitions,
+configuration boundaries, and startup dependencies.
+The completed platform also includes Kerberos-secured Hadoop identity, SPNEGO-
+26

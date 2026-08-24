@@ -1,106 +1,128 @@
 \chapter{Discussion and Critical Analysis}
 
 \section{Introduction}
-This chapter provides a critical interpretation of the implemented work. Its purpose is to move beyond pure description and explain what the project achieves well, where its trade-offs appear, what it contributes academically and industrially, and which boundaries must remain explicit in a serious jury defense. The discussion therefore reconnects the final implementation with the reference ideas of distributed data-intensive systems and modern lakehouse-oriented engineering \cite{kleppmann2017ddia,armbrust2021lakehouse}.
+Chapter VIII established that \projectname{} operated as an integrated distributed customer-data platform. The purpose of the present chapter is not to repeat those validation results, but to interpret their significance. The discussion examines the coherence of the architectural choices, the trade-offs introduced by the selected stack and deployment model, the lessons derived from implementation, and the limits within which the observed results remain valid.
 
-\section{Strengths of the Final Architecture}
-The final architecture presents several important strengths. Many of them correspond directly to the architectural qualities discussed in the literature on distributed data-intensive systems and on lakehouse-oriented analytics platforms \cite{kleppmann2017ddia,armbrust2021lakehouse}.
+The analysis follows the principles commonly associated with distributed data-intensive systems and lakehouse architectures: explicit responsibility boundaries, durable data, independent compute and storage concerns, shared metadata, reproducible processing, and controlled operational exposure \cite{kleppmann2017ddia,armbrust2021lakehouse}. The conclusions are deliberately restricted to the implemented three-VM data plane, the local control plane, and the retained evidence presented in the preceding chapter.
 
-First, it is \textbf{modular}. Ingestion, bronze storage, processing, metadata governance, SQL exposure, transformation, validation, orchestration, monitoring, and security are clearly separated. This makes the platform easier to reason about and strengthens the quality of the report because each layer has a clear responsibility.
-
-Second, it is \textbf{truly distributed}. Kafka, HDFS, Spark, and Trino are all deployed across more than one virtual machine, and the architecture does not depend on a single overloaded ``fake cluster'' node for every important function \cite{apache_kafka_docs,apache_hadoop_docs,apache_spark_docs,trino_docs}.
-
-Third, it is \textbf{governance-oriented}. The project does not stop at moving data. It introduces shared metadata, structured modeling, data-quality validation, orchestration logic, and observability. This is a major strength because it positions the work as a serious data engineering platform rather than a simple ingestion pipeline \cite{apache_hive_docs,dbt_docs,great_expectations_docs,prometheus_docs}.
-
-Fourth, it includes \textbf{meaningful security integration}. The security controls are not limited to a conceptual recommendation. Kerberos, SPNEGO, TLS, authenticated gateways, encrypted runtime storage support, and secured remote orchestration were actually integrated into the deployment logic \cite{mit_kerberos_docs,apache_hadoop_docs,openssh_docs,cryptsetup_docs}.
-
-For consistency with the intended style of the discussion chapter, these strengths are expressed only through analytical prose and summary tables, without adding interpretive diagrams.
-
-\section{Trade-Offs and Constraints}
-The architecture also reflects real constraints and trade-offs.
-
-The first major constraint is the \textbf{limited infrastructure capacity} of the academic environment. The cluster is distributed, but it is built on lightweight virtual machines with limited memory, storage, and compute capacity. This makes the deployment realistic enough for distributed proof, but it also imposes stricter discipline in dataset sizing, runtime cleanup, and service tuning.
-
-The second trade-off is \textbf{integration complexity}. A platform combining Kafka, HDFS, Spark, Hive Metastore, Trino, dbt-spark, Great Expectations, Airflow, and multiple security controls is inherently more complex than a monolithic pipeline. That complexity is justified by the learning and platform value, but it also increases debugging effort and operational sensitivity \cite{kleppmann2017ddia}.
-
-The third trade-off is \textbf{security overhead}. Once Kerberos, SPNEGO, TLS, and encrypted runtime storage are introduced, the project becomes much stronger architecturally, but also harder to configure, restart, and validate. This is not a flaw of the work; it is the natural consequence of moving from an open demo cluster to a more realistic protected environment.
+\section{Critical Assessment of the Architectural Decisions}
+The platform was designed as a chain of cooperating capabilities rather than as a single processing application. This separation made it possible to assign ingestion, persistence, computation, cataloging, transformation, validation, orchestration, observation, and protection to explicit architectural layers. The resulting modularity is valuable because a change in one concern does not necessarily require redesigning the entire platform. However, modularity also creates more interfaces, configuration contracts, and runtime dependencies that must remain mutually consistent.
 
 \begin{table}[!htbp]
     \centering
     \footnotesize
-    \renewcommand{\arraystretch}{1.16}
+    \renewcommand{\arraystretch}{1.14}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|Y|Y|Y|}
+    \begin{tabularx}{\textwidth}{|L{0.25\textwidth}|Y|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Constraint}} & \textcolor{white}{\textbf{Observed impact}} & \textcolor{white}{\textbf{Architectural response}} \\
+        \textcolor{white}{\textbf{Architectural decision}} & \textcolor{white}{\textbf{Value obtained}} & \textcolor{white}{\textbf{Associated trade-off}} \\
         \hline
-        Limited VM resources & tighter storage and memory pressure & reduced dataset scope and disciplined service separation \\
+        Kafka transport and HDFS bronze persistence & decoupled source publication from durable, replayable raw history & duplicated operational responsibilities and additional storage and retention management \\
         \hline
-        Multi-tool integration complexity & longer debugging and stabilization cycles & explicit DAG boundaries, preflight checks, and bundle-based deployment \\
+        Spark with Iceberg and Hive Metastore & distributed processing over governed tables shared by transformation and query services & compatibility and availability depend on coordinated engine, catalog, and storage configuration \\
         \hline
-        Security hardening overhead & more fragile configuration paths for some services & documented access paths and layered security design \\
+        dbt-spark and Great Expectations as separate controls & distinguished modeled transformation from explicit, retained data-quality evidence & introduced separate projects, runtimes, artifacts, and failure paths \\
+        \hline
+        Local control plane and Linux data plane & isolated orchestration and supervision from distributed data services & made network resolution, SSH access, credentials, and remote readiness part of every execution path \\
+        \hline
+        Multi-node service placement & demonstrated genuine participation in storage, processing, transport, and querying & retained several central coordinator roles and did not constitute a high-availability topology \\
+        \hline
+        Security and observability as cross-cutting layers & made protected access and runtime evidence part of normal platform operation & increased certificate, ticket, gateway, exporter, and configuration-management overhead \\
         \hline
     \end{tabularx}
-    \caption{Main constraints and the corresponding design responses}
-    \label{tab:chapter9-constraints}
+    \caption{Benefits and trade-offs of the principal architectural decisions}
+    \label{tab:chapter9-architectural-decisions}
 \end{table}
 \FloatBarrier
 
-\section{Academic Value}
-The project has strong academic value because it combines several disciplines that are often studied separately:
-\begin{itemize}
-    \item distributed systems;
-    \item Big Data storage and processing;
-    \item lakehouse architecture;
-    \item data quality and governance;
-    \item workflow orchestration;
-    \item observability;
-    \item and infrastructure security.
-\end{itemize}
+The strongest result of these decisions is the creation of an end-to-end engineering contract. A source is not considered usable merely because it reaches Kafka; it must also be durably landed, transformed into governed tables, validated, exposed analytically, and accompanied by operational evidence. This contract gives the platform more value than a collection of independently functioning services.
 
-This interdisciplinary nature makes the project more than a stack assembly exercise. It demonstrates how theoretical principles such as separation of concerns, distributed coordination, schema management, replayability, and secure service exposure can be translated into an operational platform \cite{kleppmann2017ddia,armbrust2021lakehouse,marz2015bigdata}.
+\section{Strengths Supported by the Implementation}
+\subsection{End-to-End Coherence}
+The implementation connects the complete data lifecycle. The same three source perspectives---campaign response, digital behavior, and retail transactions---move through transport, bronze persistence, raw lakehouse loading, raw-data validation, modeled transformation, and analytical access. The five Airflow workflows make the lifecycle explicit through environment reset, lakehouse setup, service readiness, a Kafka--HDFS--Spark workflow with integrated raw-quality tasks, and governed dbt transformation. This decomposition supports repeatability and makes failures easier to localize than in a single opaque workflow.
 
-It also provides academic honesty in scope. The report does not confuse foundational customer-data engineering with the final AI layer. Instead, it positions the work as the technical basis that future segmentation, churn, value-prediction, or personalization modules could consume. This is a stronger academic position than claiming prematurely that the AI product itself is already complete.
+\subsection{Distributed Execution with Shared Governance}
+The deployment demonstrates distribution in the areas where it is technically meaningful: Kafka brokers span the three virtual machines, HDFS stores data through three DataNodes, Spark registers workers on all three machines, and Trino separates its coordinator from two dedicated workers. At the same time, Hive Metastore and Iceberg provide a shared table interpretation across processing and query services. This combination is important because distribution without consistent metadata would only move computation across nodes; it would not create a governed analytical platform \cite{apache_hive_docs,apache_iceberg_docs}.
 
-\section{Industrial Value}
-The industrial value of the platform lies in its role within the broader AdOptimizer AI initiative. SMART AUTOMATION TECHNOLOGIES needs a structured and trustworthy customer-data foundation before downstream intelligent marketing services can operate reliably.
+\subsection{Reproducibility and Evidence}
+Readiness checks, ordered orchestration, dbt tests, Great Expectations artifacts, Airflow histories, and monitoring dashboards make execution outcomes inspectable. The platform therefore preserves evidence not only of resulting data, but also of the operational path that produced it. This strengthens reproducibility and separates a demonstrable engineering result from an implementation that can only be explained from source code or manual observation.
 
-In that context, AdOptimizer CDP contributes industrially by:
-\begin{itemize}
-    \item centralizing heterogeneous customer-related data in a governed architecture;
-    \item creating a repeatable path from source datasets to analytical data products;
-    \item exposing SQL-accessible and transformation-ready outputs;
-    \item preserving observability and security as operational requirements;
-    \item preparing a realistic base for future Customer 360 and AI-driven services.
-\end{itemize}
+\subsection{Security-Aware Operational Design}
+Security was integrated into deployed paths rather than left as a conceptual recommendation. Kerberos-secured Hadoop interactions, SPNEGO/HTTPS browser access, authenticated gateways, SSH-based submission, and separated operational identities reduce the openness of the baseline cluster. Their value lies in demonstrating how security affects service communication and deployment practice. The result remains infrastructure hardening rather than a complete enterprise identity-governance system, but it is nevertheless part of the functioning architecture.
 
-This means the project is not an isolated academic prototype, but an engineering foundation aligned with a larger company vision.
+\section{Trade-Offs and Operational Constraints}
+\subsection{Resource Capacity versus Architectural Breadth}
+The three virtual machines provide sufficient separation to demonstrate distributed behavior, but their limited CPU, memory, and storage constrain concurrency and workload scale. The breadth of the stack also means that infrastructure resources are shared by storage, processing, query, metadata, security, and monitoring services. Consequently, the deployment proves architectural feasibility and integration; it does not establish the maximum throughput or capacity of the design.
 
-\section{Critical Limits}
-The final report must still distinguish clearly between implemented work and downstream possibilities.
+\subsection{Distribution versus Centralization}
+Several worker-oriented capabilities are distributed, while coordination remains intentionally centralized. VM2 hosts central roles including the HDFS NameNode, Spark master, Hive Metastore, and Trino coordinator, and the local machine hosts Airflow and the principal monitoring services. This arrangement is appropriate for a resource-constrained implementation, but the loss of a coordinator host or the control plane would interrupt important platform capabilities. The deployment must therefore be described as multi-node and distributed, not as fully redundant or highly available.
 
-The project \textbf{does implement}:
-\begin{itemize}
-    \item distributed ingestion, storage, processing, querying, and transformation foundations;
-    \item metadata governance and quality validation;
-    \item orchestration and observability;
-    \item meaningful baseline infrastructure security.
-\end{itemize}
+\subsection{Specialized Components versus Integration Cost}
+Each selected component has a clear responsibility, yet every boundary creates an integration obligation. File paths, schemas, catalog identifiers, Kerberos principals, certificates, hostnames, ports, and service readiness must agree across independently configured systems. Much of the engineering difficulty consequently lies between tools rather than inside them. This is a characteristic trade-off of distributed data platforms: specialized services improve separation of concerns while increasing the cost of maintaining reliable interfaces \cite{kleppmann2017ddia}.
 
-The project \textbf{does not claim to implement fully}:
-\begin{itemize}
-    \item a complete enterprise Customer 360 master data system;
-    \item production-scale machine learning pipelines;
-    \item real-time personalization engines;
-    \item advanced recommendation systems;
-    \item organization-wide security governance and policy automation.
-\end{itemize}
+\subsection{Controlled Batch Processing versus Real-Time Semantics}
+Kafka provides event transport, but the validated lifecycle is an orchestrated sequence in which the raw-loading workflow includes explicit quality tasks and is followed by a governed transformation workflow. The implementation should therefore not be interpreted as a continuously updated real-time customer profile or an event-driven personalization engine. Its current strength is controlled, replayable, and observable batch-oriented processing over heterogeneous customer datasets.
 
-This distinction is essential. It protects the credibility of the report and allows the jury to see the project as both ambitious and disciplined. The real achievement is the platform foundation, not an exaggerated promise that every downstream intelligent capability is already delivered.
+\subsection{Hardening versus Operational Simplicity}
+Kerberos tickets, keytabs, SPNEGO client settings, TLS trust, gateways, and optional encrypted runtime storage improve the security posture while making deployment and troubleshooting more sensitive. Internal or self-signed trust paths require deliberate client configuration, gateway authentication is not equivalent to enterprise IAM, and LUKS support only protects runtime storage when enabled. These boundaries prevent the security layer from being overstated while preserving its implemented value.
+
+\section{Engineering Lessons Learned}
+Several lessons emerged from constructing and validating the platform.
+
+\begin{enumerate}
+    \item \textbf{Interfaces are as important as individual services.} Successful component startup is insufficient when schemas, metadata, identities, or network assumptions disagree across service boundaries.
+    \item \textbf{Readiness must precede data movement.} Separating environment preparation and lakehouse readiness from data-processing workflows reduces ambiguous failures and makes execution order reproducible.
+    \item \textbf{Raw durability and analytical modeling serve different purposes.} HDFS bronze artifacts preserve replayability, while Iceberg, dbt-spark, and the curated layers provide governed analytical structure. Combining these responsibilities would weaken both.
+    \item \textbf{Validation evidence is a platform output.} Great Expectations results, dbt tests, workflow histories, and monitoring metrics are not auxiliary screenshots; they are retained proof that the platform executed its contracts.
+    \item \textbf{Security changes architecture.} Authentication, protected browser paths, remote submission, and credential separation affect hostnames, protocols, startup order, and operational procedures. They are most effective when designed with the deployment rather than added after it.
+    \item \textbf{A distributed demonstration still requires explicit claim boundaries.} Multi-node participation proves that work crosses machine boundaries, but it does not by itself prove high availability, production capacity, or indefinite fault tolerance.
+\end{enumerate}
+
+\section{Academic and Industrial Contribution}
+Academically, the contribution lies in the integration and validation of concepts that are often examined separately. The work combines distributed ingestion, storage, computation, and querying with lakehouse table management, workflow orchestration, data-quality evidence, observability, and infrastructure security. It demonstrates how abstract principles such as replayability, separation of concerns, shared metadata, and controlled service exposure become concrete deployment decisions \cite{kleppmann2017ddia,armbrust2021lakehouse,marz2015bigdata}.
+
+Industrially, \projectname{} provides \companyname{} with an implemented reference foundation for the broader \initiative{} vision. The value is not a completed AI product, but a repeatable path for turning heterogeneous customer-related sources into governed and queryable data products. The use of explicit service boundaries also makes the architecture transferable: components can be scaled, replaced, or managed differently without changing the central lifecycle from ingestion to trusted analytical output.
+
+This transferability has an operational cost. A wider deployment would require ownership of service upgrades, compatibility testing, incident response, access governance, certificate and secret lifecycles, capacity planning, and recovery procedures. The implementation therefore supplies an architectural foundation, while industrialization would require additional operational processes around it.
+
+\section{Limitations and Validity Boundaries}
+The results must be interpreted within the conditions under which they were produced. The following limitations define what the implementation demonstrates and what remains outside its validated scope.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.14}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{0.23\textwidth}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Boundary}} & \textcolor{white}{\textbf{Current validated scope}} & \textcolor{white}{\textbf{Claim that cannot yet be made}} \\
+        \hline
+        Workload representativeness & three retained customer-oriented datasets and approximately 1.12 million visible raw records & sustained enterprise ingestion capacity or production-scale performance \\
+        \hline
+        Availability & successful coordinated operation across a three-VM data plane and local control plane & high availability under coordinator, node, or control-plane failure \\
+        \hline
+        Performance evaluation & runtime and resource snapshots from the implemented environment & statistically repeatable speedup or superiority over an equivalent local baseline \\
+        \hline
+        Customer unification & complementary campaign, behavioral, and transactional analytical perspectives & production-grade cross-source identity resolution or an enterprise customer master \\
+        \hline
+        Processing mode & replayable, orchestrated loading and transformation workflows & continuously updated real-time profiles or low-latency decision serving \\
+        \hline
+        Security maturity & implemented Kerberos, protected browser paths, authenticated gateways, SSH submission, identity separation, and optional LUKS support & enterprise IAM, centralized secrets management, public-key infrastructure automation, or universal data-at-rest encryption \\
+        \hline
+    \end{tabularx}
+    \caption{Validated scope and limits of interpretation}
+    \label{tab:chapter9-validity-boundaries}
+\end{table}
+\FloatBarrier
+
+\clearpage
+These limitations do not negate the completed implementation. They delimit the evidence: the project establishes a functioning, distributed, governed, observable, quality-aware, and security-aware customer-data lakehouse foundation. It does not establish that every production-scale, availability, identity-resolution, or enterprise-governance requirement has already been satisfied.
 
 \section{Conclusion}
-This chapter showed that the final architecture combines significant strengths with real and understandable constraints. The project is modular, distributed, governance-oriented, monitored, and security-aware, which gives it strong academic and industrial relevance. At the same time, limited infrastructure, integration complexity, and secure-cluster operational overhead impose real trade-offs that had to be managed carefully.
+The critical analysis shows that the principal value of \projectname{} lies in architectural coherence. Heterogeneous source handling, distributed data services, governed transformation, quality evidence, orchestration, observability, and protected access were connected into one operational lifecycle. The same choices also create real costs in resource consumption, integration effort, centralized coordination, and security administration.
 
-Most importantly, the chapter clarified the correct positioning of the work: AdOptimizer CDP is a delivered distributed customer-data platform under the broader AdOptimizer AI vision, not the final AI product itself. The last chapter now concludes the report and outlines the most relevant future perspectives that can build on this foundation.
+The project should therefore be understood as a completed Data Engineering and Big Data platform implementation with clearly bounded evidence. It is a credible Customer 360-ready analytical foundation within the broader \initiative{} direction, but not a production-scale customer master or finished AI system. Chapter X concludes the report and converts the identified boundaries into focused perspectives for the platform's continued evolution.

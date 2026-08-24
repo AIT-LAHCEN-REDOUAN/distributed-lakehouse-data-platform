@@ -1,0 +1,31 @@
+AdOptimizer CDP Chapter IX. Discussion and Critical Analysis
+support only protects runtime storage when enabled. These boundaries prevent the security
+layer from being overstated while preserving its implemented value.
+IX.5 Engineering Lessons Learned
+Several lessons emerged from constructing and validating the platform.
+1. Interfaces are as important as individual services.Successful component
+startup is insufficient when schemas, metadata, identities, or network assumptions
+disagree across service boundaries.
+2. Readiness must precede data movement.Separating environment preparation
+and lakehouse readiness from data-processing workflows reduces ambiguous failures
+and makes execution order reproducible.
+3. Raw durability and analytical modeling serve different purposes.HDFS
+bronze artifacts preserve replayability, while Iceberg, dbt-spark, and the curated
+layers provide governed analytical structure. Combining these responsibilities would
+weaken both.
+4. Validation evidence is a platform output.Great Expectations results, dbt tests,
+workflow histories, and monitoring metrics are not auxiliary screenshots; they are
+retained proof that the platform executed its contracts.
+5. Security changes architecture.Authentication, protected browser paths, remote
+submission, and credential separation affect hostnames, protocols, startup order, and
+operational procedures. They are most effective when designed with the deployment
+rather than added after it.
+6. A distributed demonstration still requires explicit claim boundaries.Multi-
+node participation proves that work crosses machine boundaries, but it does not by
+itself prove high availability, production capacity, or indefinite fault tolerance.
+IX.6 Academic and Industrial Contribution
+Academically, the contribution lies in the integration and validation of concepts that are
+often examined separately. The work combines distributed ingestion, storage, computation,
+and querying with lakehouse table management, workflow orchestration, data-quality
+evidence, observability, and infrastructure security. It demonstrates how abstract principles
+76

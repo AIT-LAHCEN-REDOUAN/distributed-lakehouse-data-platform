@@ -1,0 +1,39 @@
+AdOptimizer CDP Contents
+III.2 Project Constraints and Selection Criteria . . . . . . . . . . . . . . . . . 22
+III.3 Comparative Assessment . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+III.3.1 Event Ingestion and Distributed Bronze Storage . . . . . . . . . 25
+III.3.2 Lakehouse Tables, Metadata, and File Format . . . . . . . . . . 25
+III.3.3 Distributed Processing, Querying, and Transformation . . . . . . 25
+III.3.4 Quality, Orchestration, and Observability . . . . . . . . . . . . . 26
+III.3.5 Deployment Reproducibility and Security Support . . . . . . . . 26
+III.4 Synthesis of the Final Stack . . . . . . . . . . . . . . . . . . . . . . . . . 27
+III.5 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+IV Requirements Analysis and System Design 28
+IV.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+IV.2 Requirement Elicitation Context . . . . . . . . . . . . . . . . . . . . . . 28
+IV.3 Stakeholders and System Actors . . . . . . . . . . . . . . . . . . . . . . 29
+IV.4 Functional Requirements . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+IV.5 Non-Functional Requirements . . . . . . . . . . . . . . . . . . . . . . . . 31
+IV.6 System Architecture Overview . . . . . . . . . . . . . . . . . . . . . . . 31
+IV.7 Logical Layered Architecture . . . . . . . . . . . . . . . . . . . . . . . . 33
+IV.8 Physical Multi-Node Architecture . . . . . . . . . . . . . . . . . . . . . 34
+IV.9 End-to-End Data Flow . . . . . . . . . . . . . . . . . . . . . . . . . . . 35
+IV.10 Security-by-Design Integration . . . . . . . . . . . . . . . . . . . . . . . 36
+IV.11 Design Rationale and Trade-offs . . . . . . . . . . . . . . . . . . . . . . 37
+IV.12 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 37
+V Implementation of the Distributed Lakehouse Platform 38
+V.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 38
+V.2 Data Sources and Dataset Modeling . . . . . . . . . . . . . . . . . . . . 38
+V.3 Kafka-Based Ingestion Layer . . . . . . . . . . . . . . . . . . . . . . . . 39
+V.4 HDFS Bronze Storage Layer . . . . . . . . . . . . . . . . . . . . . . . . 40
+V.5 Spark Processing and Iceberg Loading . . . . . . . . . . . . . . . . . . . 41
+V.6 Hive Metastore and Catalog Governance . . . . . . . . . . . . . . . . . . 42
+V.7 Trino Query Layer . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 43
+V.8 dbt-spark Transformation Layer . . . . . . . . . . . . . . . . . . . . . . 44
+V.9 Great Expectations Validation Layer . . . . . . . . . . . . . . . . . . . . 45
+V.10 Airflow Orchestration Layer . . . . . . . . . . . . . . . . . . . . . . . . . 46
+V.11 Observability Integration . . . . . . . . . . . . . . . . . . . . . . . . . . 47
+V.12 Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 47
+VI Deployment Strategy and Distributed Execution 48
+VI.1 Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 48
+vii

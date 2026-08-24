@@ -1,0 +1,33 @@
+AdOptimizer CDP Chapter VI. Deployment Strategy and Distributed Execution
+6. Spark jobs enter through the remote submission path on VM2, with executors allocated
+across registered workers;
+7. Spark reads bronze data, writes raw Iceberg tables, and registers their metadata through
+Hive Metastore on VM2;
+8. the embedded Great Expectations tasks validate the raw lakehouse tables and persist
+validation results and Data Docs on the control plane;
+9. dbt-spark is initiated from the control plane while its transformation work executes
+through the Spark cluster;
+10. the Trino coordinator on VM2 plans analytical queries whose fragments are executed
+by workers on VM1 and VM3;
+11. Prometheus collects distributed service metrics and Grafana exposes centralized moni-
+toring views.
+The resulting path crosses explicit machine and service boundaries for transport, storage,
+processing, metadata governance, querying, transformation, validation, and supervision.
+The platform therefore does not collapse its data path into a single-machine ETL process.
+Local control plane
+Local workstation: dataset preparation and Airflow orchestration trigger
+Kafka transport cluster
+VM1:broker 1 |VM2:broker 2 |VM3:broker 3
+HDFS bronze persistence
+VM2:NameNode + DataNode 2 |VM1/VM3:DataNodes 1 and 3
+Distributed Spark compute
+VM2:master + submit client |VM1/VM2/VM3:workers 1–3
+Governed lakehouse and SQL exposure
+Iceberg tables on HDFS |VM2:Hive Metastore + Trino coordinator
+VM1/VM3:Trino workers
+publish
+persist
+submit and execute
+write, register, query
+Figure VI.3:Machine-level flow across the local control and three-node data planes.
+51

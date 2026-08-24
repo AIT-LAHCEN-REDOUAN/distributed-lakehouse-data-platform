@@ -1,0 +1,33 @@
+AdOptimizer CDP Chapter II. State of the Art and Theoretical Background
+II.3.4 Fault Tolerance and Service Resilience
+In distributed systems, failure must be considered normal rather than exceptional. Nodes
+may disappear, ports may become temporarily unavailable, certificates may expire, services
+may start in the wrong order, and storage volumes may create cascading readiness issues.
+A resilient platform therefore needs explicit strategies for retries, health checks, replication,
+recovery, and replay.
+This principle is especially relevant in data engineering because failures affect not only
+uptime but also trust in data products. A silent ingestion failure may create missing data,
+while a metadata failure may make tables unreadable. Fault tolerance is therefore directly
+tied to platform credibility and reproducibility.
+II.3.5 Batch Processing vs Stream Processing
+Batch processing is based on finite datasets processed periodically or on demand. It is
+suitable for historical backfills, curated analytical transformations, and reproducible large-
+scale recomputation. Stream processing is based on continuous flows of records or events
+that are handled incrementally as they arrive. It is useful when ingestion or propagation
+must remain closer to real-time behavior.
+Thesetwoparadigmsshouldnotbetreatedasmutuallyexclusive.Inmodernplatforms,they
+often coexist: streaming captures raw events continuously, while downstream computation
+structures them into trusted analytical tables through batch or micro-batch logic [25, 23].
+At a very general level, processing intensity may be represented by:
+Throughput= Number of records processed
+Processing time
+This expression is useful because it links theoretical processing models to an operational
+question: how much data can the platform absorb and transform within a given interval.
+II.3.6 Schema-on-Write vs Schema-on-Read
+Schema-on-write means that data must be shaped according to a predefined structure
+before it is stored in an authoritative analytical repository. This approach improves control
+and downstream semantic stability, but it may reduce ingestion flexibility. Schema-on-read,
+by contrast, stores raw or semi-structured data first and interprets structure later when
+the data is processed or queried.
+This trade-off is central to modern lakehouse thinking. Raw layers benefit from schema-
+12

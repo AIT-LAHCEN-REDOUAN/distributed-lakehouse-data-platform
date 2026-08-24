@@ -1,8 +1,32 @@
-\begin{tikzpicture}[node distance=0.55cm]
-    \node[ado box={10.8cm}{adobluefill}] (vm1)
-    {\adoboxcontent{VM1}{broker 1 + DataNode 1 + Spark worker 1 + Trino worker 1 + cAdvisor}};
-    \node[ado box={10.8cm}{adotealfill}, below=of vm1] (vm2)
-    {\adoboxcontent{VM2}{broker 2 + Kerberos KDC + NameNode + DataNode 2 + Hive Metastore + Spark master + Spark submit helper + Spark Thrift + Trino coordinator + secure gateway}};
-    \node[ado box={10.8cm}{adopurplefill}, below=of vm2] (vm3)
-    {\adoboxcontent{VM3}{broker 3 + DataNode 3 + Spark worker 3 + Trino worker 2 + cAdvisor}};
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=14.60cm, minimum height=7.10cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\large] at ($(panel.north)+(0,-0.38)$)
+    {VM service placement and node roles};
+
+  \node[ado box={12.40cm}{adotealfill}, minimum height=2.10cm, inner sep=6pt] (vm2) at (0,-2.45)
+    {\textbf{\small VM2 coordination node}\\[3pt]
+     {\scriptsize
+     \begin{tabular}{@{}p{5.55cm}p{5.55cm}@{}}
+       \textbf{Security:} Kerberos KDC & \textbf{Catalog:} Hive Metastore + PostgreSQL \\
+       \textbf{Transport:} Kafka broker 2 & \textbf{HDFS:} NameNode + DataNode 2 \\
+       \textbf{Spark core:} master + worker 2 & \textbf{Spark access:} submit client + Thrift \\
+       \textbf{Query:} Trino coordinator & \textbf{Spark evidence:} History Server \\
+       \textbf{Operations:} cAdvisor & \textbf{Access:} Trino gateway
+     \end{tabular}}};
+
+  \node[ado box={5.75cm}{adobluefill}, minimum height=1.85cm, inner sep=6pt] (vm1) at (-3.35,-5.45)
+    {\textbf{\small VM1 worker node}\\[3pt]
+     \textbf{\scriptsize Kafka:} \scriptsize broker 1 \quad
+     \textbf{\scriptsize HDFS:} \scriptsize DataNode 1\\[2pt]
+     \textbf{\scriptsize Spark:} \scriptsize worker 1 \quad
+     \textbf{\scriptsize Trino:} \scriptsize worker 1\\[2pt]
+     \textbf{\scriptsize Operations:} \scriptsize cAdvisor};
+
+  \node[ado box={5.75cm}{adopurplefill}, minimum height=1.85cm, inner sep=6pt] (vm3) at (3.35,-5.45)
+    {\textbf{\small VM3 worker node}\\[3pt]
+     \textbf{\scriptsize Kafka:} \scriptsize broker 3 \quad
+     \textbf{\scriptsize HDFS:} \scriptsize DataNode 3\\[2pt]
+     \textbf{\scriptsize Spark:} \scriptsize worker 3 \quad
+     \textbf{\scriptsize Trino:} \scriptsize worker 2\\[2pt]
+     \textbf{\scriptsize Operations:} \scriptsize cAdvisor};
 \end{tikzpicture}

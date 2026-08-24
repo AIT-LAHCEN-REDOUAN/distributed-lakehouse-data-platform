@@ -1,0 +1,47 @@
+AdOptimizer CDP Chapter VI. Deployment Strategy and Distributed Execution
+Node Main hosted services Architectural logic
+VM1 Kafka broker 1, HDFS DataNode 1, Spark
+worker 1, Trino worker 1, cAdvisor
+extends storage, compute, and
+query-worker capacity without carrying
+cluster leadership responsibilities
+VM2 Kafka broker 2, Kerberos KDC, NameNode,
+DataNode 2, Hive Metastore and
+PostgreSQL store, Spark master, Spark
+worker 2, Spark submit client, Spark Thrift
+Server, Spark History Server, Trino
+coordinator, Trino gateway, cAdvisor
+acts as the leader node and integration
+point for coordination-heavy services
+VM3 Kafka broker 3, HDFS DataNode 3, Spark
+worker 3, Trino worker 2, cAdvisor
+reinforces the cluster with additional worker
+capacity and distributed persistence
+Table VI.2:VM-level service allocation in the distributed deployment
+Unlike a pseudo-distributed installation, the principal storage, processing, transport, and
+query responsibilities are materially distributed across separate machines. The deployment
+topology is therefore part of the implemented engineering contribution.
+VM service placement and node roles
+VM2 coordination node
+Security:Kerberos KDCCatalog:Hive Metastore + PostgreSQL
+Transport:Kafka broker 2HDFS:NameNode + DataNode 2
+Spark core:master + worker 2Spark access:submit client + Thrift
+Query:Trino coordinatorSpark evidence:History Server
+Operations:cAdvisorAccess:Trino gateway
+VM1 worker node
+Kafka:broker 1HDFS:DataNode 1
+Spark:worker 1Trino:worker 1
+Operations:cAdvisor
+VM3 worker node
+Kafka:broker 3HDFS:DataNode 3
+Spark:worker 3Trino:worker 2
+Operations:cAdvisor
+Figure VI.2:Service placement and node roles across VM1, VM2, and VM3.
+VI.4 Data Flow Across Machines
+The implemented machine-to-machine flow follows an explicit sequence:
+1. Airflow initiates the relevant workflow from the local control plane;
+2. local producers read the source datasets and publish records to Kafka;
+3. topic partitions are hosted across the brokers on VM1, VM2, and VM3;
+4. bronze consumers read the topics and write source-specific.jsonlbatches to HDFS;
+5. the NameNode on VM2 coordinates block persistence across the three DataNodes;
+50

@@ -1,0 +1,4 @@
+C.2 Observability Evidence
+Figure C.3:Grafana infrastructure overview showing six healthy monitoring targets, twelve observed CPU cores, 11.46 GiB of host memory,
+and the associated availability and utilization panels.
+93

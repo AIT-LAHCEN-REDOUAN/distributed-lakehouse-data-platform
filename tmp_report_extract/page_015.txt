@@ -1,0 +1,32 @@
+AdOptimizer CDP Chapter I. General Project Context
+the implemented PFE scope. The completed contribution is the distributed, observable,
+quality-governed, and secured data platform on which such services can later depend.
+I.3 Project Definition and Scope
+I.3.1 Problem Statement
+Customer-related data is fragmented across operational contexts. In this project, the
+fragmentation is represented by campaign-response and profile data, digital behavioral and
+purchase-intent data, and retail transaction histories. When these sources remain isolated,
+customer understanding stays incomplete, reprocessing becomes difficult, analytical trust
+weakens, and governed datasets for downstream consumers are harder to produce.
+The engineering problem is therefore broader than data storage. It requires a platform that
+can ingest heterogeneous sources reproducibly, preserve replayable raw artifacts, process
+them into governed lakehouse tables, expose trusted analytical access, validate data quality,
+coordinate execution, observe distributed behavior, and secure core infrastructure flows.
+The project addresses the following engineering question:
+How can a distributed customer-data platform reproducibly ingest heteroge-
+neous datasets, preserve replayable raw data in distributed storage, construct
+governed lakehouse tables, expose trusted analytical access, automate trans-
+formation and quality controls, orchestrate and monitor end-to-end execution,
+and secure core service interactions across a multi-node environment?
+I.3.2 Motivation for a Distributed Lakehouse Approach
+A distributed lakehouse architecture was selected because the project combines heteroge-
+neous ingestion, replayable raw persistence, distributed processing, metadata governance,
+SQL access, controlled transformations, and data-quality verification. The lakehouse model
+preserves the flexibility of raw distributed storage while providing managed analytical
+tables that can be shared across processing and query engines.
+The distributed deployment also makes service responsibilities and node collaboration
+explicit. Storage, computation, querying, orchestration, validation, observability, and
+security remain separate concerns but operate through defined interfaces. This architecture
+therefore addresses the engineering problem as an integrated data platform rather than as
+a collection of isolated scripts.
+3

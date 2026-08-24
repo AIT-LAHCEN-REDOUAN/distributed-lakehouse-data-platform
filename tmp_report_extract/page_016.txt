@@ -1,0 +1,29 @@
+AdOptimizer CDP Chapter I. General Project Context
+I.3.3 Project Identity and Academic Positioning
+The implemented system is best characterized as asecure distributed customer-
+data engineering platform. Its academic positioning combines several complementary
+dimensions:
+•a Data Engineering platform for reproducible customer-data pipelines;
+•a Big Data architecture using distributed storage, processing, and querying;
+• a lakehouse implementation joining replayable raw data with governed analytical
+tables;
+• a secure multi-node deployment with orchestration, quality, and observability controls;
+•a technical foundation for future Customer 360 and AI-oriented services.
+This identity reflects the system that was implemented and validated; it does not position
+the project as a finished machine-learning product, a business-intelligence dashboard, or a
+simple ETL script collection.
+I.3.4 Project Objectives
+The project was structured around the following objectives:
+1. organize heterogeneous customer datasets and establish replayable ingestion through
+Kafka and an HDFS bronze layer;
+2. process raw data with Spark into Iceberg tables backed by Parquet and governed
+through Hive Metastore;
+3. expose analytical access through Trino, structure transformations with dbt-spark,
+and validate data quality with Great Expectations;
+4. orchestrate the complete execution sequence through Airflow and centralize opera-
+tional visibility through Prometheus, Grafana, and pipeline evidence;
+5. deploy cooperating services across a local control plane and three Linux virtual
+machines;
+6. protect the distributed runtime through baseline controls for service identity, browser
+access, transport, remote execution, and persisted data.
+4

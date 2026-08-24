@@ -1,0 +1,64 @@
+AdOptimizer CDP Chapter X. General Conclusion and Perspectives
+The original problem is therefore answered by a coherent Data Engineering and Big Data
+architecture that turns heterogeneous source data into governed and reusable analytical
+products. Its contribution is consistent with the principles of distributed data-intensive
+and lakehouse systems: durable raw history, separation of responsibilities, shared table
+metadata, independent processing and query services, and evidence-driven operation
+[22, 11, 25].
+The final positioning must nevertheless remain precise. AdOptimizer CDP is a completed
+distributed customer-data lakehouse implementation and a Customer 360-ready analytical
+foundation. It is not yet a production-scale customer master, a highly available enter-
+prise platform, or a finished AI product. Those boundaries do not reduce the delivered
+contribution; they define the point from which the platform can evolve responsibly.
+X.2 Main Contributions
+The project contributes at several complementary levels.
+Contribution
+dimension
+Implemented contribution Resulting value
+Customer-data integration one governed lifecycle for three
+heterogeneous campaign,
+behavioral, and transactional
+perspectives
+a credible analytical basis for
+broader Customer 360 development
+Distributed architecture multi-node transport, storage,
+processing, and querying across the
+three-VM data plane
+practical demonstration that the
+main data workloads cross machine
+boundaries
+Lakehouse governance replayable HDFS bronze artifacts,
+Iceberg tables, shared Hive
+metadata, and layered dbt models
+separation between durable raw
+history and reusable analytical
+structures
+Quality and
+reproducibility
+dbt tests, source-specific Great
+Expectations checkpoints,
+validation JSON, and Data Docs
+retained evidence that
+transformations and data contracts
+were checked
+Operational control five ordered Airflow workflows
+covering reset, setup, readiness,
+integrated raw loading/quality, and
+dbt transformation, complemented
+by metrics and Grafana dashboards
+repeatable execution, diagnosable
+failures, and runtime visibility
+Deployment hardening Kerberos-secured Hadoop services,
+protected browser paths,
+authenticated gateways, SSH
+submission, identity separation,
+and optional encrypted runtime
+storage
+a security-aware baseline
+integrated into normal platform
+operation
+Table X.1:Synthesis of the principal project contributions
+Taken together, these contributions establish the project primarily as a platform-engineering
+achievement. The value does not come from any individual framework in isolation, but
+from the consistency of the complete path between source data, distributed infrastructure,
+80

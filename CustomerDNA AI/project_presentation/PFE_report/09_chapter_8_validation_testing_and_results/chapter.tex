@@ -1,17 +1,16 @@
 \chapter{Validation, Testing, and Results}
 
 \section{Introduction}
-This chapter presents the validation methodology and the main technical results of \projectname{}. The objective of the validation work is to prove that the platform is not only well designed, but also operational, distributed, monitored, and secured in practice. The chapter therefore focuses on evidence-oriented validation rather than on theoretical expectation alone. In that sense, the validation logic remains aligned with the broader engineering principles already discussed in the report: distributed services must be verifiable through observable runtime evidence, not only through architectural intent \cite{kleppmann2017ddia,apache_airflow_docs,prometheus_docs}. To preserve a clean printed-report structure, the chapter is intentionally organized around textual interpretation and summary tables extracted from runtime observations rather than around screenshot-heavy presentation.
+This chapter presents the validation methodology and the main technical results of \projectname{}. Validation was designed to determine whether the implemented platform was operational across its complete execution path: service readiness, orchestration, distributed storage and processing, governed transformation, data-quality control, analytical access, observability, and secured interaction. The assessment therefore relies on retained runtime evidence rather than architectural intent alone \cite{kleppmann2017ddia,apache_airflow_docs,prometheus_docs}.
+
+The quantitative values reported in this chapter correspond to the retained validation capture of August 18, 2026. They represent the observed state of that execution cycle rather than permanent capacity or performance guarantees.
 
 \section{Validation Strategy}
-The validation strategy was structured around several complementary dimensions:
-\begin{itemize}
-    \item infrastructure readiness;
-    \item end-to-end orchestration readiness;
-    \item distributed execution evidence;
-    \item secure-access verification;
-    \item data-quality and observability evidence.
-\end{itemize}
+The validation campaign covered six complementary axes, summarized in Table~\ref{tab:chapter8-validation-strategy}.
+
+The strategy followed a gated progression. Infrastructure readiness was assessed first because later results are not reliable when storage, metadata, compute, query, identity, or monitoring services are unavailable. The five Airflow workflows were then checked in their implemented order. Multi-node participation was evaluated separately from workflow completion so that a successful task could not be mistaken for proof of distributed execution.
+
+Acceptance combined Airflow histories for execution state, service interfaces for cluster roles, persisted artifacts for durable outputs, and external Trino queries for analytical usability. Dashboard values were treated as time-bound observations, and conclusions were limited to capabilities documented in Chapter~IV and Appendix~\ref{app:validation-evidence}.
 
 \begin{table}[!htbp]
     \centering
@@ -22,58 +21,54 @@ The validation strategy was structured around several complementary dimensions:
     \begin{tabularx}{\textwidth}{|Y|Y|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Validation axis}} & \textcolor{white}{\textbf{What was checked}} & \textcolor{white}{\textbf{Expected proof}} \\
+        \textcolor{white}{\textbf{Validation axis}} & \textcolor{white}{\textbf{What was checked}} & \textcolor{white}{\textbf{Acceptance evidence}} \\
         \hline
-        Infrastructure validation & service endpoints, cluster health, secured ports, cluster membership & the platform components are reachable and stable \\
+        Infrastructure & service endpoints, cluster membership, readiness, and storage state & reachable services and healthy distributed members \\
         \hline
-        Pipeline validation & Airflow DAG execution path and task sequencing & the operational workflow can run in the intended order \\
+        Orchestration & five-DAG execution order, task completion, and rerun behavior & successful workflow histories and controlled lifecycle transitions \\
         \hline
-        Distributed execution validation & multi-worker participation and cross-node service roles & the architecture is truly distributed, not pseudo-distributed \\
+        Distributed execution & Spark workers, HDFS DataNodes, Kafka brokers, and Trino roles & runtime participation across separate virtual machines \\
         \hline
-        Security validation & Kerberos, SPNEGO, TLS, authenticated entry points & protected access paths are functioning as designed \\
+        Transformation and quality & dbt models, tests, Great Expectations checkpoints, and retained artifacts & curated tables, validation JSON, and HTML Data Docs \\
         \hline
-        Observability validation & dashboards, metrics, exporters, and run history & the platform exposes usable operational evidence \\
+        Security & Kerberos, SPNEGO/HTTPS, gateways, SSH, and identity boundaries & functioning protected access paths with documented scope limits \\
+        \hline
+        Observability and access & metrics, dashboards, run history, and external SQL querying & measurable service state and successful analytical consumption \\
         \hline
     \end{tabularx}
     \caption{Validation strategy adopted for the deployed platform}
     \label{tab:chapter8-validation-strategy}
 \end{table}
-
-This strategy is particularly important for the jury because it transforms the project defense into an evidence-based argument. Instead of claiming that the platform works only in principle, the report can point to concrete service checks, DAG outcomes, monitoring views, and secured access demonstrations. This way of validating a distributed platform is consistent with the idea that reliable systems must be defended through explicit operational signals rather than by static design claims alone \cite{kleppmann2017ddia,prometheus_docs}.
 \FloatBarrier
 
 \section{Infrastructure Validation}
-Infrastructure validation focused on proving that the main services were correctly deployed and reachable in the final environment. This includes the Kafka cluster, HDFS cluster, Hive Metastore, Spark cluster, Trino cluster, Kerberos services, browser-facing TLS gateways, and the monitoring stack \cite{apache_kafka_docs,apache_hadoop_docs,apache_hive_docs,apache_spark_docs,trino_docs,mit_kerberos_docs,prometheus_docs,grafana_docs}.
+Infrastructure validation established the operational baseline before pipeline results were interpreted. The campaign covered Kafka, HDFS, Hive Metastore, Spark, Trino, Kerberos, the browser-facing gateways, and the monitoring stack \cite{apache_kafka_docs,apache_hadoop_docs,apache_hive_docs,apache_spark_docs,trino_docs,mit_kerberos_docs,prometheus_docs,grafana_docs}.
 
-At the service level, the validation campaign confirmed the following key conditions:
+The retained checks confirmed that:
 \begin{itemize}
-    \item Kafka brokers were reachable across VM1, VM2, and VM3;
-    \item HDFS reported an active NameNode and live DataNodes across the three VMs;
-    \item Hive Metastore was reachable and usable as the metadata authority;
-    \item Spark master, workers, history server, and Thrift access were available;
-    \item Trino coordinator and workers were aligned with the secured access path;
-    \item Kerberos and related secure endpoints were reachable;
-    \item Prometheus, Grafana, and exporter services were available from the control plane.
+    \item Kafka brokers were reachable on VM1, VM2, and VM3;
+    \item HDFS exposed an active NameNode and three live DataNodes;
+    \item Hive Metastore was available as the shared metadata authority;
+    \item the Spark master, three workers, Thrift Server, and History Server were reachable;
+    \item the Trino coordinator and its two dedicated workers were available through the protected entry path;
+    \item Kerberos and the secured HDFS endpoints were operational;
+    \item Prometheus, Grafana, and the configured exporters were reachable from the control plane.
 \end{itemize}
 
-This infrastructure validation is essential because it establishes the platform baseline before any pipeline result can be interpreted. A successful data run is only meaningful if the underlying cluster services are themselves healthy and correctly interconnected.
-
-The HDFS runtime evidence is especially useful because it shows not only that the distributed file system is reachable, but that it is populated with the structures required by the platform. The observed namespace confirms an active organization around two major zones: a \texttt{/bronze} area for raw replayable ingestion and a \texttt{/warehouse} area for governed analytical storage. Within the client-specific bronze branch, the deployed platform exposes the three retained datasets---\texttt{bank\_marketing}, \texttt{online\_retail\_2}, and \texttt{online\_shoppers\_intention}---while the Iceberg warehouse contains the four expected analytical namespaces: \texttt{raw\_data.db}, \texttt{staging.db}, \texttt{intermediate.db}, and \texttt{analytics.db}. This proves that the storage layout is not theoretical; it is materially instantiated in the cluster.
-
-Beyond simple namespace presence, the HDFS summary and storage-type views show that the cluster was carrying real data at the moment of validation. The retained runtime observations reported 62.97~GB of configured capacity, 918.83~MB of DFS occupation, 7.22~GB remaining, 338 total filesystem objects, three live DataNodes, zero dead nodes, zero under-replicated blocks, and zero pending deletions. In the defended narrative of the report, these results are interpreted within the final hardened architecture, where Kerberos-secured HDFS operation and protected browser access are treated as implemented platform characteristics rather than as optional extensions.
+The HDFS namespace contained two principal branches: \texttt{/bronze} for replayable raw ingestion and \texttt{/warehouse} for governed analytical storage. The client-specific bronze branch contained the three retained datasets, while the Iceberg warehouse contained the raw, staging, intermediate, and analytics namespaces.
 
 \begin{table}[!htbp]
     \centering
     \footnotesize
-    \renewcommand{\arraystretch}{1.16}
+    \renewcommand{\arraystretch}{1.14}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{0.40\textwidth}|Y|}
+    \begin{tabularx}{\textwidth}{|L{0.39\textwidth}|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Observed HDFS evidence}} & \textcolor{white}{\textbf{Runtime result}} \\
+        \textcolor{white}{\textbf{Observed HDFS indicator}} & \textcolor{white}{\textbf{Retained runtime result}} \\
         \hline
-        Live DataNodes & 3 live nodes, 0 dead nodes \\
+        DataNode state & 3 live nodes, 0 dead nodes \\
         \hline
         Configured storage capacity & 62.97 GB \\
         \hline
@@ -81,378 +76,306 @@ Beyond simple namespace presence, the HDFS summary and storage-type views show t
         \hline
         DFS remaining & 7.22 GB (11.46\%) \\
         \hline
-        Total filesystem objects & 338 objects composed of 196 files/directories and 142 replicated blocks \\
+        Filesystem objects & 338 objects: 196 files/directories and 142 replicated blocks \\
         \hline
-        DataNode usage distribution & min 1.19\%, median 1.48\%, max 1.61\%, stddev 0.18\% \\
+        DataNode usage distribution & minimum 1.19\%, median 1.48\%, maximum 1.61\%, standard deviation 0.18\% \\
         \hline
-        Under-replicated blocks & 0 \\
+        Replication health & 0 under-replicated blocks and 0 pending deletions \\
         \hline
-        Pending deletions & 0 \\
-        \hline
-        Storage type in service & DISK across 3 nodes in service \\
-        \hline
-        Top-level namespaces & \texttt{/bronze}, \texttt{/warehouse} \\
-        \hline
-        Client 1 bronze datasets & \texttt{bank\_marketing}, \texttt{online\_retail\_2}, \texttt{online\_shoppers\_intention} \\
-        \hline
-        Iceberg warehouse namespaces & \texttt{raw\_data.db}, \texttt{staging.db}, \texttt{intermediate.db}, \texttt{analytics.db} \\
+        Storage type & DISK across 3 nodes in service \\
         \hline
     \end{tabularx}
-    \caption{HDFS runtime evidence extracted from the final distributed deployment}
+    \caption{HDFS runtime indicators retained from the distributed deployment}
     \label{tab:chapter8-hdfs-runtime-evidence}
 \end{table}
+
+Configured capacity also includes host storage classified outside DFS. Consequently, DFS used and DFS remaining should not be interpreted as a direct arithmetic decomposition of the configured total.
 
 \begin{table}[!htbp]
     \centering
     \footnotesize
-    \renewcommand{\arraystretch}{1.16}
+    \renewcommand{\arraystretch}{1.14}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{0.31\textwidth}|L{0.28\textwidth}|Y|}
+    \begin{tabularx}{\textwidth}{|L{0.29\textwidth}|L{0.31\textwidth}|Y|}
         \hline
         \rowcolor{tableheaderblue}
         \textcolor{white}{\textbf{Observed path}} & \textcolor{white}{\textbf{Observed objects}} & \textcolor{white}{\textbf{Validation meaning}} \\
         \hline
-        \texttt{/} & \texttt{/bronze}, \texttt{/warehouse} & proves that the runtime storage tree separates replayable raw persistence from governed analytical storage \\
+        \texttt{/} & \texttt{/bronze}, \texttt{/warehouse} & separates replayable persistence from governed analytical storage \\
         \hline
-        \texttt{/bronze/client\_1} & \texttt{bank\_marketing}, \texttt{online\_retail\_2}, \texttt{online\_shoppers\_intention} & proves that the retained client datasets were materially persisted in the bronze layer \\
+        \path{/bronze/client_1} & \path{bank_marketing}, \path{online_retail_2}, \path{online_shoppers_intention} & confirms materialized bronze data for the three retained sources \\
         \hline
-        \texttt{/warehouse/iceberg} & \texttt{raw\_data.db}, \texttt{staging.db}, \texttt{intermediate.db}, \texttt{analytics.db} & proves that the governed analytical progression was physically materialized in the warehouse namespace \\
+        \texttt{/warehouse/iceberg} & \texttt{raw\_data.db}, \texttt{staging.db}, \texttt{intermediate.db}, \texttt{analytics.db} & confirms the physical lakehouse-layer progression \\
         \hline
     \end{tabularx}
     \caption{HDFS namespace evidence retained from the validated deployment state}
     \label{tab:chapter8-hdfs-namespace-evidence}
 \end{table}
 
-These tables strengthen the defense in two ways. First, they show that the distributed storage layer is active, measurable, and free from immediate replication anomalies. Second, they demonstrate that the project has moved beyond service startup and into meaningful data occupation: the bronze branch contains client-level raw datasets, and the warehouse branch contains the expected governed namespaces for analytical progression. In the report logic, this namespace-level evidence is therefore used as proof of storage materialization, occupation, dataset organization, and stable three-node HDFS participation under the secured architecture retained as the final platform reference.
-
-The corresponding proof for this section is therefore presented through service-state tables and namespace inspection summaries rather than through a conceptual schema. This choice is more consistent with the role of Chapter VIII, which is to show observed results from the implemented platform.
+Together, the service and namespace observations establish that the storage layer was active, populated, distributed, and free from immediate replication anomalies during the retained capture.
 \FloatBarrier
 
-\section{Pipeline Validation}
-Pipeline validation was centered on the five operational DAGs that structure the lifecycle of the platform:
+\section{Pipeline, Transformation, and Quality Validation}
+Pipeline validation followed the five prioritized Airflow workflows implemented for the final platform:
 \begin{enumerate}
-    \item environment reset pipeline;
-    \item lakehouse setup pipeline;
-    \item lakehouse readiness pipeline;
-    \item Kafka--HDFS--Spark lakehouse pipeline;
-    \item dbt-spark lakehouse pipeline.
+    \item \path{customerdna_client1_environment_reset_pipeline};
+    \item \path{customerdna_client1_lakehouse_setup_pipeline};
+    \item \path{customerdna_client1_lakehouse_readiness_pipeline};
+    \item \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline};
+    \item \path{customerdna_client1_dbt_spark_lakehouse_pipeline}.
 \end{enumerate}
 
-The role of this validation was not merely to confirm that Airflow can trigger tasks. It was to prove that the platform can execute a controlled workflow with dependency-aware sequencing and observable task outcomes \cite{apache_airflow_docs}:
-\begin{itemize}
-    \item return to a clean baseline;
-    \item reinitialize its technical structures;
-    \item verify readiness before deeper execution;
-    \item materialize the raw lakehouse foundation;
-    \item and continue toward transformation-oriented analytical preparation.
-\end{itemize}
-
-The environment reset and lakehouse readiness phases are especially important because they transform troubleshooting experience into formal operational logic. Rather than depending on ad hoc manual cleanup, the platform can be defended as having explicit lifecycle control.
-
-The retained runtime evidence also makes it possible to defend the lifecycle sequentially. The environment reset DAG proves the platform can return to a clean analytical baseline. The lakehouse setup DAG proves that the structural layers required by the project can be recreated quickly and deterministically. The readiness DAG proves that execution does not begin blindly: the platform verifies HDFS, Hive, Spark, and Trino before heavy processing. Finally, the raw pipeline and dbt pipeline prove that the project can move from ingestion to governed transformation while preserving operational traceability. At the global Airflow view, all five retained DAG families ended in success state on August 18, 2026, which is especially important for the jury because it confirms that the platform lifecycle is complete rather than partially operational.
+This decomposition validates lifecycle control without relying on one monolithic workflow. Reset returns the platform to a controlled baseline, setup initializes the required storage and lakehouse structures, readiness prevents deeper execution against unavailable services, the Kafka--HDFS--Spark workflow materializes the distributed raw foundation and executes its embedded Great Expectations tasks, and the dbt workflow builds and tests the governed models \cite{apache_airflow_docs}.
 
 \begin{table}[!htbp]
     \centering
-    \footnotesize
-    \renewcommand{\arraystretch}{1.16}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.13}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{0.31\textwidth}|L{0.14\textwidth}|L{0.10\textwidth}|Y|}
+    \begin{tabularx}{\textwidth}{|L{0.38\textwidth}|L{0.22\textwidth}|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Validated DAG}} & \textcolor{white}{\textbf{Observed result}} & \textcolor{white}{\textbf{Duration}} & \textcolor{white}{\textbf{Interpretation}} \\
+        \textcolor{white}{\textbf{Validated workflow}} & \textcolor{white}{\textbf{Retained result}} & \textcolor{white}{\textbf{Evidence retained}} \\
         \hline
-        \texttt{customerdna\_client1\_environment\_reset\_pipeline} & Success, 7 tasks validated & 00:05:02 & proves controlled cleanup of Kafka topics, bronze storage, and lakehouse baseline before new runs \\
+        \path{customerdna_client1_environment_reset_pipeline} & successful controlled reset & Airflow task history and clean-state checks for Kafka, bronze storage, and lakehouse state \\
         \hline
-        \texttt{customerdna\_client1\_lakehouse\_setup\_pipeline} & Success, 6 tasks validated & 00:00:15 & proves HDFS bronze initialization, Hive Metastore readiness, and Iceberg namespace preparation \\
+        \path{customerdna_client1_lakehouse_setup_pipeline} & successful lakehouse initialization & creation and verification of the bronze namespace and required lakehouse structures \\
         \hline
-        \texttt{customerdna\_client1\_lakehouse\_readiness\_pipeline} & Success, 7 tasks validated & 00:00:08 & proves that HDFS, Hive, Spark, and Trino were all operational before deeper workloads were launched \\
+        \path{customerdna_client1_lakehouse_readiness_pipeline} & successful readiness validation & positive checks for HDFS, Hive, Spark, Spark Thrift, and Trino \\
         \hline
-        \texttt{customerdna\_client1\_kafka\_hdfs\_spark\_lakehouse\_pipeline} & Success, 4 tasks validated & 00:20:15 & proves end-to-end raw ingestion, distributed bronze persistence, Spark loading, and raw quality bootstrap \\
+        \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline} & successful raw loading and integrated quality validation & Kafka activity, bronze \texttt{.jsonl} files, Spark applications, raw Iceberg tables, validation JSON, and Data Docs \\
         \hline
-        \texttt{customerdna\_client1\_dbt\_spark\_lakehouse\_pipeline} & Success, 6 tasks validated & 00:14:59 & proves curated transformation, dbt test execution, and final analytical accessibility through the modeled lakehouse \\
+        \path{customerdna_client1_dbt_spark_lakehouse_pipeline} & successful model execution & dbt build/test traces and materialized staging, intermediate, and analytics tables \\
         \hline
     \end{tabularx}
-    \caption{Observed Airflow evidence for the five operational DAG families}
+    \caption{Retained validation evidence for the five operational workflows}
     \label{tab:chapter8-airflow-run-evidence}
 \end{table}
 
-\begin{table}[!htbp]
-    \centering
-    \footnotesize
-    \renewcommand{\arraystretch}{1.16}
-    \arrayrulecolor{tablelineblue}
-    \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|Y|Y|Y|}
-        \hline
-        \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{DAG}} & \textcolor{white}{\textbf{Validation meaning}} & \textcolor{white}{\textbf{Evidence type}} \\
-        \hline
-        Environment reset & proves reproducible cleanup and reset capability & Airflow task history, logs, and end-state verification \\
-        \hline
-        Lakehouse setup & proves technical structures can be prepared consistently & service-side readiness after initialization \\
-        \hline
-        Lakehouse readiness & proves the platform checks its own critical services before deeper processing & positive readiness tasks across HDFS, Hive, Spark, and Trino \\
-        \hline
-        Kafka--HDFS--Spark pipeline & proves raw distributed ingestion and lakehouse loading path & topic activity, bronze persistence, Spark execution, raw lakehouse outputs \\
-        \hline
-        dbt-spark pipeline & proves modeled transformation logic can operate on the distributed lakehouse foundation & model execution traces, curated outputs, validation coupling \\
-        \hline
-    \end{tabularx}
-    \caption{Operational meaning of the core DAG validations}
-    \label{tab:chapter8-dag-validation}
-\end{table}
+The retained Airflow history demonstrates repeatable, dependency-aware execution rather than a one-time manual sequence. Each lifecycle stage can be diagnosed and rerun at its workflow boundary, while the raw-quality checks remain separately inspectable as named tasks within the fourth workflow.
+
+\subsection*{Transformation and Data-Quality Evidence}
+Transformation validation confirmed that the raw Iceberg tables could be converted into the implemented staging, intermediate, and analytics model layers through dbt-spark. The retained execution traces included model builds and dbt tests, while Trino inspection confirmed that the resulting governed tables were queryable.
+
+Great Expectations validated the three raw-lakehouse source families through the active checkpoint definitions shown in Table~\ref{tab:chapter8-quality-evidence}. The fourth DAG exposes two explicit quality-task boundaries:
+\begin{itemize}[leftmargin=*,itemsep=0.1em,topsep=0.2em]
+    \item \path{bootstrap_raw_lakehouse_quality_assets};
+    \item \path{validate_raw_lakehouse_quality}.
+\end{itemize}
+Each execution produced machine-readable validation JSON and HTML Data Docs, separating quality evidence from Airflow task status alone \cite{great_expectations_docs,dbt_docs}.
 
 \begin{table}[!htbp]
     \centering
-    \footnotesize
-    \renewcommand{\arraystretch}{1.16}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.13}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{0.33\textwidth}|L{0.28\textwidth}|Y|}
+    \begin{tabularx}{\textwidth}{|L{0.20\textwidth}|L{0.52\textwidth}|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Validated DAG}} & \textcolor{white}{\textbf{Observed validated tasks}} & \textcolor{white}{\textbf{Operational proof}} \\
+        \textcolor{white}{\textbf{Source family}} & \textcolor{white}{\textbf{Active checkpoint definition}} & \textcolor{white}{\textbf{Retained evidence}} \\
         \hline
-        \texttt{environment\_reset} & reset Iceberg lakehouse, reset bronze zone, reset Kafka topics & proves controlled rollback to a clean state before new ingestion cycles \\
+        Bank Marketing & \path{raw_lakehouse_quality_checkpoint__bank_marketing.json} & validation JSON and Data Docs \\
         \hline
-        \texttt{lakehouse\_setup} & initialize HDFS bronze zone, validate Hive Metastore, initialize Iceberg namespaces, validate Trino & proves deterministic preparation of the raw and analytical storage foundation \\
+        Online Shoppers Intention & \path{raw_lakehouse_quality_checkpoint__online_shoppers_intention.json} & validation JSON and Data Docs \\
         \hline
-        \texttt{lakehouse\_readiness} & validate HDFS bronze, Hive Metastore, Spark cluster, Spark Thrift, Trino & proves that execution begins only after the critical serving and compute services are reachable \\
-        \hline
-        \texttt{kafka\_hdfs\_spark} & stream sources to HDFS and build raw Iceberg, bootstrap raw quality assets, validate raw lakehouse quality & proves the end-to-end raw ingestion and first governance cycle \\
-        \hline
-        \texttt{dbt\_spark} & validate Spark Thrift, run dbt models, test dbt models, validate Trino query service & proves transformation, testing, and analytical-consumption readiness over the governed lakehouse \\
+        Online Retail II & \path{raw_lakehouse_quality_checkpoint__online_retail_2.json} & validation JSON and Data Docs \\
         \hline
     \end{tabularx}
-    \caption{Task-level interpretation of the validated DAG executions}
-    \label{tab:chapter8-dag-task-evidence}
+    \caption{Source-specific Great Expectations evidence retained by the integrated raw-pipeline validation tasks}
+    \label{tab:chapter8-quality-evidence}
 \end{table}
 
-The Airflow evidence is important for the jury because it proves that the platform did not rely on a one-shot demonstration. The orchestration layer exposes repeatable operational pipelines with explicit task histories, durations, and dependency sequencing. In other words, the platform can be reset, initialized, validated, populated, transformed, and checked again through a controlled lifecycle rather than through manual intervention. This is one of the strongest validation points of the chapter because it shows the platform working as an engineering system and not only as a collection of individually reachable services.
-
-In the final presentation of results, this section is therefore better supported by Airflow run tables, task-state summaries, and execution timings than by conceptual flow diagrams.
+The retained dashboard state also reported three refreshed raw outputs with no skipped or partial incremental outputs. Across the three datasets, approximately 1.12 million raw records were visible: about 41.2K bank-marketing rows, 1.07M online-retail rows, and 12.3K online-shopping-session rows.
 \FloatBarrier
 
 \section{Distributed Execution Validation}
-Distributed execution validation aimed to prove that processing and service behavior are not confined to one node. The evidence comes from several complementary observations:
-\begin{itemize}
-    \item Spark master visibility over workers located on multiple VMs;
-    \item HDFS DataNode participation across VM1, VM2, and VM3;
-    \item Kafka broker distribution across the three-node cluster;
-    \item Trino coordinator/worker separation across the VMs.
-\end{itemize}
+Distributed execution was assessed through the runtime roles of Spark, HDFS, Kafka, and Trino. The Spark master registered workers on VM1, VM2, and VM3; HDFS stored blocks through DataNodes on all three machines; Kafka brokers were distributed across the same nodes; and Trino separated coordination on VM2 from query workers on VM1 and VM3.
 
-The most direct proof concerns Spark. The master node manages workers registered on several virtual machines, and Spark applications can allocate resources beyond the leader node. Even when light workloads do not saturate every worker equally, the cluster topology and execution path still demonstrate a true distributed compute model \cite{apache_spark_docs}. At the time of the retained observation on August 18, 2026, the cluster exposed three live workers, three total cores, 3.0~GiB of distributed memory, one active running service, and twelve completed Spark applications associated with client data loading and serving.
-
-Similarly, HDFS validation shows that the file-system layer is not reduced to local storage on VM2. The NameNode controls the namespace, but actual block storage is spread across multiple DataNodes. This is a critical argument for the defense because it proves that the storage layer also participates in the distributed design \cite{apache_hadoop_docs}.
+The retained Spark capture recorded three live workers, three total cores, 3.0~GiB of aggregate worker memory, an active Thrift service, and twelve completed applications associated with client-data loading and serving. Workload allocation was not identical across every worker, which is expected for light jobs; the relevant result is that executor capacity existed beyond the coordinator node \cite{apache_spark_docs}.
 
 \begin{table}[!htbp]
     \centering
     \footnotesize
-    \renewcommand{\arraystretch}{1.16}
+    \renewcommand{\arraystretch}{1.14}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{0.37\textwidth}|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Distributed indicator}} & \textcolor{white}{\textbf{Observed runtime result}} \\
+        \hline
+        Registered Spark workers & 3 alive workers on VM1, VM2, and VM3; 0 dead and 0 decommissioned \\
+        \hline
+        Spark capacity at capture time & 3 total cores, 1 active core; 3.0 GiB total worker memory, 512 MiB used \\
+        \hline
+        Spark SQL service & Thrift JDBC/ODBC Server active on the cluster \\
+        \hline
+        Completed Spark applications & 12 completed applications visible in the retained master/history views \\
+        \hline
+        Raw-to-Iceberg jobs & successful applications for \texttt{bank\_marketing}, \texttt{online\_retail\_2}, and \texttt{online\_shoppers\_intention} \\
+        \hline
+        HDFS participation & 3 live DataNodes with replicated blocks across the cluster \\
+        \hline
+        Kafka participation & one broker on each of VM1, VM2, and VM3 \\
+        \hline
+        Trino participation & coordinator on VM2 and two dedicated workers on VM1 and VM3 \\
+        \hline
+    \end{tabularx}
+    \caption{Runtime indicators of multi-node storage, transport, processing, and querying}
+    \label{tab:chapter8-distributed-execution-evidence}
+\end{table}
+\FloatBarrier
+
+\section{Security Validation}
+Security validation checked whether the hardened paths described in Chapter VII were usable in the deployed environment \cite{mit_kerberos_docs,apache_hadoop_docs,trino_docs,openssh_docs,cryptsetup_docs}.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.14}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{0.29\textwidth}|L{0.30\textwidth}|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Security path}} & \textcolor{white}{\textbf{Validated result}} & \textcolor{white}{\textbf{Scope interpretation}} \\
+        \hline
+        Kerberos-secured Hadoop & service principals, keytabs, and authenticated Hadoop interactions were operational & implemented service-identity baseline \\
+        \hline
+        HDFS browser access & Windows Kerberos ticket and Firefox SPNEGO reached HTTPS-only HDFS interfaces & client-sensitive path requiring documented hostnames and browser configuration \\
+        \hline
+        TLS browser exposure & HDFS, Trino, and control-plane interfaces used protected browser entry paths & internal/self-signed trust rather than enterprise PKI \\
+        \hline
+        Trino analytical access & authenticated gateway allowed controlled access to the coordinator path & gateway authentication, not full enterprise IAM \\
+        \hline
+        Spark submission & Airflow reached the Spark submit client on VM2 through SSH & authenticated control-plane/data-plane bridge \\
+        \hline
+        Operational identities & service, administration, and demonstration identities were separated & baseline role separation without centralized secret management \\
+        \hline
+        Runtime storage & LUKS-backed deployment support was available for VM runtime directories & optional data-at-rest hardening when enabled \\
+        \hline
+    \end{tabularx}
+    \caption{Validated security paths and their implementation boundaries}
+    \label{tab:chapter8-security-validation}
+\end{table}
+
+The Windows/Firefox SPNEGO workflow depends on the client ticket cache, hostname aliases, and browser negotiation settings. Client-side integration failures must therefore be distinguished from the health of the Kerberos-secured Hadoop back end.
+\FloatBarrier
+
+\section{Observability and Analytical Access Validation}
+Observability validation confirmed that platform diagnosis was not limited to manual container-log inspection. Prometheus collected infrastructure, exporter, container, and pipeline metrics; Grafana exposed the retained dashboards; cAdvisor supplied node/container observations from all three VMs; and Airflow retained task histories and logs \cite{prometheus_docs,grafana_docs,apache_airflow_docs}.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.14}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{0.39\textwidth}|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Monitoring indicator}} & \textcolor{white}{\textbf{Observed metric or state}} \\
+        \hline
+        Prometheus target health & 6 healthy targets \\
+        \hline
+        Observed host capacity & 12 CPU cores and 11.46 GiB memory \\
+        \hline
+        Hive Metastore PostgreSQL & available, 11.4 MiB database size, 44 active connections at capture time \\
+        \hline
+        Pipeline status & retained workflow and quality indicators reported successful completion \\
+        \hline
+        Latest visible raw volume & approximately 1.12 million records across the three retained datasets \\
+        \hline
+        Raw load outcomes & 3 refreshed outputs, 0 skipped, and 0 partial incremental outputs \\
+        \hline
+        Great Expectations evidence & successful source-specific checkpoint artifacts retained for the raw lakehouse \\
+        \hline
+    \end{tabularx}
+    \caption{Observed monitoring evidence supporting operational visibility}
+    \label{tab:chapter8-monitoring-evidence}
+\end{table}
+
+Analytical access was validated independently from the transformation engines through an external SQL client. The retained query targeted the Online Retail II raw table through Trino and completed successfully.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.14}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
     \begin{tabularx}{\textwidth}{|L{0.36\textwidth}|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Distributed execution indicator}} & \textcolor{white}{\textbf{Observed runtime result}} \\
+        \textcolor{white}{\textbf{Analytical-access indicator}} & \textcolor{white}{\textbf{Observed runtime result}} \\
         \hline
-        Spark master endpoint & \texttt{spark://10.10.252.12:7077} \\
+        Trino version and environment & version 435, environment \texttt{DISTRIBUTED\_DEMO} \\
         \hline
-        Registered Spark workers & 3 alive workers, 0 dead, 0 decommissioned \\
+        Coordinator uptime & 6.74 days at capture time \\
         \hline
-        Worker distribution & VM1 at \texttt{10.10.252.11:34787}, VM3 at \texttt{10.10.252.13:33877}, VM2 at \texttt{10.10.252.12:45845} \\
+        Distributed query roles & coordinator on VM2; dedicated workers on VM1 and VM3 \\
         \hline
-        Compute capacity at capture time & 3 total cores, 1 core actively used; 3.0 GiB total memory, 512 MiB used \\
+        Query state & external SQL query completed with state \textit{Finished} \\
         \hline
-        Running analytical service & \texttt{Thrift JDBC/ODBC Server} active on the Spark cluster \\
+        Query throughput snapshot & 89.0 rows/s and 242K bytes/s \\
         \hline
-        Completed distributed applications & 12 completed Spark applications visible on the master console \\
+        Query target & \texttt{lakehouse.raw\_data.online\_retail\_2}, limited to 200 rows \\
         \hline
-        Completed raw-to-Iceberg jobs observed & repeated successful runs for \texttt{bank\_marketing}, \texttt{online\_retail\_2}, and \texttt{online\_shoppers\_intention} \\
-        \hline
-        HDFS storage distribution & 3 live DataNodes, 0 dead nodes, storage blocks replicated across the three-node cluster \\
+        Consumption result & governed lakehouse tables were browsable from an external SQL client \\
         \hline
     \end{tabularx}
-    \caption{Runtime evidence that execution and storage were distributed across the three-node platform}
-    \label{tab:chapter8-distributed-execution-evidence}
-\end{table}
-
-This part of the chapter therefore moves the argument from architecture to proof. The distributed design is not merely declared in the deployment chapter; it is confirmed by worker registration, multi-node storage participation, and completed workload traces associated with the three retained client datasets.
-\FloatBarrier
-
-\section{Security Validation}
-Security validation focused on proving that the implemented protection mechanisms are not only present in configuration files, but usable in practice \cite{mit_kerberos_docs,apache_hadoop_docs,trino_docs,openssh_docs,cryptsetup_docs}.
-
-The main validated points are:
-\begin{itemize}
-    \item Kerberos-secured Hadoop services were implemented and validated in the hardened deployment track;
-    \item the HDFS browser path functioned through the Windows Kerberos + Firefox SPNEGO configuration once the client path was correctly aligned;
-    \item HTTPS-protected HDFS web access was operational;
-    \item the Trino gateway exposed a protected analytical access path;
-    \item the control plane interfaces were exposed through secured local entry points.
-\end{itemize}
-
-One especially important result is the final browser-based HDFS validation. This feature is valuable because it proves end-to-end negotiated access from a Windows client to a Kerberos-secured Hadoop service. In the report narrative, the security architecture is therefore treated as implemented and validated. Chapter VIII therefore reads all storage, orchestration, processing, and serving results as outcomes produced by the final secured platform logic, while the hardened Kerberos deployment remains the reference point for the protected-access conclusion established in Chapter VII.
-
-The evidence retained for this section is consequently summarized through authenticated interface checks, protected service paths, and concise result tables. In the defended narrative of the report, the platform security posture is interpreted as enabled in the final architecture, with the hardened Kerberos-secured deployment remaining the formal reference implementation for protected access.
-
-\section{Observability and Monitoring Validation}
-Observability validation confirms that the platform does not rely only on raw container logs for diagnosis. Instead, it exposes a structured monitoring layer composed of:
-\begin{itemize}
-    \item Prometheus for metric collection;
-    \item Grafana for dashboard-based visibility;
-    \item cAdvisor on VM1, VM2, and VM3 for node/container metrics;
-    \item pipeline-related exporters and Airflow run history for workflow evidence.
-\end{itemize}
-
-This monitoring layer matters academically because it strengthens the maturity of the platform. A distributed system is harder to defend when failures can only be explained retrospectively through manual shell inspection. Here, the project shows that service states, cluster readiness, and pipeline outcomes are visible through explicit observability mechanisms \cite{prometheus_docs,grafana_docs,apache_airflow_docs}. The retained Grafana observations were captured from the final validated dashboard state after the successful pipeline cycle of August 18, 2026.
-
-The existence of dashboards, exporters, and centralized metric collection also contributes to the evidence strategy of the report. It allows the platform to be presented not only as running, but as observable and diagnosable.
-
-\begin{table}[!htbp]
-    \centering
-    \footnotesize
-    \renewcommand{\arraystretch}{1.16}
-    \arrayrulecolor{tablelineblue}
-    \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{0.40\textwidth}|Y|}
-        \hline
-        \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Monitoring dashboard evidence}} & \textcolor{white}{\textbf{Observed metric or state}} \\
-        \hline
-        Healthy monitoring targets & 6 healthy targets \\
-        \hline
-        Host CPU capacity & 12 CPU cores \\
-        \hline
-        Host memory capacity & 11.46 GiB \\
-        \hline
-        PostgreSQL availability & Up \\
-        \hline
-        Hive Metastore PostgreSQL database size & 11.4 MiB \\
-        \hline
-        Active PostgreSQL connections & 44 \\
-        \hline
-        PostgreSQL commit rate & last observed value 2.456, peak 2.456 \\
-        \hline
-        PostgreSQL rollback rate & last observed value 0.000, peak 0.004 \\
-        \hline
-        Rows returned rate & last observed value 521.282, peak 521.282 \\
-        \hline
-        Exporter CPU usage & \texttt{postgres\_exporter\_vm2\_metastore} last 0.0023, max 0.0031; \texttt{prometheus} last 0.0057, max 0.0078 \\
-        \hline
-        Exporter memory usage & \texttt{postgres\_exporter\_vm2\_metastore} last 29.36 MiB, max 125.43 MiB; \texttt{prometheus} last 136.96 MiB, max 145.27 MiB \\
-        \hline
-        Pipeline status cards & lakehouse setup, raw pipeline, readiness, and dbt transformation all reported \textit{Success} \\
-        \hline
-        Raw rows inserted during latest pipeline evidence & approximately 1 million rows \\
-        \hline
-        Raw rows by retained dataset & \texttt{bank\_marketing} about 41.2K, \texttt{online\_retail\_2} about 1.07M, \texttt{online\_shoppers\_intention} about 12.3K \\
-        \hline
-        Raw load outcomes & 3 refreshed outputs, 0 skipped, 0 incremental partial outputs at the displayed moment \\
-        \hline
-        Great Expectations checkpoint evidence & success state 1 for the raw lakehouse checkpoint \\
-        \hline
-        dbt freshness indicator & current freshness returned to 0.00 hour after the successful transformation cycle; older historical pane still showed 3.01 days before refresh normalization \\
-        \hline
-    \end{tabularx}
-    \caption{Observed monitoring and dashboard evidence supporting operational visibility}
-    \label{tab:chapter8-monitoring-evidence}
-\end{table}
-
-\begin{table}[!htbp]
-    \centering
-    \footnotesize
-    \renewcommand{\arraystretch}{1.16}
-    \arrayrulecolor{tablelineblue}
-    \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{0.34\textwidth}|Y|}
-        \hline
-        \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Analytical access evidence}} & \textcolor{white}{\textbf{Observed runtime result}} \\
-        \hline
-        Trino version & 435 \\
-        \hline
-        Trino environment label & \texttt{DISTRIBUTED\_DEMO} \\
-        \hline
-        Trino coordinator uptime & 6.74 days \\
-        \hline
-        Active workers & 3 \\
-        \hline
-        Running, queued, and blocked queries at capture time & 0, 0, and 0 respectively \\
-        \hline
-        Query throughput indicators & 89.0 rows/s and 242K bytes/s at capture time \\
-        \hline
-        Query execution proof & successful query \texttt{SELECT * FROM lakehouse.raw\_data.online\_retail\_2 LIMIT 200} issued from DBeaver by user \texttt{redouan} \\
-        \hline
-        Query state & Finished \\
-        \hline
-        End-user meaning & analytical consumers can browse governed lakehouse tables through SQL clients connected to the distributed query layer \\
-        \hline
-    \end{tabularx}
-    \caption{Runtime proof that the analytical access layer was usable from an external SQL client}
+    \caption{Runtime evidence that the distributed analytical-access layer was usable}
     \label{tab:chapter8-trino-query-evidence}
 \end{table}
-
-For the same reason, the observability discussion in this chapter is best documented through metric-oriented summary tables rather than through additional conceptual illustrations. The practical value of this evidence is that it allows the defense to move beyond binary claims such as ``the services started'' and instead show that the services were measurable, queryable, and traceable over time.
-
-Taken together, the monitoring and analytical-access evidence closes the operational argument of the report. Airflow proves that the workflows completed successfully, Spark proves that distributed execution took place across the three-node cluster, HDFS proves that the raw and governed storage branches were physically instantiated, Trino proves that the resulting tables were consumable from an external SQL client, and Grafana proves that the whole platform remained observable through infrastructure, metastore, and pipeline-health indicators. This combination is what allows Chapter VIII to support the strong claim that the implemented platform worked end to end and remained measurable at every major layer.
 \FloatBarrier
 
 \section{Main Results}
-The main technical result of the project is the delivery of a distributed, orchestrated, monitored, and security-aware customer-data lakehouse platform under the AdOptimizer CDP scope.
+The validation campaign confirmed the delivery of a distributed, orchestrated, governed, observable, and security-aware customer-data lakehouse platform under the \projectname{} scope.
+
+The principal result is the demonstrated continuity of the implemented data path. The retained datasets were transported through Kafka, persisted in the HDFS bronze zone, materialized as governed Iceberg tables, transformed through the dbt model layers, and consumed externally through Trino. Consequently, the analytical-access result was not produced by an isolated demonstration dataset; it depended on the same storage, metadata, processing, and orchestration chain validated throughout the chapter.
+
+Completion was also established through complementary forms of evidence. Airflow histories confirmed workflow order and task state, cluster interfaces exposed the participating distributed services, persisted files and tables demonstrated durable outputs, Great Expectations retained independently inspectable validation artifacts, and Trino supplied a consumer-side query result. This triangulation reduces the risk of interpreting a successful task status or an available endpoint as sufficient proof of end-to-end platform behavior.
 
 \begin{table}[!htbp]
     \centering
     \footnotesize
-    \renewcommand{\arraystretch}{1.16}
+    \renewcommand{\arraystretch}{1.14}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{0.34\textwidth}|Y|}
+    \begin{tabularx}{\textwidth}{|L{0.31\textwidth}|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Final result dimension}} & \textcolor{white}{\textbf{Observed proof of completion}} \\
+        \textcolor{white}{\textbf{Result dimension}} & \textcolor{white}{\textbf{Observed completion evidence}} \\
         \hline
-        Orchestration lifecycle & all five operational DAG families completed successfully in Airflow with visible task histories and durations: 00:05:02, 00:00:15, 00:00:08, 00:20:15, and 00:14:59 respectively \\
+        Orchestration lifecycle & the five workflows covered reset, setup, readiness, integrated raw loading and quality validation, and governed transformation \\
         \hline
-        Distributed storage & 3 live DataNodes, governed HDFS namespace, client bronze datasets, warehouse analytical namespaces, 62.97 GB configured capacity, and 918.83 MB of occupied DFS storage \\
+        Distributed storage & 3 live DataNodes, populated bronze and warehouse namespaces, 62.97 GB configured capacity, and no immediate replication anomalies \\
         \hline
-        Distributed compute & Spark master registered 3 workers, exposed 3 total cores and 3.0 GiB memory, and displayed 12 completed client applications in addition to the active Thrift service \\
+        Distributed compute & the Spark master registered workers on all three VMs and retained 12 completed applications \\
         \hline
-        Analytical access & Trino version 435 served finished SQL queries from an external client against the lakehouse with 3 active workers, 89.0 rows/s, and 242K bytes/s at capture time \\
+        Governed transformation & dbt materialized staging, intermediate, and analytics models and executed associated tests \\
         \hline
-        Monitoring and observability & 6 healthy monitoring targets with operational Grafana dashboards for infrastructure, metastore, and pipeline health, including PostgreSQL availability, database size, and host-capacity indicators \\
+        Data quality & three source-specific Great Expectations checkpoints produced validation JSON and HTML Data Docs \\
         \hline
-        Data volume evidence & approximately 1 million raw rows processed in the latest visible pipeline cycle across the retained datasets, including 41.2K bank marketing rows, 1.07M online retail rows, and 12.3K online shoppers intention rows \\
+        Analytical access & Trino served a completed external SQL query through its coordinator and two dedicated workers \\
         \hline
-        Quality evidence & raw lakehouse quality checkpoint reported success, raw load outcomes showed 3 refreshed outputs with no skipped or incremental leftovers, and dbt freshness returned to current-state values after transformation \\
+        Observability & Prometheus and Grafana exposed healthy targets, infrastructure capacity, metastore state, pipeline status, and quality indicators \\
         \hline
-        Security posture & the hardened deployment track implemented Kerberos, SPNEGO, TLS, authenticated gateways, and encrypted runtime storage as validated in the secure version of the platform \\
+        Data volume & approximately 1.12 million raw records were visible across the three retained datasets \\
+        \hline
+        Security posture & Kerberos, SPNEGO/HTTPS, authenticated gateways, SSH submission, role separation, and optional LUKS support hardened the deployed baseline \\
         \hline
     \end{tabularx}
-    \caption{Consolidated proof that the implemented platform operated correctly end to end}
+    \caption{Consolidated validation results for the implemented platform}
     \label{tab:chapter8-final-results-summary}
 \end{table}
+\FloatBarrier
 
-The final validated outcome can be summarized as follows:
-\begin{itemize}
-    \item heterogeneous customer-related datasets can be ingested through a controlled Kafka path;
-    \item raw data can be persisted in a replayable bronze layer on distributed HDFS;
-    \item Spark can structure and load raw lakehouse tables in a distributed environment;
-    \item Hive Metastore centralizes metadata for governed table access;
-    \item Trino provides analytical SQL exposure over the lakehouse foundation;
-    \item dbt-spark introduces modeled transformation discipline;
-    \item Great Expectations provides quality-oriented evidence;
-    \item Airflow provides explicit lifecycle orchestration;
-    \item Prometheus and Grafana provide operational visibility;
-    \item Kerberos, SPNEGO, TLS, authenticated gateways, and encrypted runtime storage strengthen the final deployment.
-\end{itemize}
-
-The most important interpretive result is that the platform can be defended as a \textbf{Customer 360-ready analytical foundation}, not as a finished enterprise AI product. This distinction is central to the academic honesty of the report. What the validation proves is that the complete engineering backbone is now operational: data can enter the platform, remain durably stored, be transformed through governed layers, be queried analytically, and be observed through dedicated monitoring interfaces. The retained results from August 18, 2026 show that the complete path---from reset and setup to ingestion, quality validation, transformation, and analytical querying---executed successfully under real runtime conditions. This is precisely the level of completion expected from a strong PFE in Data Engineering and Big Data.
+The validated platform is a \textbf{Customer 360-ready analytical foundation}, not a finished enterprise AI product or customer master. The retained results show that heterogeneous data could enter through Kafka, persist in distributed bronze storage, become governed lakehouse tables, pass modeled transformations and quality controls, remain queryable through Trino, and expose operational evidence through the monitoring stack. These outcomes establish the completed Data Engineering and Big Data contribution while preserving the boundary between the implemented platform and future AdOptimizer AI capabilities.
 
 \section{Conclusion}
-This chapter demonstrated that \projectname{} was validated operationally and not only designed conceptually. Service readiness, pipeline execution, distributed participation, secure access paths, and observability mechanisms were all used to build an evidence-based understanding of the final platform.
+This chapter confirmed that \projectname{} was tested as an integrated operational platform rather than as a collection of independently reachable services. Readiness, orchestration, multi-node participation, transformation, quality, analytical access, security, and observability were assessed through retained runtime evidence.
 
-As a result, the project can be defended as a deployed and tested distributed data engineering system that provides a trustworthy base for later Customer 360 and AI-oriented work. The next chapter takes a more critical perspective by discussing the strengths, trade-offs, academic value, industrial relevance, and remaining limits of the final architecture.
+Chapter IX builds on these results to examine the architectural strengths, trade-offs, limitations, and industrial relevance of the implemented solution.
