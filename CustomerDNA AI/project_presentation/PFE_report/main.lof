@@ -1,0 +1,53 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {I.1}{\ignorespaces Visual identity of SMART AUTOMATION TECHNOLOGIES}}{1}{figure.caption.9}%
+\contentsline {figure}{\numberline {I.2}{\ignorespaces Core values of SMART AUTOMATION TECHNOLOGIES}}{2}{figure.caption.10}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {II.1}{\ignorespaces Centralized execution model and its main architectural limits.}}{7}{figure.caption.11}%
+\contentsline {figure}{\numberline {II.2}{\ignorespaces Layered organization of a distributed data platform.}}{8}{figure.caption.12}%
+\contentsline {figure}{\numberline {II.3}{\ignorespaces Spark planning, resource allocation, task execution, and shuffle flow.}}{14}{figure.caption.14}%
+\contentsline {figure}{\numberline {II.4}{\ignorespaces Hybrid flow from replayable raw history to governed analytical tables.}}{17}{figure.caption.15}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {IV.1}{\ignorespaces Global architecture of the implemented AdOptimizer CDP platform.}}{32}{figure.caption.22}%
+\contentsline {figure}{\numberline {IV.2}{\ignorespaces Logical data lifecycle and cross-cutting platform controls.}}{33}{figure.caption.23}%
+\contentsline {figure}{\numberline {IV.3}{\ignorespaces Physical topology of the local control plane and three-node distributed data plane.}}{35}{figure.caption.25}%
+\contentsline {figure}{\numberline {IV.4}{\ignorespaces Implemented data flow from source ingestion to validated analytical outputs.}}{36}{figure.caption.26}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {V.1}{\ignorespaces Complementary dataset families and their later use in curated analytical models.}}{39}{figure.caption.29}%
+\contentsline {figure}{\numberline {V.2}{\ignorespaces Kafka publication, topic distribution, and HDFS bronze landing flow.}}{40}{figure.caption.30}%
+\contentsline {figure}{\numberline {V.3}{\ignorespaces HDFS bronze storage with NameNode control and distributed DataNodes.}}{41}{figure.caption.31}%
+\contentsline {figure}{\numberline {V.4}{\ignorespaces Spark loading path from HDFS bronze files to Iceberg raw tables.}}{42}{figure.caption.32}%
+\contentsline {figure}{\numberline {V.5}{\ignorespaces Shared metadata governance through Hive Metastore.}}{43}{figure.caption.33}%
+\contentsline {figure}{\numberline {V.6}{\ignorespaces Protected Trino access through the gateway and distributed query cluster.}}{44}{figure.caption.34}%
+\contentsline {figure}{\numberline {V.7}{\ignorespaces Layered dbt transformation flow from raw to analytical models.}}{45}{figure.caption.36}%
+\contentsline {figure}{\numberline {V.8}{\ignorespaces Raw-lakehouse validation tasks integrated into the Kafka--HDFS--Spark workflow, with persisted evidence.}}{46}{figure.caption.37}%
+\contentsline {figure}{\numberline {V.9}{\ignorespaces Five-DAG orchestration sequence from reset and setup to readiness, integrated raw loading and validation, and curated transformation.}}{47}{figure.caption.39}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {VI.1}{\ignorespaces Control-plane supervision of the distributed Linux data plane.}}{49}{figure.caption.41}%
+\contentsline {figure}{\numberline {VI.2}{\ignorespaces Service placement and node roles across VM1, VM2, and VM3.}}{50}{figure.caption.43}%
+\contentsline {figure}{\numberline {VI.3}{\ignorespaces Machine-level flow across the local control and three-node data planes.}}{51}{figure.caption.44}%
+\contentsline {figure}{\numberline {VI.4}{\ignorespaces Workload-dependent Spark execution across VM1, VM2, and VM3.}}{52}{figure.caption.45}%
+\contentsline {figure}{\numberline {VI.5}{\ignorespaces Dependency-aware deployment lifecycle and startup order.}}{54}{figure.caption.47}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {VII.1}{\ignorespaces Kerberos ticket flow for authenticated Hadoop clients and services.}}{57}{figure.caption.49}%
+\contentsline {figure}{\numberline {VII.2}{\ignorespaces SPNEGO-authenticated HTTPS access to HDFS browser interfaces.}}{58}{figure.caption.50}%
+\contentsline {figure}{\numberline {VII.3}{\ignorespaces TLS-protected exposure zones for data-plane and control-plane interfaces.}}{59}{figure.caption.51}%
+\contentsline {figure}{\numberline {VII.4}{\ignorespaces Authenticated Trino path from the VM2 gateway to distributed workers.}}{60}{figure.caption.52}%
+\contentsline {figure}{\numberline {VII.5}{\ignorespaces SSH-secured Spark submission from the local control plane to VM2.}}{61}{figure.caption.53}%
+\contentsline {figure}{\numberline {VII.6}{\ignorespaces Implemented security coverage across complementary protection dimensions.}}{62}{figure.caption.55}%
+\contentsline {figure}{\numberline {VII.7}{\ignorespaces Implemented security baseline and enterprise controls outside the PFE scope.}}{63}{figure.caption.56}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {C.1}{\ignorespaces Airflow workflow execution evidence}}{91}{figure.caption.78}%
+\contentsline {figure}{\numberline {C.2}{\ignorespaces Great Expectations Data Docs evidence}}{92}{figure.caption.79}%
+\contentsline {figure}{\numberline {C.3}{\ignorespaces Grafana infrastructure monitoring evidence}}{93}{figure.caption.80}%
+\contentsline {figure}{\numberline {C.4}{\ignorespaces Grafana pipeline-health evidence}}{94}{figure.caption.81}%
+\contentsline {figure}{\numberline {C.5}{\ignorespaces Grafana Hive Metastore monitoring evidence}}{95}{figure.caption.82}%
+\contentsline {figure}{\numberline {C.6}{\ignorespaces HDFS cluster-capacity and DataNode evidence}}{96}{figure.caption.83}%
+\contentsline {figure}{\numberline {C.7}{\ignorespaces Spark worker and application evidence}}{97}{figure.caption.84}%
+\contentsline {figure}{\numberline {C.8}{\ignorespaces Trino cluster and completed-query evidence}}{98}{figure.caption.85}%

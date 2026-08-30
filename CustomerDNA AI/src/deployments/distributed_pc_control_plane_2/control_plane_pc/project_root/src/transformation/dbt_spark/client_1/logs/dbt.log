@@ -1,104 +1,101 @@
-[0m13:54:55.242839 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25d206610>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25d4b7050>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25d205950>]}
+[0m22:38:14.682295 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb762f4310>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb762f4050>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb762f4510>]}
 
 
-============================== 13:54:55.247695 | ae15bd9d-7211-4626-97f0-a4c618faee13 ==============================
-[0m13:54:55.247695 [info ] [MainThread]: Running with dbt=1.11.13
-[0m13:54:55.250036 [debug] [MainThread]: running dbt with arguments {'indirect_selection': 'eager', 'quiet': 'False', 'no_print': 'None', 'use_colors': 'True', 'partial_parse': 'True', 'printer_width': '80', 'debug': 'False', 'log_format': 'default', 'write_json': 'True', 'profiles_dir': '/opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1', 'static_parser': 'True', 'version_check': 'True', 'empty': 'None', 'log_cache_events': 'False', 'target_path': 'None', 'fail_fast': 'False', 'log_path': '/opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/logs', 'send_anonymous_usage_stats': 'True', 'introspect': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'warn_error': 'None', 'use_experimental_parser': 'False', 'invocation_command': 'dbt test', 'cache_selected_only': 'False'}
-[0m13:54:55.364804 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
-[0m13:54:55.366143 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
-[0m13:54:55.367057 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
-[0m13:54:55.582586 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'ae15bd9d-7211-4626-97f0-a4c618faee13', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25cdae910>]}
-[0m13:54:55.723088 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': 'ae15bd9d-7211-4626-97f0-a4c618faee13', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25cb24350>]}
-[0m13:54:55.724721 [info ] [MainThread]: Registered adapter: spark=1.10.3
-[0m13:54:55.856063 [debug] [MainThread]: checksum: 509af844148393f6e569c9ab09b1b3ef0c6fadc11092ef2f934b43aaff533196, vars: {}, profile: , target: , version: 1.11.13
-[0m13:54:55.858975 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
-[0m13:54:55.860045 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': 'ae15bd9d-7211-4626-97f0-a4c618faee13', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25d2068d0>]}
-[0m13:54:58.052026 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': 'ae15bd9d-7211-4626-97f0-a4c618faee13', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25c1f7510>]}
-[0m13:54:58.364753 [debug] [MainThread]: Wrote artifact WritableManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/manifest.json
-[0m13:54:58.371431 [debug] [MainThread]: Wrote artifact SemanticManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/semantic_manifest.json
-[0m13:54:58.426885 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': 'ae15bd9d-7211-4626-97f0-a4c618faee13', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25e2fe1d0>]}
-[0m13:54:58.430300 [info ] [MainThread]: Found 10 models, 11 data tests, 3 sources, 527 macros
-[0m13:54:58.433178 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'ae15bd9d-7211-4626-97f0-a4c618faee13', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25d1c7fd0>]}
-[0m13:54:58.438305 [info ] [MainThread]: 
-[0m13:54:58.439431 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
-[0m13:54:58.440457 [info ] [MainThread]: 
-[0m13:54:58.442034 [debug] [MainThread]: Acquiring new spark connection 'master'
-[0m13:54:58.452537 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_intermediate'
-[0m13:54:58.454937 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_staging'
-[0m13:54:58.456578 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_analytics'
-[0m13:54:58.470537 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
-[0m13:54:58.475499 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
-[0m13:54:58.478595 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
-[0m13:54:58.479829 [debug] [ThreadPool]: Using spark connection "list_None_intermediate"
-[0m13:54:58.480951 [debug] [ThreadPool]: Using spark connection "list_None_staging"
-[0m13:54:58.481743 [debug] [ThreadPool]: Using spark connection "list_None_analytics"
-[0m13:54:58.482485 [debug] [ThreadPool]: On list_None_intermediate: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_intermediate"} */
-show table extended in intermediate like '*'
-  
-[0m13:54:58.483378 [debug] [ThreadPool]: On list_None_staging: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_staging"} */
+============================== 22:38:14.687351 | 2718c0af-78a3-461d-a653-f56a3d1b4d0e ==============================
+[0m22:38:14.687351 [info ] [MainThread]: Running with dbt=1.11.14
+[0m22:38:14.689020 [debug] [MainThread]: running dbt with arguments {'introspect': 'True', 'indirect_selection': 'eager', 'static_parser': 'True', 'log_path': '/opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/logs', 'printer_width': '80', 'fail_fast': 'False', 'invocation_command': 'dbt test', 'use_experimental_parser': 'False', 'write_json': 'True', 'quiet': 'False', 'empty': 'None', 'send_anonymous_usage_stats': 'True', 'debug': 'False', 'use_colors': 'True', 'no_print': 'None', 'version_check': 'True', 'log_format': 'default', 'cache_selected_only': 'False', 'profiles_dir': '/opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'target_path': 'None', 'warn_error': 'None', 'partial_parse': 'True', 'log_cache_events': 'False'}
+[0m22:38:14.800436 [debug] [MainThread]: Spark adapter: Setting pyhive.hive logging to ERROR
+[0m22:38:14.801762 [debug] [MainThread]: Spark adapter: Setting thrift.transport logging to ERROR
+[0m22:38:14.802698 [debug] [MainThread]: Spark adapter: Setting thrift.protocol logging to ERROR
+[0m22:38:15.022605 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '2718c0af-78a3-461d-a653-f56a3d1b4d0e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb77162050>]}
+[0m22:38:15.183419 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'adapter_info', 'label': '2718c0af-78a3-461d-a653-f56a3d1b4d0e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb7721e1d0>]}
+[0m22:38:15.185192 [info ] [MainThread]: Registered adapter: spark=1.10.3
+[0m22:38:15.326221 [debug] [MainThread]: checksum: a68dd0028e4625ca51859c4d7ad960e9a293287eb57c7487058cd75251386e72, vars: {}, profile: , target: , version: 1.11.14
+[0m22:38:15.329200 [info ] [MainThread]: Unable to do partial parsing because saved manifest not found. Starting full parse.
+[0m22:38:15.330153 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'partial_parser', 'label': '2718c0af-78a3-461d-a653-f56a3d1b4d0e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb75c0eb90>]}
+[0m22:38:17.048276 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'load_project', 'label': '2718c0af-78a3-461d-a653-f56a3d1b4d0e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb755cf0d0>]}
+[0m22:38:17.306625 [debug] [MainThread]: Wrote artifact WritableManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/manifest.json
+[0m22:38:17.312513 [debug] [MainThread]: Wrote artifact SemanticManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/semantic_manifest.json
+[0m22:38:17.357992 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'resource_counts', 'label': '2718c0af-78a3-461d-a653-f56a3d1b4d0e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb78eb4b90>]}
+[0m22:38:17.359557 [info ] [MainThread]: Found 10 models, 11 data tests, 3 sources, 527 macros
+[0m22:38:17.360654 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '2718c0af-78a3-461d-a653-f56a3d1b4d0e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb76286e10>]}
+[0m22:38:17.363489 [info ] [MainThread]: 
+[0m22:38:17.364949 [info ] [MainThread]: Concurrency: 4 threads (target='dev')
+[0m22:38:17.366383 [info ] [MainThread]: 
+[0m22:38:17.367936 [debug] [MainThread]: Acquiring new spark connection 'master'
+[0m22:38:17.376902 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_intermediate'
+[0m22:38:17.378491 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_analytics'
+[0m22:38:17.379534 [debug] [ThreadPool]: Acquiring new spark connection 'list_None_staging'
+[0m22:38:17.389189 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:17.394971 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:17.398076 [debug] [ThreadPool]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:17.401860 [debug] [ThreadPool]: Using spark connection "list_None_staging"
+[0m22:38:17.400217 [debug] [ThreadPool]: Using spark connection "list_None_analytics"
+[0m22:38:17.399354 [debug] [ThreadPool]: Using spark connection "list_None_intermediate"
+[0m22:38:17.402731 [debug] [ThreadPool]: On list_None_staging: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_staging"} */
 show table extended in staging like '*'
   
-[0m13:54:58.484785 [debug] [ThreadPool]: On list_None_analytics: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_analytics"} */
+[0m22:38:17.403945 [debug] [ThreadPool]: On list_None_analytics: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_analytics"} */
 show table extended in analytics like '*'
   
-[0m13:54:58.485711 [debug] [ThreadPool]: Opening a new connection, currently in state init
-[0m13:54:58.487710 [debug] [ThreadPool]: Opening a new connection, currently in state init
-[0m13:54:58.488892 [debug] [ThreadPool]: Opening a new connection, currently in state init
-[0m13:55:30.782725 [debug] [ThreadPool]: Spark adapter: Poll status: 1, sleeping
-[0m13:55:30.879234 [debug] [ThreadPool]: Spark adapter: Poll status: 1, sleeping
-[0m13:55:31.352570 [debug] [ThreadPool]: Spark adapter: Poll status: 1, sleeping
-[0m13:55:35.960827 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
-[0m13:55:35.962119 [debug] [ThreadPool]: SQL status: OK in 37.474 seconds
-[0m13:55:36.077869 [debug] [ThreadPool]: On list_None_analytics: ROLLBACK
-[0m13:55:36.079133 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
-[0m13:55:36.080166 [debug] [ThreadPool]: On list_None_analytics: Close
-[0m13:55:36.930471 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
-[0m13:55:36.931780 [debug] [ThreadPool]: SQL status: OK in 38.447 seconds
-[0m13:55:37.075520 [debug] [ThreadPool]: On list_None_intermediate: ROLLBACK
-[0m13:55:37.076802 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
-[0m13:55:37.077602 [debug] [ThreadPool]: On list_None_intermediate: Close
-[0m13:55:37.372287 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
-[0m13:55:37.373641 [debug] [ThreadPool]: SQL status: OK in 38.887 seconds
-[0m13:55:37.504386 [debug] [ThreadPool]: On list_None_staging: ROLLBACK
-[0m13:55:37.505784 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
-[0m13:55:37.506669 [debug] [ThreadPool]: On list_None_staging: Close
-[0m13:55:37.554158 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': 'ae15bd9d-7211-4626-97f0-a4c618faee13', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b2563485d0>]}
-[0m13:55:37.556042 [debug] [MainThread]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:37.557631 [debug] [MainThread]: Spark adapter: NotImplemented: commit
-[0m13:55:37.563422 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453
-[0m13:55:37.564154 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4
-[0m13:55:37.565174 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6
-[0m13:55:37.565890 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
-[0m13:55:37.566969 [info ] [Thread-1 (]: 1 of 11 START test not_null_analytics_customer360_overview_unified_entity_token  [RUN]
-[0m13:55:37.568652 [info ] [Thread-2 (]: 2 of 11 START test not_null_int_bank_marketing_contacts_bank_record_id ......... [RUN]
-[0m13:55:37.570462 [info ] [Thread-3 (]: 3 of 11 START test not_null_int_customer_360_feature_store_unified_entity_id ... [RUN]
-[0m13:55:37.572018 [info ] [Thread-4 (]: 4 of 11 START test not_null_int_online_retail_customer_sales_customer_id ....... [RUN]
-[0m13:55:37.573396 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_None_staging, now test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453)
-[0m13:55:37.574620 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly list_None_intermediate, now test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4)
-[0m13:55:37.576238 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly list_None_analytics, now test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6)
-[0m13:55:37.577350 [debug] [Thread-4 (]: Acquiring new spark connection 'test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8'
-[0m13:55:37.578504 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453
-[0m13:55:37.579895 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4
-[0m13:55:37.581991 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6
-[0m13:55:37.583563 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
-[0m13:55:37.619653 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4"
-[0m13:55:37.620413 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453"
-[0m13:55:37.627059 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6"
-[0m13:55:37.634230 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
-[0m13:55:37.655439 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453
-[0m13:55:37.678189 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453"
-[0m13:55:37.679418 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4
-[0m13:55:37.680266 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6
-[0m13:55:37.682534 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
-[0m13:55:37.687179 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4"
-[0m13:55:37.695560 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6"
-[0m13:55:37.700601 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
-[0m13:55:37.715572 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:37.716335 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:37.717278 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453"
-[0m13:55:37.719180 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
-[0m13:55:37.721118 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:37.722236 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453"} */
+[0m22:38:17.405469 [debug] [ThreadPool]: On list_None_intermediate: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "connection_name": "list_None_intermediate"} */
+show table extended in intermediate like '*'
+  
+[0m22:38:17.406243 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m22:38:17.407068 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m22:38:17.407826 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m22:38:19.009827 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m22:38:19.011364 [debug] [ThreadPool]: SQL status: OK in 1.605 seconds
+[0m22:38:19.137536 [debug] [ThreadPool]: On list_None_staging: ROLLBACK
+[0m22:38:19.138938 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m22:38:19.139966 [debug] [ThreadPool]: On list_None_staging: Close
+[0m22:38:19.693282 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m22:38:19.694861 [debug] [ThreadPool]: SQL status: OK in 2.288 seconds
+[0m22:38:19.818486 [debug] [ThreadPool]: On list_None_analytics: ROLLBACK
+[0m22:38:19.819653 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m22:38:19.820451 [debug] [ThreadPool]: On list_None_analytics: Close
+[0m22:38:20.034605 [debug] [ThreadPool]: Spark adapter: Poll status: 2, query complete
+[0m22:38:20.035649 [debug] [ThreadPool]: SQL status: OK in 2.628 seconds
+[0m22:38:20.157994 [debug] [ThreadPool]: On list_None_intermediate: ROLLBACK
+[0m22:38:20.160423 [debug] [ThreadPool]: Spark adapter: NotImplemented: rollback
+[0m22:38:20.164054 [debug] [ThreadPool]: On list_None_intermediate: Close
+[0m22:38:20.238959 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'runnable_timing', 'label': '2718c0af-78a3-461d-a653-f56a3d1b4d0e', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb756f0a10>]}
+[0m22:38:20.242360 [debug] [MainThread]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:20.245793 [debug] [MainThread]: Spark adapter: NotImplemented: commit
+[0m22:38:20.254009 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453
+[0m22:38:20.255148 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4
+[0m22:38:20.256184 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6
+[0m22:38:20.257168 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
+[0m22:38:20.259210 [info ] [Thread-1 (]: 1 of 11 START test not_null_analytics_customer360_overview_unified_entity_token  [RUN]
+[0m22:38:20.261550 [info ] [Thread-2 (]: 2 of 11 START test not_null_int_bank_marketing_contacts_bank_record_id ......... [RUN]
+[0m22:38:20.264919 [info ] [Thread-3 (]: 3 of 11 START test not_null_int_customer_360_feature_store_unified_entity_id ... [RUN]
+[0m22:38:20.268092 [info ] [Thread-4 (]: 4 of 11 START test not_null_int_online_retail_customer_sales_customer_id ....... [RUN]
+[0m22:38:20.269817 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_None_intermediate, now test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453)
+[0m22:38:20.271874 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly list_None_analytics, now test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4)
+[0m22:38:20.273660 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly list_None_staging, now test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6)
+[0m22:38:20.275395 [debug] [Thread-4 (]: Acquiring new spark connection 'test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8'
+[0m22:38:20.276851 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453
+[0m22:38:20.278698 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4
+[0m22:38:20.279804 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6
+[0m22:38:20.282004 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
+[0m22:38:20.308808 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453"
+[0m22:38:20.315264 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4"
+[0m22:38:20.321783 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6"
+[0m22:38:20.327617 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
+[0m22:38:20.340602 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
+[0m22:38:20.341474 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453
+[0m22:38:20.353212 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4
+[0m22:38:20.370331 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453"
+[0m22:38:20.374329 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
+[0m22:38:20.375009 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6
+[0m22:38:20.379585 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4"
+[0m22:38:20.385431 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6"
+[0m22:38:20.395978 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:20.397121 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:20.398633 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453"
+[0m22:38:20.399629 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:20.401100 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4"
+[0m22:38:20.402157 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453"} */
 
     
     select
@@ -124,38 +121,9 @@ where unified_entity_token is null
   
       
     ) dbt_internal_test
-[0m13:55:37.723321 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:37.726309 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"} */
-
-    
-    select
-      count(*) as failures,
-      count(*) != 0 as should_warn,
-      count(*) != 0 as should_error
-    from (
-      
-    
-  
-    
-    
-
-
-
-select customer_id
-from intermediate.int_online_retail_customer_sales
-where customer_id is null
-
-
-
-  
-  
-      
-    ) dbt_internal_test
-[0m13:55:37.728551 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4"
-[0m13:55:37.730472 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
-[0m13:55:37.731906 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6"
-[0m13:55:37.733970 [debug] [Thread-4 (]: Opening a new connection, currently in state init
-[0m13:55:37.735001 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4"} */
+[0m22:38:20.402968 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:20.403993 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"
+[0m22:38:20.405339 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4"} */
 
     
     select
@@ -181,7 +149,36 @@ where bank_record_id is null
   
       
     ) dbt_internal_test
-[0m13:55:37.737083 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6"} */
+[0m22:38:20.406527 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m22:38:20.407734 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6"
+[0m22:38:20.408818 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select customer_id
+from intermediate.int_online_retail_customer_sales
+where customer_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m22:38:20.410020 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m22:38:20.411697 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6"} */
 
     
     select
@@ -207,46 +204,30 @@ where unified_entity_id is null
   
       
     ) dbt_internal_test
-[0m13:55:37.742616 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
-[0m13:55:37.744465 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
-[0m13:55:48.813974 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
-[0m13:55:48.877338 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
-[0m13:55:48.878200 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
-[0m13:55:48.879258 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
-[0m13:55:53.886548 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
-[0m13:55:53.888201 [debug] [Thread-3 (]: SQL status: OK in 16.146 seconds
-[0m13:55:53.896889 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
-[0m13:55:53.898233 [debug] [Thread-1 (]: SQL status: OK in 16.170 seconds
-[0m13:55:53.907650 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
-[0m13:55:53.908865 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
-[0m13:55:53.909933 [debug] [Thread-2 (]: SQL status: OK in 16.170 seconds
-[0m13:55:53.911335 [debug] [Thread-4 (]: SQL status: OK in 16.180 seconds
-[0m13:55:54.012578 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6: ROLLBACK
-[0m13:55:54.014527 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
-[0m13:55:54.016276 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6: Close
-[0m13:55:54.042405 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453: ROLLBACK
-[0m13:55:54.045278 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: ROLLBACK
-[0m13:55:54.047942 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4: ROLLBACK
-[0m13:55:54.049508 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
-[0m13:55:54.051195 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
-[0m13:55:54.052853 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
-[0m13:55:54.057288 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453: Close
-[0m13:55:54.059900 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: Close
-[0m13:55:54.061690 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4: Close
-[0m13:55:54.214572 [info ] [Thread-3 (]: 3 of 11 PASS not_null_int_customer_360_feature_store_unified_entity_id ......... [[32mPASS[0m in 16.64s]
-[0m13:55:54.216367 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6
-[0m13:55:54.217682 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b
-[0m13:55:54.218743 [info ] [Thread-3 (]: 5 of 11 START test not_null_int_online_shopper_sessions_shopper_session_id ..... [RUN]
-[0m13:55:54.219825 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6, now test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b)
-[0m13:55:54.223047 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b
-[0m13:55:54.233439 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b"
-[0m13:55:54.241741 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b
-[0m13:55:54.252056 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b"
-[0m13:55:54.273704 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:54.272590 [info ] [Thread-2 (]: 2 of 11 PASS not_null_int_bank_marketing_contacts_bank_record_id ............... [[32mPASS[0m in 16.70s]
-[0m13:55:54.275339 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b"
-[0m13:55:54.277083 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4
-[0m13:55:54.278943 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b"} */
+[0m22:38:20.412702 [debug] [Thread-4 (]: Opening a new connection, currently in state init
+[0m22:38:20.413955 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m22:38:22.789775 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:22.790940 [debug] [Thread-1 (]: SQL status: OK in 2.386 seconds
+[0m22:38:22.807103 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:22.808430 [debug] [Thread-3 (]: SQL status: OK in 2.396 seconds
+[0m22:38:23.022068 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453: ROLLBACK
+[0m22:38:23.024006 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6: ROLLBACK
+[0m22:38:23.025388 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:23.027337 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:23.028593 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453: Close
+[0m22:38:23.029543 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6: Close
+[0m22:38:23.093473 [info ] [Thread-3 (]: 3 of 11 PASS not_null_int_customer_360_feature_store_unified_entity_id ......... [[32mPASS[0m in 2.82s]
+[0m22:38:23.095663 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6
+[0m22:38:23.097203 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b
+[0m22:38:23.098781 [info ] [Thread-3 (]: 5 of 11 START test not_null_int_online_shopper_sessions_shopper_session_id ..... [RUN]
+[0m22:38:23.099980 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_customer_360_feature_store_unified_entity_id.84de6849f6, now test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b)
+[0m22:38:23.100859 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b
+[0m22:38:23.107103 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b"
+[0m22:38:23.113245 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b
+[0m22:38:23.117570 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b"
+[0m22:38:23.123286 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:23.124263 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b"
+[0m22:38:23.125337 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b"} */
 
     
     select
@@ -272,92 +253,23 @@ where shopper_session_id is null
   
       
     ) dbt_internal_test
-[0m13:55:54.280457 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102
-[0m13:55:54.281484 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
-[0m13:55:54.282810 [info ] [Thread-2 (]: 6 of 11 START test not_null_stg_bank_marketing_bank_record_id .................. [RUN]
-[0m13:55:54.285658 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4, now test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102)
-[0m13:55:54.287464 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102
-[0m13:55:54.295502 [info ] [Thread-4 (]: 4 of 11 PASS not_null_int_online_retail_customer_sales_customer_id ............. [[32mPASS[0m in 16.72s]
-[0m13:55:54.299207 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102"
-[0m13:55:54.303154 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
-[0m13:55:54.302050 [info ] [Thread-1 (]: 1 of 11 PASS not_null_analytics_customer360_overview_unified_entity_token ...... [[32mPASS[0m in 16.73s]
-[0m13:55:54.310784 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3
-[0m13:55:54.312219 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453
-[0m13:55:54.313585 [info ] [Thread-4 (]: 7 of 11 START test not_null_stg_online_retail_2_invoice_no ..................... [RUN]
-[0m13:55:54.315213 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7
-[0m13:55:54.318552 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8, now test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3)
-[0m13:55:54.323183 [info ] [Thread-1 (]: 8 of 11 START test not_null_stg_online_shoppers_intention_shopper_session_id ... [RUN]
-[0m13:55:54.327689 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3
-[0m13:55:54.331567 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453, now test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7)
-[0m13:55:54.341106 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3"
-[0m13:55:54.342929 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7
-[0m13:55:54.345159 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102
-[0m13:55:54.354872 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7"
-[0m13:55:54.361544 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102"
-[0m13:55:54.364990 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3
-[0m13:55:54.370740 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3"
-[0m13:55:54.371506 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7
-[0m13:55:54.378727 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7"
-[0m13:55:54.385798 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:54.388648 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7"
-[0m13:55:54.389532 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:54.390244 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:54.391139 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7"} */
-
-    
-    select
-      count(*) as failures,
-      count(*) != 0 as should_warn,
-      count(*) != 0 as should_error
-    from (
-      
-    
-  
-    
-    
-
-
-
-select shopper_session_id
-from staging.stg_online_shoppers_intention
-where shopper_session_id is null
-
-
-
-  
-  
-      
-    ) dbt_internal_test
-[0m13:55:54.392474 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3"
-[0m13:55:54.394556 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102"
-[0m13:55:54.395686 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
-[0m13:55:54.396552 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3"} */
-
-    
-    select
-      count(*) as failures,
-      count(*) != 0 as should_warn,
-      count(*) != 0 as should_error
-    from (
-      
-    
-  
-    
-    
-
-
-
-select invoice_no
-from staging.stg_online_retail_2
-where invoice_no is null
-
-
-
-  
-  
-      
-    ) dbt_internal_test
-[0m13:55:54.397547 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102"} */
+[0m22:38:23.126938 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m22:38:23.143027 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:23.145344 [debug] [Thread-4 (]: SQL status: OK in 2.734 seconds
+[0m22:38:23.161361 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:23.162738 [info ] [Thread-1 (]: 1 of 11 PASS not_null_analytics_customer360_overview_unified_entity_token ...... [[32mPASS[0m in 2.89s]
+[0m22:38:23.163682 [debug] [Thread-2 (]: SQL status: OK in 2.755 seconds
+[0m22:38:23.165060 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453
+[0m22:38:23.166614 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102
+[0m22:38:23.167418 [info ] [Thread-1 (]: 6 of 11 START test not_null_stg_bank_marketing_bank_record_id .................. [RUN]
+[0m22:38:23.168358 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_analytics_customer360_overview_unified_entity_token.67489c6453, now test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102)
+[0m22:38:23.169315 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102
+[0m22:38:23.174997 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102"
+[0m22:38:23.189686 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102
+[0m22:38:23.194153 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102"
+[0m22:38:23.207459 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:23.209573 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102"
+[0m22:38:23.211249 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102"} */
 
     
     select
@@ -383,25 +295,106 @@ where bank_record_id is null
   
       
     ) dbt_internal_test
-[0m13:55:54.399231 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
-[0m13:55:54.400138 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
-[0m13:55:58.517619 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
-[0m13:55:58.518950 [debug] [Thread-4 (]: SQL status: OK in 4.120 seconds
-[0m13:55:58.607341 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3: ROLLBACK
-[0m13:55:58.608432 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
-[0m13:55:58.609309 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3: Close
-[0m13:55:58.796171 [info ] [Thread-4 (]: 7 of 11 PASS not_null_stg_online_retail_2_invoice_no ........................... [[32mPASS[0m in 4.48s]
-[0m13:55:58.797471 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3
-[0m13:55:58.798486 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9
-[0m13:55:58.799352 [info ] [Thread-4 (]: 9 of 11 START test unique_analytics_customer360_overview_unified_entity_token .. [RUN]
-[0m13:55:58.800278 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3, now test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9)
-[0m13:55:58.801152 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9
-[0m13:55:58.808397 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9"
-[0m13:55:58.822510 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9
-[0m13:55:58.826450 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9"
-[0m13:55:58.836306 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:58.837299 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9"
-[0m13:55:58.838237 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9"} */
+[0m22:38:23.212463 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m22:38:23.220900 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: ROLLBACK
+[0m22:38:23.222590 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:23.223859 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8: Close
+[0m22:38:23.229299 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4: ROLLBACK
+[0m22:38:23.230639 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:23.232042 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4: Close
+[0m22:38:23.295388 [info ] [Thread-4 (]: 4 of 11 PASS not_null_int_online_retail_customer_sales_customer_id ............. [[32mPASS[0m in 3.02s]
+[0m22:38:23.300800 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8
+[0m22:38:23.303189 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3
+[0m22:38:23.304940 [info ] [Thread-4 (]: 7 of 11 START test not_null_stg_online_retail_2_invoice_no ..................... [RUN]
+[0m22:38:23.307177 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_online_retail_customer_sales_customer_id.05d59ed3b8, now test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3)
+[0m22:38:23.309765 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3
+[0m22:38:23.311467 [info ] [Thread-2 (]: 2 of 11 PASS not_null_int_bank_marketing_contacts_bank_record_id ............... [[32mPASS[0m in 3.04s]
+[0m22:38:23.324518 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4
+[0m22:38:23.330971 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3"
+[0m22:38:23.334226 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7
+[0m22:38:23.339027 [info ] [Thread-2 (]: 8 of 11 START test not_null_stg_online_shoppers_intention_shopper_session_id ... [RUN]
+[0m22:38:23.341126 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_bank_marketing_contacts_bank_record_id.c69d0253e4, now test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7)
+[0m22:38:23.345930 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7
+[0m22:38:23.356028 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7"
+[0m22:38:23.358506 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3
+[0m22:38:23.362638 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3"
+[0m22:38:23.364494 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7
+[0m22:38:23.379921 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:23.395925 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7"
+[0m22:38:23.396895 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3"
+[0m22:38:23.398964 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select invoice_no
+from staging.stg_online_retail_2
+where invoice_no is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m22:38:23.400318 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
+[0m22:38:23.412513 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:23.414156 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7"
+[0m22:38:23.416204 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7"} */
+
+    
+    select
+      count(*) as failures,
+      count(*) != 0 as should_warn,
+      count(*) != 0 as should_error
+    from (
+      
+    
+  
+    
+    
+
+
+
+select shopper_session_id
+from staging.stg_online_shoppers_intention
+where shopper_session_id is null
+
+
+
+  
+  
+      
+    ) dbt_internal_test
+[0m22:38:23.417439 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
+[0m22:38:24.599841 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:24.601378 [debug] [Thread-1 (]: SQL status: OK in 1.389 seconds
+[0m22:38:24.716307 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102: ROLLBACK
+[0m22:38:24.717703 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:24.718760 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102: Close
+[0m22:38:24.922999 [info ] [Thread-1 (]: 6 of 11 PASS not_null_stg_bank_marketing_bank_record_id ........................ [[32mPASS[0m in 1.75s]
+[0m22:38:24.924580 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102
+[0m22:38:24.925771 [debug] [Thread-1 (]: Began running node test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9
+[0m22:38:24.927044 [info ] [Thread-1 (]: 9 of 11 START test unique_analytics_customer360_overview_unified_entity_token .. [RUN]
+[0m22:38:24.928167 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102, now test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9)
+[0m22:38:24.929185 [debug] [Thread-1 (]: Began compiling node test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9
+[0m22:38:24.940355 [debug] [Thread-1 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9"
+[0m22:38:24.947293 [debug] [Thread-1 (]: Began executing node test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9
+[0m22:38:24.953730 [debug] [Thread-1 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9"
+[0m22:38:24.962804 [debug] [Thread-1 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:24.964074 [debug] [Thread-1 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9"
+[0m22:38:24.967035 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9"} */
 
     
     select
@@ -430,24 +423,24 @@ having count(*) > 1
   
       
     ) dbt_internal_test
-[0m13:55:58.839127 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
-[0m13:55:58.891340 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
-[0m13:55:58.893029 [debug] [Thread-3 (]: SQL status: OK in 4.611 seconds
-[0m13:55:58.983698 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b: ROLLBACK
-[0m13:55:58.985363 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
-[0m13:55:58.987652 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b: Close
-[0m13:55:59.061868 [info ] [Thread-3 (]: 5 of 11 PASS not_null_int_online_shopper_sessions_shopper_session_id ........... [[32mPASS[0m in 4.84s]
-[0m13:55:59.063758 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b
-[0m13:55:59.065722 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff
-[0m13:55:59.067143 [info ] [Thread-3 (]: 10 of 11 START test unique_int_customer_360_feature_store_unified_entity_id .... [RUN]
-[0m13:55:59.068726 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b, now test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff)
-[0m13:55:59.070140 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff
-[0m13:55:59.076556 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff"
-[0m13:55:59.084254 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff
-[0m13:55:59.089274 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff"
-[0m13:55:59.098783 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:59.100394 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff"
-[0m13:55:59.101748 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff"} */
+[0m22:38:24.968344 [debug] [Thread-1 (]: Opening a new connection, currently in state closed
+[0m22:38:25.193544 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:25.194878 [debug] [Thread-3 (]: SQL status: OK in 2.068 seconds
+[0m22:38:25.330023 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b: ROLLBACK
+[0m22:38:25.332394 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:25.333461 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b: Close
+[0m22:38:25.583926 [info ] [Thread-3 (]: 5 of 11 PASS not_null_int_online_shopper_sessions_shopper_session_id ........... [[32mPASS[0m in 2.48s]
+[0m22:38:25.585443 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b
+[0m22:38:25.586449 [debug] [Thread-3 (]: Began running node test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff
+[0m22:38:25.587592 [info ] [Thread-3 (]: 10 of 11 START test unique_int_customer_360_feature_store_unified_entity_id .... [RUN]
+[0m22:38:25.588757 [debug] [Thread-3 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_int_online_shopper_sessions_shopper_session_id.1ee31c205b, now test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff)
+[0m22:38:25.589803 [debug] [Thread-3 (]: Began compiling node test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff
+[0m22:38:25.596615 [debug] [Thread-3 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff"
+[0m22:38:25.609498 [debug] [Thread-3 (]: Began executing node test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff
+[0m22:38:25.613854 [debug] [Thread-3 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff"
+[0m22:38:25.621163 [debug] [Thread-3 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:25.622529 [debug] [Thread-3 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff"
+[0m22:38:25.623483 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff"} */
 
     
     select
@@ -476,24 +469,24 @@ having count(*) > 1
   
       
     ) dbt_internal_test
-[0m13:55:59.102853 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
-[0m13:55:59.140592 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
-[0m13:55:59.142227 [debug] [Thread-2 (]: SQL status: OK in 4.742 seconds
-[0m13:55:59.266182 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102: ROLLBACK
-[0m13:55:59.268848 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
-[0m13:55:59.270403 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102: Close
-[0m13:55:59.639356 [info ] [Thread-2 (]: 6 of 11 PASS not_null_stg_bank_marketing_bank_record_id ........................ [[32mPASS[0m in 5.35s]
-[0m13:55:59.641312 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102
-[0m13:55:59.642889 [debug] [Thread-2 (]: Began running node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
-[0m13:55:59.643980 [info ] [Thread-2 (]: 11 of 11 START test unique_int_online_retail_customer_sales_customer_id ........ [RUN]
-[0m13:55:59.645719 [debug] [Thread-2 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_stg_bank_marketing_bank_record_id.b7622e1102, now test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb)
-[0m13:55:59.647484 [debug] [Thread-2 (]: Began compiling node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
-[0m13:55:59.651824 [debug] [Thread-2 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
-[0m13:55:59.660084 [debug] [Thread-2 (]: Began executing node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
-[0m13:55:59.663919 [debug] [Thread-2 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
-[0m13:55:59.669362 [debug] [Thread-2 (]: Spark adapter: NotImplemented: add_begin_query
-[0m13:55:59.670310 [debug] [Thread-2 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
-[0m13:55:59.671323 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: /* {"app": "dbt", "dbt_version": "1.11.13", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"} */
+[0m22:38:25.624753 [debug] [Thread-3 (]: Opening a new connection, currently in state closed
+[0m22:38:27.109161 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:27.111669 [debug] [Thread-4 (]: SQL status: OK in 3.711 seconds
+[0m22:38:27.226111 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3: ROLLBACK
+[0m22:38:27.227581 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:27.228738 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3: Close
+[0m22:38:27.402485 [info ] [Thread-4 (]: 7 of 11 PASS not_null_stg_online_retail_2_invoice_no ........................... [[32mPASS[0m in 4.10s]
+[0m22:38:27.404215 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3
+[0m22:38:27.406053 [debug] [Thread-4 (]: Began running node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
+[0m22:38:27.407342 [info ] [Thread-4 (]: 11 of 11 START test unique_int_online_retail_customer_sales_customer_id ........ [RUN]
+[0m22:38:27.408527 [debug] [Thread-4 (]: Re-using an available connection from the pool (formerly test.customerdna_client1_lakehouse.not_null_stg_online_retail_2_invoice_no.9a648588b3, now test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb)
+[0m22:38:27.410025 [debug] [Thread-4 (]: Began compiling node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
+[0m22:38:27.414569 [debug] [Thread-4 (]: Writing injected SQL for node "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
+[0m22:38:27.423933 [debug] [Thread-4 (]: Began executing node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
+[0m22:38:27.429652 [debug] [Thread-4 (]: Writing runtime sql for node "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
+[0m22:38:27.447636 [debug] [Thread-4 (]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:27.449253 [debug] [Thread-4 (]: Using spark connection "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"
+[0m22:38:27.450239 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: /* {"app": "dbt", "dbt_version": "1.11.14", "profile_name": "customerdna_client1_lakehouse", "target_name": "dev", "node_id": "test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb"} */
 
     
     select
@@ -522,64 +515,60 @@ having count(*) > 1
   
       
     ) dbt_internal_test
-[0m13:55:59.672223 [debug] [Thread-2 (]: Opening a new connection, currently in state closed
-[0m13:56:02.319410 [debug] [Thread-1 (]: Spark adapter: Poll status: 1, sleeping
-[0m13:56:04.674147 [debug] [Thread-4 (]: Spark adapter: Poll status: 1, sleeping
-[0m13:56:04.733237 [debug] [Thread-3 (]: Spark adapter: Poll status: 1, sleeping
-[0m13:56:07.406032 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
-[0m13:56:07.407297 [debug] [Thread-1 (]: SQL status: OK in 13.012 seconds
-[0m13:56:07.468389 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7: ROLLBACK
-[0m13:56:07.469410 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
-[0m13:56:07.470189 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7: Close
-[0m13:56:07.645616 [debug] [Thread-2 (]: Spark adapter: Poll status: 1, sleeping
-[0m13:56:07.914320 [info ] [Thread-1 (]: 8 of 11 PASS not_null_stg_online_shoppers_intention_shopper_session_id ......... [[32mPASS[0m in 13.58s]
-[0m13:56:07.915695 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7
-[0m13:56:09.751231 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
-[0m13:56:09.752346 [debug] [Thread-4 (]: SQL status: OK in 10.913 seconds
-[0m13:56:09.770079 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
-[0m13:56:09.773133 [debug] [Thread-3 (]: SQL status: OK in 10.670 seconds
-[0m13:56:09.871094 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9: ROLLBACK
-[0m13:56:09.872246 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
-[0m13:56:09.873103 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9: Close
-[0m13:56:09.895095 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff: ROLLBACK
-[0m13:56:09.896280 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
-[0m13:56:09.897062 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff: Close
-[0m13:56:10.053803 [info ] [Thread-3 (]: 10 of 11 PASS unique_int_customer_360_feature_store_unified_entity_id .......... [[32mPASS[0m in 10.99s]
-[0m13:56:10.054605 [info ] [Thread-4 (]: 9 of 11 PASS unique_analytics_customer360_overview_unified_entity_token ........ [[32mPASS[0m in 11.25s]
-[0m13:56:10.057031 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff
-[0m13:56:10.059542 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9
-[0m13:56:12.723259 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
-[0m13:56:12.724596 [debug] [Thread-2 (]: SQL status: OK in 13.052 seconds
-[0m13:56:12.787232 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: ROLLBACK
-[0m13:56:12.788237 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
-[0m13:56:12.789299 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: Close
-[0m13:56:12.852846 [info ] [Thread-2 (]: 11 of 11 PASS unique_int_online_retail_customer_sales_customer_id .............. [[32mPASS[0m in 13.21s]
-[0m13:56:12.854253 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
-[0m13:56:12.856529 [debug] [MainThread]: On master: ROLLBACK
-[0m13:56:12.857713 [debug] [MainThread]: Opening a new connection, currently in state init
-[0m13:56:13.218934 [debug] [MainThread]: Spark adapter: NotImplemented: rollback
-[0m13:56:13.220085 [debug] [MainThread]: Spark adapter: NotImplemented: add_begin_query
-[0m13:56:13.220828 [debug] [MainThread]: Spark adapter: NotImplemented: commit
-[0m13:56:13.221751 [debug] [MainThread]: On master: ROLLBACK
-[0m13:56:13.222601 [debug] [MainThread]: Spark adapter: NotImplemented: rollback
-[0m13:56:13.223429 [debug] [MainThread]: On master: Close
-[0m13:56:13.280358 [debug] [MainThread]: Connection 'master' was properly closed.
-[0m13:56:13.281519 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb' was properly closed.
-[0m13:56:13.282292 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7' was properly closed.
-[0m13:56:13.283027 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff' was properly closed.
-[0m13:56:13.283729 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9' was properly closed.
-[0m13:56:13.284567 [info ] [MainThread]: 
-[0m13:56:13.285374 [info ] [MainThread]: Finished running 11 data tests in 0 hours 1 minutes and 14.84 seconds (74.84s).
-[0m13:56:13.287508 [debug] [MainThread]: Command end result
-[0m13:56:13.342526 [debug] [MainThread]: Wrote artifact WritableManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/manifest.json
-[0m13:56:13.347676 [debug] [MainThread]: Wrote artifact SemanticManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/semantic_manifest.json
-[0m13:56:13.361664 [debug] [MainThread]: Wrote artifact RunExecutionResult to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/run_results.json
-[0m13:56:13.362666 [info ] [MainThread]: 
-[0m13:56:13.363833 [info ] [MainThread]: [32mCompleted successfully[0m
-[0m13:56:13.364892 [info ] [MainThread]: 
-[0m13:56:13.366587 [info ] [MainThread]: Done. PASS=11 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=11
-[0m13:56:13.368912 [debug] [MainThread]: Resource report: {"command_name": "test", "command_success": true, "command_wall_clock_time": 78.21963, "process_in_blocks": "0", "process_kernel_time": 0.860557, "process_mem_max_rss": "147888", "process_out_blocks": "0", "process_user_time": 5.416683}
-[0m13:56:13.370300 [debug] [MainThread]: Command `dbt test` succeeded at 13:56:13.370134 after 78.22 seconds
-[0m13:56:13.371445 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25d6ed750>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b25d250250>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x78b261aaab50>]}
-[0m13:56:13.372630 [debug] [MainThread]: Flushing usage events
-[0m13:56:13.930525 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m22:38:27.451220 [debug] [Thread-4 (]: Opening a new connection, currently in state closed
+[0m22:38:27.862152 [debug] [Thread-2 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:27.863333 [debug] [Thread-2 (]: SQL status: OK in 4.446 seconds
+[0m22:38:27.966622 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7: ROLLBACK
+[0m22:38:27.968639 [debug] [Thread-2 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:27.969433 [debug] [Thread-2 (]: On test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7: Close
+[0m22:38:28.039966 [info ] [Thread-2 (]: 8 of 11 PASS not_null_stg_online_shoppers_intention_shopper_session_id ......... [[32mPASS[0m in 4.70s]
+[0m22:38:28.041287 [debug] [Thread-2 (]: Finished running node test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7
+[0m22:38:30.322573 [debug] [Thread-3 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:30.323836 [debug] [Thread-3 (]: SQL status: OK in 4.699 seconds
+[0m22:38:30.391753 [debug] [Thread-1 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:30.393237 [debug] [Thread-1 (]: SQL status: OK in 5.425 seconds
+[0m22:38:30.406022 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff: ROLLBACK
+[0m22:38:30.407681 [debug] [Thread-3 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:30.408865 [debug] [Thread-3 (]: On test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff: Close
+[0m22:38:30.435123 [debug] [Thread-4 (]: Spark adapter: Poll status: 2, query complete
+[0m22:38:30.436240 [debug] [Thread-4 (]: SQL status: OK in 2.985 seconds
+[0m22:38:30.463515 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9: ROLLBACK
+[0m22:38:30.465017 [debug] [Thread-1 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:30.466301 [debug] [Thread-1 (]: On test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9: Close
+[0m22:38:30.493380 [info ] [Thread-3 (]: 10 of 11 PASS unique_int_customer_360_feature_store_unified_entity_id .......... [[32mPASS[0m in 4.90s]
+[0m22:38:30.495934 [debug] [Thread-3 (]: Finished running node test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff
+[0m22:38:30.507710 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: ROLLBACK
+[0m22:38:30.508877 [debug] [Thread-4 (]: Spark adapter: NotImplemented: rollback
+[0m22:38:30.510017 [debug] [Thread-4 (]: On test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb: Close
+[0m22:38:30.522656 [info ] [Thread-1 (]: 9 of 11 PASS unique_analytics_customer360_overview_unified_entity_token ........ [[32mPASS[0m in 5.59s]
+[0m22:38:30.524115 [debug] [Thread-1 (]: Finished running node test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9
+[0m22:38:30.563163 [info ] [Thread-4 (]: 11 of 11 PASS unique_int_online_retail_customer_sales_customer_id .............. [[32mPASS[0m in 3.15s]
+[0m22:38:30.564691 [debug] [Thread-4 (]: Finished running node test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb
+[0m22:38:30.567868 [debug] [MainThread]: On master: ROLLBACK
+[0m22:38:30.568907 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m22:38:30.705205 [debug] [MainThread]: Spark adapter: NotImplemented: rollback
+[0m22:38:30.707046 [debug] [MainThread]: Spark adapter: NotImplemented: add_begin_query
+[0m22:38:30.708085 [debug] [MainThread]: Spark adapter: NotImplemented: commit
+[0m22:38:30.708827 [debug] [MainThread]: On master: ROLLBACK
+[0m22:38:30.710027 [debug] [MainThread]: Spark adapter: NotImplemented: rollback
+[0m22:38:30.710983 [debug] [MainThread]: On master: Close
+[0m22:38:30.740591 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m22:38:30.741736 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_analytics_customer360_overview_unified_entity_token.d3ec44fab9' was properly closed.
+[0m22:38:30.742480 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.not_null_stg_online_shoppers_intention_shopper_session_id.f9ed5768f7' was properly closed.
+[0m22:38:30.743495 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_int_customer_360_feature_store_unified_entity_id.57d1d8abff' was properly closed.
+[0m22:38:30.744578 [debug] [MainThread]: Connection 'test.customerdna_client1_lakehouse.unique_int_online_retail_customer_sales_customer_id.13dd1785fb' was properly closed.
+[0m22:38:30.745415 [info ] [MainThread]: 
+[0m22:38:30.746150 [info ] [MainThread]: Finished running 11 data tests in 0 hours 0 minutes and 13.38 seconds (13.38s).
+[0m22:38:30.748260 [debug] [MainThread]: Command end result
+[0m22:38:30.808122 [debug] [MainThread]: Wrote artifact WritableManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/manifest.json
+[0m22:38:30.813962 [debug] [MainThread]: Wrote artifact SemanticManifest to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/semantic_manifest.json
+[0m22:38:30.825337 [debug] [MainThread]: Wrote artifact RunExecutionResult to /opt/airflow/CustomerDNA_AI/src/transformation/dbt_spark/client_1/target/run_results.json
+[0m22:38:30.826420 [info ] [MainThread]: 
+[0m22:38:30.827546 [info ] [MainThread]: [32mCompleted successfully[0m
+[0m22:38:30.828475 [info ] [MainThread]: 
+[0m22:38:30.829386 [info ] [MainThread]: Done. PASS=11 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=11
+[0m22:38:30.830824 [debug] [MainThread]: Resource report: {"command_name": "test", "command_success": true, "command_wall_clock_time": 16.235323, "process_in_blocks": "0", "process_kernel_time": 0.891886, "process_mem_max_rss": "147936", "process_out_blocks": "0", "process_user_time": 4.571418}
+[0m22:38:30.832559 [debug] [MainThread]: Command `dbt test` succeeded at 22:38:30.832368 after 16.24 seconds
+[0m22:38:30.833687 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb7ac83550>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb7651c110>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7bcb7a9be910>]}
+[0m22:38:30.834558 [debug] [MainThread]: Flushing usage events
+[0m22:38:31.306262 [debug] [MainThread]: An error was encountered while trying to flush usage events

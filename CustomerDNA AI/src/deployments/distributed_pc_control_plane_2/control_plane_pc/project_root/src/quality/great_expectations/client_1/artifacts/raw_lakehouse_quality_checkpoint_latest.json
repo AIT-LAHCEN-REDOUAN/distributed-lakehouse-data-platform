@@ -2,9 +2,9 @@
   "checkpoint_name": "raw_lakehouse_quality_checkpoint",
   "status": "success",
   "success": true,
-  "started_at": "2026-08-18T13:36:36.787532+00:00",
-  "ended_at": "2026-08-18T13:37:00.056857+00:00",
-  "duration_seconds": 25.389,
+  "started_at": "2026-08-25T22:32:02.582368+00:00",
+  "ended_at": "2026-08-25T22:33:07.410985+00:00",
+  "duration_seconds": 66.779,
   "validation_count": 3,
   "validation_results": 3,
   "validations": [

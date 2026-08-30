@@ -1,0 +1,49 @@
+\babel@toc {english}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {II.1}{\ignorespaces Comparison between centralized and distributed architectural logic}}{9}{table.caption.13}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {III.1}{\ignorespaces Comparative assessment of the principal technology choices}}{24}{table.caption.16}%
+\contentsline {table}{\numberline {III.2}{\ignorespaces Final technology stack and utility within AdOptimizer CDP}}{27}{table.caption.17}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {IV.1}{\ignorespaces Principal stakeholders and interaction responsibilities}}{29}{table.caption.18}%
+\contentsline {table}{\numberline {IV.2}{\ignorespaces Primary functional requirements of the platform, part 1}}{30}{table.caption.19}%
+\contentsline {table}{\numberline {IV.3}{\ignorespaces Primary functional requirements of the platform, part 2}}{30}{table.caption.20}%
+\contentsline {table}{\numberline {IV.4}{\ignorespaces Main non-functional requirements of the platform}}{31}{table.caption.21}%
+\contentsline {table}{\numberline {IV.5}{\ignorespaces Physical node distribution of the final deployment}}{34}{table.caption.24}%
+\contentsline {table}{\numberline {IV.6}{\ignorespaces Security controls integrated into the system design}}{37}{table.caption.27}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {V.1}{\ignorespaces Active datasets retained in the implemented platform}}{39}{table.caption.28}%
+\contentsline {table}{\numberline {V.2}{\ignorespaces Implemented dbt-spark model inventory}}{44}{table.caption.35}%
+\contentsline {table}{\numberline {V.3}{\ignorespaces Implemented orchestration flow of the platform}}{46}{table.caption.38}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {VI.1}{\ignorespaces Main responsibilities of the local control plane}}{49}{table.caption.40}%
+\contentsline {table}{\numberline {VI.2}{\ignorespaces VM-level service allocation in the distributed deployment}}{50}{table.caption.42}%
+\contentsline {table}{\numberline {VI.3}{\ignorespaces Operational deployment artifacts used in the project}}{53}{table.caption.46}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {VII.1}{\ignorespaces Main security objectives and corresponding implementation controls}}{56}{table.caption.48}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {VIII.1}{\ignorespaces Validation strategy adopted for the deployed platform}}{65}{table.caption.57}%
+\contentsline {table}{\numberline {VIII.2}{\ignorespaces HDFS runtime indicators retained from the distributed deployment}}{66}{table.caption.58}%
+\contentsline {table}{\numberline {VIII.3}{\ignorespaces HDFS namespace evidence retained from the validated deployment state}}{66}{table.caption.59}%
+\contentsline {table}{\numberline {VIII.4}{\ignorespaces Retained validation evidence for the five operational workflows}}{67}{table.caption.60}%
+\contentsline {table}{\numberline {VIII.5}{\ignorespaces Source-specific Great Expectations evidence retained by the integrated raw-pipeline validation tasks}}{68}{table.caption.62}%
+\contentsline {table}{\numberline {VIII.6}{\ignorespaces Runtime indicators of multi-node storage, transport, processing, and querying}}{68}{table.caption.63}%
+\contentsline {table}{\numberline {VIII.7}{\ignorespaces Validated security paths and their implementation boundaries}}{69}{table.caption.64}%
+\contentsline {table}{\numberline {VIII.8}{\ignorespaces Observed monitoring evidence supporting operational visibility}}{70}{table.caption.65}%
+\contentsline {table}{\numberline {VIII.9}{\ignorespaces Runtime evidence that the distributed analytical-access layer was usable}}{70}{table.caption.66}%
+\contentsline {table}{\numberline {VIII.10}{\ignorespaces Consolidated validation results for the implemented platform}}{71}{table.caption.67}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {IX.1}{\ignorespaces Benefits and trade-offs of the principal architectural decisions}}{73}{table.caption.68}%
+\contentsline {table}{\numberline {IX.2}{\ignorespaces Validated scope and limits of interpretation}}{77}{table.caption.69}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {X.1}{\ignorespaces Synthesis of the principal project contributions}}{80}{table.caption.70}%
+\contentsline {table}{\numberline {X.2}{\ignorespaces Prioritized evolution path from the implemented platform to downstream intelligent services}}{82}{table.caption.71}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {A.1}{\ignorespaces Traceability from functional requirements to implemented and retained evidence}}{87}{table.caption.73}%
+\contentsline {table}{\numberline {A.2}{\ignorespaces Traceability from non-functional requirements to architectural verification}}{88}{table.caption.74}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {B.1}{\ignorespaces Allocation of the supplied Compose definitions to the deployed execution zones}}{89}{table.caption.75}%
+\contentsline {table}{\numberline {B.2}{\ignorespaces Service placement extracted from the four Docker Compose definitions}}{90}{table.caption.76}%
+\contentsline {table}{\numberline {B.3}{\ignorespaces Cross-cutting implementation properties extracted from the Compose definitions}}{90}{table.caption.77}%
+\addvspace {10\p@ }

@@ -131,30 +131,30 @@ This decomposition validates lifecycle control without relying on one monolithic
 \begin{table}[!htbp]
     \centering
     \scriptsize
-    \renewcommand{\arraystretch}{1.13}
+    \renewcommand{\arraystretch}{1.12}
     \arrayrulecolor{tablelineblue}
     \rowcolors{2}{tablebodyblue}{white}
-    \begin{tabularx}{\textwidth}{|L{0.38\textwidth}|L{0.22\textwidth}|Y|}
+    \begin{tabularx}{\textwidth}{|L{0.34\textwidth}|L{0.13\textwidth}|L{0.15\textwidth}|Y|}
         \hline
         \rowcolor{tableheaderblue}
-        \textcolor{white}{\textbf{Validated workflow}} & \textcolor{white}{\textbf{Retained result}} & \textcolor{white}{\textbf{Evidence retained}} \\
+        \textcolor{white}{\textbf{Validated workflow}} & \textcolor{white}{\textbf{Run date}} & \textcolor{white}{\textbf{Observed duration}} & \textcolor{white}{\textbf{Retained completion evidence}} \\
         \hline
-        \path{customerdna_client1_environment_reset_pipeline} & successful controlled reset & Airflow task history and clean-state checks for Kafka, bronze storage, and lakehouse state \\
+        \path{customerdna_client1_environment_reset_pipeline} & 2026-08-18 14:09:30 & 00:05:02 & successful reset of Kafka topics, bronze storage, and Iceberg lakehouse state; validation tasks for Hive Metastore and Trino also succeeded \\
         \hline
-        \path{customerdna_client1_lakehouse_setup_pipeline} & successful lakehouse initialization & creation and verification of the bronze namespace and required lakehouse structures \\
+        \path{customerdna_client1_lakehouse_setup_pipeline} & 2026-08-18 14:15:32 & 00:00:15 & successful creation and verification of the bronze namespace and Iceberg warehouse namespaces \\
         \hline
-        \path{customerdna_client1_lakehouse_readiness_pipeline} & successful readiness validation & positive checks for HDFS, Hive, Spark, Spark Thrift, and Trino \\
+        \path{customerdna_client1_lakehouse_readiness_pipeline} & 2026-08-18 14:16:13 & 00:00:08 & successful readiness checks for HDFS, Hive Metastore, Spark cluster, Spark Thrift, and Trino \\
         \hline
-        \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline} & successful raw loading and integrated quality validation & Kafka activity, bronze \texttt{.jsonl} files, Spark applications, raw Iceberg tables, validation JSON, and Data Docs \\
+        \path{customerdna_client1_kafka_hdfs_spark_lakehouse_pipeline} & 2026-08-18 14:16:50 & 00:20:15 & successful raw loading into HDFS bronze and Iceberg raw tables, followed by Great Expectations bootstrap and validation tasks \\
         \hline
-        \path{customerdna_client1_dbt_spark_lakehouse_pipeline} & successful model execution & dbt build/test traces and materialized staging, intermediate, and analytics tables \\
+        \path{customerdna_client1_dbt_spark_lakehouse_pipeline} & 2026-08-18 14:41:17 & 00:14:59 & successful dbt model execution, dbt tests, Spark Thrift validation, and final Trino query validation \\
         \hline
     \end{tabularx}
-    \caption{Retained validation evidence for the five operational workflows}
+    \caption{Retained Airflow workflow outcomes for the validated execution cycle}
     \label{tab:chapter8-airflow-run-evidence}
 \end{table}
 
-The retained Airflow history demonstrates repeatable, dependency-aware execution rather than a one-time manual sequence. Each lifecycle stage can be diagnosed and rerun at its workflow boundary, while the raw-quality checks remain separately inspectable as named tasks within the fourth workflow.
+The retained Airflow history demonstrates repeatable, dependency-aware execution rather than a one-time manual sequence. Each lifecycle stage can be diagnosed and rerun at its workflow boundary, while the raw-quality checks remain separately inspectable as named tasks within the fourth workflow. The captured task timings also show that the most expensive steps were the Spark-based raw materialization stage (11 minutes 59 seconds inside the fourth workflow) and the dbt build stage (13 minutes 31 seconds inside the fifth workflow), which is consistent with the fact that these phases perform the heaviest storage and transformation work.
 
 \subsection*{Transformation and Data-Quality Evidence}
 Transformation validation confirmed that the raw Iceberg tables could be converted into the implemented staging, intermediate, and analytics model layers through dbt-spark. The retained execution traces included model builds and dbt tests, while Trino inspection confirmed that the resulting governed tables were queryable.
@@ -189,12 +189,34 @@ Each execution produced machine-readable validation JSON and HTML Data Docs, sep
 \end{table}
 
 The retained dashboard state also reported three refreshed raw outputs with no skipped or partial incremental outputs. Across the three datasets, approximately 1.12 million raw records were visible: about 41.2K bank-marketing rows, 1.07M online-retail rows, and 12.3K online-shopping-session rows.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.13}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{0.27\textwidth}|L{0.18\textwidth}|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Retained raw table}} & \textcolor{white}{\textbf{Observed row volume}} & \textcolor{white}{\textbf{Interpretation}} \\
+        \hline
+        \texttt{bank\_marketing} & about 41.2K rows & confirms successful landing and raw-lakehouse persistence for the campaign-response source family \\
+        \hline
+        \texttt{online\_retail\_2} & about 1.07M rows & confirms the platform handled the largest retained source volume within the validated run set \\
+        \hline
+        \texttt{online\_shoppers\_intention} & about 12.3K rows & confirms successful loading for the browsing-intention source family \\
+        \hline
+    \end{tabularx}
+    \caption{Observed raw-lakehouse row volumes retained by the monitoring layer}
+    \label{tab:chapter8-raw-row-volumes}
+\end{table}
 \FloatBarrier
 
 \section{Distributed Execution Validation}
 Distributed execution was assessed through the runtime roles of Spark, HDFS, Kafka, and Trino. The Spark master registered workers on VM1, VM2, and VM3; HDFS stored blocks through DataNodes on all three machines; Kafka brokers were distributed across the same nodes; and Trino separated coordination on VM2 from query workers on VM1 and VM3.
 
-The retained Spark capture recorded three live workers, three total cores, 3.0~GiB of aggregate worker memory, an active Thrift service, and twelve completed applications associated with client-data loading and serving. Workload allocation was not identical across every worker, which is expected for light jobs; the relevant result is that executor capacity existed beyond the coordinator node \cite{apache_spark_docs}.
+The retained Spark capture recorded three live workers, three total cores, 3.0~GiB of aggregate worker memory, an active Thrift service, and twelve completed applications associated with client-data loading and serving. The same retained view also showed the \textit{Thrift JDBC/ODBC Server} as the active long-running service application while the bronze-to-Iceberg jobs for the three retained source families appeared in the completed-application history. Workload allocation was not identical across every worker, which is expected for light jobs; the relevant result is that executor capacity existed beyond the coordinator node \cite{apache_spark_docs}.
 
 \begin{table}[!htbp]
     \centering
@@ -216,6 +238,8 @@ The retained Spark capture recorded three live workers, three total cores, 3.0~G
         Completed Spark applications & 12 completed applications visible in the retained master/history views \\
         \hline
         Raw-to-Iceberg jobs & successful applications for \texttt{bank\_marketing}, \texttt{online\_retail\_2}, and \texttt{online\_shoppers\_intention} \\
+        \hline
+        Running service application & \texttt{Thrift JDBC/ODBC Server} active as the SQL entry point for Spark-backed model execution \\
         \hline
         HDFS participation & 3 live DataNodes with replicated blocks across the cluster \\
         \hline
@@ -285,20 +309,20 @@ Observability validation confirmed that platform diagnosis was not limited to ma
         \hline
         Hive Metastore PostgreSQL & available, 11.4 MiB database size, 44 active connections at capture time \\
         \hline
-        Pipeline status & retained workflow and quality indicators reported successful completion \\
+        Pipeline status & retained Grafana pipeline panels reported \textit{Success} for lakehouse setup, lakehouse readiness, the Kafka--HDFS--Spark raw pipeline, and the dbt-spark transformation workflow \\
         \hline
         Latest visible raw volume & approximately 1.12 million records across the three retained datasets \\
         \hline
         Raw load outcomes & 3 refreshed outputs, 0 skipped, and 0 partial incremental outputs \\
         \hline
-        Great Expectations evidence & successful source-specific checkpoint artifacts retained for the raw lakehouse \\
+        Great Expectations evidence & successful source-specific checkpoint artifacts retained for the raw lakehouse across all three active source families \\
         \hline
     \end{tabularx}
     \caption{Observed monitoring evidence supporting operational visibility}
     \label{tab:chapter8-monitoring-evidence}
 \end{table}
 
-Analytical access was validated independently from the transformation engines through an external SQL client. The retained query targeted the Online Retail II raw table through Trino and completed successfully.
+Analytical access was validated independently from the transformation engines through an external SQL client. The retained query targeted the Online Retail II raw table through Trino and completed successfully. This matters because it proves that the lakehouse state exposed by the platform was not only internally visible to Spark and dbt, but also consumable from an external analyst-facing tool.
 
 \begin{table}[!htbp]
     \centering
@@ -334,7 +358,7 @@ Analytical access was validated independently from the transformation engines th
 \section{Main Results}
 The validation campaign confirmed the delivery of a distributed, orchestrated, governed, observable, and security-aware customer-data lakehouse platform under the \projectname{} scope.
 
-The principal result is the demonstrated continuity of the implemented data path. The retained datasets were transported through Kafka, persisted in the HDFS bronze zone, materialized as governed Iceberg tables, transformed through the dbt model layers, and consumed externally through Trino. Consequently, the analytical-access result was not produced by an isolated demonstration dataset; it depended on the same storage, metadata, processing, and orchestration chain validated throughout the chapter.
+The principal result is the demonstrated continuity of the implemented data path. The retained datasets were transported through Kafka, persisted in the HDFS bronze zone, materialized as governed Iceberg tables, transformed through the dbt model layers, and consumed externally through Trino. Consequently, the analytical-access result was not produced by an isolated demonstration dataset; it depended on the same storage, metadata, processing, transformation, validation, and orchestration chain validated throughout the chapter.
 
 Completion was also established through complementary forms of evidence. Airflow histories confirmed workflow order and task state, cluster interfaces exposed the participating distributed services, persisted files and tables demonstrated durable outputs, Great Expectations retained independently inspectable validation artifacts, and Trino supplied a consumer-side query result. This triangulation reduces the risk of interpreting a successful task status or an available endpoint as sufficient proof of end-to-end platform behavior.
 
@@ -361,7 +385,7 @@ Completion was also established through complementary forms of evidence. Airflow
         \hline
         Analytical access & Trino served a completed external SQL query through its coordinator and two dedicated workers \\
         \hline
-        Observability & Prometheus and Grafana exposed healthy targets, infrastructure capacity, metastore state, pipeline status, and quality indicators \\
+        Observability & Prometheus and Grafana exposed 6 healthy targets, 12 CPU cores, 11.46 GiB observed host memory, metastore state, pipeline status, and quality indicators \\
         \hline
         Data volume & approximately 1.12 million raw records were visible across the three retained datasets \\
         \hline
