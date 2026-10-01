@@ -1,4 +1,0 @@
-C.4 Distributed Processing and Analytical Access
-Figure C.7:Spark master interface showing three alive workers, three aggregate cores, 3.0 GiB of worker memory, an active Thrift JDBC/ODBC
-service, and twelve completed applications.
-97

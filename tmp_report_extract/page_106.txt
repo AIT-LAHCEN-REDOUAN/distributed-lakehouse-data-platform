@@ -1,3 +1,0 @@
-Figure C.4:Grafana pipeline-health view retaining workflow status, raw-row volume, readiness, and freshness indicators as they appeared at
-the dashboard capture time.
-94

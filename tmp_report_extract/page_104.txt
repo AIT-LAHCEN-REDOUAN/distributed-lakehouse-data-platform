@@ -1,2 +1,0 @@
-Figure C.2:Great Expectations Data Docs showing three successful raw-lakehouse validation records retained on August 3, 2026.
-92

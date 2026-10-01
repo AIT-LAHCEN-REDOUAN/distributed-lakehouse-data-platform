@@ -1,3 +1,0 @@
-Figure C.8:Trino 435 cluster view showing environmentDISTRIBUTED_DEMO, 6.74 days of uptime, three active execution nodes, and a
-completed query overlakehouse.raw_data.online_retail_2with the displayed throughput snapshot.
-98

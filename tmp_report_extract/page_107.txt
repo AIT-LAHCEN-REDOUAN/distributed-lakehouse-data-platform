@@ -1,4 +1,0 @@
-C.3 Storage and Metadata Evidence
-Figure C.5:Grafana Hive Metastore dashboard showing PostgreSQL availability, a database size of 11.4 MiB, 42 active connections in this
-time-specific capture, and transaction and row-return activity.
-95

@@ -1,5 +1,0 @@
-AdOptimizer CDP Appendix C. Selected Validation Evidence
-Figure C.6:HDFS administrative overview showing 62.97 GB of configured capacity, three live
-DataNodes, no dead nodes, and no under-replicated blocks. The visible security and safe-mode
-notices are not used as evidence for the final hardened access path.
-96
