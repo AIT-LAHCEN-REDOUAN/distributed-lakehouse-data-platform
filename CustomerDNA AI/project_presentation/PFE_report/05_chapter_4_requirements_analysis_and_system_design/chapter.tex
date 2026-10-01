@@ -1,0 +1,281 @@
+\chapter{Requirements Analysis and System Design}
+
+\section{Introduction}
+This chapter translates the business framing and technical choices established in the previous chapters into a structured design baseline for \projectname{}. It identifies what the platform was required to do, the constraints imposed by the deployment environment, the principal actors and consumers, and the way the implemented multi-layer architecture satisfies those needs. Whereas Chapter III justified the technology choices, this chapter formalizes the requirements and architectural organization of the completed solution. The design follows established data-intensive engineering principles: separation of concerns, explicit data-movement boundaries, and layered coordination between storage, compute, metadata, and access services \cite{kleppmann2017ddia,armbrust2021lakehouse}.
+
+\section{Requirement Elicitation Context}
+The requirements of \projectname{} were derived from three complementary sources:
+\begin{itemize}
+    \item the business objective of creating a distributed customer-data foundation under the broader \initiative{} vision;
+    \item the engineering need to ingest, store, process, validate, orchestrate, expose, and monitor heterogeneous customer-related datasets;
+    \item the operational reality of a local control plane connected to three resource-constrained Linux virtual machines with integrated security hardening requirements.
+\end{itemize}
+
+The resulting requirements are therefore traceable to implemented capabilities, acceptance criteria, and the final distributed deployment model rather than being presented as abstract intentions.
+
+\section{Stakeholders and System Actors}
+The platform exposes different interaction paths according to operational responsibility. Table~\ref{tab:chapter4-actors} summarizes the principal roles considered in the design.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{3.0cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Actor or stakeholder}} & \textcolor{white}{\textbf{Primary interaction}} & \textcolor{white}{\textbf{Expected outcome}} \\
+        \hline
+        Platform administrator / operator & Deploys services, manages configuration and security material, verifies readiness, and investigates runtime failures. & A reproducible, observable, and protected distributed runtime. \\
+        \hline
+        Data engineer & Executes and maintains ingestion, processing, transformation, orchestration, and validation workflows. & Governed data products with traceable execution and quality evidence. \\
+        \hline
+        Data analyst & Uses authenticated SQL access to inspect governed raw and curated lakehouse tables. & Reliable analytical access without direct dependence on storage internals. \\
+        \hline
+        Future data-science and AI consumers & Consume curated customer-data products produced by the platform. & Reusable inputs for future Customer 360 and AI use cases; model development remains outside the PFE scope. \\
+        \hline
+    \end{tabularx}
+    \caption{Principal stakeholders and interaction responsibilities}
+    \label{tab:chapter4-actors}
+\end{table}
+\FloatBarrier
+
+\section{Functional Requirements}
+The functional scope of the platform is centered on the end-to-end lifecycle of customer-related data, from ingestion to governed analytical access. The most important functional requirements are summarized in Table~\ref{tab:chapter4-functional-part1} and Table~\ref{tab:chapter4-functional-part2}.
+
+The requirements were organized as a dependency-aware execution contract rather than as an independent list of features. FR-1 to FR-5 define the data foundation: source-aware ingestion, replayable Kafka transport, durable HDFS bronze persistence, distributed Spark loading, and shared metadata governance. FR-6 to FR-10 cover the controlled use and operation of that foundation through analytical querying, layered transformation, explicit quality validation, orchestration, and observability. This grouping reflects the implemented lifecycle because downstream capabilities are meaningful only after the preceding storage, processing, and catalog conditions have been satisfied.
+
+\pagebreak
+Each acceptance criterion is also expressed through an observable technical result. The report therefore distinguishes between a service being reachable and a platform capability being completed: successful ingestion must leave routed records and bronze artifacts, raw loading must produce registered Iceberg tables, transformation must materialize declared models, and validation must retain inspectable evidence. This evidence-oriented formulation supports the traceability analysis in Appendix~\ref{app:requirements-traceability} and provides a consistent basis for the validation campaign presented in Chapter~VIII.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{1.3cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Functional requirement}} & \textcolor{white}{\textbf{Technical acceptance criterion}} \\
+        \hline
+        FR-1 & Ingest heterogeneous customer-related datasets through a structured pipeline. & The same configured ingestion process accepts the three active Client~1 datasets and preserves their dataset-specific routing. \\
+        \hline
+        FR-2 & Provide topic-based transport for reproducible raw data movement. & Kafka topics are created, used, and reset through controlled pipeline operations, with visible topic-based message flow. \\
+        \hline
+        FR-3 & Persist replayable raw data in a distributed bronze landing zone. & HDFS stores bronze artifacts in a durable, distributed structure that can be re-read by downstream Spark processing stages. \\
+        \hline
+        FR-4 & Load bronze data into governed raw lakehouse tables. & Spark reads the persisted bronze files and writes Iceberg raw tables backed by Parquet and registered through the shared catalog. \\
+        \hline
+        FR-5 & Centralize analytical metadata for table discovery and reuse. & Hive Metastore exposes the table definitions required for downstream engines to identify and access the lakehouse objects. \\
+        \hline
+    \end{tabularx}
+    \caption{Primary functional requirements of the platform, part 1}
+    \label{tab:chapter4-functional-part1}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{1.3cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Functional requirement}} & \textcolor{white}{\textbf{Technical acceptance criterion}} \\
+        \hline
+        FR-6 & Provide interactive SQL access for analytical exploration. & Trino executes catalog, schema, row-count, and representative analytical queries over governed lakehouse tables. \\
+        \hline
+        FR-7 & Support layered transformations from raw to curated analytical outputs. & dbt-spark runs declared transformation models and preserves dependency-aware model execution. \\
+        \hline
+        FR-8 & Apply lightweight data quality validation and persist validation evidence. & Great Expectations checks structural and semantic rules and records validation artifacts for the controlled datasets. \\
+        \hline
+        FR-9 & Orchestrate the operational sequence of the data platform. & Airflow executes the five-workflow chain for environment reset, lakehouse setup, service readiness, integrated raw ingestion/loading and quality validation, and dbt transformation, with visible task state and run history. \\
+        \hline
+        FR-10 & Expose infrastructure and pipeline observability signals. & Prometheus collects service, exporter, and cAdvisor metrics, while Grafana displays infrastructure-readiness and pipeline-oriented indicators. \\
+        \hline
+    \end{tabularx}
+    \caption{Primary functional requirements of the platform, part 2}
+    \label{tab:chapter4-functional-part2}
+\end{table}
+\FloatBarrier
+
+\section{Non-Functional Requirements}
+Beyond functional behavior, the platform was designed around quality constraints related to scalability, modularity, traceability, security, operational inspectability, and resource feasibility. These requirements are summarized in Table~\ref{tab:chapter4-nonfunctional}. Their importance is consistent with the broader literature on reliable and maintainable distributed systems, in which reproducibility, observability, and controlled failure handling are architectural qualities rather than optional conveniences \cite{kleppmann2017ddia}.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{1.4cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Non-functional requirement}} & \textcolor{white}{\textbf{Design implication}} \\
+        \hline
+        NFR-1 & Horizontal evolution of the principal data-plane roles. & Storage, compute, and query responsibilities are distributed so that capacity can be extended without concentrating all workloads on one node. \\
+        \hline
+        NFR-2 & Modularity and separation of concerns. & Ingestion, storage, processing, metadata, validation, orchestration, monitoring, and security are implemented as distinct layers. \\
+        \hline
+        NFR-3 & Reproducibility of ingestion and transformation flows. & The platform preserves replayable bronze data, versioned transformation logic, and explicit orchestration sequences. \\
+        \hline
+        NFR-4 & Observability of service and pipeline behavior. & Health checks, metrics, dashboards, and orchestration logs must make failures visible and diagnosable. \\
+        \hline
+        NFR-5 & Baseline security for access, movement, and persisted runtime data. & Authentication, protected service exposure, secure remote submission, and encrypted storage are integrated according to the deployed scope. \\
+        \hline
+        NFR-6 & Operational inspectability and evidence retention. & Metrics, dashboards, task logs, run history, validation results, and execution artifacts make behavior and failures traceable. \\
+        \hline
+        NFR-7 & Feasibility within constrained infrastructure. & Service placement, startup order, and workload execution must remain compatible with the available three-VM resource envelope. \\
+        \hline
+    \end{tabularx}
+    \caption{Main non-functional requirements of the platform}
+    \label{tab:chapter4-nonfunctional}
+\end{table}
+\FloatBarrier
+
+\section{System Architecture Overview}
+The global architecture consolidates the implemented \projectname{} platform into a single system-level view. It connects ingestion, distributed storage and processing, lakehouse governance, orchestration, validation, observability, and the secured multi-node deployment before the following sections examine each design dimension separately.
+
+\newgeometry{left=0.7cm,right=0.7cm,top=0.6cm,bottom=1.2cm,footskip=0.7cm}
+\begin{landscape}
+    \thispagestyle{plain}
+    \begingroup
+        \centering
+        \includegraphics[width=\linewidth,height=0.945\textheight,keepaspectratio]{90_assets/architecture/Architecture_Final.drawio.png}
+        \captionsetup{type=figure,skip=4pt}
+        \captionof{figure}{Global architecture of the implemented AdOptimizer CDP platform.}
+        \label{fig:chapter4-global-architecture}
+        \par
+    \endgroup
+\end{landscape}
+\restoregeometry
+
+\section{Logical Layered Architecture}
+At the logical level, \projectname{} is organized as a layered customer-data platform rather than as a monolithic data pipeline. This organization is aligned with lakehouse thinking, where raw persistence, structured table layers, metadata governance, and analytical access are coordinated but not collapsed into one opaque runtime block \cite{armbrust2021lakehouse}. Each layer has a precise responsibility in the end-to-end flow:
+\begin{itemize}
+    \item \textbf{Ingestion layer:} receives and transports the raw input datasets through Kafka.
+    \item \textbf{Bronze persistence layer:} stores replayable raw artifacts in HDFS.
+    \item \textbf{Raw lakehouse layer:} structures the raw persisted inputs through Spark and Iceberg.
+    \item \textbf{Metadata layer:} centralizes table definitions through Hive Metastore.
+    \item \textbf{Raw-validation layer:} checks the source-specific raw lakehouse tables through Great Expectations and persists evidence.
+    \item \textbf{Transformation layer:} applies modeled transformations and tests through dbt-spark.
+    \item \textbf{Analytical access layer:} exposes governed raw and curated tables through Trino.
+    \item \textbf{Cross-cutting orchestration and observability layer:} coordinates execution through Airflow and supervises the platform through Prometheus and Grafana.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_4/fig_4_1_logical_architecture.tex}
+    \caption{Logical data lifecycle and cross-cutting platform controls.}
+    \label{fig:chapter4-logical-architecture}
+\end{figure}
+
+This logical decomposition is important because it explains the system as a coordinated architecture rather than as a sequence of unrelated tools. It also clarifies why the same dataset may pass through different representations before becoming a trusted analytical asset.
+
+\section{Physical Multi-Node Architecture}
+At the physical level, the final design is distributed across one control plane and three data-plane virtual machines. Table~\ref{tab:chapter4-nodes} summarizes this allocation.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{1.45cm}|L{2.15cm}|L{3.0cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Node}} & \textcolor{white}{\textbf{IP / Type}} & \textcolor{white}{\textbf{VM specifications}} & \textcolor{white}{\textbf{Main services}} & \textcolor{white}{\textbf{Architectural role}} \\
+        \hline
+        Control plane & Local workstation & Not applicable, because this node is not part of the Linux VM fleet. & Airflow, Prometheus, Grafana, Kafka UI, metrics exporter, local TLS gateway, remote orchestration runtime & Supervises, orchestrates, monitors, and drives the distributed data plane. \\
+        \hline
+        VM1 & 10.10.252.11 & Ubuntu 22.04.5 LTS;\newline QEMU virtual CPU (2 sockets $\times$ 2 cores);\newline 3.8 GiB RAM; 26 GB disk;\newline no dedicated GPU. & Kafka broker 1, HDFS DataNode 1,\newline Spark worker 1, Trino worker 1,\newline cAdvisor & Worker node dedicated to distributed storage,\newline processing, and query participation. \\
+        \hline
+        VM2 & 10.10.252.12 & Ubuntu 22.04.5 LTS;\newline QEMU virtual CPU (2 sockets $\times$ 2 cores);\newline 3.8 GiB RAM; 26 GB disk;\newline no dedicated GPU. & Kafka broker 2, Kerberos KDC,\newline NameNode, DataNode 2,\newline Hive Metastore and metastore database,\newline Spark master, submit helper, worker 2,\newline Thrift Server and History Server,\newline Trino coordinator, HTTPS gateway, cAdvisor & Data-plane coordination node for storage, processing, metadata, querying, and protected cluster services. \\
+        \hline
+        VM3 & 10.10.252.13 & Ubuntu 22.04.5 LTS;\newline QEMU virtual CPU (2 sockets $\times$ 2 cores);\newline 3.8 GiB RAM; 26 GB disk;\newline no dedicated GPU. & Kafka broker 3, HDFS DataNode 3,\newline Spark worker 3, Trino worker 2,\newline cAdvisor & Additional worker node reinforcing distributed storage,\newline compute, and query execution. \\
+        \hline
+    \end{tabularx}
+    \caption{Physical node distribution of the final deployment}
+    \label{tab:chapter4-nodes}
+\end{table}
+\FloatBarrier
+
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_4/fig_4_2_physical_architecture.tex}
+    \caption{Physical topology of the local control plane and three-node distributed data plane.}
+    \label{fig:chapter4-physical-architecture}
+\end{figure}
+
+\section{End-to-End Data Flow}
+The end-to-end operational flow of the platform can be summarized as follows:
+\begin{enumerate}
+    \item Airflow initiates the five implemented workflows for environment reset, lakehouse setup, service readiness, integrated raw ingestion/loading and validation, and dbt transformation;
+    \item source datasets are prepared and published through the configured ingestion path;
+    \item Kafka receives the records and distributes topic partitions across the broker cluster;
+    \item bronze consumers persist replayable raw artifacts in HDFS through NameNode/DataNode coordination;
+    \item Spark reads the bronze zone and loads Iceberg raw tables through distributed execution, with Hive Metastore registering the shared table definitions;
+    \item within the same Kafka--HDFS--Spark workflow, Great Expectations assets are bootstrapped and the raw lakehouse tables are validated, producing JSON results and HTML Data Docs;
+    \item dbt-spark creates staging, intermediate, and analytics models and applies its declared transformation tests;
+    \item Trino exposes distributed SQL access to the governed raw and curated lakehouse tables;
+    \item Prometheus and Grafana continuously expose infrastructure and pipeline monitoring signals across the execution lifecycle.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \input{90_assets/latex_diagrams/chapter_4/fig_4_3_end_to_end_flow.tex}
+    \caption{Implemented data flow from source ingestion to validated analytical outputs.}
+    \label{fig:chapter4-end-to-end-flow}
+\end{figure}
+
+This ordering distinguishes the primary data path from the cross-cutting orchestration and observability controls. It also establishes the reference sequence used by the implementation and validation chapters.
+
+\section{Security-by-Design Integration}
+Security is not positioned as an external afterthought. It is integrated into the design of the platform through explicit controls attached to core layers. This follows the same engineering rationale as the rest of the architecture: identity, traffic protection, and protected storage boundaries are treated as part of the system design itself, not as a late operational patch \cite{apache_hadoop_docs,mit_kerberos_docs,cryptsetup_docs}. Table~\ref{tab:chapter4-security-controls} summarizes this logic.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.16}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{3.0cm}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Security control}} & \textcolor{white}{\textbf{Protected scope}} & \textcolor{white}{\textbf{Design contribution}} \\
+        \hline
+        Kerberos & Hadoop secure mode and service authentication & Ensures that protected cluster services rely on explicit identity rather than implicit trust. \\
+        \hline
+        SPNEGO & Secured Hadoop web interfaces & Extends authenticated access to browser-facing Hadoop endpoints. \\
+        \hline
+        TLS & Sensitive exposed service endpoints & Protects data movement and browser-facing access paths. \\
+        \hline
+        LUKS & Runtime storage volumes on the VMs & Provides encrypted-at-rest support for persisted service state. \\
+        \hline
+        SSH-based remote orchestration & Control-plane to data-plane submission path & Keeps remote execution structured and controlled from the orchestration side. \\
+        \hline
+        Authenticated gateways & Query and access entry points & Reduces uncontrolled direct exposure of critical services. \\
+        \hline
+    \end{tabularx}
+    \caption{Security controls integrated into the system design}
+    \label{tab:chapter4-security-controls}
+\end{table}
+\FloatBarrier
+
+\section{Design Rationale and Trade-offs}
+The final design reflects deliberate engineering trade-offs rather than maximum-complexity choices:
+\begin{itemize}[leftmargin=*,itemsep=0.18em,topsep=0.3em]
+    \item \textbf{Distributed execution within constrained resources:} real multi-node cooperation is retained within the available VM resource limits.
+    \item \textbf{Layered responsibilities:} explicit service boundaries improve maintainability and fault isolation.
+    \item \textbf{Integrated hardening:} deployed paths are protected without implying an enterprise-complete security program.
+    \item \textbf{Operational transparency:} checks, metrics, logs, and execution artifacts keep platform behavior inspectable and diagnosable.
+    \item \textbf{Future-ready scope:} curated outputs support later Customer 360 and AI services without overstating current functionality.
+\end{itemize}
+
+These trade-offs align the architecture with the implemented workload, available infrastructure, and operational requirements.
+
+\section{Conclusion}
+This chapter formalized the stakeholders and requirements of \projectname{}, mapped them to the logical and physical architectures, and defined the end-to-end flow and integrated security baseline. These design choices provide the reference model for the concrete platform implementation presented in Chapter V.

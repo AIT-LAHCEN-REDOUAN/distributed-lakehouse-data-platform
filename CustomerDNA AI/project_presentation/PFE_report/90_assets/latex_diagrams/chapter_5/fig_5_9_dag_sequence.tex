@@ -1,0 +1,26 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=14.60cm, minimum height=8.45cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\large] at ($(panel.north)+(0,-0.38)$)
+    {Five-DAG orchestration sequence};
+
+  \node[ado box={11.60cm}{adograyfill}, minimum height=1.05cm, inner sep=5pt] (reset) at (0,-1.45)
+    {\textbf{\small 1. Environment reset}\\[-1pt]
+     \scriptsize clear Kafka, bronze, and lakehouse runtime state};
+  \node[ado box={11.60cm}{adobluefill}, minimum height=1.05cm, inner sep=5pt] (setup) at (0,-2.90)
+    {\textbf{\small 2. Lakehouse setup}\\[-1pt]
+     \scriptsize initialize bronze storage and required lakehouse structures};
+  \node[ado box={11.60cm}{adotealfill}, minimum height=1.05cm, inner sep=5pt] (ready) at (0,-4.35)
+    {\textbf{\small 3. Lakehouse readiness}\\[-1pt]
+     \scriptsize verify HDFS, Hive, Spark, Spark Thrift, and Trino availability};
+  \node[ado box={11.60cm}{adoorangefill}, minimum height=1.05cm, inner sep=5pt] (raw) at (0,-5.80)
+    {\textbf{\small 4. Kafka--HDFS--Spark raw pipeline}\\[-1pt]
+     \scriptsize publish, persist, load Iceberg raw tables, then run embedded raw-quality tasks};
+  \node[ado box={11.60cm}{adopurplefill}, minimum height=1.05cm, inner sep=5pt] (dbt) at (0,-7.25)
+    {\textbf{\small 5. dbt-spark transformation}\\[-1pt]
+     \scriptsize build and test staged, intermediate, and analytical models};
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (reset.south) -- (setup.north);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (setup.south) -- (ready.north);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (ready.south) -- (raw.north);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (raw.south) -- (dbt.north);
+\end{tikzpicture}

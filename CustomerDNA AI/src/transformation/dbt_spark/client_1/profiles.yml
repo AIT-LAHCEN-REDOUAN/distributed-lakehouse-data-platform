@@ -1,0 +1,16 @@
+customerdna_client1_lakehouse:
+  target: dev
+  outputs:
+    dev:
+      type: spark
+      method: thrift
+      host: "{{ env_var('CUSTOMERDNA_DBT_SPARK_HOST', 'localhost') }}"
+      port: "{{ env_var('CUSTOMERDNA_DBT_SPARK_PORT', '10000') | as_number }}"
+      user: "{{ env_var('CUSTOMERDNA_DBT_SPARK_USER', 'dbt') }}"
+      schema: raw_data
+      threads: "{{ env_var('CUSTOMERDNA_DBT_THREADS', '2') | as_number }}"
+      auth: "{{ env_var('CUSTOMERDNA_DBT_SPARK_AUTH', 'NONE') }}"
+      kerberos_service_name: "{{ env_var('CUSTOMERDNA_DBT_SPARK_KERBEROS_SERVICE_NAME', 'spark') }}"
+      connect_timeout: 60
+      connect_retries: 5
+      retry_all: true

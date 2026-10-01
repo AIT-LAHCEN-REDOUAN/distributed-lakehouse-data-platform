@@ -1,0 +1,101 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage[final]{microtype}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{tocloft}
+\usepackage{tikz}
+\usepackage{pdflscape}
+
+\onehalfspacing
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\frenchspacing
+\raggedbottom
+\emergencystretch=2em
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  urlcolor=blue,
+  citecolor=black,
+  pdftitle={AdOptimizer CDP},
+  pdfauthor={PFE Student},
+  pdfsubject={Distributed Customer Data Lakehouse Platform},
+  pdfkeywords={AdOptimizer CDP, Lakehouse, Big Data, Airflow, Spark, HDFS, Trino, Security}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{AdOptimizer CDP}
+\fancyhead[R]{\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14.5pt}
+\renewcommand{\thechapter}{\Roman{chapter}}
+\newcommand{\tocnumgap}{\hspace{0.7em}}
+\renewcommand{\cftchapaftersnum}{\tocnumgap}
+\renewcommand{\cftsecaftersnum}{\tocnumgap}
+\renewcommand{\cftsubsecaftersnum}{\tocnumgap}
+\renewcommand{\cftfigaftersnum}{\tocnumgap}
+\renewcommand{\cfttabaftersnum}{\tocnumgap}
+\newlength{\tocchapnumlen}
+\newlength{\tocsecnumlen}
+\newlength{\tocsubsecnumlen}
+\newlength{\tocfignumlen}
+\newlength{\toctabnumlen}
+\newlength{\toctitlecol}
+\settowidth{\tocchapnumlen}{\bfseries VIII\tocnumgap\hspace{0.45em}}
+\settowidth{\tocsecnumlen}{VIII.10\tocnumgap}
+\settowidth{\tocsubsecnumlen}{III.3.5\tocnumgap}
+\settowidth{\tocfignumlen}{VIII.10\tocnumgap}
+\settowidth{\toctabnumlen}{VIII.10\tocnumgap}
+\setlength{\toctitlecol}{\tocsecnumlen}
+\setlength{\cftchapnumwidth}{\tocchapnumlen}
+\setlength{\cftsecindent}{1.2em}
+\setlength{\cftsecnumwidth}{\tocsecnumlen}
+\setlength{\cftsubsecindent}{\dimexpr\cftsecindent+\toctitlecol\relax}
+\setlength{\cftsubsecnumwidth}{\tocsubsecnumlen}
+\setlength{\cftfignumwidth}{\tocfignumlen}
+\setlength{\cfttabnumwidth}{\toctabnumlen}
+
+\setlist[itemize]{leftmargin=2em}
+\setlist[enumerate]{leftmargin=2.2em}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{10pt plus 2pt minus 2pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\captionsetup[table]{font=small,labelfont=bf,skip=6pt}
+\captionsetup[figure]{font=small,labelfont=bf,skip=6pt}
+
+\definecolor{tableheaderblue}{RGB}{118,155,204}
+\definecolor{tablelineblue}{RGB}{158,186,224}
+\definecolor{tablebodyblue}{RGB}{246,249,253}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\newcommand{\projectname}{AdOptimizer CDP}
+\newcommand{\initiative}{AdOptimizer AI}
+\newcommand{\companyname}{SMART AUTOMATION TECHNOLOGIES}
+\newcommand{\universityname}{Abdelmalek Essaadi University}
+\newcommand{\schoolname}{Ecole Normale Superieure of Tetouan}
+\newcommand{\universityurl}{https://www.uae.ac.ma/}
+\newcommand{\schoolurl}{https://ens.uae.ac.ma/}
+
+\input{90_assets/latex_diagrams/shared/tikz_styles.tex}

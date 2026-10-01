@@ -1,0 +1,10 @@
+\begin{tikzpicture}[node distance=0.65cm]
+    \node[ado box={10.0cm}{adotealfill}] (hdfs)
+    {\adoboxcontent{Validated HDFS browser path}{Windows ticket + SPNEGO + HTTPS endpoint}};
+    \node[ado box={10.0cm}{adopurplefill}, below=of hdfs] (trino)
+    {\adoboxcontent{Validated analytical access}{authenticated Trino gateway and coordinator path}};
+    \node[ado box={10.0cm}{adograyfill}, below=of trino] (ssh)
+    {\adoboxcontent{Validated orchestration bridge}{secured control-plane to VM2 Spark submission}};
+    \draw[ado arrow] (hdfs) -- (trino);
+    \draw[ado arrow] (trino) -- (ssh);
+\end{tikzpicture}

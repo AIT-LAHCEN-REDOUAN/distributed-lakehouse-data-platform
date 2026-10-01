@@ -1,0 +1,29 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=14.60cm, minimum height=5.75cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\large] at ($(panel.north)+(0,-0.38)$)
+    {Shared metadata governance};
+
+  \node[ado box={3.20cm}{adoorangefill}, minimum height=1.85cm, inner sep=5pt] (spark) at (-4.95,-2.05)
+    {\textbf{\small Spark writers}\\[-1pt]
+     \scriptsize manage Iceberg tables\\[-1pt]
+     \scriptsize publish definitions};
+  \node[ado box={4.30cm}{adopurplefill}, minimum height=1.85cm, inner sep=5pt] (hms) at (0,-2.05)
+    {\textbf{\small Hive Metastore}\\[-1pt]
+     \scriptsize shared table definitions\\[-1pt]
+     \scriptsize catalog authority on VM2};
+  \node[ado box={3.20cm}{adotealfill}, minimum height=1.85cm, inner sep=5pt] (trino) at (4.95,-2.05)
+    {\textbf{\small Trino readers}\\[-1pt]
+     \scriptsize discover shared tables\\[-1pt]
+     \scriptsize resolve definitions};
+
+  \node[ado box={5.10cm}{adograyfill}, minimum height=1.15cm, inner sep=5pt] (pg) at (0,-4.65)
+    {\textbf{\small PostgreSQL backing store}\\[-1pt]
+     \scriptsize persistent Hive Metastore catalog};
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (spark.east) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, above] {publish} (hms.west);
+  \draw[<->, >=Latex, draw=black!55, line width=0.85pt]
+    (hms.east) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, above] {lookup} (trino.west);
+  \draw[<->, >=Latex, draw=black!55, line width=0.85pt]
+    (hms.south) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, right] {persist / retrieve} (pg.north);
+\end{tikzpicture}

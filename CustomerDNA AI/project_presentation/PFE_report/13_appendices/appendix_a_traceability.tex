@@ -1,0 +1,78 @@
+\chapter{Requirements-to-Evidence Traceability}
+\label{app:requirements-traceability}
+
+This appendix connects the requirements defined in Chapter~IV with the implemented platform components and the retained validation material. It is intentionally concise: the detailed requirement definitions remain in Tables~\ref{tab:chapter4-functional-part1}, \ref{tab:chapter4-functional-part2}, and~\ref{tab:chapter4-nonfunctional}, while the validation interpretation remains in Chapter~VIII.
+
+The traceability analysis is organized around the functional and non-functional requirement identifiers established in Chapter~IV. For each requirement, the appendix identifies the implemented technical response and its principal verification source. Evidence includes runtime interfaces, retained validation results, and deployment information extracted from the implemented service definitions. Each artifact is interpreted only within its observable scope, while the detailed technical discussion and validation boundaries remain in the main report.
+
+\section{Functional Requirements}
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \renewcommand{\arraystretch}{1.12}
+    \arrayrulecolor{tablelineblue}
+    \begin{tabularx}{\textwidth}{|L{1.0cm}|L{3.7cm}|Y|L{3.6cm}|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Required capability}} & \textcolor{white}{\textbf{Implemented response}} & \textcolor{white}{\textbf{Principal retained evidence}} \\
+        \hline
+        FR-1 & Structured ingestion of heterogeneous customer data & One dataset-aware ingestion path handles Bank Marketing, Online Shoppers Intention, and Online Retail II inputs. & Dataset-specific Spark applications in Figure~\ref{fig:appendix-spark-workers} and the raw-pipeline history in Figure~\ref{fig:appendix-airflow-runs}. \\
+        \hline
+        FR-2 & Reproducible topic-based transport & A three-broker Kafka deployment provides the transport boundary used by the controlled ingestion workflow. & Broker placement in Table~\ref{tab:appendix-compose-placement} and orchestration history in Figure~\ref{fig:appendix-airflow-runs}. \\
+        \hline
+        FR-3 & Distributed, replayable bronze persistence & HDFS retains raw artifacts before governed lakehouse loading, with one DataNode on each Linux VM. & Three live DataNodes and retained capacity in Figure~\ref{fig:appendix-hdfs-health}. \\
+        \hline
+        FR-4 & Governed raw lakehouse loading & Spark converts bronze inputs into Iceberg/Parquet raw tables registered through the shared metadata layer. & Completed raw-to-Iceberg jobs in Figure~\ref{fig:appendix-spark-workers}. \\
+        \hline
+        FR-5 & Centralized analytical metadata & Hive Metastore and its PostgreSQL repository provide shared table discovery for Spark and Trino. & Metastore availability in Figure~\ref{fig:appendix-hive-dashboard} and service placement in Table~\ref{tab:appendix-compose-placement}. \\
+        \hline
+        FR-6 & Interactive analytical SQL access & Trino exposes governed lakehouse tables independently from the transformation runtime. & Completed Online Retail II query in Figure~\ref{fig:appendix-trino-query}. \\
+        \hline
+        FR-7 & Layered governed transformations & dbt-spark coordinates dependency-aware transformations after the raw lakehouse load. & Successful dbt workflow state in Figures~\ref{fig:appendix-airflow-runs} and~\ref{fig:appendix-pipeline-dashboard}. \\
+        \hline
+        FR-8 & Persistent data-quality validation & Great Expectations runs as explicit bootstrap and validation tasks inside the Kafka--HDFS--Spark raw pipeline, recording validation results and HTML Data Docs. & Three successful validation records in Figure~\ref{fig:appendix-gx-docs}. \\
+        \hline
+        FR-9 & Observable workflow orchestration & Airflow separates reset, setup, readiness, integrated raw loading/quality, and dbt transformation into five controlled workflows. & Successful run history in Figure~\ref{fig:appendix-airflow-runs}; the authoritative final workflow set is documented in Chapter~VIII. \\
+        \hline
+        FR-10 & Infrastructure and pipeline observability & Prometheus collects platform signals while Grafana exposes infrastructure, metastore, and pipeline views. & Figures~\ref{fig:appendix-infrastructure-dashboard}--\ref{fig:appendix-pipeline-dashboard}. \\
+        \hline
+    \end{tabularx}
+    \caption{Traceability from functional requirements to implemented and retained evidence}
+    \label{tab:appendix-functional-traceability}
+\end{table}
+\FloatBarrier
+
+\section{Non-Functional Requirements}
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \renewcommand{\arraystretch}{1.13}
+    \arrayrulecolor{tablelineblue}
+    \begin{tabularx}{\textwidth}{|L{1.15cm}|L{3.9cm}|Y|L{3.4cm}|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{ID}} & \textcolor{white}{\textbf{Quality objective}} & \textcolor{white}{\textbf{Implemented response}} & \textcolor{white}{\textbf{Verification reference}} \\
+        \hline
+        NFR-1 & Horizontal evolution & Kafka brokers, HDFS DataNodes, Spark workers, and Trino execution roles are distributed across three VMs. & Table~\ref{tab:appendix-compose-placement} and Figures~\ref{fig:appendix-hdfs-health}, \ref{fig:appendix-spark-workers}, and~\ref{fig:appendix-trino-query}. \\
+        \hline
+        NFR-2 & Modularity and separation of concerns & Orchestration, monitoring, transport, storage, metadata, compute, validation, and query access remain separate service groups. & Compose-derived topology in Appendix~\ref{app:deployment-reference}. \\
+        \hline
+        NFR-3 & Reproducibility & Replayable bronze storage, explicit workflow boundaries, persistent Spark events, and retained validation artifacts support controlled reruns. & Figures~\ref{fig:appendix-airflow-runs}, \ref{fig:appendix-gx-docs}, and~\ref{fig:appendix-spark-workers}. \\
+        \hline
+        NFR-4 & Observability & Health checks, cAdvisor, Prometheus, Grafana, exporters, and Airflow histories expose service and pipeline state. & Figures~\ref{fig:appendix-infrastructure-dashboard}--\ref{fig:appendix-pipeline-dashboard}. \\
+        \hline
+        NFR-5 & Baseline security & Kerberos configuration and role-specific keytabs protect Hadoop-facing identities; Caddy gateways provide protected service exposure. & Security-related Compose controls in Table~\ref{tab:appendix-compose-properties} and the validation boundaries stated in Chapter~VIII. \\
+        \hline
+        NFR-6 & Inspectability and evidence retention & Runtime interfaces, task histories, validation documents, dashboards, and persistent event data retain evidence beyond console output. & Evidence set in Appendix~\ref{app:validation-evidence}. \\
+        \hline
+        NFR-7 & Resource feasibility & Central coordination services are concentrated on VM2 while worker roles are distributed and the control plane remains local. & Table~\ref{tab:appendix-compose-placement} and the capacity view in Figure~\ref{fig:appendix-infrastructure-dashboard}. \\
+        \hline
+    \end{tabularx}
+    \caption{Traceability from non-functional requirements to architectural verification}
+    \label{tab:appendix-nonfunctional-traceability}
+\end{table}
+\FloatBarrier
+
+The traceability confirms that the appendices support the completed implementation without replacing the argument developed in the main chapters. A screenshot is treated as evidence only for the indicators explicitly identified in its caption.

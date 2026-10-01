@@ -1,0 +1,47 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - prometheus:9090
+        labels:
+          node: control_plane_pc
+
+  - job_name: postgres_exporter_vm2_metastore
+    static_configs:
+      - targets:
+          - postgres-exporter:9187
+        labels:
+          node: control_plane_pc
+          datasource: hive_metastore_postgres_vm2
+
+  - job_name: pipeline_metrics_exporter
+    static_configs:
+      - targets:
+          - pipeline-metrics-exporter:9109
+        labels:
+          node: control_plane_pc
+
+  - job_name: cadvisor_vm1
+    static_configs:
+      - targets:
+          - 10.10.252.11:8081
+        labels:
+          node: vm1
+
+  - job_name: cadvisor_vm2
+    static_configs:
+      - targets:
+          - 10.10.252.12:8081
+        labels:
+          node: vm2
+
+  - job_name: cadvisor_vm3
+    static_configs:
+      - targets:
+          - 10.10.252.13:8081
+        labels:
+          node: vm3

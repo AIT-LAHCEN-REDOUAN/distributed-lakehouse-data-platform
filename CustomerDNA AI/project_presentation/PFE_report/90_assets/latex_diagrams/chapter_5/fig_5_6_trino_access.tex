@@ -1,0 +1,46 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado group, minimum width=14.60cm, minimum height=8.15cm, anchor=north] (panel) at (0,0) {};
+  \node[ado label, font=\bfseries\large] at ($(panel.north)+(0,-0.38)$)
+    {Protected Trino access path};
+
+  \node[ado box={3.00cm}{adograyfill}, minimum height=1.25cm, inner sep=5pt] (users) at (-3.80,-1.60)
+    {\textbf{\small Users}\\[-1pt]
+     \scriptsize web and SQL clients};
+  \node[ado box={3.80cm}{adopurplefill}, minimum height=1.25cm, inner sep=5pt] (gateway) at (3.00,-1.60)
+    {\textbf{\small Auth gateway}\\[-1pt]
+     \scriptsize protected query entry};
+
+  \node[ado group, minimum width=13.40cm, minimum height=3.25cm, anchor=north] (cluster) at (0,-2.70) {};
+  \node[ado label, font=\bfseries\normalsize] at ($(cluster.north)+(-3.55,-0.34)$)
+    {Distributed Trino cluster};
+
+  \node[ado box={4.60cm}{adoorangefill}, minimum height=1.15cm, inner sep=5pt] (coord) at (0,-3.95)
+    {\textbf{\small Trino coordinator}\\[-1pt]
+     \scriptsize VM2 $\cdot$ planning and control};
+  \node[ado small box={3.00cm}{adobluefill}, minimum height=1.05cm] (w1) at (-3.60,-5.25)
+    {\textbf{\small Worker 1}\\[-1pt]\scriptsize execution on VM1};
+  \node[ado small box={3.00cm}{adotealfill}, minimum height=1.05cm] (w2) at (3.60,-5.25)
+    {\textbf{\small Worker 2}\\[-1pt]\scriptsize execution on VM3};
+
+  \node[ado box={5.10cm}{adograyfill}, minimum height=1.05cm, inner sep=5pt] (catalog) at (-3.55,-7.15)
+    {\textbf{\small Hive Metastore catalog}\\[-1pt]
+     \scriptsize shared governed definitions};
+  \node[ado box={5.10cm}{adotealfill}, minimum height=1.05cm, inner sep=5pt] (tables) at (3.55,-7.15)
+    {\textbf{\small Iceberg tables in HDFS}\\[-1pt]
+     \scriptsize distributed analytical data};
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt]
+    (users.east) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, above] {secure access} (gateway.west);
+  \coordinate (entry) at (3.00,-2.50);
+  \draw[draw=black!55, line width=0.9pt] (gateway.south) -- (entry);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (entry) -| (coord.north);
+  \node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt] at (3.95,-2.45) {forward query};
+
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (coord.south west) -- (w1.north);
+  \draw[ado arrow, draw=black!55, line width=0.9pt] (coord.south east) -- (w2.north);
+
+  \draw[<->, >=Latex, dashed, draw=black!55, line width=0.85pt]
+    ($(cluster.south)+(-3.55,0)$) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, left] {metadata lookup} (catalog.north);
+  \draw[<->, >=Latex, draw=black!55, line width=0.85pt]
+    ($(cluster.south)+(3.55,0)$) -- node[ado annotation, font=\scriptsize, fill=white, inner sep=1pt, right] {table scans} (tables.north);
+\end{tikzpicture}

@@ -1,0 +1,77 @@
+CustomerDNA Distributed Deployment Access Points
+Date verified: Monday, August 10, 2026
+
+============================================================
+CONTROL PLANE PC
+============================================================
+
+Accessible in browser
+- Airflow: https://localhost:18080 | username: admin | password: CustomerDNA_Airflow_Admin_2026!
+- Kafka UI: https://localhost:18085 | username: no login | password: not applicable
+- Prometheus: https://localhost:19090 | username: no login | password: not applicable
+- Grafana: https://localhost:13001 | username: admin | password: CustomerDNA_Grafana_Admin_2026!
+
+Not browser-first / service endpoints
+- Generated compose port override: D:\github\Master_PFE_Project\CustomerDNA AI\src\deployments\distributed_pc_control_plane\control_plane_pc\runtime\compose.generated.env
+- Remote Spark submission SSH target: 10.10.252.12:22
+- Note: the browser may show a warning because the local TLS gateway uses an internal demo certificate authority
+
+============================================================
+VM1
+============================================================
+
+Accessible in browser
+- Spark Worker UI: http://10.10.252.11:8087 | username: no login | password: not applicable
+- HDFS DataNode web: https://10.10.252.11:9865 | username: Kerberos/SPNEGO ticket required | password: not a browser password
+- cAdvisor: http://10.10.252.11:8081 | username: no login | password: not applicable
+
+Not browser-first / service endpoints
+- Trino Worker HTTP: http://10.10.252.11:8080 | technical worker endpoint only
+- Kafka broker: 10.10.252.11:9092 | username: none | password: none
+
+============================================================
+VM2
+============================================================
+
+Accessible in browser
+- HDFS NameNode web: https://10.10.252.12:9871 | username: Kerberos/SPNEGO ticket required | password: not a browser password
+- HDFS NameNode browser alias: https://namenode.customerdna.local:9871 | username: demo_hdfs@CUSTOMERDNA.LOCAL via Firefox Kerberos ticket | password: CustomerDNA_Hdfs_Browser_2026!
+- Spark Master UI: http://10.10.252.12:8086 | username: no login | password: not applicable
+- Spark History UI: http://10.10.252.12:18080 | username: no login | password: not applicable
+- Trino Coordinator UI (HTTP): http://10.10.252.12:8088/ui/ | username: customerdna_analyst | password: CustomerDNA_Trino_Analyst_2026!
+- Trino Coordinator UI (HTTPS): https://10.10.252.12:8443/ui/ | username: customerdna_analyst | password: CustomerDNA_Trino_Analyst_2026!
+- cAdvisor: http://10.10.252.12:8081 | username: no login | password: not applicable
+
+Not browser-first / service endpoints
+- Kafka broker: 10.10.252.12:9092 | username: none | password: none
+- HDFS NameNode RPC: 10.10.252.12:9000 | secured by Kerberos/TLS
+- Hive Metastore: 10.10.252.12:9083 | service endpoint
+- Hive Metastore PostgreSQL: 10.10.252.12:5435 | username: hive | password: CustomerDNA_Hive_2026!
+- Spark Master: spark://10.10.252.12:7077 | cluster internal endpoint
+- Spark submit helper container: spark-submit-client on VM2
+- Spark Thrift: 10.10.252.12:10000 | username: spark | password: not enabled in demo deployment
+
+============================================================
+VM3
+============================================================
+
+Accessible in browser
+- Spark Worker UI: http://10.10.252.13:8087 | username: no login | password: not applicable
+- HDFS DataNode web: https://10.10.252.13:9865 | username: Kerberos/SPNEGO ticket required | password: not a browser password
+- cAdvisor: http://10.10.252.13:8081 | username: no login | password: not applicable
+
+Not browser-first / service endpoints
+- Trino Worker HTTP: http://10.10.252.13:8080 | technical worker endpoint only
+- Kafka broker: 10.10.252.13:9092 | username: none | password: none
+
+============================================================
+NOTES
+============================================================
+
+- Trino worker endpoints on VM1 and VM3 are technical HTTP endpoints, not user UIs.
+- Kafka broker ports are service endpoints, not web pages.
+- The main Trino UI is only on VM2 through the gateway on `http://10.10.252.12:8088/ui/` or `https://10.10.252.12:8443/ui/`.
+- The control plane local entry ports can be remapped if a port is already busy. Check `control_plane_pc\runtime\compose.generated.env` for the active values.
+- VM1, VM2, and VM3 runtime service data can be mounted on LUKS-encrypted storage under `/mnt/customerdna_secure` when `setup_encrypted_storage_vmX.sh` is used.
+- Preferred demo Trino account: `customerdna_analyst / CustomerDNA_Trino_Analyst_2026!`
+- Service-side Trino account used by automation: `customerdna_service / CustomerDNA_Trino_Service_2026!`

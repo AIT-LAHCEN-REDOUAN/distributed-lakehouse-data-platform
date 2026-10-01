@@ -1,0 +1,85 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\footnotesize]
+  % ---------- Centralized panel ----------
+  \node[ado group, minimum width=9.6cm, minimum height=4.7cm, anchor=north] (centralpanel) at (0,0) {};
+  \node[ado label, font=\bfseries\Large] at ($(centralpanel.north)+(0,-0.45)$) {Centralized architecture};
+
+  \node[ado small box={1.55cm}{adograyfill}, minimum height=0.70cm] (csrc1) at (-2.45,-1.10)
+    {\textbf{\scriptsize Campaign}\\[-1pt]\scriptsize data};
+  \node[ado small box={1.75cm}{adograyfill}, minimum height=0.70cm] (csrc2) at (0,-1.10)
+    {\textbf{\scriptsize Behavioral}\\[-1pt]\scriptsize data};
+  \node[ado small box={1.75cm}{adograyfill}, minimum height=0.70cm] (csrc3) at (2.45,-1.10)
+    {\textbf{\scriptsize Transaction}\\[-1pt]\scriptsize data};
+
+  \node[ado box={4.55cm}{adobluefill}, minimum height=1.60cm, inner sep=5pt] (server) at (0,-2.70) {};
+  \node[font=\bfseries\Large] at ($(server.center)+(0,0.15)$) {Single server};
+  \node[ado small box={3.10cm}{blue!18}, minimum height=0.42cm, inner sep=2pt] at (0,-2.15) {\scriptsize Ingestion};
+  \node[ado small box={3.10cm}{blue!18}, minimum height=0.42cm, inner sep=2pt] at (0,-2.55) {\scriptsize Storage};
+  \node[ado small box={3.10cm}{blue!18}, minimum height=0.42cm, inner sep=2pt] at (0,-2.95) {\scriptsize Processing + metadata + access};
+
+  \node[ado small box={1.40cm}{adograyfill}, minimum height=0.58cm] (cana) at (-2.05,-4.25) {\scriptsize Analysts};
+  \node[ado small box={1.60cm}{adograyfill}, minimum height=0.58cm] (capp) at (2.05,-4.25) {\scriptsize Applications};
+
+  \draw[ado arrow] (csrc1.south) -- ++(0,-0.14) -| ($(server.north)+(-1.25,0)$);
+  \draw[ado arrow] (csrc2.south) -- ++(0,-0.14) -- ($(server.north)+(0,0)$);
+  \draw[ado arrow] (csrc3.south) -- ++(0,-0.14) -| ($(server.north)+(1.25,0)$);
+  \draw[ado arrow] ($(server.south)+(-0.95,0)$) |- (cana.north);
+  \draw[ado arrow] ($(server.south)+(0.95,0)$) |- (capp.north);
+
+  \node[ado annotation, text width=6.6cm] at (0,-5.10)
+    {Single point of failure, limited scaling, and resource contention.};
+
+  % ---------- Transition ----------
+  \draw[ado arrow] (0,-5.55) -- (0,-6.30);
+  \node[ado annotation, text width=5.6cm] at (0,-6.90)
+    {Evolution toward scalability, resilience, and service specialization};
+
+  % ---------- Distributed panel ----------
+  \node[ado group, minimum width=9.8cm, minimum height=5.8cm, anchor=north] (distpanel) at (0,-7.55) {};
+  \node[ado label, font=\bfseries\Large] at ($(distpanel.north)+(0,-0.45)$) {Distributed data platform};
+
+  \node[ado small box={1.55cm}{adograyfill}, minimum height=0.70cm] (dsrc1) at (-2.45,-8.65)
+    {\textbf{\scriptsize Campaign}\\[-1pt]\scriptsize data};
+  \node[ado small box={1.75cm}{adograyfill}, minimum height=0.70cm] (dsrc2) at (0,-8.65)
+    {\textbf{\scriptsize Behavioral}\\[-1pt]\scriptsize data};
+  \node[ado small box={1.75cm}{adograyfill}, minimum height=0.70cm] (dsrc3) at (2.45,-8.65)
+    {\textbf{\scriptsize Transaction}\\[-1pt]\scriptsize data};
+
+  \node[ado box={2.65cm}{adobluefill}, minimum height=0.95cm, inner sep=4pt] (ingest) at (-2.35,-10.00)
+    {\textbf{\small Ingestion layer}\\[-1pt]\scriptsize capture and route};
+  \node[ado box={2.65cm}{adotealfill}, minimum height=0.95cm, inner sep=4pt] (meta) at (2.35,-10.00)
+    {\textbf{\small Metadata layer}\\[-1pt]\scriptsize shared catalog};
+
+  \node[ado box={2.75cm}{adobluefill}, minimum height=1.08cm, inner sep=4pt] (storage) at (-2.35,-11.60) {};
+  \node[font=\bfseries\normalsize] at ($(storage.center)+(0,-0.05)$) {Storage layer};
+  \node[ado small box={0.46cm}{blue!15}, minimum height=0.38cm, inner sep=1.2pt] at ($(storage.north)+(-0.76,-0.23)$) {\scriptsize A};
+  \node[ado small box={0.46cm}{blue!15}, minimum height=0.38cm, inner sep=1.2pt] at ($(storage.north)+(0,-0.23)$) {\scriptsize B};
+  \node[ado small box={0.46cm}{blue!15}, minimum height=0.38cm, inner sep=1.2pt] at ($(storage.north)+(0.76,-0.23)$) {\scriptsize C};
+
+  \node[ado box={2.75cm}{adotealfill}, minimum height=1.08cm, inner sep=4pt] (compute) at (2.35,-11.60) {};
+  \node[font=\bfseries\normalsize] at ($(compute.center)+(0,-0.05)$) {Compute layer};
+  \node[ado small box={0.46cm}{teal!16}, minimum height=0.38cm, inner sep=1.2pt] at ($(compute.north)+(-0.76,-0.23)$) {\scriptsize A};
+  \node[ado small box={0.46cm}{teal!16}, minimum height=0.38cm, inner sep=1.2pt] at ($(compute.north)+(0,-0.23)$) {\scriptsize B};
+  \node[ado small box={0.46cm}{teal!16}, minimum height=0.38cm, inner sep=1.2pt] at ($(compute.north)+(0.76,-0.23)$) {\scriptsize C};
+
+  \node[ado box={3.45cm}{adograyfill}, minimum height=0.92cm, inner sep=4pt] (access) at (0,-13.20)
+    {\textbf{\small Analytics and access}\\[-1pt]\scriptsize SQL exploration and governed reuse};
+
+  \node[ado small box={1.25cm}{adograyfill}, minimum height=0.56cm] (dana) at (-2.55,-14.45) {\scriptsize Analysts};
+  \node[ado small box={1.25cm}{adograyfill}, minimum height=0.56cm] (dsql) at (0,-14.45) {\scriptsize BI / SQL};
+  \node[ado small box={1.65cm}{adograyfill}, minimum height=0.56cm] (dml) at (2.55,-14.45) {\scriptsize Future AI / ML};
+
+  \draw[ado arrow] (dsrc1.south) -- ++(0,-0.14) -| ($(ingest.north)+(-0.50,0)$);
+  \draw[ado arrow] (dsrc2.south) -- ++(0,-0.14) -| ($(ingest.north)+(0.50,0)$);
+  \draw[ado arrow] (dsrc3.south) -- ++(0,-0.14) -- (meta.north);
+  \draw[ado arrow] (ingest.south) -- (storage.north);
+  \draw[ado arrow] (meta.south) -- (compute.north);
+  \draw[ado arrow] (storage.east) -- (compute.west);
+  \draw[ado arrow] ($(storage.south)+(0.55,0)$) |- ($(access.north)+(-0.65,0)$);
+  \draw[ado arrow] ($(compute.south)+(-0.55,0)$) |- ($(access.north)+(0.65,0)$);
+  \draw[ado arrow] ($(access.south)+(-1.05,0)$) |- (dana.north);
+  \draw[ado arrow] (access.south) -- (dsql.north);
+  \draw[ado arrow] ($(access.south)+(1.05,0)$) |- (dml.north);
+
+  \node[ado annotation, text width=6.6cm] at (0,-15.25)
+    {Horizontal scaling, fault tolerance, and separation of concerns.};
+\end{tikzpicture}

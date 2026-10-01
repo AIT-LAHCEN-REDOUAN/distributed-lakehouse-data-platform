@@ -1,0 +1,92 @@
+\chapter{General Conclusion and Perspectives}
+
+\section{General Conclusion}
+Customer-related information is frequently fragmented across campaign systems, digital interaction channels, and transactional applications. This fragmentation weakens replayability, governance, analytical trust, and the ability to prepare reliable inputs for advanced customer-oriented services. The central problem addressed by this project was therefore to determine how heterogeneous customer data could be integrated through a distributed, governed, observable, and protected engineering platform rather than through isolated scripts or a single local database.
+
+To answer this problem, the project designed, implemented, deployed, and validated \projectname{} within the broader \initiative{} initiative at \companyname. The resulting platform connects Kafka ingestion, HDFS bronze persistence, Spark processing, Iceberg table management, Hive Metastore governance, Trino analytical access, dbt-spark transformations, Great Expectations validation, Airflow orchestration, and Prometheus/Grafana observability. These capabilities operate across a local control plane and a three-VM Linux data plane, with security controls integrated into the deployed access and execution paths.
+
+The implementation demonstrates that campaign-response, digital-behavior, and retail-transaction datasets can follow one reproducible lifecycle: source publication, replayable raw landing, distributed loading, integrated raw-data validation, governed transformation and testing, and external SQL consumption. The five-workflow orchestration sequence---reset, setup, readiness, raw loading with embedded quality tasks, and dbt transformation---together with retained validation artifacts and monitoring evidence shows that the result is an operational platform rather than a collection of independently demonstrated technologies.
+
+The original problem is therefore answered by a coherent Data Engineering and Big Data architecture that turns heterogeneous source data into governed and reusable analytical products. Its contribution is consistent with the principles of distributed data-intensive and lakehouse systems: durable raw history, separation of responsibilities, shared table metadata, independent processing and query services, and evidence-driven operation \cite{kleppmann2017ddia,armbrust2021lakehouse,marz2015bigdata}.
+
+The final positioning must nevertheless remain precise. \projectname{} is a completed distributed customer-data lakehouse implementation and a Customer 360-ready analytical foundation. It is not yet a production-scale customer master, a highly available enterprise platform, or a finished AI product. Those boundaries do not reduce the delivered contribution; they define the point from which the platform can evolve responsibly.
+
+\section{Main Contributions}
+The project contributes at several complementary levels.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.15}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{0.25\textwidth}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Contribution dimension}} & \textcolor{white}{\textbf{Implemented contribution}} & \textcolor{white}{\textbf{Resulting value}} \\
+        \hline
+        Customer-data integration & one governed lifecycle for three heterogeneous campaign, behavioral, and transactional perspectives & a credible analytical basis for broader Customer 360 development \\
+        \hline
+        Distributed architecture & multi-node transport, storage, processing, and querying across the three-VM data plane & practical demonstration that the main data workloads cross machine boundaries \\
+        \hline
+        Lakehouse governance & replayable HDFS bronze artifacts, Iceberg tables, shared Hive metadata, and layered dbt models & separation between durable raw history and reusable analytical structures \\
+        \hline
+        Quality and reproducibility & dbt tests, source-specific Great Expectations checkpoints, validation JSON, and Data Docs & retained evidence that transformations and data contracts were checked \\
+        \hline
+        Operational control & five ordered Airflow workflows covering reset, setup, readiness, integrated raw loading/quality, and dbt transformation, complemented by metrics and Grafana dashboards & repeatable execution, diagnosable failures, and runtime visibility \\
+        \hline
+        Deployment hardening & Kerberos-secured Hadoop services, protected browser paths, authenticated gateways, SSH submission, identity separation, and optional encrypted runtime storage & a security-aware baseline integrated into normal platform operation \\
+        \hline
+    \end{tabularx}
+    \caption{Synthesis of the principal project contributions}
+    \label{tab:chapter10-main-contributions}
+\end{table}
+\FloatBarrier
+
+Taken together, these contributions establish the project primarily as a platform-engineering achievement. The value does not come from any individual framework in isolation, but from the consistency of the complete path between source data, distributed infrastructure, governed analytical outputs, validation evidence, and controlled access.
+
+\section{Future Perspectives}
+The next developments should preserve the current architecture's separation of concerns while increasing its availability, data coverage, governance maturity, and downstream business value. The perspectives can be organized into three successive directions.
+
+\subsection{Platform Industrialization}
+The first priority is to strengthen the operating foundation before expanding business functionality. Central coordinator and catalog responsibilities should be made more resilient, and the local control plane should evolve toward a managed deployment environment. Backup, restoration, failover, and node-loss scenarios should be tested explicitly rather than inferred from successful nominal execution.
+
+Deployment automation can also be extended through versioned environment configuration, infrastructure provisioning, compatibility checks, and repeatable certificate and service-identity initialization. Centralized secret management, automated certificate rotation, finer-grained access control, and encryption enabled consistently across persistent runtime storage would move the current security baseline closer to enterprise operation.
+
+Performance evaluation should become systematic. Repeated benchmarks over identical datasets and workflows can compare local and distributed execution, measure end-to-end duration and service-level throughput, and identify CPU, memory, storage, and network bottlenecks. Such measurements would guide capacity planning without replacing the functional evidence already established by the project.
+
+\subsection{Customer 360 Enrichment}
+The second direction is to broaden the customer-data foundation. Additional operational sources can extend the current campaign, behavioral, and transactional perspectives with support interactions, consent and preference data, product usage, and other company-relevant channels. Each new source should retain the same ingestion, bronze, transformation, quality, and evidence contracts.
+
+A mature Customer 360 layer would also require canonical identifiers, controlled cross-source identity resolution, survivorship rules, and explicit handling of uncertain matches. Richer semantic marts, documented data contracts, lineage, retention rules, and access policies would turn the current analytical foundation into a more complete governed customer domain. Incremental and streaming transformations could then reduce data freshness where business requirements justify lower latency.
+
+\subsection{AdOptimizer AI Capabilities}
+The third direction concerns the intelligent services of the broader \initiative{} vision. Curated customer features can support segmentation, persona generation, churn-risk estimation, customer-lifetime-value modeling, conversion analysis, campaign optimization, recommendation, and personalization. These services should consume governed outputs rather than bypass the platform and rebuild source integrations independently.
+
+Moving from analytical features to operational AI would require a dedicated lifecycle for training, evaluation, versioning, deployment, monitoring, and retraining. Feature consistency, model drift, explainability, privacy, and decision traceability would become additional requirements. In this evolution, \projectname{} remains the trusted data foundation, while machine-learning and decision services form downstream products with their own validation responsibilities.
+
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.15}
+    \arrayrulecolor{tablelineblue}
+    \rowcolors{2}{tablebodyblue}{white}
+    \begin{tabularx}{\textwidth}{|L{0.20\textwidth}|Y|Y|}
+        \hline
+        \rowcolor{tableheaderblue}
+        \textcolor{white}{\textbf{Evolution direction}} & \textcolor{white}{\textbf{Priority objectives}} & \textcolor{white}{\textbf{Expected outcome}} \\
+        \hline
+        Platform industrialization & resilience, automated deployment, secrets and certificate lifecycles, recovery testing, and repeatable benchmarking & a more scalable, recoverable, and operationally controlled platform \\
+        \hline
+        Customer 360 enrichment & additional sources, identity resolution, semantic models, lineage, policies, and lower-latency processing where required & a governed and increasingly unified customer-information domain \\
+        \hline
+        AdOptimizer AI capabilities & governed features, model lifecycle management, monitoring, and decision-service integration & trustworthy intelligent marketing services consuming validated platform outputs \\
+        \hline
+    \end{tabularx}
+    \caption{Prioritized evolution path from the implemented platform to downstream intelligent services}
+    \label{tab:chapter10-evolution-path}
+\end{table}
+\FloatBarrier
+
+\section{Closing Perspective}
+\projectname{} demonstrates that trustworthy customer analytics depend on a durable, governed, observable, and protected data foundation. By integrating distributed execution, controlled transformation, explicit validation, and secured access, the completed platform gives \companyname{} a credible basis for extending \initiative{} toward Customer 360 and future AI services while preserving reproducibility, governance, evidence, security, and scope discipline.

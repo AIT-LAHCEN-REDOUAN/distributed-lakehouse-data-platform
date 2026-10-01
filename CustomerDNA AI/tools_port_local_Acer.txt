@@ -1,0 +1,8 @@
+Airflow: http://localhost:8080
+Kafka UI: http://localhost:8081
+HDFS NameNode: http://localhost:9870
+Spark Master: http://localhost:8086
+Spark Worker: http://localhost:8087
+Spark History: http://localhost:18080
+Spark Thrift app UI: http://localhost:4040
+Trino: http://localhost:8088

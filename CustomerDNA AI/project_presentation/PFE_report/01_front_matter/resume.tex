@@ -1,0 +1,29 @@
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{R\'esum\'e}
+\thispagestyle{plain}
+\vspace*{-0.55cm}
+{\Huge\bfseries R\'esum\'e\par}
+\vspace{0.65cm}
+
+\begingroup
+\emergencystretch=4em
+
+Les organisations modernes g\'en\`erent d'importants volumes de donn\'ees clients dans des environnements op\'erationnels h\'et\'erog\`enes et fragment\'es. Les donn\'ees de campagne, les traces comportementales, les transactions commerciales et les attributs de profil sont produits dans des formats diff\'erents, \`a des cadences variables et selon des hypoth\`eses s\'emantiques non homog\`enes. Lorsque ces sources demeurent isol\'ees, les informations clients deviennent difficiles \`a valider, \`a r\'econcilier, \`a rejouer et \`a transformer en actifs analytiques fiables. Cette fragmentation ralentit la prise de d\'ecision, emp\^eche une vision client unifi\'ee et prive les futurs services intelligents d'un socle de donn\'ees suffisamment robuste.
+
+Ce projet de fin d'\'etudes r\'epond \`a cette probl\'ematique par la conception et la mise en \oe{}uvre de \projectname{}, une plateforme lakehouse distribu\'ee consacr\'ee aux donn\'ees clients et d\'evelopp\'ee dans le cadre de l'initiative plus large \initiative{} au sein de \companyname. La plateforme mise en \oe{}uvre combine une ingestion rejouable avec Kafka, un stockage bronze dans HDFS, des traitements distribu\'es avec Spark, des tables Iceberg et Parquet gouvern\'ees par Hive Metastore, ainsi qu'un acc\`es analytique via Trino. dbt-spark structure les couches de transformation, Great Expectations conserve les preuves de validation, Airflow orchestre les workflows, Prometheus et Grafana assurent l'observabilit\'e, tandis que des contr\^oles de s\'ecurit\'e en couches prot\`egent l'identit\'e des services, les acc\`es, les communications et les donn\'ees persist\'ees.
+
+D\'eploy\'ee entre un plan de contr\^ole local et trois machines virtuelles Linux, la plateforme a \`et\'e valid\'ee au moyen de sc\'enarios d'ex\'ecution de bout en bout couvrant l'ingestion, la persistance distribu\'ee, la transformation, l'acc\`es analytique inter-moteurs, les contr\^oles de qualit\'e, l'orchestration, la supervision et les interactions s\'ecuris\'ees entre services. L'architecture obtenue renforce la reproductibilit\'e, la scalabilit\'e, la tra\c{c}abilit\'e, la fiabilit\'e op\'erationnelle et l'extensibilit\'e. Elle transforme des jeux de donn\'ees brutes h\'et\'erog\`enes en produits de donn\'ees gouvern\'es et r\'eutilisables, tout en \`etablissant le socle d'ing\'enierie n\'ecessaire \`a des analyses fiables, \`a de futures capacit\'es Customer 360 et \`a des d\'eveloppements ult\'erieurs en apprentissage automatique.
+
+\vspace{0.18cm}
+\noindent\rule{\textwidth}{0.4pt}
+
+\vspace{0.08cm}
+{\fontsize{9}{10.2}\selectfont\noindent\textbf{Mots-cl\'es~: }Big Data, Ing\'enierie des donn\'ees, Syst\`emes distribu\'es, Data Lakehouse, Plateforme de donn\'ees client, Gouvernance des donn\'ees, Qualit\'e des donn\'ees, Observabilit\'e, S\'ecurit\'e, Customer 360.\par}
+
+\vspace{0.08cm}
+\noindent\rule{\textwidth}{0.4pt}
+
+\endgroup
+
+\clearpage

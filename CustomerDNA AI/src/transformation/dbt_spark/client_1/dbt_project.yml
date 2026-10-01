@@ -1,0 +1,36 @@
+name: "customerdna_client1_lakehouse"
+version: "1.0.0"
+config-version: 2
+
+profile: "customerdna_client1_lakehouse"
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+analysis-paths: ["analyses"]
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+vars:
+  pii_token_salt: "{{ env_var('CUSTOMERDNA_PII_TOKEN_SALT', 'CustomerDNA_PII_Token_Salt_2026!') }}"
+
+models:
+  customerdna_client1_lakehouse:
+    +file_format: iceberg
+    +persist_docs:
+      relation: true
+      columns: true
+
+    staging:
+      +materialized: table
+      +schema: staging
+
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+
+    analytics:
+      +materialized: table
+      +schema: analytics

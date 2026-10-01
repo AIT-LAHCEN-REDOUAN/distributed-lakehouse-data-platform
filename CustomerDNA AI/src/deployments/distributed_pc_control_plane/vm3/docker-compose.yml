@@ -1,0 +1,157 @@
+services:
+  broker-3:
+    image: apache/kafka:4.3.1
+    container_name: broker-3
+    hostname: broker-3
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      CLUSTER_ID: ${CUSTOMERDNA_KAFKA_CLUSTER_ID}
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://${VM3_HOST_IP}:29092,EXTERNAL://${VM3_HOST_IP}:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@${VM1_HOST_IP}:9093,2@${VM2_HOST_IP}:9093,3@${VM3_HOST_IP}:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: ${CUSTOMERDNA_KAFKA_REPLICATION_FACTOR}
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: ${CUSTOMERDNA_KAFKA_REPLICATION_FACTOR}
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: ${CUSTOMERDNA_KAFKA_MIN_INSYNC_REPLICAS}
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_NUM_PARTITIONS: ${CUSTOMERDNA_KAFKA_DEFAULT_PARTITIONS}
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes:
+      - ${CUSTOMERDNA_RUNTIME_KAFKA_DATA_DIR:-./runtime/kafka/data}:/var/lib/kafka/data
+
+  datanode-3:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode-3
+    hostname: datanode-3
+    network_mode: host
+    extra_hosts:
+      - "datanode-3:${VM3_HOST_IP}"
+      - "datanode-3.customerdna.local:${VM3_HOST_IP}"
+      - "datanode-1:${VM1_HOST_IP}"
+      - "datanode-1.customerdna.local:${VM1_HOST_IP}"
+      - "datanode-2:${VM2_HOST_IP}"
+      - "datanode-2.customerdna.local:${VM2_HOST_IP}"
+      - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
+    restart: unless-stopped
+    environment:
+      KRB5_CONFIG: /etc/krb5.conf
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf
+      SERVICE_PRECONDITION: namenode:${CUSTOMERDNA_HDFS_NAMENODE_HTTPS_PORT:-9871}
+    volumes:
+      - ${CUSTOMERDNA_RUNTIME_HDFS_DATANODE_DIR:-./runtime/hdfs/datanode}:/hadoop/dfs/data
+      - ./hdfs/config/core-site.xml:/etc/hadoop/core-site.xml:ro
+      - ./hdfs/config/hdfs-site.xml:/etc/hadoop/hdfs-site.xml:ro
+      - ./hdfs/tls/ssl-server.xml:/etc/hadoop/ssl-server.xml:ro
+      - ./hdfs/tls/ssl-client.xml:/etc/hadoop/ssl-client.xml:ro
+      - ./hdfs/tls:/etc/hadoop/tls:ro
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/datanode-3:/etc/security/keytabs:ro
+    healthcheck:
+      disable: true
+
+  spark-worker-3:
+    build:
+      context: ./spark
+      dockerfile: Dockerfile
+      args:
+        SPARK_BASE_IMAGE: ${CUSTOMERDNA_SPARK_BASE_IMAGE}
+        ICEBERG_VERSION: ${CUSTOMERDNA_SPARK_ICEBERG_VERSION}
+        POSTGRES_JDBC_VERSION: ${CUSTOMERDNA_SPARK_POSTGRES_JDBC_VERSION}
+    image: ${CUSTOMERDNA_SPARK_IMAGE}
+    container_name: spark-worker-3
+    hostname: spark-worker-3.customerdna.local
+    network_mode: host
+    extra_hosts:
+      - "namenode:${VM2_HOST_IP}"
+      - "namenode.customerdna.local:${VM2_HOST_IP}"
+      - "hive-metastore:${VM2_HOST_IP}"
+      - "spark-thrift-server:${VM2_HOST_IP}"
+      - "spark-master:${VM2_HOST_IP}"
+      - "spark-worker-1:${VM1_HOST_IP}"
+      - "spark-worker-1.customerdna.local:${VM1_HOST_IP}"
+      - "spark-worker-2:${VM2_HOST_IP}"
+      - "spark-worker-2.customerdna.local:${VM2_HOST_IP}"
+      - "spark-worker-3:${VM3_HOST_IP}"
+      - "spark-worker-3.customerdna.local:${VM3_HOST_IP}"
+    restart: unless-stopped
+    environment:
+      HOME: /opt/spark/work-dir
+      IVY_HOME: /opt/spark/work-dir/.ivy2
+      HADOOP_CONF_DIR: /etc/hadoop/conf
+      KRB5_CONFIG: /etc/krb5.conf
+      KRB5CCNAME: FILE:/tmp/krb5cc_spark
+      KRB5_CLIENT_KTNAME: ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB}
+      HADOOP_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
+      SPARK_CONF_DIR: /opt/spark/custom-conf
+      SPARK_CLASSPATH: ${CUSTOMERDNA_SPARK_EXTRA_CLASSPATH}
+      SPARK_SUBMIT_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false -Divy.home=/opt/spark/work-dir/.ivy2 -Divy.cache.dir=/opt/spark/work-dir/.ivy2/cache
+      SPARK_DAEMON_JAVA_OPTS: -Djava.security.krb5.conf=/etc/krb5.conf -Djava.security.auth.login.config=/opt/spark/custom-conf/jaas.conf -Djavax.security.auth.useSubjectCredsOnly=false
+      SPARK_LOCAL_IP: ${VM3_HOST_IP}
+      SPARK_LOCAL_HOSTNAME: spark-worker-3.customerdna.local
+      SPARK_PUBLIC_DNS: ${VM3_HOST_IP}
+    command:
+      - /bin/bash
+      - -lc
+      - >
+        export KRB5CCNAME=FILE:/tmp/krb5cc_spark;
+        kdestroy -c FILE:/tmp/krb5cc_spark >/dev/null 2>&1 || true;
+        kinit -c FILE:/tmp/krb5cc_spark -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL}
+        || exit 1;
+        (
+             while true; do
+               sleep 1800;
+               kinit -c FILE:/tmp/krb5cc_spark -R || kinit -c FILE:/tmp/krb5cc_spark -kt ${CUSTOMERDNA_SPARK_KERBEROS_KEYTAB} ${CUSTOMERDNA_SPARK_KERBEROS_PRINCIPAL};
+             done
+           ) >/dev/null 2>&1 &
+        exec /opt/spark/bin/spark-class
+        org.apache.spark.deploy.worker.Worker
+        spark://${VM2_HOST_IP}:${SPARK_MASTER_PORT}
+        --webui-port ${SPARK_WORKER_WEBUI_PORT}
+        --cores ${SPARK_WORKER_CORES}
+        --memory ${SPARK_WORKER_MEMORY}
+    volumes:
+      - ${CUSTOMERDNA_RUNTIME_SPARK_EVENTS_DIR:-./runtime/spark/events}:/tmp/spark-events
+      - ${CUSTOMERDNA_RUNTIME_SPARK_IVY2_DIR:-./runtime/spark/ivy2}:/opt/spark/work-dir/.ivy2
+      - ./spark/config:/opt/spark/custom-conf:ro
+      - ./hdfs/config:/etc/hadoop/conf:ro
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/spark:/etc/security/keytabs:ro
+
+  trino-worker-2:
+    image: trinodb/trino:${TRINO_VERSION}
+    container_name: trino-worker-2
+    hostname: trino-worker-2
+    network_mode: host
+    restart: unless-stopped
+    extra_hosts:
+      - "namenode:${VM2_HOST_IP}"
+      - "hive-metastore:${VM2_HOST_IP}"
+      - "datanode-1:${VM1_HOST_IP}"
+      - "datanode-2:${VM2_HOST_IP}"
+      - "datanode-3:${VM3_HOST_IP}"
+    volumes:
+      - ./trino/etc:/etc/trino:ro
+      - ${CUSTOMERDNA_RUNTIME_TRINO_DATA_DIR:-./runtime/trino/data}:/var/trino/data
+      - ./kerberos/krb5.conf:/etc/krb5.conf:ro
+      - ${CUSTOMERDNA_RUNTIME_KERBEROS_KEYTAB_DIR:-./runtime/kerberos/keytabs}/trino:/etc/security/keytabs:ro
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: vm3_cadvisor
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      CADVISOR_HEALTHCHECK_URL: http://127.0.0.1:8081/healthz
+    command:
+      - --port=8081
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro

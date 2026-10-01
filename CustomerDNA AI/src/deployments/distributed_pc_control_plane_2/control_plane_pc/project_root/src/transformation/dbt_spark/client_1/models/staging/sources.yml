@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: raw_data
+    schema: raw_data
+    tables:
+      - name: bank_marketing
+      - name: online_shoppers_intention
+      - name: online_retail_2

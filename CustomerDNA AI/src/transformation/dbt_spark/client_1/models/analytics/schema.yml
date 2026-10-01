@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: analytics_customer360_overview
+    description: Final entity-level overview for Customer 360 segmentation, conversion, and retention analysis.
+    columns:
+      - name: unified_entity_token
+        tests: [not_null, unique]
+      - name: entity_key_token
+        description: Tokenized business key for demo-safe analytics consumption.
+      - name: known_customer_token
+        description: Tokenized known customer identifier for protected customer-level reporting.
+  - name: analytics_conversion_performance
+    description: Final conversion performance mart for campaign and digital-intent sources.
+  - name: analytics_sales_performance
+    description: Final country-month sales mart for Online Retail II.

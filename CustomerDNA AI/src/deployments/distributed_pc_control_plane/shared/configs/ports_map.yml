@@ -1,0 +1,60 @@
+ports:
+  kafka:
+    external_client_port: 9092
+    internal_broker_port: 29092
+    controller_port: 9093
+    notes:
+      - One broker per VM.
+      - KRaft quorum spans VM1, VM2, and VM3.
+
+  hdfs:
+    namenode_rpc_port: 9000
+    namenode_web_port: 9871
+    datanode_web_port: 9865
+    notes:
+      - NameNode is placed on VM2.
+      - DataNodes are placed on VM1, VM2, and VM3.
+
+  hive:
+    metastore_port: 9083
+    metastore_postgres_port: 5435
+    notes:
+      - Hive Metastore and its PostgreSQL backend stay on VM2.
+
+  spark:
+    master_port: 7077
+    master_webui_port: 8086
+    submit_ssh_port: 22
+    worker_webui_port_default: 8087
+    history_webui_port: 18080
+    thrift_port: 10000
+    thrift_webui_port: 4040
+    notes:
+      - Spark master stays on VM2.
+      - Spark submit helper also stays on VM2 and is reached from the control plane over SSH.
+      - Workers run on VM1, VM2, and VM3.
+      - If worker UI ports collide on a single host, node-specific overrides are required.
+
+  trino:
+    coordinator_http_port: 8088
+    worker_internal_http_port: 8080
+    notes:
+      - Coordinator stays on VM2.
+      - Workers run on VM1 and VM3.
+
+  monitoring:
+    cadvisor_port: 8081
+    postgres_exporter_port: 9187
+    pipeline_metrics_exporter_port: 9109
+    prometheus_port: 19090
+    grafana_port: 13001
+    airflow_api_port: 18080
+    notes:
+      - Control-plane preferred ports are local-PC defaults.
+      - The local startup script may shift those three control-plane ports if they are already in use.
+
+  local_baseline_implementation:
+    kafka_ui_port: 8085
+    trino_local_port: 8088
+    notes:
+      - Included here to avoid confusion with the existing local baseline stack still present on the workstation.

@@ -1,0 +1,15 @@
+================================================================================
+ VM3 SPECIFICATION - 10.10.252.13
+================================================================================
+
+Hostname        : redouan
+OS              : Ubuntu 22.04.5 LTS
+Kernel          : 5.15.0-119-generic
+CPU             : QEMU Virtual CPU 2.5+ (2 sockets x 2 cores)
+RAM (total)     : 3.8 GiB
+RAM (used)      : 185 MiB
+Disk (total)    : 26 GB
+Disk (used)     : 7.0 GB (29%)
+GPU             : No dedicated GPU (basic VGA)
+
+================================================================================

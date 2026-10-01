@@ -1,0 +1,18 @@
+*.zip
+/dataset
+
+# CustomerDNA AI project directories to ignore
+CustomerDNA AI/base_dataset/
+CustomerDNA AI/project_requirements/
+CustomerDNA AI/src/Preprocessing/Customer_Personality_Analysis_dataset_Preprocessing/cleaned_dataset/
+CustomerDNA AI/src/Preprocessing/E-commerce_customer_churn_Preprocessing/cleaned_dataset/
+CustomerDNA AI/src/Preprocessing/Retailrocket_recommender_system_dataset_Preprocessing/cleaned_dataset/
+CustomerDNA AI/src/Preprocessing/UCI_Online_Retail_2_Preprocessing/cleaned_dataset/
+/CustomerDNA AI/datasets
+/CustomerDNA AI/src/deployments/distributed_pc_control_plane/windows_kerberos_client
+CustomerDNA AI/src/deployments/distributed_pc_control_plane/vm2/NUL
+CustomerDNA AI/src/deployments/distributed_pc_control_plane/control_plane_pc/NUL
+CustomerDNA AI/NUL
+CustomerDNA AI/src/deployments/distributed_pc_control_plane/NUL
+/.idea
+CustomerDNA AI/src/deployments/distributed_pc_control_plane_2/vm2/NUL

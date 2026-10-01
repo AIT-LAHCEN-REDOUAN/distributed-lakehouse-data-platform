@@ -1,0 +1,48 @@
+\begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+  \node[ado box={11.80cm}{adograyfill}, minimum height=1.15cm, inner sep=5pt] (user) at (0,0)
+    {\textbf{\normalsize Analytical users}\\[-1pt]
+     \footnotesize browser-based SQL access through the protected entry point};
+
+  \node[ado box={11.80cm}{adotealfill}, minimum height=1.20cm, inner sep=5pt] (gateway) at (0,-1.75)
+    {\textbf{\normalsize HTTPS authenticated gateway --- VM2}\\[-1pt]
+     \footnotesize validates credentials and controls external SQL access};
+
+  \draw[{Latex[length=2.6mm,width=1.6mm]}-{Latex[length=2.6mm,width=1.6mm]},
+        draw=black!60, line width=1.0pt]
+    (user.south) --
+    node[font=\scriptsize, text=black!60, fill=white, inner sep=1pt, right=2pt]
+    {login, query, and result}
+    (gateway.north);
+
+  \draw[draw=black!35, dashed, line width=0.8pt] (-6.65,-2.70) -- (6.65,-2.70);
+  \node[font=\scriptsize, text=black!55, fill=white, inner sep=2pt] at (4.55,-2.70)
+    {external access boundary};
+
+  \node[ado group, minimum width=14.20cm, minimum height=4.35cm, anchor=north] (cluster) at (0,-3.00) {};
+  \node[ado label, font=\bfseries\normalsize] at ($(cluster.north)+(0,-0.38)$)
+    {Internal Trino execution zone};
+
+  \node[ado box={10.80cm}{adopurplefill}, minimum height=1.20cm, inner sep=5pt] (coord) at (0,-4.25)
+    {\textbf{\normalsize Trino coordinator --- VM2}\\[-1pt]
+     \footnotesize plans queries, coordinates workers, and assembles results};
+
+  \node[ado box={5.15cm}{adoorangefill}, minimum height=1.20cm, inner sep=5pt] (worker1) at (-3.20,-6.15)
+    {\textbf{\small Trino worker 1 --- VM1}\\[2pt]
+     \footnotesize executes fragments and returns partial results};
+  \node[ado box={5.15cm}{adoorangefill}, minimum height=1.20cm, inner sep=5pt] (worker2) at (3.20,-6.15)
+    {\textbf{\small Trino worker 2 --- VM3}\\[2pt]
+     \footnotesize executes fragments and returns partial results};
+
+  \draw[{Latex[length=2.6mm,width=1.6mm]}-{Latex[length=2.6mm,width=1.6mm]},
+        draw=black!60, line width=1.0pt]
+    (gateway.south) --
+    node[font=\scriptsize, text=black!60, fill=white, inner sep=1pt, right=2pt]
+    {validated SQL and result}
+    (coord.north);
+  \draw[{Latex[length=2.6mm,width=1.6mm]}-{Latex[length=2.6mm,width=1.6mm]},
+        draw=black!55, line width=0.95pt]
+    (coord.south) -- (worker1.north);
+  \draw[{Latex[length=2.6mm,width=1.6mm]}-{Latex[length=2.6mm,width=1.6mm]},
+        draw=black!55, line width=0.95pt]
+    (coord.south) -- (worker2.north);
+\end{tikzpicture}
