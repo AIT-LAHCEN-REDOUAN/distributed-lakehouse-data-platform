@@ -1,6 +1,0 @@
-# Add these lines to the Windows hosts file if they are not already present:
-# C:\Windows\System32\drivers\etc\hosts
-
-10.10.252.12  namenode.customerdna.local namenode datanode-2.customerdna.local datanode-2
-10.10.252.11  datanode-1.customerdna.local datanode-1
-10.10.252.13  datanode-3.customerdna.local datanode-3
