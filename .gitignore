@@ -16,4 +16,8 @@ CustomerDNA AI/NUL
 CustomerDNA AI/src/deployments/distributed_pc_control_plane/NUL
 /.idea
 CustomerDNA AI/src/deployments/distributed_pc_control_plane_2/vm2/NUL
-*.rar
+CustomerDNA AI/Report_presentation.rar
+/CustomerDNA AI/src/deployments
+/CustomerDNA AI/src/deployments
+/CustomerDNA AI/src/deployments/distributed_pc_control_plane
+/CustomerDNA AI/src/deployments/distributed_pc_control_plane_2
